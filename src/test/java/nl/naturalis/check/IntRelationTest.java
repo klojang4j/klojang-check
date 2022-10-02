@@ -1,4 +1,4 @@
-package nl.naturalis.common.function;
+package nl.naturalis.check;
 
 import nl.naturalis.check.Check;
 import org.junit.Test;

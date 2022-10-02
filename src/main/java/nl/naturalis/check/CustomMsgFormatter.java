@@ -1,18 +1,18 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.ClassMethods;
-import nl.naturalis.common.NumberMethods;
-
+import java.math.BigInteger;
 import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import static nl.naturalis.base.ArrayType.describe;
 import static nl.naturalis.check.Check.DEF_ARG_NAME;
 import static nl.naturalis.check.CommonChecks.NAMES;
 import static nl.naturalis.check.MsgUtil.MAX_STRING_WIDTH;
-import static nl.naturalis.common.StringMethods.toShortString;
+import static nl.naturalis.check.MsgUtil.simpleClassName;
+import static nl.naturalis.check.Misc.toShortString;
 
 /*
  * Formats client-provided messages.
@@ -111,7 +111,7 @@ final class CustomMsgFormatter {
     if (fnc != null) {
       return fnc.apply(args);
     }
-    OptionalInt x = NumberMethods.toInt(arg);
+    OptionalInt x = getInt(arg);
     if (x.isPresent()) {
       int i = 5 + x.getAsInt();
       if (i < args.length) {
@@ -132,7 +132,7 @@ final class CustomMsgFormatter {
 
   // ${0}, ${1} ... etc.
   private static String getUserArgVal(String arg, Object[] args) {
-    OptionalInt x = NumberMethods.toInt(arg);
+    OptionalInt x = getInt(arg);
     if (x.isPresent()) {
       int i = x.getAsInt();
       if (i >= 0 && i < args.length) {
@@ -140,6 +140,14 @@ final class CustomMsgFormatter {
       }
     }
     return ARG_START + arg + ARG_END;
+  }
+
+  private static OptionalInt getInt(String arg) {
+    try {
+      return OptionalInt.of(new BigInteger(arg).intValueExact());
+    } catch (NumberFormatException e) {
+      return OptionalInt.empty();
+    }
   }
 
   private static String getCheckName(Object[] args) {
@@ -160,11 +168,11 @@ final class CustomMsgFormatter {
   private static String getArgumentType(Object[] args) {
     if (args[2] == null) {
       if (args[1] != null) {
-        return ClassMethods.describe(args[1]);
+        return describe(args[1]);
       }
       return null;
     }
-    return ClassMethods.simpleClassName((Class<?>) args[2]);
+    return simpleClassName((Class<?>) args[2]);
   }
 
 }

@@ -90,14 +90,14 @@
  * The checks you pass to the {@code is(...)} methods fall apart in two broad
  * categories: implementations of {@link java.util.function.Predicate} and
  * {@link java.util.function.IntPredicate} on the one hand, and implementations of
- * {@link nl.naturalis.common.function.Relation} and its sister interfaces on the
- * other. The latter are not part of the JDK. They can be thought of as a
- * "BiPredicate" (which neither exists in the JDK): a function that takes <i>two</i>
- * arguments and returns a boolean. If the two arguments have a particular relation,
- * defined by the implementation, to each other, the relation is said to <i>exist</i>
- * and the function returns {@code true}. Within the context of Naturalis Check, the
- * first argument is always the value to be validated, while the second argument is
- * the value that it is to be validated against. In the examples above,
+ * {@link nl.naturalis.check.Relation} and its sister interfaces on the other. The
+ * latter are not part of the JDK. They can be thought of as a "BiPredicate" (which
+ * neither exists in the JDK): a function that takes <i>two</i> arguments and returns
+ * a boolean. If the two arguments have a particular relation, defined by the
+ * implementation, to each other, the relation is said to <i>exist</i> and the
+ * function returns {@code true}. Within the context of Naturalis Check, the first
+ * argument is always the value to be validated, while the second argument is the
+ * value that it is to be validated against. In the examples above,
  * {@linkplain nl.naturalis.check.CommonChecks#positive() positive()},
  * {@linkplain nl.naturalis.check.CommonChecks#even() even()},
  * {@linkplain nl.naturalis.check.CommonChecks#empty() empty()} and
@@ -163,7 +163,7 @@
  *      defaults to "argument".
  *   <li><b><code>${obj}</code></b> The object of the relationship, in case the
  *      check took the form of a
- *      {@linkplain nl.naturalis.common.function.Relation} or one of its sister
+ *      {@linkplain nl.naturalis.check.Relation} or one of its sister
  *      interfaces. For example, for the
  *      {@linkplain nl.naturalis.check.CommonChecks#instanceOf() instanceOf()} check,
  *      <code>${obj}</code> would be the class that the argument must be an instance

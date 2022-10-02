@@ -1,10 +1,9 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.ArrayType;
+import nl.naturalis.base.ArrayType;
 
-import java.io.File;
-
-import static nl.naturalis.check.MsgUtil.*;
+import static nl.naturalis.check.MsgUtil.className;
+import static nl.naturalis.check.MsgUtil.toStr;
 
 final class MsgPredicate {
 

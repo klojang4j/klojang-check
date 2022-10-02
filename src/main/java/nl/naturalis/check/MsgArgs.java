@@ -1,7 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.ClassMethods;
-
 /**
  * @param test
  * @param negated
@@ -38,7 +36,7 @@ record MsgArgs(Object test,
     if (c == null) {
       return name();
     }
-    return ClassMethods.simpleClassName(c) + ' ' + name();
+    return Misc.simpleClassName(c) + ' ' + name();
   }
 
 }

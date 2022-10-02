@@ -1,6 +1,9 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.function.*;
+import nl.naturalis.base.function.IntObjRelation;
+import nl.naturalis.base.function.IntRelation;
+import nl.naturalis.base.function.ThrowingIntConsumer;
+import nl.naturalis.base.function.ThrowingIntFunction;
 
 import java.util.function.*;
 

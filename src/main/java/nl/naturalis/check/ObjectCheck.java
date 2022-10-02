@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.function.*;
+import nl.naturalis.base.function.*;
 
 import java.util.function.*;
 

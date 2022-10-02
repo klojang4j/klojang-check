@@ -1,16 +1,17 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.MathMethods;
-import nl.naturalis.common.function.Relation;
-import nl.naturalis.common.x.invoke.InvokeUtils;
+import nl.naturalis.base.function.Relation;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.*;
 
 import static nl.naturalis.check.Check.DEF_ARG_NAME;
 import static nl.naturalis.check.MsgUtil.simpleClassName;
-import static nl.naturalis.common.ObjectMethods.ifNull;
 
 /**
  * Defines various functions that can optionally be passed as the first argument to
@@ -232,7 +233,7 @@ public class CommonProperties {
    * @return A {@code Function} that returns the length of an array
    */
   public static <T> ToIntFunction<T> length() {
-    return InvokeUtils::getArrayLength;
+    return Array::getLength;
   }
 
   static {
@@ -376,23 +377,41 @@ public class CommonProperties {
 
   static {
     tmp.put(abs(),
-        (arg, argName) -> "Math.abs(" + ifNull(argName, DEF_ARG_NAME) + ")");
+        (arg, argName) -> "abs(" + ifNull(argName, DEF_ARG_NAME) + ")");
   }
 
+  //@formatter:off
+  private static final Map<Class<?>, UnaryOperator<? extends Number>> absFunctions = Map.of(
+      Integer.class,        n -> n.intValue() >= 0 ? n : Integer.valueOf(-n.intValue()),
+      AtomicInteger.class,  n -> n.intValue() >= 0 ? n : new AtomicInteger(-n.intValue()),
+      Double.class,         n -> n.doubleValue() >= 0 ? n : Double.valueOf(-n.doubleValue()),
+      Long.class,           n -> n.longValue() >= 0 ? n : Long.valueOf(-n.longValue()),
+      AtomicLong.class,     n -> n.longValue() >= 0 ? n : new AtomicLong(-n.longValue()),
+      Float.class,          n -> n.floatValue() >= 0 ? n : Float.valueOf(-n.floatValue()),
+      Short.class,          n -> n.shortValue() >= 0 ? n : Short.valueOf((short) -n.shortValue()),
+      Byte.class,           n -> n.byteValue() >= 0 ? n : Byte.valueOf((byte) -n.byteValue()),
+      BigInteger.class,     n -> ((BigInteger) n).abs(),
+      BigDecimal.class,     n -> ((BigDecimal) n).abs());
+  //@formatter:on
+
   /**
-   * Returns the absolute value of any kind of {@code Number}. This method is
-   * equivalent to {@link MathMethods#abs(Number) NumberMethods::abs}. However, for
-   * ease of reading, this property will still be formatted as "Math.abs(argName)".
+   * Returns the absolute value of a {@code Number}.
    *
    * @param <T> The type of the {@code Number}
    * @return The absolute value of a {@code Number}
    */
   public static <T extends Number> Function<T, T> ABS() {
-    return MathMethods::abs;
+    return n -> {
+      UnaryOperator op = absFunctions.get(n.getClass());
+      if (op != null) {
+        return (T) op.apply(n);
+      }
+      throw new InvalidCheckException("type not supported: " + n.getClass());
+    };
   }
 
   static {
-    tmp.put(ABS(), (arg, argName) -> "Math.abs(" + base(argName, arg) + ")");
+    tmp.put(ABS(), (arg, argName) -> "abs(" + base(argName, arg) + ")");
   }
 
   /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -432,6 +451,10 @@ public class CommonProperties {
 
   private static String base(String argName, Object arg) {
     return ifNull(argName, simpleClassName(arg));
+  }
+
+  private static <T> T ifNull(T value, T defVal) {
+    return value == null ? defVal : value;
   }
 
 }

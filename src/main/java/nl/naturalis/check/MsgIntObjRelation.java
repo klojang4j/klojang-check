@@ -2,7 +2,7 @@ package nl.naturalis.check;
 
 import java.util.List;
 
-import static nl.naturalis.common.x.invoke.InvokeUtils.getArrayLength;
+import static nl.naturalis.check.Misc.*;
 
 final class MsgIntObjRelation {
 

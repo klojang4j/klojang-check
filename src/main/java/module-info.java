@@ -10,12 +10,7 @@
  * @author Ayco Holleman
  */
 module nl.naturalis.check {
-  exports nl.naturalis.common;
   exports nl.naturalis.check;
-  exports nl.naturalis.common.collection;
-  exports nl.naturalis.common.exception;
-  exports nl.naturalis.common.function;
-  exports nl.naturalis.common.invoke;
-  exports nl.naturalis.common.path;
-  exports nl.naturalis.common.util;
+
+  requires nl.naturalis.base;
 }

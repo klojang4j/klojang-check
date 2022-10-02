@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.function.IntRelation;
+import nl.naturalis.base.function.IntRelation;
 
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;

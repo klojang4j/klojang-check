@@ -1,6 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.function.Relation;
 import org.junit.Test;
 
 import java.io.FileOutputStream;

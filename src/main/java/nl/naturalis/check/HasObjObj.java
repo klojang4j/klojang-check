@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.function.Relation;
+import nl.naturalis.base.function.Relation;
 
 import java.util.function.Function;
 import java.util.function.Predicate;

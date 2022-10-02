@@ -1,23 +1,23 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.*;
-import nl.naturalis.common.function.ComposablePredicate;
-import nl.naturalis.common.function.IntObjRelation;
-import nl.naturalis.common.function.IntRelation;
-import nl.naturalis.common.function.Relation;
+import nl.naturalis.base.Result;
+import nl.naturalis.base.function.ComposablePredicate;
+import nl.naturalis.base.function.IntObjRelation;
+import nl.naturalis.base.function.IntRelation;
+import nl.naturalis.base.function.Relation;
 
 import java.io.File;
 import java.util.*;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
+import static java.lang.invoke.MethodHandles.arrayLength;
 import static nl.naturalis.check.MsgIntObjRelation.*;
 import static nl.naturalis.check.MsgIntPredicate.*;
 import static nl.naturalis.check.MsgIntRelation.*;
 import static nl.naturalis.check.MsgObjIntRelation.*;
 import static nl.naturalis.check.MsgPredicate.*;
 import static nl.naturalis.check.MsgRelation.*;
-import static nl.naturalis.common.x.invoke.InvokeUtils.getArrayLength;
 
 /**
  * Defines various common checks on arguments, variables, object state, etc. The
@@ -123,9 +123,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is empty as per
-   * {@link ObjectMethods#isEmpty(Object) ObjectMethods::isEmpty}. Possibly more
-   * useful when called from an {@code isNot} method.
+   * Verifies that the argument is empty. Probably more useful when called from an
+   * {@code isNot} method.
    *
    *
    * <blockquote><pre>{@code
@@ -139,7 +138,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <T> Predicate<T> empty() {
-    return ObjectMethods::isEmpty;
+    return Misc::isEmpty;
   }
 
   static {
@@ -147,18 +146,16 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is deep-not-null as per
-   * {@link ObjectMethods#isDeepNotNull(Object) ObjectMethods::isDeepNotNull}.
+   * Verifies that the argument is deep-not-null.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
-   * @see ObjectMethods#isDeepNotNull(Object)
    */
   public static <T> Predicate<T> deepNotNull() {
-    return ObjectMethods::isDeepNotNull;
+    return Misc::isDeepNotNull;
   }
 
   static {
@@ -166,18 +163,16 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is deep-not-empty as per
-   * {@link ObjectMethods#isDeepNotEmpty(Object) ObjectMethods::isDeepNotEmpty}.
+   * Verifies that the argument is deep-not-empty.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
-   * @see ObjectMethods#isDeepNotEmpty(Object)
    */
   public static <T> Predicate<T> deepNotEmpty() {
-    return ObjectMethods::isDeepNotEmpty;
+    return Misc::isDeepNotEmpty;
   }
 
   static {
@@ -186,8 +181,7 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is {@code null} or contains whitespace only. Probably
-   * more useful when called from an {@code isNot} method. Equivalent to
-   * {@link StringMethods#isBlank(Object) StringMethods::isBlank}.
+   * more useful when called from an {@code isNot} method.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -195,7 +189,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Predicate<String> blank() {
-    return StringMethods::isBlank;
+    return s -> s == null || s.isBlank();
   }
 
   static {
@@ -740,13 +734,12 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is a supertype of another type. In other words, that
-   * the other type extends, implements, or is equal to the argument. Equivalent to
-   * {@link ClassMethods#isSupertype(Class, Class) ClassMethods::isSupertype}.
+   * the other type extends, implements, or is equal to the argument.
    *
    * @return A {@code Relation} that implements the test described above
    */
   public static <T, U> Relation<Class<T>, Class<U>> supertypeOf() {
-    return ClassMethods::isSupertype;
+    return Class::isAssignableFrom;
   }
 
   static {
@@ -755,13 +748,12 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is a subtype of another type. In other words, that it
-   * extends or implements the other type. Equivalent to
-   * {@link ClassMethods#isSubtype Class, Class) ClassMethods::isSubtype}
+   * extends or implements the other type.
    *
    * @return A {@code Relation} that implements the test described above
    */
   public static <T, U> Relation<Class<T>, Class<U>> subtypeOf() {
-    return ClassMethods::isSubtype;
+    return (x, y) -> y.isAssignableFrom(x);
   }
 
   static {
@@ -870,7 +862,23 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <Y, X extends Y> Relation<X, Y[]> inArray() {
-    return ArrayMethods::isElementOf;
+    return (x, y) -> {
+      if (x == null) {
+        for (Y e : y) {
+          if (e == null) {
+            return true;
+          }
+        }
+        return false;
+      } else {
+        for (Y e : y) {
+          if (x.equals(e)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    };
   }
 
   static {
@@ -1020,7 +1028,11 @@ public final class CommonChecks {
       } else if (y instanceof List<?> l) {
         return x < l.size();
       } else if (y.getClass().isArray()) {
-        return x < getArrayLength(y);
+        try {
+          return x < (int) arrayLength(y.getClass()).invoke(y);
+        } catch (Throwable t) {
+          throw new InvalidCheckException(t.toString());
+        }
       }
       throw new InvalidCheckException(
           "indexOf() check only applicable to String, List and array");
@@ -1057,7 +1069,11 @@ public final class CommonChecks {
       } else if (y instanceof List<?> l) {
         return x <= l.size();
       } else if (y.getClass().isArray()) {
-        return x <= getArrayLength(y);
+        try {
+          return x <= (int) arrayLength(y.getClass()).invoke(y);
+        } catch (Throwable t) {
+          throw new InvalidCheckException(t.toString());
+        }
       }
       throw new InvalidCheckException(
           "indexInclusiveOf() check only applicable to String, List and array");
@@ -1115,7 +1131,14 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static IntObjRelation<int[]> inIntArray() {
-    return ArrayMethods::isElementOf;
+    return (x, y) -> {
+      for (int i : y) {
+        if (x == i) {
+          return true;
+        }
+      }
+      return false;
+    };
   }
 
   static {
