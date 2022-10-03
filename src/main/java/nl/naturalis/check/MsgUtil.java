@@ -1,6 +1,7 @@
 package nl.naturalis.check;
 
 import nl.naturalis.base.ArrayType;
+import nl.naturalis.check.*;
 
 import java.util.Collection;
 import java.util.Map;
@@ -68,10 +69,6 @@ final class MsgUtil {
     return CustomMsgFormatter.format(msg, all);
   }
 
-  //////////////////////////////////////////////////////////////////////////
-
-  //////////////////////////////////////////////////////////////////////////
-
   static String toStr(Object val) {
     if (val == null) {
       return "null";
@@ -90,27 +87,13 @@ final class MsgUtil {
       String s = toShortString(val, MAX_STRING_WIDTH);
       return m.getClass().getSimpleName() + '[' + m.size() + "] of " + s;
     } else if (val.getClass().isArray()) {
-      return arrayToString(val);
+      int len = getArrayLength(val);
+      if (len == 0) {
+        return ArrayInfo.describe(val);
+      }
+      return ArrayInfo.describe(val) + " of " + toShortString(val, MAX_STRING_WIDTH);
     }
     return toShortString(val, MAX_STRING_WIDTH);
-  }
-
-  private static String arrayToString(Object val) {
-    Class<?> c = val.getClass();
-    ArrayType at = ArrayType.forClass(c);
-    String baseType = at.baseType().getSimpleName();
-    int len = getArrayLength(val);
-    if (len == 0) {
-      if (at.dimensions() == 1) { // happy path
-        return baseType + "[0]";
-      }
-      return baseType + "[0]"
-          + "[]".repeat(Math.max(0, at.dimensions() - 1));
-    }
-    String s = toShortString(val, MAX_STRING_WIDTH);
-    return baseType + '[' + len + ']'
-        + "[]".repeat(Math.max(0, at.dimensions() - 1))
-        + " of " + s;
   }
 
   static String className(Object obj) {

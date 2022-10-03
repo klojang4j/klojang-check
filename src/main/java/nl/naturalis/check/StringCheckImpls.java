@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 
 import static java.math.BigDecimal.ONE;
 
-final class NumberMethods {
+/**
+ * Implementations of string-to-number checks in the CommonChecks class that require
+ * more than 1 or 2 lines of code.
+ */
+final class StringCheckImpls {
 
   private static final BigDecimal MIN_DOUBLE_BD =
       new BigDecimal(Double.toString(Double.MIN_VALUE));
@@ -21,7 +25,7 @@ final class NumberMethods {
 
   private static final BigDecimal MAX_LONG_BD = new BigDecimal(Long.MAX_VALUE);
 
-  private NumberMethods() {
+  private StringCheckImpls() {
     throw new UnsupportedOperationException();
   }
 
@@ -74,10 +78,6 @@ final class NumberMethods {
   static boolean isByte(String s) {
     return isIntegral(s, Byte.MIN_VALUE, Byte.MAX_VALUE);
   }
-
-  ////////////////////////////////////////////////////////////////////////////////
-  //                           END OF PARSE METHODS                             //
-  ////////////////////////////////////////////////////////////////////////////////
 
   static boolean isRound(double d) {
     return isRound(new BigDecimal(Double.toString(d)));

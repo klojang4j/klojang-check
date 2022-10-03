@@ -7,7 +7,7 @@ import static java.time.DayOfWeek.THURSDAY;
 import static nl.naturalis.check.CommonChecks.*;
 import static nl.naturalis.check.CommonProperties.strlen;
 import static nl.naturalis.check.CommonProperties.unbox;
-import static nl.naturalis.common.ArrayMethods.ints;
+import static nl.naturalis.check.TestUtil.ints;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

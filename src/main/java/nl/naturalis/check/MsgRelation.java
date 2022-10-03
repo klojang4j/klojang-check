@@ -1,5 +1,7 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.PrefabMsgFormatter;
+
 import static nl.naturalis.check.MsgUtil.*;
 
 @SuppressWarnings("rawtypes")

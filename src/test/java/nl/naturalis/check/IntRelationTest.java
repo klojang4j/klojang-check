@@ -19,8 +19,8 @@ public class IntRelationTest {
 
   @Test
   public void converse00() {
-    assertTrue(lt().converse().exists(6, 8));
-    assertFalse(lt().converse().exists(8, 6));
+    assertTrue(lt().converse().exists(8, 6));
+    assertFalse(lt().converse().exists(6, 8));
   }
 
 }

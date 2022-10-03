@@ -1,5 +1,8 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.PrefabMsgFormatter;
+import nl.naturalis.check.MsgUtil;
+
 import java.util.List;
 
 import static nl.naturalis.check.Misc.*;

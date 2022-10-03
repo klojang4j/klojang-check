@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import static nl.naturalis.check.CommonChecks.instanceOf;
 import static nl.naturalis.check.CustomMsgFormatter.format;
-import static nl.naturalis.common.ArrayMethods.pack;
 import static org.junit.Assert.assertEquals;
+import static nl.naturalis.check.TestUtil.*;
 
 public class CustomMsgFormatterTest {
 

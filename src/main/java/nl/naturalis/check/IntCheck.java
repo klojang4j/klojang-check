@@ -4,6 +4,7 @@ import nl.naturalis.base.function.IntObjRelation;
 import nl.naturalis.base.function.IntRelation;
 import nl.naturalis.base.function.ThrowingIntConsumer;
 import nl.naturalis.base.function.ThrowingIntFunction;
+import nl.naturalis.check.MsgUtil;
 
 import java.util.function.*;
 

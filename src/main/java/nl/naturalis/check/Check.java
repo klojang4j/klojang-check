@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static nl.naturalis.check.MsgUtil.ERR_NULL_MESSAGE;
-
 /**
  * Provides static factory methods for {@link IntCheck} and {@link ObjectCheck}
  * instances. The {@code Check} class also contains a few validation methods itself,

@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.util.List;
 
 import static nl.naturalis.check.Check.EOM;
-import static nl.naturalis.common.ArrayMethods.pack;
 import static org.junit.Assert.*;
+import static nl.naturalis.check.TestUtil.*;
 
 @SuppressWarnings({"rawtypes"})
 public class CheckTest {

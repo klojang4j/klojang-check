@@ -1,10 +1,12 @@
 package nl.naturalis.check;
 
+import nl.naturalis.base.Emptyable;
 import nl.naturalis.base.Result;
 import nl.naturalis.base.function.ComposablePredicate;
 import nl.naturalis.base.function.IntObjRelation;
 import nl.naturalis.base.function.IntRelation;
 import nl.naturalis.base.function.Relation;
+import nl.naturalis.check.MsgPredicate;
 
 import java.io.File;
 import java.util.*;
@@ -89,12 +91,11 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a condition evaluates to {@code true}. If the condition is
-   * expressed as a {@code Boolean} rather than a {@code boolean}, use
-   * {@link #nullOr() nullOr()}.
+   * Verifies that a condition evaluates to {@code true}. Useful for validating
+   * {@code boolean} properties:
    *
    * <blockquote><pre>{@code
-   * Check.that(list.isEmpty()).is(yes());
+   * Check.that(connection.isOpen()).is(yes());
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
@@ -108,9 +109,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a condition evaluates to {@code false}. If the condition is
-   * expressed as a {@code Boolean} rather than a {@code boolean}, use
-   * {@link #nullOr() nullOr()}.
+   * Verifies that a condition evaluates to {@code false}.
    *
    * @return a function implementing the test described above
    */
@@ -126,10 +125,23 @@ public final class CommonChecks {
    * Verifies that the argument is empty. Probably more useful when called from an
    * {@code isNot} method.
    *
-   *
    * <blockquote><pre>{@code
    * Check.that(list).isNot(empty());
    * }</pre></blockquote>
+   *
+   * <p>
+   * A value is defined to be empty if any of the following applies:
+   *
+   * <ul>
+   *   <li>it is {@code null}
+   *   <li>it is an empty {@link CharSequence}
+   *   <li>it is an empty {@link Collection}
+   *   <li>it is an empty {@link Map}
+   *   <li>it is an empty {@link Emptyable}
+   *   <li>it is a zero-length array
+   *   <li>it is an empty {@link Optional} <b>or</b> an {@code Optional}
+   *      containing an empty value
+   * </ul>
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -138,7 +150,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <T> Predicate<T> empty() {
-    return Misc::isEmpty;
+    return CheckImpls::isEmpty;
   }
 
   static {
@@ -146,7 +158,12 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is deep-not-null.
+   * Verifies that the argument is not {@code null} and, if it is an array,
+   * {@code Collection} or {@code Map}, that it does not contain any {@code null}
+   * values. It may still be an <i>empty</i> (zero-length) array, {@code Collection}
+   * or {@code Map}, however. For maps, both keys and values are tested for
+   * {@code null}.
+   *
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -155,7 +172,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <T> Predicate<T> deepNotNull() {
-    return Misc::isDeepNotNull;
+    return CheckImpls::isDeepNotNull;
   }
 
   static {
@@ -163,7 +180,22 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is deep-not-empty.
+   * Verifies that the argument is recursively non-empty. A value is defined to be
+   * deep-not-empty if any of the following applies:
+   *
+   * <ul>
+   *   <li>it is a non-empty {@link CharSequence}
+   *   <li>it is a non-empty {@link Collection} containing only <i>deep-not-empty</i>
+   *       elements
+   *   <li>it is a non-empty {@link Map} containing only <i>deep-not-empty</i> keys and
+   *       values
+   *   <li>it is a <i>deep-not-empty</i> {@link Emptyable}
+   *   <li>it is a non-zero-length {@code Object[]} containing only <i>deep-not-empty</i>
+   *       elements
+   *   <li>it is a non-zero-length array of primitive values
+   *   <li>it is a non-empty {@link Optional} containing a <i>deep-not-empty</i> value
+   *   <li>it is a non-null object of any other type
+   * </ul>
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -172,7 +204,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <T> Predicate<T> deepNotEmpty() {
-    return Misc::isDeepNotEmpty;
+    return CheckImpls::isDeepNotEmpty;
   }
 
   static {
@@ -199,7 +231,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument can be parsed into a 32-bit integer
    * (a&#46;k&#46;a&#46; an {@code int}). Equivalent to
-   * {@link NumberMethods#isInt(String) NumberMethods::isInt}.
+   * {@link StringCheckImpls#isInt(String) NumberMethods::isInt}.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -207,7 +239,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Predicate<String> int32() {
-    return NumberMethods::isInt;
+    return StringCheckImpls::isInt;
   }
 
   static {
@@ -217,7 +249,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument can be parsed into a 64-bit integer
    * (a&#46;k&#46;a&#46; a {@code long}). Equivalent to
-   * {@link NumberMethods#isLong(String) NumberMethods::isLong}.
+   * {@link StringCheckImpls#isLong(String) NumberMethods::isLong}.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -225,7 +257,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Predicate<String> int64() {
-    return NumberMethods::isLong;
+    return StringCheckImpls::isLong;
   }
 
   static {
@@ -235,7 +267,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument can be parsed into a 16-bit integer
    * (a&#46;k&#46;a&#46; a {@code short}). Equivalent to
-   * {@link NumberMethods#isShort(String) NumberMethods::isShort}.
+   * {@link StringCheckImpls#isShort(String) NumberMethods::isShort}.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -243,7 +275,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Predicate<String> int16() {
-    return NumberMethods::isShort;
+    return StringCheckImpls::isShort;
   }
 
   static {
@@ -253,7 +285,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument can be parsed into an 8-bit integer
    * (a&#46;k&#46;a&#46; a {@code byte}). Equivalent to
-   * {@link NumberMethods#isByte(String) NumberMethods::isByte}.
+   * {@link StringCheckImpls#isByte(String) NumberMethods::isByte}.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -261,7 +293,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Predicate<String> int8() {
-    return NumberMethods::isByte;
+    return StringCheckImpls::isByte;
   }
 
   static {
@@ -271,7 +303,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument can be parsed into a 32-bit floating point value
    * (a&#46;k&#46;a&#46; a {@code float}). Equivalent to
-   * {@link NumberMethods#isFloat(String) NumberMethods::isFloat}.
+   * {@link StringCheckImpls#isFloat(String) NumberMethods::isFloat}.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -279,7 +311,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Predicate<String> float32() {
-    return NumberMethods::isFloat;
+    return StringCheckImpls::isFloat;
   }
 
   static {
@@ -289,7 +321,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument can be parsed into a 64-bit floating point value
    * (a&#46;k&#46;a&#46; a {@code double}). Equivalent to
-   * {@link NumberMethods#isDouble(String) NumberMethods::isDouble}.
+   * {@link StringCheckImpls#isDouble(String) NumberMethods::isDouble}.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -297,7 +329,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Predicate<String> float64() {
-    return NumberMethods::isDouble;
+    return StringCheckImpls::isDouble;
   }
 
   static {
@@ -353,12 +385,12 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<File> onFileSystem() {
+  public static Predicate<File> fileExists() {
     return File::exists;
   }
 
   static {
-    setMetadata(onFileSystem(), msgOnFileSystem(), "onFileSystem");
+    setMetadata(fileExists(), msgFileExists(), "fileExists");
   }
 
   /**
@@ -372,7 +404,7 @@ public final class CommonChecks {
   }
 
   static {
-    setMetadata(readable(), MsgPredicate.msgReadable(), "readable");
+    setMetadata(readable(), msgReadable(), "readable");
   }
 
   /**

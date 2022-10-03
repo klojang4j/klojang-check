@@ -2,11 +2,11 @@ package nl.naturalis.check;
 
 import org.junit.Test;
 
-import static nl.naturalis.common.ArrayMethods.ints;
 import static nl.naturalis.check.CommonChecks.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static nl.naturalis.check.CommonProperties.*;
+import static nl.naturalis.check.TestUtil.*;
 
 public class IntCheckTest {
 

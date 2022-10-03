@@ -2,11 +2,14 @@ package nl.naturalis.check;
 
 import org.junit.Test;
 
-import static nl.naturalis.common.ArrayMethods.ints;
-import static nl.naturalis.common.CollectionMethods.initializeList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 import static nl.naturalis.check.CommonChecks.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static nl.naturalis.check.TestUtil.*;
 
 public class MsgIntObjRelationTest {
 
@@ -18,7 +21,8 @@ public class MsgIntObjRelationTest {
   @Test
   public void intObjRelation00() {
     Check.that(7).is(indexOf(), new float[10]);
-    Check.that(7).is(indexOf(), initializeList(10, "foo"));
+    Check.that(7).is(indexOf(),
+        IntStream.range(0, 10).mapToObj(String::valueOf).collect(toList()));
     Check.that(7).is(indexOf(), "Hello, Sam");
     Check.that(7).is(inIntArray(), ints(3, 5, 7, 9));
     Check.that(7).is(inRangeOf(), ints(7, 8));
@@ -54,7 +58,9 @@ public class MsgIntObjRelationTest {
   @Test
   public void indexInto00() {
     try {
-      Check.that(7, "cola").is(indexOf(), initializeList(5, "foo"));
+      Check.that(7, "cola").is(indexOf(), IntStream.range(0, 5)
+          .mapToObj(String::valueOf)
+          .collect(toList()));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("cola must be >= 0 and < 5 (was 7)", e.getMessage());
@@ -66,7 +72,9 @@ public class MsgIntObjRelationTest {
   @Test
   public void indexInto01() {
     try {
-      Check.that(7, "cola").isNot(indexOf(), initializeList(10, "foo"));
+      Check.that(7, "cola").isNot(indexOf(), IntStream.range(0, 10)
+          .mapToObj(String::valueOf)
+          .collect(toList()));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("cola must be < 0 or >= 10 (was 7)", e.getMessage());

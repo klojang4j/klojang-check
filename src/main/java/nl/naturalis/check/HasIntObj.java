@@ -1,5 +1,7 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.MsgUtil;
+
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;

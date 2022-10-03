@@ -1,7 +1,6 @@
 package nl.naturalis.check;
 
 import nl.naturalis.base.ArrayType;
-import nl.naturalis.base.Emptyable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -11,7 +10,6 @@ import java.util.stream.Stream;
 import static java.lang.invoke.MethodHandles.arrayElementGetter;
 import static java.lang.invoke.MethodHandles.arrayLength;
 import static java.util.stream.Collectors.joining;
-import static nl.naturalis.check.CommonChecks.notNull;
 
 class Misc {
 
@@ -30,17 +28,13 @@ class Misc {
     return (T) arrayElementGetter(array.getClass()).invoke(array, idx);
   }
 
-  static String toShortString(Object obj) {
-    return toShortString(obj, 50);
-  }
-
   static String toShortString(Object obj, int maxWidth) {
     int maxElements = divUp(maxWidth, 8);
     int maxEntries = divUp(maxWidth, 16);
     return toShortString(obj, maxWidth, maxElements, maxEntries);
   }
 
-  static int divUp(int value, int divideBy) {
+  private static int divUp(int value, int divideBy) {
     return (int) Math.ceil((double) value / (double) divideBy);
   }
 
@@ -156,113 +150,6 @@ class Misc {
     return sb.toString();
   }
 
-  static <T> boolean isEmpty(T obj) {
-    if (obj == null) {
-      return true;
-    } else if (obj instanceof CharSequence cs) {
-      return cs.isEmpty();
-    } else if (obj instanceof Collection<?> c) {
-      return c.isEmpty();
-    } else if (obj instanceof Map<?, ?> m) {
-      return m.isEmpty();
-    } else if (obj.getClass().isArray()) {
-      return getArrayLength(obj) != 0;
-    } else if (obj instanceof Emptyable e) {
-      return e.isEmpty();
-    } else if (obj instanceof Optional<?> o) {
-      return o.isPresent() && !isEmpty(o.get());
-    }
-    return false;
-  }
-
-  static boolean isDeepNotEmpty(Object arg) {
-    return arg != null
-        && (!(arg instanceof CharSequence cs) || cs.length() > 0)
-        && (!(arg instanceof Collection<?> c) || dne(c))
-        && (!(arg instanceof Map<?, ?> m) || dne(m))
-        && (!(arg instanceof Object[] x) || dne(x))
-        && (arg.getClass().isArray() || getArrayLength(arg) != 0)
-        && (!(arg instanceof Optional<?> o) || dne(o))
-        && (!(arg instanceof Emptyable e) || e.isDeepNotEmpty());
-  }
-
-  private static boolean dne(Collection<?> coll) {
-    if (coll.isEmpty()) {
-      return false;
-    }
-    return coll.stream().allMatch(Misc::isDeepNotEmpty);
-  }
-
-  private static boolean dne(Map<?, ?> map) {
-    if (map.isEmpty()) {
-      return false;
-    }
-    return map.entrySet().stream().allMatch(Misc::entryDeepNotEmpty);
-  }
-
-  private static boolean entryDeepNotEmpty(Object obj) {
-    var e = (Map.Entry<?, ?>) obj;
-    return isDeepNotEmpty(e.getKey()) && isDeepNotEmpty(e.getValue());
-  }
-
-  private static boolean dne(Object[] arr) {
-    if (arr.length == 0) {
-      return false;
-    }
-    return Arrays.stream(arr).allMatch(Misc::isDeepNotEmpty);
-  }
-
-  private static boolean dne(Optional<?> opt) {
-    return opt.isPresent() && isDeepNotEmpty(opt.get());
-  }
-
-  /**
-   * Verifies that the argument is not null and, if it is array, {@link Collection}
-   * or {@link Map}, does not contain any null values. It may still be an empty
-   * array, {@code Collection} or {@code Map}, however. For maps, both keys and
-   * values are tested for {@code null}.
-   *
-   * @param arg the object to be tested
-   * @return whether it is not null and does not contain any null values
-   */
-  static boolean isDeepNotNull(Object arg) {
-    if (arg == null) {
-      return false;
-    } else if (arg instanceof Object[] x) {
-      return Arrays.stream(x).allMatch(notNull());
-    } else if (arg instanceof Collection<?> c) {
-      if (isNullRepellent(c)) {
-        return true;
-      }
-      return c.stream().allMatch(notNull());
-    } else if (arg instanceof Map<?, ?> m) {
-      return m.entrySet().stream()
-          .allMatch(e -> e.getKey() != null && e.getValue() != null);
-    }
-    return true;
-  }
-
-  private static final Set<Class<?>> NULL_REPELLERS =
-      // Actually, List.of(1) and List.of(1, 2) currently have the same type, but
-      // better safe than sorry. They will anyhow be de-duplicated when entering
-      // the HashSet
-      Set.copyOf(new HashSet<>(
-          Arrays.asList(
-              Collections.emptyList().getClass(),
-              Collections.emptySet().getClass(),
-              List.of().getClass(),
-              List.of(1).getClass(),
-              List.of(1, 2).getClass(),
-              List.of(1, 2, 3).getClass(),
-              Set.of().getClass(),
-              Set.of(1).getClass(),
-              Set.of(1, 2).getClass(),
-              Set.of(1, 2, 3).getClass())));
-
-  static boolean isNullRepellent(Collection<?> c) {
-    return NULL_REPELLERS.contains(c.getClass());
-  }
-
   static String simpleClassName(Object obj) {
     Objects.requireNonNull(obj);
     return simpleClassName(obj.getClass());
@@ -270,14 +157,14 @@ class Misc {
 
   static String simpleClassName(Class<?> clazz) {
     if (clazz.isArray()) {
-      return ArrayType.forClass(clazz).toString();
+      return ArrayInfo.create(clazz).simpleName();
     }
     return clazz.getSimpleName();
   }
 
   static String className(Class<?> clazz) {
     if (clazz.isArray()) {
-      return ArrayType.forClass(clazz).arrayClassName();
+      return ArrayInfo.create(clazz).name();
     }
     return clazz.getName();
   }

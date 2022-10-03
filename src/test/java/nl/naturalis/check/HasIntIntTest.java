@@ -46,7 +46,7 @@ public class HasIntIntTest {
       Check.that(-7, "foo").has(abs(), even());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("Math.abs(foo) must be even (was 7)", e.getMessage());
+      assertEquals("abs(foo) must be even (was 7)", e.getMessage());
       return;
     }
     fail();
@@ -58,7 +58,7 @@ public class HasIntIntTest {
       Check.that(-7).notHas(abs(), odd());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("Math.abs(argument) must not be odd (was 7)", e.getMessage());
+      assertEquals("abs(argument) must not be odd (was 7)", e.getMessage());
       return;
     }
     fail();

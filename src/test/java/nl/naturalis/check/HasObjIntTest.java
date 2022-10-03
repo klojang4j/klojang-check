@@ -1,6 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.common.IntPair;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -9,12 +8,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
-import static nl.naturalis.common.ArrayMethods.floats;
 import static nl.naturalis.check.CommonChecks.*;
 import static nl.naturalis.check.CommonProperties.*;
-import static nl.naturalis.common.ArrayMethods.ints;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static nl.naturalis.check.TestUtil.*;
 
 public class HasObjIntTest {
 

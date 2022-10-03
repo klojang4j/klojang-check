@@ -1,5 +1,7 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.PrefabMsgFormatter;
+
 final class MsgIntPredicate {
 
   private MsgIntPredicate() {

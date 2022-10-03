@@ -2,6 +2,7 @@ package nl.naturalis.check;
 
 import nl.naturalis.base.function.IntObjRelation;
 import nl.naturalis.base.function.IntRelation;
+import nl.naturalis.check.MsgUtil;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;

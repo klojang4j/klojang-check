@@ -35,9 +35,9 @@ final class CustomMsgFormatter {
   @SuppressWarnings("unused")
   private static final Pattern PATTERN = Pattern.compile(REGEX);
 
-  // Will be called if the use provided at least one message argument, so
-  // implying the message pattern contains ${0}, ${1} etc. and possibly also
-  // predefined message arguments like ${arg}, ${name}, ...
+  // Will be called if the user provided at least one message argument, implying the
+  // message pattern will contain ${0}, ${1} etc. and possibly also predefined
+  // message arguments like ${arg}, ${name}, ...
   static String format(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {

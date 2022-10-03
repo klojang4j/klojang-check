@@ -1,6 +1,7 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.ArrayType;
+import nl.naturalis.check.ArrayInfo;
+import nl.naturalis.check.PrefabMsgFormatter;
 
 import static nl.naturalis.check.MsgUtil.className;
 import static nl.naturalis.check.MsgUtil.toStr;
@@ -120,10 +121,10 @@ final class MsgPredicate {
     //@formatter:off
     return x -> x.arg() instanceof Class<?> c
         ? x.negated()
-            ? x.name() + " must not be an array type (was " + ArrayType.forClass(c) + ')'
+            ? x.name() + " must not be an array type (was " + ArrayInfo.create(c) + ')'
             : x.name() + " must be an array type (was " + className(c) + ')'
         : x.negated()
-            ? x.name() + " must not be an array (was " + ArrayType.describe(x.arg()) + ')'
+            ? x.name() + " must not be an array (was " + ArrayInfo.describe(x.arg()) + ')'
             : x.name() + " must be an array (was " + toStr(x.arg()) + ')';
     //@formatter:on
   }
@@ -140,7 +141,7 @@ final class MsgPredicate {
         : x.name() + " must be an existing directory (was " + x.arg() + ')';
   }
 
-  static PrefabMsgFormatter msgOnFileSystem() {
+  static PrefabMsgFormatter msgFileExists() {
     return x -> x.negated()
         ? x.name() + " must not exist (was " + x.arg() + ')'
         : x.name() + " must exist (was " + x.arg() + ')';

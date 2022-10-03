@@ -11,9 +11,9 @@ import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ToIntFunction;
 
-import static nl.naturalis.common.ArrayMethods.ints;
 import static nl.naturalis.check.CommonProperties.*;
 import static org.junit.Assert.*;
+import static nl.naturalis.check.TestUtil.*;
 
 @SuppressWarnings("rawtypes")
 public class CommonPropertiesTest {
@@ -283,10 +283,10 @@ public class CommonPropertiesTest {
     assertEquals(6, abs().applyAsInt(-6));
     String propName = formatProperty(-6, "dragon", abs(), IntUnaryOperator.class);
     System.out.println(propName);
-    assertEquals("Math.abs(dragon)", propName);
+    assertEquals("abs(dragon)", propName);
     propName = formatProperty(-6, null, abs(), IntUnaryOperator.class);
     System.out.println(propName);
-    assertEquals("Math.abs(argument)", propName);
+    assertEquals("abs(argument)", propName);
   }
 
   @Test
@@ -295,10 +295,10 @@ public class CommonPropertiesTest {
     assertEquals(Float.valueOf(6F), ABS().apply(Float.valueOf(-6F)));
     String propName = formatProperty(-6F, "skippy", ABS(), Function.class);
     System.out.println(propName);
-    assertEquals("Math.abs(skippy)", propName);
+    assertEquals("abs(skippy)", propName);
     propName = formatProperty(-6F, null, ABS(), Function.class);
     System.out.println(propName);
-    assertEquals("Math.abs(Float)", propName);
+    assertEquals("abs(Float)", propName);
   }
 
   @Test

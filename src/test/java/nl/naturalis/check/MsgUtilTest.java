@@ -1,5 +1,6 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.MsgUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

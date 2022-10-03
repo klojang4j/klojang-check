@@ -1,13 +1,5 @@
 package nl.naturalis.check;
 
-/**
- * @param test
- * @param negated
- * @param name
- * @param arg
- * @param type
- * @param obj
- */
 record MsgArgs(Object test,
     boolean negated,
     String name,

@@ -1,39 +1,30 @@
 package nl.naturalis.check;
 
+import nl.naturalis.base.function.Relation;
 import org.junit.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.time.DayOfWeek.*;
 import static nl.naturalis.check.CommonChecks.*;
 import static nl.naturalis.check.CommonExceptions.IO;
 import static nl.naturalis.check.CommonExceptions.STATE;
-import static nl.naturalis.common.ArrayMethods.pack;
-import static nl.naturalis.common.CollectionMethods.newArrayList;
-import static nl.naturalis.common.CollectionMethods.newHashMap;
 import static org.junit.Assert.*;
+import static nl.naturalis.check.TestUtil.*;
 
 public class MsgRelationTest {
 
-  private static final Map<String, String> beatles =
-      newHashMap(
-          0,
-          String.class,
-          String.class,
-          "john",
-          "lennon",
-          "paul",
-          "mccartney",
-          "george",
-          "harrison",
-          "guess who",
-          "huh?");
+  private static final Map<String, String> beatles = new LinkedHashMap<>();
+
+  static {
+    beatles.put("john", "lennon");
+    beatles.put("paul", "mccartney");
+    beatles.put("george", "harrison");
+    beatles.put("guess who", "huh?");
+  }
 
   @Test(expected = IllegalArgumentException.class)
   public void relation00() { // Just to cover check without parameter name
@@ -390,7 +381,7 @@ public class MsgRelationTest {
   @Test
   public void contains00() {
     try {
-      List<String> names = newArrayList(0, "john", "paul", "george", "guess who");
+      List<String> names = List.of("john", "paul", "george", "guess who");
       Check.on(IO, names, "poseidon").is(containing(), "ringo");
     } catch (IOException e) {
       System.out.println(e.getMessage());
@@ -403,7 +394,7 @@ public class MsgRelationTest {
   @Test
   public void contains01() {
     try {
-      List<String> names = newArrayList(0, "john", "paul", "george", "guess who");
+      List<String> names = List.of("john", "paul", "george", "guess who");
       Check.on(IO, names, "poseidon").isNot(containing(), "paul");
     } catch (IOException e) {
       System.out.println(e.getMessage());
@@ -417,10 +408,7 @@ public class MsgRelationTest {
   public void hasKey00() {
     try {
       Map<String, String> map =
-          newHashMap(
-              0,
-              String.class,
-              String.class,
+          Map.of(
               "john",
               "lennon",
               "paul",
@@ -442,10 +430,7 @@ public class MsgRelationTest {
   public void hasKey01() {
     try {
       Map<String, String> map =
-          newHashMap(
-              0,
-              String.class,
-              String.class,
+          Map.of(
               "john",
               "lennon",
               "paul",
@@ -467,10 +452,7 @@ public class MsgRelationTest {
   public void hasValue00() {
     try {
       Map<String, String> map =
-          newHashMap(
-              0,
-              String.class,
-              String.class,
+          Map.of(
               "john",
               "lennon",
               "paul",
@@ -492,10 +474,7 @@ public class MsgRelationTest {
   public void hasValue01() {
     try {
       Map<String, String> map =
-          newHashMap(
-              0,
-              String.class,
-              String.class,
+          Map.of(
               "john",
               "lennon",
               "paul",
@@ -516,12 +495,12 @@ public class MsgRelationTest {
   @Test
   public void in00() {
     try {
-      List<String> names = newArrayList(0, "john", "paul", "george", "guess who");
+      List<String> names = List.of("john", "paul", "george", "guess who");
       Check.that("ringo", "tetrapod").is(in(), names);
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "tetrapod must be element of ArrayList[4] of [john, paul, george, guess who] (was ringo)",
+          "tetrapod must be element of ListN[4] of [john, paul, george, guess who] (was ringo)",
           e.getMessage());
       return;
     }
@@ -531,13 +510,12 @@ public class MsgRelationTest {
   @Test
   public void in01() {
     try {
-      List<String> names = newArrayList(0, "john", "paul", "george", "guess who");
+      List<String> names = List.of("john", "paul", "george", "guess who");
       Check.that("paul", "tetrapod").isNot(in(), names);
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "tetrapod must not be element of ArrayList[4] of [john, paul, george, guess who] (was "
-              + "paul)",
+          "tetrapod must not be element of ListN[4] of [john, paul, george, guess who] (was paul)",
           e.getMessage());
       return;
     }
@@ -551,7 +529,7 @@ public class MsgRelationTest {
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "flavius must be key in HashMap[4] of {george=harrison, john=lennon, paul=mccartney, guess who=huh?} (was ringo)",
+          "flavius must be key in LinkedHashMap[4] of {john=lennon, paul=mccartney, george=harrison, guess who=huh?} (was ringo)",
           e.getMessage());
       return;
     }
@@ -565,7 +543,7 @@ public class MsgRelationTest {
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "flavius must not be key in HashMap[4] of {george=harrison, john=lennon, paul=mccartney, guess who=huh?} (was john)",
+          "flavius must not be key in LinkedHashMap[4] of {john=lennon, paul=mccartney, george=harrison, guess who=huh?} (was john)",
           e.getMessage());
       return;
     }
@@ -579,7 +557,7 @@ public class MsgRelationTest {
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "werner must be value in HashMap[4] of {george=harrison, john=lennon, paul=mccartney, guess who=huh?} (was star)",
+          "werner must be value in LinkedHashMap[4] of {john=lennon, paul=mccartney, george=harrison, guess who=huh?} (was star)",
           e.getMessage());
       return;
     }
@@ -593,7 +571,7 @@ public class MsgRelationTest {
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "werner must not be value in HashMap[4] of {george=harrison, john=lennon, paul=mccartney, guess who=huh?} (was lennon)",
+          "werner must not be value in LinkedHashMap[4] of {john=lennon, paul=mccartney, george=harrison, guess who=huh?} (was lennon)",
           e.getMessage());
       return;
     }
