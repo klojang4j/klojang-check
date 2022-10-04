@@ -57,7 +57,7 @@ public final class ObjectCheck<T, E extends Exception> {
    * @param <P> the type of the extracted value The type of the returned value
    * @param transformer A {@code Function} that transforms the argument into some
    *     other value
-   * @param <X>
+   * @param <X> if the function fails while processing the value
    * @return this instance The value computed by the {@code Function}
    * @throws X The exception potentially thrown by the {@code Function}
    */
@@ -71,10 +71,10 @@ public final class ObjectCheck<T, E extends Exception> {
    * To be used as the last call after a chain of checks.
    *
    * @param consumer The {@code Consumer}
-   * @param <X> the type of the exception thrown by the consumer
-   * @throws X if the consumer fails while processing the value
+   * @param <Y> the type of the exception thrown by the consumer
+   * @throws Y if the consumer fails while processing the value
    */
-  public <X extends Throwable> void then(ThrowingConsumer<T, X> consumer) throws X {
+  public <Y extends Throwable> void then(ThrowingConsumer<T, Y> consumer) throws Y {
     consumer.accept(arg);
   }
 

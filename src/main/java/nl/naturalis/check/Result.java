@@ -5,6 +5,8 @@ import nl.naturalis.check.function.ThrowingConsumer;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import static nl.naturalis.check.Check.illegalNullValue;
+
 /**
  * Simple value container where the value is explicitly allowed to be null. This
  * class is meant to be used as the return value of methods that would otherwise
@@ -24,7 +26,7 @@ import java.util.Objects;
  *
  * @param <T> the type of the result value
  */
-public final class Result<T> {
+public final class Result<T> implements Emptyable {
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   private static final Result NONE = new Result(null);
@@ -42,7 +44,7 @@ public final class Result<T> {
   }
 
   /**
-   * Returns a special {@code Result} object signifying the absence of a result.
+   * Returns a special {@code Result} instance signifying the absence of a result.
    *
    * @param <U> the type of the result value
    * @return a special {@code Result} object signifying the absence of a result
@@ -59,7 +61,7 @@ public final class Result<T> {
   }
 
   /**
-   * Returns the value.
+   * Returns the result.
    *
    * @return the value
    * @throws NoSuchElementException if this {@code Result} does not contain a
@@ -73,14 +75,20 @@ public final class Result<T> {
   }
 
   /**
-   * Returns {@code true} if the result value can be retrieved from this
-   * {@code Result}; {@code false} if no result is available.
+   * Returns {@code true} if this {@code Result} represents a legitimate outcome
+   * (even if possibly {@code null}). If so, the result value can be retrieved via
+   * the {@link #get()} method. If not, calling the {@code get()} method will result
+   * in a {@link NoSuchElementException}.
    *
-   * @return {@code true} if the result value can be retrieved from this
-   *     {@code Result}; {@code false} if no result is available
+   * @return {@code true} if this {@code Result} represents a legitimate outcome
+   *     (even if possibly {@code null})
    */
   public boolean isAvailable() {
     return this != NONE;
+  }
+
+  public boolean isUnavailable() {
+    return this == NONE;
   }
 
   /**
@@ -92,18 +100,18 @@ public final class Result<T> {
    */
   public <X extends Throwable> void ifAvailable(ThrowingConsumer<T, X> consumer)
       throws X {
-    Objects.requireNonNull(consumer);
-    if (isAvailable()) {
+    if (consumer == null) {
+      throw illegalNullValue();
+    } else if (isAvailable()) {
       consumer.accept(val);
     }
   }
 
   /**
-   * Returns value of this {@code Result} if available, else the provided default
-   * value.
+   * Returns the result value, if available, else the provided default value.
    *
    * @param defaultValue the default value
-   * @return the value if it is a proper result, else the provided default value
+   * @return the result value, if available, else the provided default value
    */
   public T orElse(T defaultValue) {
     return isAvailable() ? val : defaultValue;
@@ -119,10 +127,34 @@ public final class Result<T> {
    * @return this instance or the provided instance
    */
   public Result<T> or(Result<T> alternative) {
-    if (alternative == NONE) {
+    if (alternative == null) {
+      throw illegalNullValue();
+    } else if (alternative == NONE) {
       throw new IllegalArgumentException("Result.notAvailable() not allowed");
     }
     return isAvailable() ? this : alternative;
+  }
+
+  /**
+   * Returns {@code true} if this instance is {@link Result#notAvailable()}, or if
+   * the result value is empty as per the {@link CommonChecks#empty() empty()} test.
+   *
+   * @return {@code true} if no result is available or the result value is empty.
+   */
+  @Override
+  public boolean isEmpty() {
+    return this == NONE || CheckImpls.isEmpty(val);
+  }
+
+  /**
+   * Returns {@code true} a result is available and it is recursively non-empty as
+   * per the {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
+   *
+   * @return {@code true} if a result is available and it is deep-not-empty
+   */
+  @Override
+  public boolean isDeepNotEmpty() {
+    return this != NONE && CheckImpls.isDeepNotEmpty(val);
   }
 
   @Override

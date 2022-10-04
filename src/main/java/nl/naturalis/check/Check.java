@@ -38,6 +38,19 @@ public final class Check {
 
   static final String DEF_ARG_NAME = "argument";
 
+  /*
+   * For internal use only. We don't want to get high on our own stuff as it may lead
+   * to circular method calls (a.k.a. stack overflow errors). Therefore, if an
+   * argument should not be null, don't use Check.notNull.
+   */
+  static final IllegalArgumentException illegalNullValue() {
+    return new IllegalArgumentException("argument must not be null");
+  }
+
+  static final IllegalArgumentException illegalNullValue(String argName) {
+    return new IllegalArgumentException(argName + " must not be null");
+  }
+
   private static final Function<String, IllegalArgumentException> DEF_EXC_FACTORY =
       CommonExceptions.ARGUMENT;
 
@@ -110,7 +123,7 @@ public final class Check {
     if (arg != null) {
       return new ObjectCheck<>(arg, null, DEF_EXC_FACTORY);
     }
-    throw new IllegalArgumentException("argument must not be null");
+    throw illegalNullValue();
   }
 
   /**
@@ -131,7 +144,7 @@ public final class Check {
     if (arg != null) {
       return new ObjectCheck<>(arg, argName, DEF_EXC_FACTORY);
     }
-    throw new IllegalArgumentException(argName + " must not be null");
+    throw illegalNullValue(argName);
   }
 
   /**

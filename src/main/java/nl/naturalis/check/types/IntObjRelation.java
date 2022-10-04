@@ -7,11 +7,11 @@ package nl.naturalis.check.types;
  * {@linkplain nl.naturalis.common.function package description} for more
  * information.
  *
- * @param <T> the type of the object of the relation
+ * @param <O> the type of the object of the relation
  * @author Ayco Holleman
  */
 @FunctionalInterface
-public interface IntObjRelation<T> {
+public interface IntObjRelation<O> {
 
   /**
    * Returns the converse of this relation, swapping subject and object in the
@@ -21,7 +21,7 @@ public interface IntObjRelation<T> {
    * @return an {@code ObjIntRelation} that is the converse of this
    *     {@code IntObjRelation}.
    */
-  default ObjIntRelation<T> converse() {
+  default ObjIntRelation<O> converse() {
     return (x, y) -> exists(y, x);
   }
 
@@ -30,7 +30,7 @@ public interface IntObjRelation<T> {
    *
    * @return the negation of this {@code IntObjRelation}
    */
-  default IntObjRelation<T> negate() {
+  default IntObjRelation<O> negate() {
     return (x, y) -> !exists(x, y);
   }
 
@@ -42,6 +42,6 @@ public interface IntObjRelation<T> {
    * @param object The value to test it against
    * @return {@code true} if the relation exists, {@code false} otherwise
    */
-  boolean exists(int subject, T object);
+  boolean exists(int subject, O object);
 
 }

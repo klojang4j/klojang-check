@@ -2,8 +2,7 @@ package nl.naturalis.check;
 
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -115,6 +114,71 @@ public class CommonChecksTest {
   @Test(expected = IllegalArgumentException.class)
   public void empty05() {
     Check.that(new byte[] {07}).is(empty());
+  }
+
+  @Test
+  public void notEmpty01() {
+    Check.that(null).isNot(notEmpty());
+    Check.that("").isNot(notEmpty());
+    Check.that(Optional.empty()).isNot(notEmpty());
+    Check.that(Optional.of("")).isNot(notEmpty());
+    Check.that(List.of()).isNot(notEmpty());
+    Check.that(Set.of()).isNot(notEmpty());
+    Check.that(Map.of()).isNot(notEmpty());
+    Check.that(EMPTY_OBJECT_ARRAY).isNot(notEmpty());
+    Check.that(EMPTY_STRING_ARRAY).isNot(notEmpty());
+    Check.that(new char[0]).isNot(notEmpty());
+    assertTrue(true);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty02() {
+    Check.that(null).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty03() {
+    Check.that("").is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty04() {
+    Check.that(Optional.empty()).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty05() {
+    Check.that(Optional.of("")).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty06() {
+    Check.that(List.of()).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty07() {
+    Check.that(Set.of()).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty08() {
+    Check.that(Map.of()).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty09() {
+    Check.that(EMPTY_OBJECT_ARRAY).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty10() {
+    Check.that(EMPTY_STRING_ARRAY).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notEmpty11() {
+    Check.that(new char[0]).is(notEmpty());
   }
 
   @Test
@@ -325,6 +389,26 @@ public class CommonChecksTest {
   public void indexOf00() {
     int[] ints = new int[0];
     Check.that(0).is(indexOf(), ints);
+  }
+
+  @Test
+  public void subtypeOf00() {
+    Check.that(FileOutputStream.class).is(subtypeOf(), OutputStream.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void subtypeOf01() {
+    Check.that(OutputStream.class).is(subtypeOf(), FileOutputStream.class);
+  }
+
+  @Test
+  public void instanceOf00() {
+    Check.that(new ByteArrayOutputStream()).is(instanceOf(), OutputStream.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void instanceOf01() {
+    Check.that("foo").is(instanceOf(), FileOutputStream.class);
   }
 
 }

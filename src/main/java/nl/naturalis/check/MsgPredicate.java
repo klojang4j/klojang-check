@@ -44,6 +44,12 @@ final class MsgPredicate {
         : x.name() + " must be null or empty (was " + toStr(x.arg()) + ')';
   }
 
+  static PrefabMsgFormatter msgNotEmpty() {
+    return x -> x.negated()
+        ? x.name() + " must be null or empty (was " + toStr(x.arg()) + ')'
+        : x.name() + " must not be null or empty (was " + toStr(x.arg()) + ')';
+  }
+
   static PrefabMsgFormatter msgDeepNotNull() {
     //@formatter:off
     return x ->  x.negated()

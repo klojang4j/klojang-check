@@ -6,12 +6,12 @@ package nl.naturalis.check.types;
  * <b>contains-key</b> relation exists between x and y. See the
  * {@linkplain nl.naturalis.base.function package description} for more information.
  *
- * @param <T> the type of the subject of the relation
- * @param <U> the type of the object of the relation
+ * @param <S> the type of the subject of the relation
+ * @param <O> the type of the object of the relation
  * @author Ayco Holleman
  */
 @FunctionalInterface
-public interface Relation<T, U> {
+public interface Relation<S, O> {
 
   /**
    * Returns the converse of this relation, swapping subject and object in the
@@ -20,7 +20,7 @@ public interface Relation<T, U> {
    *
    * @return the converse of this {@code Relation}
    */
-  default Relation<U, T> converse() {
+  default Relation<O, S> converse() {
     return (x, y) -> exists(y, x);
   }
 
@@ -29,18 +29,18 @@ public interface Relation<T, U> {
    *
    * @return the negation of this {@code Relation}
    */
-  default Relation<T, U> negate() {
+  default Relation<S, O> negate() {
     return (x, y) -> !exists(x, y);
   }
 
   /**
    * Determines whether the two arguments have the relation that the implementation
-   * attempts to established.
+   * attempts to establish.
    *
    * @param subject The value to test
    * @param object The value to test it against
    * @return {@code true} if the relation exists, {@code false} otherwise.
    */
-  boolean exists(T subject, U object);
+  boolean exists(S subject, O object);
 
 }
