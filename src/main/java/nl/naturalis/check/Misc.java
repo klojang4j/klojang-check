@@ -3,7 +3,6 @@ package nl.naturalis.check;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntFunction;
-import java.util.stream.Stream;
 
 import static java.lang.invoke.MethodHandles.arrayElementGetter;
 import static java.lang.invoke.MethodHandles.arrayLength;
@@ -11,7 +10,9 @@ import static java.util.stream.Collectors.joining;
 
 class Misc {
 
-  static final String IMPLODE_SEPARATOR = ", ";
+  private static final String SEP = ", ";
+
+  private interface Stringifier extends Function<Object, String> {}
 
   static int getArrayLength(Object array) {
     try {
@@ -37,41 +38,42 @@ class Misc {
   }
 
   static String toShortString(Object obj,
-      int maxWidth,
-      int maxElements,
+      int maxLen,
+      int maxElems,
       int maxEntries) {
     if (obj == null) {
       return "null";
-    } else if (obj.getClass() == String.class || obj instanceof Number) {
-      // identify strings and numbers as quickly as possible
-      return ellipsis0(obj.toString(), maxWidth);
+    } else if ((obj instanceof String s && s.length() <= maxLen)
+        || obj instanceof Number) {
+      return obj.toString();
     }
     String s;
-    //@formatter:off
     if (obj instanceof Class<?> c) {
       s = simpleClassName(c);
     } else if (obj instanceof Collection<?> c) {
-      String suffix = c.size() > maxElements ? ", ...]" : "]";
-      s = '[' + implodeCollection(c, o -> toShortString(o, maxWidth, maxElements, maxEntries), ", ", 0, maxElements) + suffix;
+      Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
+      String suffix = c.size() > maxElems ? ", ...]" : "]";
+      s = '[' + implodeCollection(c, stringifier, maxElems) + suffix;
     } else if (obj instanceof Map<?, ?> m) {
-      String suffix = m.size() > maxElements ? ", ...}" : "}";
-      s = '{' + implodeCollection(m.entrySet(), o -> toShortString(o, maxWidth, maxElements, maxEntries), ", ", 0, maxEntries) + suffix;
+      Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
+      String suffix = m.size() > maxElems ? ", ...}" : "}";
+      s = '{' + implodeCollection(m.entrySet(), stringifier, maxElems) + suffix;
     } else if (obj instanceof Map.Entry<?, ?> e) {
-      s = toShortString(e.getKey(), maxWidth, maxElements, maxEntries) + '=' + toShortString(e.getValue(), maxWidth, maxElements, maxEntries);
+      s = entryToString(e, maxLen, maxElems, maxEntries);
     } else if (obj instanceof int[] ints) {
-      String x = ints.length > maxElements ? ", ...]" : "]";
-      s = '['+ implodeInts((int[])obj, String::valueOf, ", ", 0, maxElements) + x;
+      String suffix = ints.length > maxElems ? ", ...]" : "]";
+      s = '[' + implodeInts((int[]) obj, String::valueOf, maxElems) + suffix;
     } else if (obj instanceof Object[] objs) {
-      String suffix = objs.length > maxElements ? ", ...]" : "]";
-      s = '[' + implodeArray(objs, o -> toShortString(o, maxWidth, maxElements, maxEntries), ", ", 0, maxElements) + suffix;
+      String suffix = objs.length > maxElems ? ", ...]" : "]";
+      Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
+      s = '[' + implodeArray(objs, stringifier, maxElems) + suffix;
     } else if (obj.getClass().isArray()) {
-      String suffix = getArrayLength(obj) > maxElements ? ", ...]" : "]";
-      s = '[' + implodeAny(obj, String::valueOf, ", ", 0, maxElements) + suffix;
+      String suffix = getArrayLength(obj) > maxElems ? ", ...]" : "]";
+      s = '[' + implodeAny(obj, String::valueOf, maxElems) + suffix;
     } else {
       s = obj.toString();
     }
-    //@formatter:on
-    return ellipsis0(s, maxWidth);
+    return ellipsis0(s, maxLen);
   }
 
   static String ellipsis0(String str, int maxWidth) {
@@ -82,54 +84,38 @@ class Misc {
     return str;
   }
 
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  static <T> String implodeCollection(
-      Collection<T> collection,
-      Function<T, String> stringifier,
-      String separator,
-      int from,
-      int to) {
-    int sz = collection.size();
-    int x = to == -1 ? sz : Math.min(to, sz);
-    if (from == 0) {
-      Stream<T> stream = x == sz
-          ? collection.stream()
-          : collection.stream().limit(x);
-      return stream.map(stringifier).collect(joining(separator));
-    } else if (collection instanceof List) {
-      List<T> sublist = ((List<T>) collection).subList(from, x);
-      return sublist.stream().map(stringifier).collect(joining(separator));
-    }
-    Stream stream = Arrays.stream(collection.toArray(), from, x);
-    return (String) stream.map(stringifier).collect(joining(separator));
+  private static String entryToString(Map.Entry<?, ?> e,
+      int maxLen,
+      int maxElems,
+      int maxEntries) {
+    String k = toShortString(e.getKey(), maxLen, maxElems, maxEntries);
+    String v = toShortString(e.getValue(), maxLen, maxElems, maxEntries);
+    return k + '=' + v;
   }
 
-  static <T> String implodeArray(T[] array,
-      Function<T, String> stringifier,
-      String separator,
-      int from,
-      int to) {
-    int x = to == -1 ? array.length : Math.min(to, array.length);
-    return Arrays.stream(array, from, x)
-        .map(stringifier)
-        .collect(joining(separator));
+  private static <T> String implodeCollection(Collection<T> collection,
+      Stringifier stringifier,
+      int maxElems) {
+    int x = Math.min(collection.size(), maxElems);
+    return collection.stream().limit(x).map(stringifier).collect(joining(SEP));
   }
 
-  static String implodeInts(int[] array,
+  private static <T> String implodeArray(T[] array,
+      Stringifier stringifier,
+      int maxElems) {
+    int x = Math.min(array.length, maxElems);
+    return Arrays.stream(array, 0, x).map(stringifier).collect(joining(SEP));
+  }
+
+  private static String implodeInts(int[] array,
       IntFunction<String> stringifier,
-      String separator,
-      int from,
-      int to) {
-    int x = to == -1 ? array.length : Math.min(to, array.length);
-    return Arrays.stream(array, from, x)
-        .mapToObj(stringifier)
-        .collect(joining(separator));
+      int maxElems) {
+    int x = Math.min(array.length, maxElems);
+    return Arrays.stream(array, 0, x).mapToObj(stringifier).collect(joining(SEP));
   }
 
-  static String implodeAny(Object array,
+  private static String implodeAny(Object array,
       Function<Object, String> stringifier,
-      String separator,
-      int from,
       int to) {
     int len = getArrayLength(array);
     int x = to == -1 ? len : Math.min(to, len);
@@ -137,7 +123,7 @@ class Misc {
     try {
       for (int i = 0; i < x; ++i) {
         if (i != 0) {
-          sb.append(separator);
+          sb.append(SEP);
         }
         Object o = getArrayElement(array, i);
         sb.append(stringifier.apply(o));
@@ -146,11 +132,6 @@ class Misc {
       throw new InvalidCheckException(t.toString());
     }
     return sb.toString();
-  }
-
-  static String simpleClassName(Object obj) {
-    Objects.requireNonNull(obj);
-    return simpleClassName(obj.getClass());
   }
 
   static String simpleClassName(Class<?> clazz) {

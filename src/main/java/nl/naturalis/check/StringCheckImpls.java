@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 import static java.math.BigDecimal.ONE;
 
-/**
- * Implementations of string-to-number checks in the CommonChecks class that require
- * more than 1 or 2 lines of code.
+/*
+ * Implementations of string-to-number checks in the CommonChecks class. Separate
+ * from the CheckImpl class because there are quite a few of them.
  */
 final class StringCheckImpls {
 
