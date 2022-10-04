@@ -13,15 +13,17 @@ import static nl.naturalis.check.Check.DEF_ARG_NAME;
  * Facilitates the validation of {@code int} values. See the
  * {@link nl.naturalis.check package description} for a detailed explanation.
  *
- * @param <E> The type of the exception throw if the value fails a test
+ * @param <X> The type of the exception that is thrown by default if the value
+ *     fails a test (this can be overridden for individual tests in the chain of
+ *     checks)
  */
-public final class IntCheck<E extends Exception> {
+public final class IntCheck<X extends Exception> {
 
   final int arg;
   final String argName;
-  final Function<String, E> exc;
+  final Function<String, X> exc;
 
-  IntCheck(int arg, String argName, Function<String, E> exc) {
+  IntCheck(int arg, String argName, Function<String, X> exc) {
     this.arg = arg;
     this.argName = argName;
     this.exc = exc;
@@ -53,13 +55,14 @@ public final class IntCheck<E extends Exception> {
    * @param transformer A {@code Function} that transforms the argument into some
    *     other value
    * @param <R> The type of the returned value
-   * @param <X> the type of the exception thrown by the transformer function
+   * @param <X2> the type of the exception thrown if the function fails while
+   *     processing the value
    * @return the value computed by the {@code Function}
-   * @throws X if the transformation function fails while processing the
+   * @throws X2 if the transformation function fails while processing the
    *     {@code int} value
    */
-  public <R, X extends Throwable> R ok(ThrowingIntFunction<R, X> transformer)
-      throws X {
+  public <R, X2 extends Throwable> R ok(ThrowingIntFunction<R, X2> transformer)
+      throws X2 {
     return transformer.apply(arg);
   }
 
@@ -68,10 +71,12 @@ public final class IntCheck<E extends Exception> {
    * To be used as the last call after a chain of checks.
    *
    * @param consumer The {@code Consumer}
-   * @param <X> the type of the exception thrown by the consumer
-   * @throws X if the consumer fails while processing the value
+   * @param <X2> the type of the exception thrown if the consumer fails while
+   *     processing the value
+   * @throws X2 if the consumer fails while processing the value
    */
-  public <X extends Throwable> void then(ThrowingIntConsumer<X> consumer) throws X {
+  public <X2 extends Throwable> void then(ThrowingIntConsumer<X2> consumer)
+      throws X2 {
     consumer.accept(arg);
   }
 
@@ -83,9 +88,9 @@ public final class IntCheck<E extends Exception> {
    *
    * @param test the test
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> is(IntPredicate test) throws E {
+  public IntCheck<X> is(IntPredicate test) throws X {
     if (test.test(arg)) {
       return this;
     }
@@ -105,9 +110,9 @@ public final class IntCheck<E extends Exception> {
    *
    * @param test the test
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> isNot(IntPredicate test) throws E {
+  public IntCheck<X> isNot(IntPredicate test) throws X {
     if (!test.test(arg)) {
       return this;
     }
@@ -133,10 +138,10 @@ public final class IntCheck<E extends Exception> {
    *     passed as-is to the exception. (Of course, the message should not contain
    *     any message arguments then.)
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> is(IntPredicate test, String message, Object... msgArgs)
-      throws E {
+  public IntCheck<X> is(IntPredicate test, String message, Object... msgArgs)
+      throws X {
     if (test.test(arg)) {
       return this;
     }
@@ -164,10 +169,10 @@ public final class IntCheck<E extends Exception> {
    *     passed as-is to the exception. (Of course, the message should not contain
    *     any message arguments then.)
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> isNot(IntPredicate test, String message, Object... msgArgs)
-      throws E {
+  public IntCheck<X> isNot(IntPredicate test, String message, Object... msgArgs)
+      throws X {
     // WATCH OUT. Do not call: is(test.negate(), message, msgArgs). If the test came
     // from the CommonChecks class it must preserve its identity in order to be looked
     // up in the CommonChecks.NAMES map
@@ -192,13 +197,13 @@ public final class IntCheck<E extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid The {@code Supplier} of the exception to be thrown if the
    *     argument is invalid
-   * @param <X> the type of the exception thrown if the {@code int} value does
+   * @param <X2> the type of the exception thrown if the {@code int} value does
    *     not pass the test
    * @return this instance
-   * @throws X if the {@code int} value does not pass the test
+   * @throws X2 if the {@code int} value does not pass the test
    */
-  public <X extends Exception> IntCheck<E> is(IntPredicate test,
-      Supplier<X> exception) throws X {
+  public <X2 extends Exception> IntCheck<X> is(IntPredicate test,
+      Supplier<X2> exception) throws X2 {
     if (test.test(arg)) {
       return this;
     }
@@ -213,14 +218,14 @@ public final class IntCheck<E extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid The {@code Supplier} of the exception to be thrown if the
    *     argument is invalid
-   * @param <X> the type of the exception thrown if the {@code int} value does
+   * @param <X2> the type of the exception thrown if the {@code int} value does
    *     not pass the test
    * @return this instance
-   * @throws X if the {@code int} value does not pass the test
+   * @throws X2 if the {@code int} value does not pass the test
    */
-  public <X extends Exception> IntCheck<E> isNot(IntPredicate test,
-      Supplier<X> exception)
-      throws X {
+  public <X2 extends Exception> IntCheck<X> isNot(IntPredicate test,
+      Supplier<X2> exception)
+      throws X2 {
     return is(test.negate(), exception);
   }
 
@@ -233,9 +238,9 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param object the object of the {@code Relation}
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> is(IntRelation test, int object) throws E {
+  public IntCheck<X> is(IntRelation test, int object) throws X {
     if (test.exists(arg, object)) {
       return this;
     }
@@ -256,9 +261,9 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param object the object of the {@code Relation}
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> isNot(IntRelation test, int object) throws E {
+  public IntCheck<X> isNot(IntRelation test, int object) throws X {
     if (!test.exists(arg, object)) {
       return this;
     }
@@ -285,12 +290,12 @@ public final class IntCheck<E extends Exception> {
    *     passed as-is to the exception. (Of course, the message should not contain
    *     any message arguments then.)
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> is(IntRelation test,
+  public IntCheck<X> is(IntRelation test,
       int object,
       String message,
-      Object... msgArgs) throws E {
+      Object... msgArgs) throws X {
     if (test.exists(arg, object)) {
       return this;
     }
@@ -319,13 +324,13 @@ public final class IntCheck<E extends Exception> {
    *     passed as-is to the exception. (Of course, the message should not contain
    *     any message arguments then.)
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public IntCheck<E> isNot(IntRelation test,
+  public IntCheck<X> isNot(IntRelation test,
       int object,
       String message,
       Object... msgArgs)
-      throws E {
+      throws X {
     if (!test.exists(arg, object)) {
       return this;
     }
@@ -348,15 +353,15 @@ public final class IntCheck<E extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid The {@code Supplier} of the exception to be thrown if the
    *     argument is invalid
-   * @param <X> the type of the exception thrown if the {@code int} value does
+   * @param <X2> the type of the exception thrown if the {@code int} value does
    *     not pass the test
    * @return this instance
-   * @throws X if the {@code int} value does not pass the test
+   * @throws X2 if the {@code int} value does not pass the test
    */
-  public <X extends Exception> IntCheck<E> is(IntRelation test,
+  public <X2 extends Exception> IntCheck<X> is(IntRelation test,
       int object,
-      Supplier<X> exception)
-      throws X {
+      Supplier<X2> exception)
+      throws X2 {
     if (test.exists(arg, object)) {
       return this;
     }
@@ -372,13 +377,14 @@ public final class IntCheck<E extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid The {@code Supplier} of the exception to be thrown if the
    *     argument is invalid
-   * @param <X> the type of the exception thrown if the {@code int} value does
+   * @param <X2> the type of the exception thrown if the {@code int} value does
    *     not pass the test
    * @return this instance
-   * @throws X if the {@code int} value does not pass the test
+   * @throws X2 if the {@code int} value does not pass the test
    */
-  public <X extends Exception> IntCheck<E> isNot(
-      IntRelation test, int object, Supplier<X> exception) throws X {
+  public <X2 extends Exception> IntCheck<X> isNot(IntRelation test,
+      int object,
+      Supplier<X2> exception) throws X2 {
     return is(test.negate(), object, exception);
   }
 
@@ -392,9 +398,9 @@ public final class IntCheck<E extends Exception> {
    * @param object the object of the {@code IntObjRelation}
    * @param <O> The type of the object of the {@code IntObjRelation}
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public <O> IntCheck<E> is(IntObjRelation<O> test, O object) throws E {
+  public <O> IntCheck<X> is(IntObjRelation<O> test, O object) throws X {
     if (test.exists(arg, object)) {
       return this;
     }
@@ -416,9 +422,9 @@ public final class IntCheck<E extends Exception> {
    * @param object the object of the {@code IntObjRelation}
    * @param <O> the type of the object of the {@code IntObjRelation}
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public <O> IntCheck<E> isNot(IntObjRelation<O> test, O object) throws E {
+  public <O> IntCheck<X> isNot(IntObjRelation<O> test, O object) throws X {
     if (!test.exists(arg, object)) {
       return this;
     }
@@ -441,13 +447,13 @@ public final class IntCheck<E extends Exception> {
    * @param msgArgs the message arguments
    * @param <O> the type of the object of the {@code IntObjRelation}
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public <O> IntCheck<E> is(IntObjRelation<O> test,
+  public <O> IntCheck<X> is(IntObjRelation<O> test,
       O object,
       String message,
       Object... msgArgs)
-      throws E {
+      throws X {
     if (test.exists(arg, object)) {
       return this;
     }
@@ -472,13 +478,13 @@ public final class IntCheck<E extends Exception> {
    * @param msgArgs the message arguments
    * @param <O> the type of the object of the {@code IntObjRelation}
    * @return this instance
-   * @throws E if the {@code int} value does not pass the test
+   * @throws X if the {@code int} value does not pass the test
    */
-  public <O> IntCheck<E> isNot(IntObjRelation<O> test,
+  public <O> IntCheck<X> isNot(IntObjRelation<O> test,
       O object,
       String message,
       Object... msgArgs)
-      throws E {
+      throws X {
     if (!test.exists(arg, object)) {
       return this;
     }
@@ -502,13 +508,13 @@ public final class IntCheck<E extends Exception> {
    *     is invalid The {@code Supplier} of the exception to be thrown if the
    *     argument is invalid
    * @param <O> the type of the object of the {@code IntObjRelation}
-   * @param <X> the type of exception thrown if the {@code int} value does not
+   * @param <X2> the type of exception thrown if the {@code int} value does not
    *     pass the test
    * @return this instance
-   * @throws X if the {@code int} value does not pass the test
+   * @throws X2 if the {@code int} value does not pass the test
    */
-  public <O, X extends Exception> IntCheck<E> is(
-      IntObjRelation<O> test, O object, Supplier<X> exception) throws X {
+  public <O, X2 extends Exception> IntCheck<X> is(
+      IntObjRelation<O> test, O object, Supplier<X2> exception) throws X2 {
     if (test.exists(arg, object)) {
       return this;
     }
@@ -525,13 +531,13 @@ public final class IntCheck<E extends Exception> {
    *     is invalid The {@code Supplier} of the exception to be thrown if the
    *     argument is invalid
    * @param <O> the type of the object of the {@code IntObjRelation}
-   * @param <X> the type of exception thrown if the {@code int} value does not
+   * @param <X2> the type of exception thrown if the {@code int} value does not
    *     pass the test
    * @return this instance
-   * @throws X if the {@code int} value does not pass the test
+   * @throws X2 if the {@code int} value does not pass the test
    */
-  public <O, X extends Exception> IntCheck<E> isNot(
-      IntObjRelation<O> test, O object, Supplier<X> exception) throws X {
+  public <O, X2 extends Exception> IntCheck<X> isNot(
+      IntObjRelation<O> test, O object, Supplier<X2> exception) throws X2 {
     return is(test.negate(), object, exception);
   }
 
@@ -548,9 +554,9 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public <P> IntCheck<E> has(IntFunction<P> property, Predicate<P> test) throws E {
+  public <P> IntCheck<X> has(IntFunction<P> property, Predicate<P> test) throws X {
     return HasIntObj.get(this).has(property, test);
   }
 
@@ -567,10 +573,10 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public <P> IntCheck<E> notHas(IntFunction<P> property, Predicate<P> test)
-      throws E {
+  public <P> IntCheck<X> notHas(IntFunction<P> property, Predicate<P> test)
+      throws X {
     return HasIntObj.get(this).notHas(property, test);
   }
 
@@ -588,10 +594,10 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public <P> IntCheck<E> has(IntFunction<P> property, String name, Predicate<P> test)
-      throws E {
+  public <P> IntCheck<X> has(IntFunction<P> property, String name, Predicate<P> test)
+      throws X {
     return HasIntObj.get(this).has(property, name, test);
   }
 
@@ -609,11 +615,11 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public <P> IntCheck<E> notHas(IntFunction<P> property,
+  public <P> IntCheck<X> notHas(IntFunction<P> property,
       String name,
-      Predicate<P> test) throws E {
+      Predicate<P> test) throws X {
     return HasIntObj.get(this).notHas(property, name, test);
   }
 
@@ -630,11 +636,11 @@ public final class IntCheck<E extends Exception> {
    * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public <P> IntCheck<E> has(
+  public <P> IntCheck<X> has(
       IntFunction<P> property, Predicate<P> test, String message, Object... msgArgs)
-      throws E {
+      throws X {
     return HasIntObj.get(this).has(property, test, message, msgArgs);
   }
 
@@ -651,11 +657,11 @@ public final class IntCheck<E extends Exception> {
    * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws E if the argument is invalid
+   * @throws X if the argument is invalid
    */
-  public <P> IntCheck<E> notHas(
+  public <P> IntCheck<X> notHas(
       IntFunction<P> property, Predicate<P> test, String message, Object... msgArgs)
-      throws E {
+      throws X {
     return HasIntObj.get(this).notHas(property, test, message, msgArgs);
   }
 
@@ -670,12 +676,12 @@ public final class IntCheck<E extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
    * @param <P> the type of the extracted value
-   * @param <X> the type of the exception thrown if the argument is invalid
+   * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
-   * @throws X if the argument is invalid
+   * @throws X2 if the argument is invalid
    */
-  public <P, X extends Exception> IntCheck<E> has(
-      IntFunction<P> property, Predicate<P> test, Supplier<X> exception) throws X {
+  public <P, X2 extends Exception> IntCheck<X> has(
+      IntFunction<P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
     return HasIntObj.get(this).has(property, test, exception);
   }
 
@@ -690,12 +696,12 @@ public final class IntCheck<E extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
    * @param <P> the type of the extracted value
-   * @param <X> the type of the exception thrown if the argument is invalid
+   * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
-   * @throws X if the argument is invalid
+   * @throws X2 if the argument is invalid
    */
-  public <P, X extends Exception> IntCheck<E> notHas(
-      IntFunction<P> property, Predicate<P> test, Supplier<X> exception) throws X {
+  public <P, X2 extends Exception> IntCheck<X> notHas(
+      IntFunction<P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
     return HasIntObj.get(this).has(property, test.negate(), exception);
   }
 
@@ -711,9 +717,9 @@ public final class IntCheck<E extends Exception> {
    *     validated using the specified test
    * @param test the test
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> has(IntUnaryOperator property, IntPredicate test) throws E {
+  public IntCheck<X> has(IntUnaryOperator property, IntPredicate test) throws X {
     return HasIntInt.get(this).has(property, test);
   }
 
@@ -729,9 +735,9 @@ public final class IntCheck<E extends Exception> {
    *     validated using the specified test
    * @param test the test
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> notHas(IntUnaryOperator property, IntPredicate test) throws E {
+  public IntCheck<X> notHas(IntUnaryOperator property, IntPredicate test) throws X {
     return HasIntInt.get(this).notHas(property, test);
   }
 
@@ -750,10 +756,10 @@ public final class IntCheck<E extends Exception> {
    *     {@code argName + "." + name}.
    * @param test the test
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> has(IntUnaryOperator property, String name, IntPredicate test)
-      throws E {
+  public IntCheck<X> has(IntUnaryOperator property, String name, IntPredicate test)
+      throws X {
     return HasIntInt.get(this).has(property, name, test);
   }
 
@@ -772,11 +778,11 @@ public final class IntCheck<E extends Exception> {
    *     {@code argName + "." + name}.
    * @param test the test
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> notHas(IntUnaryOperator property,
+  public IntCheck<X> notHas(IntUnaryOperator property,
       String name,
-      IntPredicate test) throws E {
+      IntPredicate test) throws X {
     return HasIntInt.get(this).notHas(property, name, test);
   }
 
@@ -792,13 +798,13 @@ public final class IntCheck<E extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> has(
+  public IntCheck<X> has(
       IntUnaryOperator property,
       IntPredicate test,
       String message,
-      Object... msgArgs) throws E {
+      Object... msgArgs) throws X {
     return HasIntInt.get(this).has(property, test, message, msgArgs);
   }
 
@@ -814,13 +820,13 @@ public final class IntCheck<E extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> notHas(
+  public IntCheck<X> notHas(
       IntUnaryOperator property,
       IntPredicate test,
       String message,
-      Object... msgArgs) throws E {
+      Object... msgArgs) throws X {
     return HasIntInt.get(this).notHas(property, test, message, msgArgs);
   }
 
@@ -834,12 +840,13 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <X> the type of the exception thrown if the argument is invalid
+   * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
-   * @throws X if the argument is invalid
+   * @throws X2 if the argument is invalid
    */
-  public <X extends Exception> IntCheck<E> has(
-      IntUnaryOperator property, IntPredicate test, Supplier<X> exception) throws X {
+  public <X2 extends Exception> IntCheck<X> has(
+      IntUnaryOperator property, IntPredicate test, Supplier<X2> exception) throws
+      X2 {
     return HasIntInt.get(this).has(property, test, exception);
   }
 
@@ -853,12 +860,13 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <X> the type of the exception thrown if the argument is invalid
+   * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
-   * @throws X if the argument is invalid
+   * @throws X2 if the argument is invalid
    */
-  public <X extends Exception> IntCheck<E> notHas(
-      IntUnaryOperator property, IntPredicate test, Supplier<X> exception) throws X {
+  public <X2 extends Exception> IntCheck<X> notHas(IntUnaryOperator property,
+      IntPredicate test,
+      Supplier<X2> exception) throws X2 {
     return HasIntInt.get(this).has(property, test.negate(), exception);
   }
 
@@ -875,10 +883,10 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntRelation}
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> has(IntUnaryOperator property, IntRelation test, int object)
-      throws E {
+  public IntCheck<X> has(IntUnaryOperator property, IntRelation test, int object)
+      throws X {
     return HasIntInt.get(this).has(property, test, object);
   }
 
@@ -895,10 +903,10 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntRelation}
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> notHas(IntUnaryOperator property, IntRelation test, int object)
-      throws E {
+  public IntCheck<X> notHas(IntUnaryOperator property, IntRelation test, int object)
+      throws X {
     return HasIntInt.get(this).notHas(property, test, object);
   }
 
@@ -916,13 +924,13 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntRelation}
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> has(IntUnaryOperator property,
+  public IntCheck<X> has(IntUnaryOperator property,
       String name,
       IntRelation test,
       int object)
-      throws E {
+      throws X {
     return HasIntInt.get(this).has(property, name, test, object);
   }
 
@@ -940,13 +948,13 @@ public final class IntCheck<E extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntRelation}
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> notHas(IntUnaryOperator property,
+  public IntCheck<X> notHas(IntUnaryOperator property,
       String name,
       IntRelation test,
       int object)
-      throws E {
+      throws X {
     return HasIntInt.get(this).notHas(property, name, test, object);
   }
 
@@ -963,15 +971,15 @@ public final class IntCheck<E extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> has(
+  public IntCheck<X> has(
       IntUnaryOperator property,
       IntRelation test,
       int object,
       String message,
       Object... msgArgs)
-      throws E {
+      throws X {
     return HasIntInt.get(this).has(property, test, object, message, msgArgs);
   }
 
@@ -988,15 +996,15 @@ public final class IntCheck<E extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws E if the property does not pass the test
+   * @throws X if the property does not pass the test
    */
-  public IntCheck<E> notHas(
+  public IntCheck<X> notHas(
       IntUnaryOperator property,
       IntRelation test,
       int object,
       String message,
       Object... msgArgs)
-      throws E {
+      throws X {
     return HasIntInt.get(this).notHas(property, test, object, message, msgArgs);
   }
 
@@ -1011,14 +1019,17 @@ public final class IntCheck<E extends Exception> {
    * @param object the object of the {@code IntRelation}
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <X> the type of the exception thrown if the property does not pass
+   * @param <X2> the type of the exception thrown if the property does not pass
    *     the test
    * @return this instance
-   * @throws X if the property does not pass the test
+   * @throws X2 if the property does not pass the test
    */
-  public <X extends Exception> IntCheck<E> has(
-      IntUnaryOperator property, IntRelation test, int object, Supplier<X> exception)
-      throws X {
+  public <X2 extends Exception> IntCheck<X> has(
+      IntUnaryOperator property,
+      IntRelation test,
+      int object,
+      Supplier<X2> exception)
+      throws X2 {
     return HasIntInt.get(this).has(property, test, object, exception);
   }
 
@@ -1033,14 +1044,17 @@ public final class IntCheck<E extends Exception> {
    * @param object the object of the {@code IntRelation}
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <X> the type of the exception thrown if the property does not pass
+   * @param <X2> the type of the exception thrown if the property does not pass
    *     the test
    * @return this instance
-   * @throws X if the property does not pass the test
+   * @throws X2 if the property does not pass the test
    */
-  public <X extends Exception> IntCheck<E> notHas(
-      IntUnaryOperator property, IntRelation test, int object, Supplier<X> exception)
-      throws X {
+  public <X2 extends Exception> IntCheck<X> notHas(
+      IntUnaryOperator property,
+      IntRelation test,
+      int object,
+      Supplier<X2> exception)
+      throws X2 {
     return has(property, test.negate(), object, exception);
   }
 
@@ -1061,7 +1075,7 @@ public final class IntCheck<E extends Exception> {
    * @param arg the value to be validated.
    * @return an {@link IntCheck} instance for validating the specified value
    */
-  public IntCheck<E> and(int arg) {
+  public IntCheck<X> and(int arg) {
     return new IntCheck<>(arg, DEF_ARG_NAME, exc);
   }
 
@@ -1073,7 +1087,7 @@ public final class IntCheck<E extends Exception> {
    * @param argName the name of the argument, field or variable being validated
    * @return an {@link IntCheck} instance for validating the specified value
    */
-  public IntCheck<E> and(int arg, String argName) {
+  public IntCheck<X> and(int arg, String argName) {
     return new IntCheck<>(arg, argName, exc);
   }
 
@@ -1085,7 +1099,7 @@ public final class IntCheck<E extends Exception> {
    * @param <T> the type of the value to be validated
    * @return a new {@code IntCheck} instance for validating the specified value
    */
-  public <T> ObjectCheck<T, E> and(T arg) {
+  public <T> ObjectCheck<T, X> and(T arg) {
     return new ObjectCheck<>(arg, DEF_ARG_NAME, exc);
   }
 
@@ -1098,7 +1112,7 @@ public final class IntCheck<E extends Exception> {
    * @param <T> the type of the value to be validated
    * @return a new {@code IntCheck} instance for validating the specified value
    */
-  public <T> ObjectCheck<T, E> and(T arg, String argName) {
+  public <T> ObjectCheck<T, X> and(T arg, String argName) {
     return new ObjectCheck<>(arg, argName, exc);
   }
 
