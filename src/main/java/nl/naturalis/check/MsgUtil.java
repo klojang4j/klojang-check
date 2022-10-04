@@ -1,8 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.ArrayType;
-import nl.naturalis.check.*;
-
 import java.util.Collection;
 import java.util.Map;
 

@@ -1,7 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.Emptyable;
-
 import java.util.*;
 
 import static nl.naturalis.check.Misc.getArrayLength;

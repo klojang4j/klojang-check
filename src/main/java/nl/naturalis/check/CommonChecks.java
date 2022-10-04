@@ -1,12 +1,9 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.Emptyable;
-import nl.naturalis.base.Result;
-import nl.naturalis.base.function.ComposablePredicate;
-import nl.naturalis.base.function.IntObjRelation;
-import nl.naturalis.base.function.IntRelation;
-import nl.naturalis.base.function.Relation;
-import nl.naturalis.check.MsgPredicate;
+import nl.naturalis.check.types.ComposablePredicate;
+import nl.naturalis.check.types.IntObjRelation;
+import nl.naturalis.check.types.IntRelation;
+import nl.naturalis.check.types.Relation;
 
 import java.io.File;
 import java.util.*;
@@ -248,8 +245,7 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument can be parsed into a 64-bit integer
-   * (a&#46;k&#46;a&#46; a {@code long}). Equivalent to
-   * {@link StringCheckImpls#isLong(String) NumberMethods::isLong}.
+   * (a&#46;k&#46;a&#46; a {@code long}).
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -422,9 +418,10 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an {@code Optional} contains a value. Note that you can also use
-   * the {@link #empty()} check to verify this, but this check is more targeted and
-   * self-explanatory.
+   * Verifies that an {@code Optional} contains a value. Note that this check differs
+   * from the {@link #empty()} check in that it only verifies that {@code Optional}
+   * is not empty. The {@code empty()} check (in its negation) additionally requires
+   * that the value it contains is itself non-empty.
    *
    * @param <T> the type of the value contained in the {@code Optional}
    * @return a function implementing the test described above
@@ -438,9 +435,10 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a {@linkplain Result result} is available. Note that you can also
-   * use the {@link #empty()} check to verify this, but this check is more targeted
-   * and self-explanatory.
+   * Verifies that a {@linkplain Result result} is available. Note that this check
+   * differs from the {@link #empty()} check in that it only verifies that
+   * {@code Result} contains a value. The {@code empty()} check (in its negation)
+   * additionally requires that the value it contains is itself non-empty.
    *
    * @param <T> the type of the value contained in the {@code Result}
    * @return a function implementing the test described above
@@ -629,10 +627,12 @@ public final class CommonChecks {
    * Verifies that a value equals another value. Equivalent to
    * {@link Objects#equals(Object) Objects::equals}.
    *
-   * @param <X> The type of the argument
+   * @param <S> the type of the subject of the relationship (which is the value
+   *     being tested)
+   * @param <O> the type of the object of the relationship
    * @return a function implementing the test described above
    */
-  public static <X, Y> Relation<X, Y> EQ() {
+  public static <S, O> Relation<S, O> EQ() {
     return Objects::equals;
   }
 
@@ -647,12 +647,12 @@ public final class CommonChecks {
    * {@code Integer}). However, it can be used to check any value that is an instance
    * of {@link Comparable}.
    *
-   * @param <X> The type of the values being compared
+   * @param <S> the type of the values being compared
    * @return a function implementing the test described above
    * @see CommonProperties#unbox()
    * @see #gt()
    */
-  public static <X extends Comparable<X>> Relation<X, X> GT() {
+  public static <S extends Comparable<S>> Relation<S, S> GT() {
     return (x, y) -> x.compareTo(y) > 0;
   }
 
@@ -667,12 +667,12 @@ public final class CommonChecks {
    * {@code Integer}). However, it can be used to check any value that is an instance
    * of {@link Comparable}.
    *
-   * @param <X> The type of the values being compared
+   * @param <S> the type of the values being compared
    * @return a function implementing the test described above
    * @see CommonProperties#unbox()
    * @see #lt()
    */
-  public static <X extends Comparable<X>> Relation<X, X> LT() {
+  public static <S extends Comparable<S>> Relation<S, S> LT() {
     return (x, y) -> x.compareTo(y) < 0;
   }
 
@@ -687,12 +687,12 @@ public final class CommonChecks {
    * (including {@code Integer}). However, it can be used to check any value that is
    * an instance of {@link Comparable}.
    *
-   * @param <X> The type of the values being compared
+   * @param <S> the type of the values being compared
    * @return a function implementing the test described above
    * @see CommonProperties#unbox()
    * @see #gte()
    */
-  public static <X extends Comparable<X>> Relation<X, X> GTE() {
+  public static <S extends Comparable<S>> Relation<S, S> GTE() {
     return (x, y) -> x.compareTo(y) >= 0;
   }
 
@@ -707,12 +707,12 @@ public final class CommonChecks {
    * {@code Integer}). However, it can be used to check any value that is an instance
    * of {@link Comparable}.
    *
-   * @param <X> The type of the values being compared
+   * @param <S> the type of the values being compared
    * @return a function implementing the test described above
    * @see CommonProperties#unbox()
    * @see #lte()
    */
-  public static <X extends Comparable<X>> Relation<X, X> LTE() {
+  public static <S extends Comparable<S>> Relation<S, S> LTE() {
     return (x, y) -> x.compareTo(y) <= 0;
   }
 
@@ -723,12 +723,13 @@ public final class CommonChecks {
   /**
    * Verifies that a value references the same object as another value
    *
-   * @param <X> The type of the argument (the subject of the {@code Relation})
-   * @param <Y> The type of the value to compare it with (the object of the
+   * @param <S> the type of the subject of the relationship (which is the value
+   *     being tested) (the subject of the {@code Relation})
+   * @param <O> The type of the value to compare it with (the object of the
    *     {@code Relation})
    * @return a function implementing the test described above
    */
-  public static <X, Y> Relation<X, Y> sameAs() {
+  public static <S, O> Relation<S, O> sameAs() {
     return (x, y) -> x == y;
   }
 
@@ -739,10 +740,11 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is either null or equals a particular value.
    *
-   * @param <X> The type of the argument
+   * @param <S> the type of the subject of the relationship (which is the value
+   *     being tested)
    * @return a function implementing the test described above
    */
-  public static <X> Relation<X, X> nullOr() {
+  public static <S> Relation<S, S> nullOr() {
     return (x, y) -> x == null || x.equals(y);
   }
 
@@ -753,10 +755,11 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is an instance of a particular class or interface.
    *
-   * @param <X> The type of the argument
+   * @param <S> the type of the subject of the relationship (which is the value
+   *     being tested)
    * @return a function implementing the test described above
    */
-  public static <X> Relation<X, Class<?>> instanceOf() {
+  public static <S> Relation<S, Class<?>> instanceOf() {
     return (x, y) -> y.isInstance(x);
   }
 
@@ -768,7 +771,7 @@ public final class CommonChecks {
    * Verifies that the argument is a supertype of another type. In other words, that
    * the other type extends, implements, or is equal to the argument.
    *
-   * @return A {@code Relation} that implements the test described above
+   * @return a function that implements the test described above
    */
   public static <T, U> Relation<Class<T>, Class<U>> supertypeOf() {
     return Class::isAssignableFrom;
@@ -782,7 +785,7 @@ public final class CommonChecks {
    * Verifies that the argument is a subtype of another type. In other words, that it
    * extends or implements the other type.
    *
-   * @return A {@code Relation} that implements the test described above
+   * @return a function that implements the test described above
    */
   public static <T, U> Relation<Class<T>, Class<U>> subtypeOf() {
     return (x, y) -> y.isAssignableFrom(x);
@@ -843,11 +846,11 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is an element of a collection.
    *
-   * @param <E> The type of the argument
-   * @param <C> The type of the {@code Collection}
+   * @param <S> The type of the argument
+   * @param <O> The type of the {@code Collection}
    * @return a function implementing the test described above
    */
-  public static <E, C extends Collection<? super E>> Relation<E, C> in() {
+  public static <S, O extends Collection<? super S>> Relation<S, O> in() {
     return (x, y) -> y.contains(x);
   }
 
@@ -858,11 +861,11 @@ public final class CommonChecks {
   /**
    * Verifies the presence of a key within a map.
    *
-   * @param <K> The type of the keys within the map
-   * @param <M> The Type of the {@code Map}
+   * @param <S> The type of the keys within the map
+   * @param <O> The Type of the {@code Map}
    * @return a function implementing the test described above
    */
-  public static <K, M extends Map<? super K, ?>> Relation<K, M> keyIn() {
+  public static <S, O extends Map<? super S, ?>> Relation<S, O> keyIn() {
     return (x, y) -> y.containsKey(x);
   }
 
@@ -873,11 +876,11 @@ public final class CommonChecks {
   /**
    * Verifies the presence of a value within a map.
    *
-   * @param <K> The type of the keys within the map
-   * @param <M> The Type of the {@code Map}
+   * @param <S> The type of the keys within the map
+   * @param <O> The Type of the {@code Map}
    * @return a function implementing the test described above
    */
-  public static <K, M extends Map<? super K, ?>> Relation<K, M> valueIn() {
+  public static <S, O extends Map<? super S, ?>> Relation<S, O> valueIn() {
     return (x, y) -> y.containsValue(x);
   }
 
@@ -889,21 +892,22 @@ public final class CommonChecks {
    * Verifies that the argument is an element of an array. Equivalent to
    * {@link ArrayMethods#isElementOf(Object, Object[]) ArrayMethods::isElementOf}.
    *
-   * @param <X> The type of the argument
-   * @param <Y> The component type of the array
+   * @param <T> the type of the subject of the relationship (which is the value
+   *     being tested)
+   * @param <U> The component type of the array
    * @return a function implementing the test described above
    */
-  public static <Y, X extends Y> Relation<X, Y[]> inArray() {
+  public static <U, T extends U> Relation<T, U[]> inArray() {
     return (x, y) -> {
       if (x == null) {
-        for (Y e : y) {
+        for (U e : y) {
           if (e == null) {
             return true;
           }
         }
         return false;
       } else {
-        for (Y e : y) {
+        for (U e : y) {
           if (x.equals(e)) {
             return true;
           }

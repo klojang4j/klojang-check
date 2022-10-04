@@ -7,12 +7,11 @@ import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import static nl.naturalis.base.ArrayType.describe;
 import static nl.naturalis.check.Check.DEF_ARG_NAME;
 import static nl.naturalis.check.CommonChecks.NAMES;
+import static nl.naturalis.check.Misc.toShortString;
 import static nl.naturalis.check.MsgUtil.MAX_STRING_WIDTH;
 import static nl.naturalis.check.MsgUtil.simpleClassName;
-import static nl.naturalis.check.Misc.toShortString;
 
 /*
  * Formats client-provided messages.
@@ -168,7 +167,7 @@ final class CustomMsgFormatter {
   private static String getArgumentType(Object[] args) {
     if (args[2] == null) {
       if (args[1] != null) {
-        return describe(args[1]);
+        return Misc.describe(args[1]);
       }
       return null;
     }

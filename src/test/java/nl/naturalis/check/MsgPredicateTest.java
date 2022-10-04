@@ -1,13 +1,10 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.Result;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;

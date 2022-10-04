@@ -1,7 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.ArrayType;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -179,7 +177,7 @@ class Misc {
     } else if (obj instanceof Map<?, ?> m) {
       return m.getClass().getSimpleName() + '[' + m.size() + ']';
     } else if (obj.getClass().isArray()) {
-      return ArrayType.describe(obj);
+      return ArrayInfo.describe(obj);
     }
     return obj.getClass().getSimpleName();
   }

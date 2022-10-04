@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.function.Relation;
+import nl.naturalis.check.types.Relation;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;

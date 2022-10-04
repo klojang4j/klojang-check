@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.base.DuplicateValueException;
+import nl.naturalis.check.exceptions.DuplicateValueException;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static nl.naturalis.base.DuplicateValueException.ValueType;
+import static nl.naturalis.check.exceptions.DuplicateValueException.ValueType;
 
 /**
  * Provides factories for some commonly thrown exceptions. Typically (but not
