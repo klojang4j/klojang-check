@@ -37,7 +37,7 @@ public class MsgRelationTest {
     map.put("Greeting", "HelloWorld");
     Check.that(map).is((x, y) -> x.containsKey(y), "Greeting");
     Check.that(map).is(Map::containsKey, "Greeting");
-    Check.that(map).is(containingKey(), "Greeting");
+    Check.that(map).is(containsKey(), "Greeting");
     Check.that(map).is((Map<String, Object> x, String y) -> x.containsKey(y),
         "Greeting");
     Check.that(map)
@@ -52,8 +52,8 @@ public class MsgRelationTest {
     Check.that(String.class).is(subtypeOf(), CharSequence.class);
     Check.that("foo").is(instanceOf(), CharSequence.class);
     Check.that(CharSequence.class).isNot(instanceOf(), String.class);
-    Check.that(Set.of("1", "2", "3")).is(containing(), "2");
-    Check.that(Set.of("1", "2", "3")).isNot(containing(), "4");
+    Check.that(Set.of("1", "2", "3")).is(contains(), "2");
+    Check.that(Set.of("1", "2", "3")).isNot(contains(), "4");
     Check.that((Integer) 2).is(in(), List.of(1, 2, 3));
     Check.that((Integer) 4).isNot(in(), List.of(1, 2, 3));
     Check.that(Set.of("1", "2", "3")).is(enclosing(), List.of("1", "2"));
@@ -63,10 +63,10 @@ public class MsgRelationTest {
     Check.that(Set.of(MONDAY, TUESDAY, SATURDAY))
         .isNot(enclosedBy(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
     Map<Integer, Integer> map = Map.of(1, 1, 2, 4, 3, 6, 4, 8, 5, 10);
-    Check.that(map).is(containingKey(), 1);
-    Check.that(map).isNot(containingKey(), 11);
-    Check.that(map).is(containingValue(), 4);
-    Check.that(map).isNot(containingValue(), 7);
+    Check.that(map).is(containsKey(), 1);
+    Check.that(map).isNot(containsKey(), 11);
+    Check.that(map).is(containsValue(), 4);
+    Check.that(map).isNot(containsValue(), 7);
     Check.that((Integer) 5).is(keyIn(), map);
     Check.that((Integer) 7).isNot(valueIn(), map);
     Check.that((Integer) 7).is(inArray(), pack(1, 7, 10));
@@ -82,7 +82,7 @@ public class MsgRelationTest {
     Check.that("ZZZ").is(GT(), "AAA");
     Check.that("hello").isNot(startsWith(), "foo");
     Check.that("hello").is(endsWith(), "lo");
-    Check.that("hello").is(containingString(), "lo");
+    Check.that("hello").is(hasSubstring(), "lo");
     Check.that("abc").is(substringOf(), "abcde");
     Check.that("abc").is(substringOf(), "abc");
     Check.that("abc").isNot(substringOf(), "ab");
@@ -382,7 +382,7 @@ public class MsgRelationTest {
   public void contains00() {
     try {
       List<String> names = List.of("john", "paul", "george", "guess who");
-      Check.on(IO, names, "poseidon").is(containing(), "ringo");
+      Check.on(IO, names, "poseidon").is(contains(), "ringo");
     } catch (IOException e) {
       System.out.println(e.getMessage());
       assertEquals("poseidon must contain ringo", e.getMessage());
@@ -395,7 +395,7 @@ public class MsgRelationTest {
   public void contains01() {
     try {
       List<String> names = List.of("john", "paul", "george", "guess who");
-      Check.on(IO, names, "poseidon").isNot(containing(), "paul");
+      Check.on(IO, names, "poseidon").isNot(contains(), "paul");
     } catch (IOException e) {
       System.out.println(e.getMessage());
       assertEquals("poseidon must not contain paul", e.getMessage());
@@ -417,7 +417,7 @@ public class MsgRelationTest {
               "harrison",
               "guess who",
               "huh?");
-      Check.on(STATE, map, "thor").is(containingKey(), "ringo");
+      Check.on(STATE, map, "thor").is(containsKey(), "ringo");
     } catch (IllegalStateException e) {
       System.out.println(e.getMessage());
       assertEquals("thor must contain key ringo", e.getMessage());
@@ -439,7 +439,7 @@ public class MsgRelationTest {
               "harrison",
               "guess who",
               "huh?");
-      Check.on(STATE, map, "thor").isNot(containingKey(), "john");
+      Check.on(STATE, map, "thor").isNot(containsKey(), "john");
     } catch (IllegalStateException e) {
       System.out.println(e.getMessage());
       assertEquals("thor must not contain key john", e.getMessage());
@@ -461,7 +461,7 @@ public class MsgRelationTest {
               "harrison",
               "guess who",
               "huh?");
-      Check.that(map, "morpheus").is(containingValue(), "star");
+      Check.that(map, "morpheus").is(containsValue(), "star");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("morpheus must contain value star", e.getMessage());
@@ -483,7 +483,7 @@ public class MsgRelationTest {
               "harrison",
               "guess who",
               "huh?");
-      Check.that(map, "morpheus").isNot(containingValue(), "huh?");
+      Check.that(map, "morpheus").isNot(containsValue(), "huh?");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("morpheus must not contain value huh?", e.getMessage());
@@ -675,7 +675,7 @@ public class MsgRelationTest {
   @Test
   public void hasSubstring00() {
     try {
-      Check.that("abcd", "BMW").is(containingString(), "qwe");
+      Check.that("abcd", "BMW").is(hasSubstring(), "qwe");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("BMW must contain qwe (was abcd)", e.getMessage());
@@ -687,7 +687,7 @@ public class MsgRelationTest {
   @Test
   public void hasSubstring01() {
     try {
-      Check.that("abcd", "BMW").isNot(containingString(), "abc");
+      Check.that("abcd", "BMW").isNot(hasSubstring(), "abc");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("BMW must not contain abc (was abcd)", e.getMessage());

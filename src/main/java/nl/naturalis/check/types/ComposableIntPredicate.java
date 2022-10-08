@@ -6,13 +6,13 @@ import java.util.function.IntPredicate;
 
 public interface ComposableIntPredicate extends IntPredicate {
 
-  default ComposableIntPredicate or(ComposableIntPredicate test) {
+  default ComposableIntPredicate or(IntPredicate test) {
     Objects.requireNonNull(test);
     return x -> callMe(x) || test.test(x);
   }
 
   default ComposableIntPredicate or(IntRelation relation, int value) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
     return x -> callMe(x) || relation.exists(x, value);
   }
 
@@ -20,8 +20,8 @@ public interface ComposableIntPredicate extends IntPredicate {
       int val0,
       int val1,
       int... moreValues) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
-    Objects.requireNonNull(moreValues, Util.VARARGS_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(moreValues, Private.VARARGS_MUST_NOT_BE_NULL);
     return x -> callMe(x)
         || relation.exists(x, val0)
         || relation.exists(x, val1)
@@ -29,7 +29,7 @@ public interface ComposableIntPredicate extends IntPredicate {
   }
 
   default <U> ComposableIntPredicate or(IntObjRelation<U> relation, U value) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
     return x -> callMe(x) || relation.exists(x, value);
   }
 
@@ -37,21 +37,21 @@ public interface ComposableIntPredicate extends IntPredicate {
       U val0,
       U val1,
       U... moreValues) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
-    Objects.requireNonNull(moreValues, Util.VARARGS_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(moreValues, Private.VARARGS_MUST_NOT_BE_NULL);
     return x -> callMe(x)
         || relation.exists(x, val0)
         || relation.exists(x, val1)
         || Arrays.stream(moreValues).anyMatch(u -> relation.exists(x, u));
   }
 
-  default ComposableIntPredicate and(ComposableIntPredicate test) {
+  default ComposableIntPredicate and(IntPredicate test) {
     Objects.requireNonNull(test);
     return x -> callMe(x) && test.test(x);
   }
 
   default ComposableIntPredicate and(IntRelation relation, int value) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
     return x -> callMe(x) && relation.exists(x, value);
   }
 
@@ -59,8 +59,8 @@ public interface ComposableIntPredicate extends IntPredicate {
       int val0,
       int val1,
       int... moreValues) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
-    Objects.requireNonNull(moreValues, Util.VARARGS_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(moreValues, Private.VARARGS_MUST_NOT_BE_NULL);
     return x -> callMe(x)
         && relation.exists(x, val0)
         && relation.exists(x, val1)
@@ -68,7 +68,7 @@ public interface ComposableIntPredicate extends IntPredicate {
   }
 
   default <U> ComposableIntPredicate and(IntObjRelation<U> relation, U value) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
     return x -> callMe(x) && relation.exists(x, value);
   }
 
@@ -76,8 +76,8 @@ public interface ComposableIntPredicate extends IntPredicate {
       U val0,
       U val1,
       U... moreValues) {
-    Objects.requireNonNull(relation, Util.RELATION_MUST_NOT_BE_NULL);
-    Objects.requireNonNull(moreValues, Util.VARARGS_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(relation, Private.RELATION_MUST_NOT_BE_NULL);
+    Objects.requireNonNull(moreValues, Private.VARARGS_MUST_NOT_BE_NULL);
     return x -> callMe(x)
         && relation.exists(x, val0)
         && relation.exists(x, val1)

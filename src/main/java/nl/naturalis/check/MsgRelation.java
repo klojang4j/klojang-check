@@ -1,7 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.PrefabMsgFormatter;
-
 import static nl.naturalis.check.MsgUtil.*;
 
 @SuppressWarnings("rawtypes")
@@ -49,13 +47,13 @@ final class MsgRelation {
     //@formatter:on
   }
 
-  static PrefabMsgFormatter msgContaining() {
+  static PrefabMsgFormatter msgContains() {
     return x -> x.negated()
         ? x.name() + " must not contain " + toStr(x.obj())
         : x.name() + " must contain " + toStr(x.obj());
   }
 
-  static PrefabMsgFormatter msgContainingKey() {
+  static PrefabMsgFormatter msgContainsKey() {
     return x -> x.negated()
         ? x.name() + " must not contain key " + toStr(x.obj())
         : x.name() + " must contain key " + toStr(x.obj());
@@ -107,7 +105,7 @@ final class MsgRelation {
     //@formatter:off
   }
 
-  static PrefabMsgFormatter msgContainingString() {
+  static PrefabMsgFormatter msgHasSubstring() {
     //@formatter:off
     return x -> x.negated()
         ? x.name() + " must not contain " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'

@@ -70,7 +70,7 @@ final class MsgUtil {
     if (val == null) {
       return "null";
     } else if (val instanceof String s) {
-      return s.isBlank() ? '"' + s + '"' : ellipsis0(s, MAX_STRING_WIDTH);
+      return s.isBlank() ? '"' + s + '"' : ellipsis(s, MAX_STRING_WIDTH);
     } else if (val instanceof Collection<?> c) {
       if (c.size() == 0) {
         return c.getClass().getSimpleName() + "[0]";

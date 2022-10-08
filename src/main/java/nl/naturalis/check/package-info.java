@@ -106,7 +106,7 @@
  * {@linkplain nl.naturalis.check.CommonChecks#lte() lte()},
  * {@linkplain nl.naturalis.check.CommonChecks#instanceOf() instanceOf()},
  * {@linkplain nl.naturalis.check.CommonChecks#keyIn() keyIn()} and
- * {@linkplain nl.naturalis.check.CommonChecks#containingKey() containingKey()} are
+ * {@linkplain nl.naturalis.check.CommonChecks#containsKey() containingKey()} are
  * checks implemented as a {@code Relation} or one of its sister interfaces. For more
  * information, see the package description of
  * {@linkplain nl.naturalis.common.function}.

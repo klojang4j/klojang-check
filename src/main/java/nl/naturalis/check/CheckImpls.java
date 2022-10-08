@@ -78,6 +78,24 @@ final class CheckImpls {
     return true;
   }
 
+  static <T, U extends T> boolean inArray(U elem, T[] array) {
+    if (elem == null) {
+      for (T e : array) {
+        if (e == null) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      for (T e : array) {
+        if (elem.equals(e)) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
   private static boolean dne(Collection<?> coll) {
     if (coll.isEmpty()) {
       return false;

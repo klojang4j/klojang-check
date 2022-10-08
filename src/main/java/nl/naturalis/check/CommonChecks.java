@@ -61,7 +61,7 @@ public final class CommonChecks {
    * @param <T> the type of the argument
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<T> NULL() {
+  public static <T> ComposablePredicate<T> NULL() {
     return Objects::isNull;
   }
 
@@ -82,7 +82,7 @@ public final class CommonChecks {
    * @param <T> the type of the argument
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<T> notNull() {
+  public static <T> ComposablePredicate<T> notNull() {
     return Objects::nonNull;
   }
 
@@ -100,7 +100,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<Boolean> yes() {
+  public static ComposablePredicate<Boolean> yes() {
     return x -> x;
   }
 
@@ -113,7 +113,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<Boolean> no() {
+  public static ComposablePredicate<Boolean> no() {
     return x -> !x;
   }
 
@@ -148,7 +148,7 @@ public final class CommonChecks {
    * @param <T> the type of the argument
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<T> empty() {
+  public static <T> ComposablePredicate<T> empty() {
     return CheckImpls::isEmpty;
   }
 
@@ -169,7 +169,7 @@ public final class CommonChecks {
    * @param <T> the type of the argument
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<T> notEmpty() {
+  public static <T> ComposablePredicate<T> notEmpty() {
     return CheckImpls::isNotEmpty;
   }
 
@@ -191,7 +191,7 @@ public final class CommonChecks {
    * @param <T> the type of the argument
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<T> deepNotNull() {
+  public static <T> ComposablePredicate<T> deepNotNull() {
     return CheckImpls::isDeepNotNull;
   }
 
@@ -223,7 +223,7 @@ public final class CommonChecks {
    * @param <T> the type of the argument
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<T> deepNotEmpty() {
+  public static <T> ComposablePredicate<T> deepNotEmpty() {
     return CheckImpls::isDeepNotEmpty;
   }
 
@@ -240,7 +240,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<String> blank() {
+  public static ComposablePredicate<String> blank() {
     return s -> s == null || s.isBlank();
   }
 
@@ -258,7 +258,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<String> int32() {
+  public static ComposablePredicate<String> int32() {
     return StringCheckImpls::isInt;
   }
 
@@ -275,7 +275,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<String> int64() {
+  public static ComposablePredicate<String> int64() {
     return StringCheckImpls::isLong;
   }
 
@@ -293,7 +293,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<String> int16() {
+  public static ComposablePredicate<String> int16() {
     return StringCheckImpls::isShort;
   }
 
@@ -311,7 +311,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<String> int8() {
+  public static ComposablePredicate<String> int8() {
     return StringCheckImpls::isByte;
   }
 
@@ -329,7 +329,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<String> float32() {
+  public static ComposablePredicate<String> float32() {
     return StringCheckImpls::isFloat;
   }
 
@@ -347,7 +347,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<String> float64() {
+  public static ComposablePredicate<String> float64() {
     return StringCheckImpls::isDouble;
   }
 
@@ -362,7 +362,7 @@ public final class CommonChecks {
    * @param <T> the type of the argument
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<T> array() {
+  public static <T> ComposablePredicate<T> array() {
     return x -> x instanceof Class<?> c ? c.isArray() : x.getClass().isArray();
   }
 
@@ -376,7 +376,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<File> file() {
+  public static ComposablePredicate<File> file() {
     return File::isFile;
   }
 
@@ -404,7 +404,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<File> fileExists() {
+  public static ComposablePredicate<File> fileExists() {
     return File::exists;
   }
 
@@ -418,7 +418,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<File> readable() {
+  public static ComposablePredicate<File> readable() {
     return File::canRead;
   }
 
@@ -432,7 +432,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Predicate<File> writable() {
+  public static ComposablePredicate<File> writable() {
     return File::canWrite;
   }
 
@@ -449,7 +449,7 @@ public final class CommonChecks {
    * @param <T> the type of the value contained in the {@code Optional}
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<Optional<T>> present() {
+  public static <T> ComposablePredicate<Optional<T>> present() {
     return Optional::isPresent;
   }
 
@@ -466,7 +466,7 @@ public final class CommonChecks {
    * @param <T> the type of the value contained in the {@code Result}
    * @return a function implementing the test described above
    */
-  public static <T> Predicate<Result<T>> available() {
+  public static <T> ComposablePredicate<Result<T>> available() {
     return Result::isAvailable;
   }
 
@@ -826,12 +826,12 @@ public final class CommonChecks {
    * @param <S> the type of the collection
    * @return a function implementing the test described above
    */
-  public static <O, S extends Collection<? super O>> Relation<S, O> containing() {
+  public static <O, S extends Collection<? super O>> Relation<S, O> contains() {
     return Collection::contains;
   }
 
   static {
-    setMetadata(containing(), msgContaining(), "containing");
+    setMetadata(contains(), msgContains(), "contains");
   }
 
   /**
@@ -842,12 +842,12 @@ public final class CommonChecks {
    * @param <S> the Type of the {@code Map}
    * @return a function implementing the test described above
    */
-  public static <O, S extends Map<? super O, ?>> Relation<S, O> containingKey() {
+  public static <O, S extends Map<? super O, ?>> Relation<S, O> containsKey() {
     return Map::containsKey;
   }
 
   static {
-    setMetadata(containingKey(), msgContainingKey(), "containingKey");
+    setMetadata(containsKey(), msgContainsKey(), "containsKey");
   }
 
   /**
@@ -858,12 +858,12 @@ public final class CommonChecks {
    * @param <S> the Type of the {@code Map}
    * @return a function implementing the test described above
    */
-  public static <O, S extends Map<?, ? super O>> Relation<S, O> containingValue() {
+  public static <O, S extends Map<?, ? super O>> Relation<S, O> containsValue() {
     return Map::containsValue;
   }
 
   static {
-    setMetadata(containingValue(), msgContainingValue(), "containingValue");
+    setMetadata(containsValue(), msgContainingValue(), "containsValue");
   }
 
   /**
@@ -899,11 +899,11 @@ public final class CommonChecks {
   /**
    * Verifies the presence of a value within a map.
    *
-   * @param <O> the type of the keys within the map
-   * @param <S> the Type of the {@code Map}
+   * @param <S> the type of the keys within the map
+   * @param <O> the Type of the {@code Map}
    * @return a function implementing the test described above
    */
-  public static <O, S extends Map<?, ? super O>> Relation<O, S> valueIn() {
+  public static <S, O extends Map<?, ? super S>> Relation<S, O> valueIn() {
     return (x, y) -> y.containsValue(x);
   }
 
@@ -912,8 +912,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is an element of an array. Equivalent to
-   * {@link ArrayMethods#isElementOf(Object, Object[]) ArrayMethods::isElementOf}.
+   * Verifies that the argument is an element of an array.
    *
    * @param <S> the type of the subject of the relationship (which is the value
    *     being tested)
@@ -921,23 +920,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <O, S extends O> Relation<S, O[]> inArray() {
-    return (x, y) -> {
-      if (x == null) {
-        for (O e : y) {
-          if (e == null) {
-            return true;
-          }
-        }
-        return false;
-      } else {
-        for (O e : y) {
-          if (x.equals(e)) {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
+    return CheckImpls::inArray;
   }
 
   static {
@@ -1001,12 +984,12 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, CharSequence> containingString() {
+  public static Relation<String, CharSequence> hasSubstring() {
     return String::contains;
   }
 
   static {
-    setMetadata(containingString(), msgContainingString(), "containingString");
+    setMetadata(hasSubstring(), msgHasSubstring(), "hasSubstring");
   }
 
   /**

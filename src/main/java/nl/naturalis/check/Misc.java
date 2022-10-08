@@ -8,13 +8,17 @@ import static java.lang.invoke.MethodHandles.arrayElementGetter;
 import static java.lang.invoke.MethodHandles.arrayLength;
 import static java.util.stream.Collectors.joining;
 
-class Misc {
+public final class Misc {
 
   private static final String SEP = ", ";
 
   private interface Stringifier extends Function<Object, String> {}
 
-  static int getArrayLength(Object array) {
+  private Misc() {
+    throw new UnsupportedOperationException();
+  }
+
+  public static int getArrayLength(Object array) {
     try {
       return (int) arrayLength(array.getClass()).invoke(array);
     } catch (Throwable t) {
@@ -22,22 +26,13 @@ class Misc {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  static <T> T getArrayElement(Object array, int idx) throws Throwable {
-    return (T) arrayElementGetter(array.getClass()).invoke(array, idx);
-  }
-
-  static String toShortString(Object obj, int maxWidth) {
+  public static String toShortString(Object obj, int maxWidth) {
     int maxElements = divUp(maxWidth, 8);
     int maxEntries = divUp(maxWidth, 16);
     return toShortString(obj, maxWidth, maxElements, maxEntries);
   }
 
-  private static int divUp(int value, int divideBy) {
-    return (int) Math.ceil((double) value / (double) divideBy);
-  }
-
-  static String toShortString(Object obj,
+  public static String toShortString(Object obj,
       int maxLen,
       int maxElems,
       int maxEntries) {
@@ -73,15 +68,44 @@ class Misc {
     } else {
       s = obj.toString();
     }
-    return ellipsis0(s, maxLen);
+    return ellipsis(s, maxLen);
   }
 
-  static String ellipsis0(String str, int maxWidth) {
+  public static String ellipsis(String str, int maxWidth) {
     maxWidth = Math.max(4, maxWidth);
     if (str.length() > maxWidth) {
       return str.substring(0, maxWidth - 3) + "...";
     }
     return str;
+  }
+
+  public static String simpleClassName(Class<?> clazz) {
+    if (clazz.isArray()) {
+      return ArrayInfo.create(clazz).simpleName();
+    }
+    return clazz.getSimpleName();
+  }
+
+  public static String className(Class<?> clazz) {
+    if (clazz.isArray()) {
+      return ArrayInfo.create(clazz).name();
+    }
+    return clazz.getName();
+  }
+
+  public static String describe(Object obj) {
+    if (obj == null) {
+      return "null";
+    } else if (obj.getClass() == Class.class) {
+      return ((Class<?>) obj).getSimpleName() + ".class";
+    } else if (obj instanceof Collection<?> c) {
+      return c.getClass().getSimpleName() + '[' + c.size() + ']';
+    } else if (obj instanceof Map<?, ?> m) {
+      return m.getClass().getSimpleName() + '[' + m.size() + ']';
+    } else if (obj.getClass().isArray()) {
+      return ArrayInfo.describe(obj);
+    }
+    return obj.getClass().getSimpleName();
   }
 
   private static String entryToString(Map.Entry<?, ?> e,
@@ -134,33 +158,13 @@ class Misc {
     return sb.toString();
   }
 
-  static String simpleClassName(Class<?> clazz) {
-    if (clazz.isArray()) {
-      return ArrayInfo.create(clazz).simpleName();
-    }
-    return clazz.getSimpleName();
+  @SuppressWarnings("unchecked")
+  private static <T> T getArrayElement(Object array, int idx) throws Throwable {
+    return (T) arrayElementGetter(array.getClass()).invoke(array, idx);
   }
 
-  static String className(Class<?> clazz) {
-    if (clazz.isArray()) {
-      return ArrayInfo.create(clazz).name();
-    }
-    return clazz.getName();
-  }
-
-  static String describe(Object obj) {
-    if (obj == null) {
-      return "null";
-    } else if (obj.getClass() == Class.class) {
-      return ((Class<?>) obj).getSimpleName() + ".class";
-    } else if (obj instanceof Collection<?> c) {
-      return c.getClass().getSimpleName() + '[' + c.size() + ']';
-    } else if (obj instanceof Map<?, ?> m) {
-      return m.getClass().getSimpleName() + '[' + m.size() + ']';
-    } else if (obj.getClass().isArray()) {
-      return ArrayInfo.describe(obj);
-    }
-    return obj.getClass().getSimpleName();
+  private static int divUp(int value, int divideBy) {
+    return (int) Math.ceil((double) value / (double) divideBy);
   }
 
 }
