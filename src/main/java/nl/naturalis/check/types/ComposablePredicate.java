@@ -2,9 +2,11 @@ package nl.naturalis.check.types;
 
 import nl.naturalis.check.CommonChecks;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static nl.naturalis.check.types.Private.*;
 
@@ -174,6 +176,40 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     return x -> meFirst(x) || ((Relation) relation).exists(x, object);
+  }
+
+  /**
+   * Returns a new test combining this test with the specified free-form test. A
+   * value will pass the new test if it passes this test or if the provided
+   * expression evaluates to {@code true}.
+   *
+   * @param test the boolean expression to evaluate if the value fails to pass
+   *     this test
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default <V> ComposablePredicate<V> orElse(boolean test) {
+    return x -> meFirst(x) || test;
+  }
+
+  /**
+   * Returns a new test combining this test with the free-form test supplied by the
+   * specified {@code Supplier}. A value will pass the new test if it passes this
+   * test or if the expression supplied by the {@code Supplier} evaluates to
+   * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
+   * called if the value fails to pass this test. Useful if evaluating the expression
+   * is not necessarily trivial.
+   *
+   * @param test the supplier of a boolean expression
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default <V> ComposablePredicate<V> orEval(Supplier<Boolean> test) {
+    return x -> meFirst(x) || test.get();
   }
 
   /**
@@ -411,6 +447,30 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   /**
    * Returns a new test combining this test and the specified test. It is, in fact,
    * the disjunction (OR) of two completely separate tests for two completely
+   * separate values. A value will pass the new test if it passes this test or if all
+   * values in the specified collection have the specified relation to the specified
+   * object.
+   *
+   * @param subjects a collection of subjects for the specified {@code Relation}.
+   *     The collection must contain at least one element.
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified {@code Relation}
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
+   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> orAll(int[] subjects,
+      IntRelation relation, int object) {
+    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkSubjects(subjects);
+    return x -> meFirst(x)
+        || Arrays.stream(subjects).allMatch(y -> relation.exists(y, object));
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It is, in fact,
+   * the disjunction (OR) of two completely separate tests for two completely
    * separate values. A value will pass the new test if it passes this test or if at
    * least one value in the specified collection has the specified relation to the
    * specified object.
@@ -437,6 +497,30 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   /**
    * Returns a new test combining this test and the specified test. It is, in fact,
    * the disjunction (OR) of two completely separate tests for two completely
+   * separate values. A value will pass the new test if it passes this test or if at
+   * least one value in the specified collection has the specified relation to the
+   * specified object.
+   *
+   * @param subjects a collection of subjects for the specified {@code Relation}.
+   *     The collection must contain at least one element.
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified {@code Relation}
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
+   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> orAny(int[] subjects,
+      IntRelation relation, int object) {
+    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkSubjects(subjects);
+    return x -> meFirst(x)
+        || Arrays.stream(subjects).anyMatch(y -> relation.exists(y, object));
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It is, in fact,
+   * the disjunction (OR) of two completely separate tests for two completely
    * separate values. A value will pass the new test if it passes this test or if
    * none of the values in the specified collection have the specified relation to
    * the specified object.
@@ -458,6 +542,30 @@ public interface ComposablePredicate<T> extends Predicate<T> {
     checkSubjects(subjects);
     return x -> meFirst(x)
         || subjects.stream().noneMatch(y -> relation.exists(y, object));
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It is, in fact,
+   * the disjunction (OR) of two completely separate tests for two completely
+   * separate values. A value will pass the new test if it passes this test or if
+   * none of the values in the specified collection have the specified relation to
+   * the specified object.
+   *
+   * @param subjects a collection of subjects for the specified {@code Relation}.
+   *     The collection must contain at least one element.
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified {@code Relation}
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
+   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> orNone(int[] subjects,
+      IntRelation relation, int object) {
+    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkSubjects(subjects);
+    return x -> meFirst(x)
+        || Arrays.stream(subjects).noneMatch(y -> relation.exists(y, object));
   }
 
   /**
@@ -494,6 +602,40 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <O, V> ComposablePredicate<V> andAlso(Relation<?, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     return x -> meFirst(x) && ((Relation) relation).exists(x, object);
+  }
+
+  /**
+   * Returns a new test combining this test with the specified free-form test. A
+   * value will pass the new test if it passes this test and if the provided
+   * expression evaluates to {@code true}.
+   *
+   * @param test the boolean expression to evaluate if the value fails to pass
+   *     this test
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default <V> ComposablePredicate<V> andAlso(boolean test) {
+    return x -> meFirst(x) && test;
+  }
+
+  /**
+   * Returns a new test combining this test with the free-form test supplied by the
+   * specified {@code Supplier}. A value will pass the new test if it passes this
+   * test and if the expression supplied by the {@code Supplier} evaluates to
+   * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
+   * called if the value passes this test. Useful if evaluating the boolean
+   * expression is not necessarily trivial.
+   *
+   * @param test the supplier of a boolean expression
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default <V> ComposablePredicate<V> andEval(Supplier<Boolean> test) {
+    return x -> meFirst(x) && test.get();
   }
 
   /**
@@ -726,6 +868,30 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   /**
    * Returns a new test combining this test and the specified test. It is, in fact,
    * the conjunction (AND) of two completely separate tests for two completely
+   * separate values. A value will pass the new test if it passes this test and if
+   * all values in the specified collection have the specified relation to the
+   * specified object.
+   *
+   * @param subjects a collection of subjects for the specified {@code Relation}.
+   *     The collection must contain at least one element.
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified {@code Relation}
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
+   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> andAll(int[] subjects,
+      IntRelation relation, int object) {
+    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkSubjects(subjects);
+    return x -> meFirst(x)
+        && Arrays.stream(subjects).allMatch(y -> relation.exists(y, object));
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It is, in fact,
+   * the conjunction (AND) of two completely separate tests for two completely
    * separate values. A value will pass the new test if it passes this test and if at
    * least one value in the specified collection has the specified relation to the
    * specified object.
@@ -747,6 +913,30 @@ public interface ComposablePredicate<T> extends Predicate<T> {
     checkSubjects(subjects);
     return x -> meFirst(x)
         && subjects.stream().anyMatch(y -> relation.exists(y, object));
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It is, in fact,
+   * the conjunction (AND) of two completely separate tests for two completely
+   * separate values. A value will pass the new test if it passes this test and if at
+   * least one value in the specified collection has the specified relation to the
+   * specified object.
+   *
+   * @param subjects a collection of subjects for the specified {@code Relation}.
+   *     The collection must contain at least one element.
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified {@code Relation}
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
+   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> andAny(int[] subjects,
+      IntRelation relation, int object) {
+    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkSubjects(subjects);
+    return x -> meFirst(x)
+        && Arrays.stream(subjects).anyMatch(y -> relation.exists(y, object));
   }
 
   /**
@@ -778,6 +968,30 @@ public interface ComposablePredicate<T> extends Predicate<T> {
     checkSubjects(subjects);
     return x -> meFirst(x)
         && subjects.stream().noneMatch(y -> relation.exists(y, object));
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It is, in fact,
+   * the conjunction (AND) of two completely separate tests for two completely
+   * separate values. A value will pass the new test if it passes this test and if
+   * none of the values in the specified collection have the specified relation to
+   * the specified object.
+   *
+   * @param subjects a collection of subjects for the specified {@code Relation}.
+   *     The collection must contain at least one element.
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified {@code Relation}
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
+   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> andNone(int[] subjects,
+      IntRelation relation, int object) {
+    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkSubjects(subjects);
+    return x -> meFirst(x)
+        && Arrays.stream(subjects).noneMatch(y -> relation.exists(y, object));
   }
 
   private <V> boolean meFirst(V v) {

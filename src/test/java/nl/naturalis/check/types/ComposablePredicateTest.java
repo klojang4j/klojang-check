@@ -212,6 +212,21 @@ public class ComposablePredicateTest {
   }
 
   @Test
+  public void orAll102() {
+    Check.that(LocalDate.now()).is(NULL().orAll(ints(1, 2, 3, 4), lt(), 10));
+  }
+
+  @Test
+  public void orAll103() {
+    Check.that(LocalDate.now()).is(notNull().orAll(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orAll104() {
+    Check.that(LocalDate.now()).is(NULL().orAll(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test
   public void orAny100() {
     Check.that(LocalDate.now())
         .is(NULL().orAny(of("hello", "foo"), substringOf(), "hello, world"));
@@ -223,6 +238,21 @@ public class ComposablePredicateTest {
   public void orAny101() {
     Check.that(LocalDate.now())
         .is(invalid().orAny(of("hello", "bar"), substringOf(), "foo, world"));
+  }
+
+  @Test
+  public void orAny102() {
+    Check.that(LocalDate.now()).is(NULL().orAny(ints(1, 52, 53, 54), lt(), 10));
+  }
+
+  @Test
+  public void orAny103() {
+    Check.that(LocalDate.now()).is(notNull().orAny(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orAny104() {
+    Check.that(LocalDate.now()).is(NULL().orAny(ints(1, 2, 3, 4), gt(), 10));
   }
 
   @Test
@@ -239,6 +269,21 @@ public class ComposablePredicateTest {
         .is(invalid().orNone(of("hello", "bar"),
             substringOf(),
             "hello, world"));
+  }
+
+  @Test
+  public void orNone102() {
+    Check.that(LocalDate.now()).is(NULL().orNone(ints(51, 52, 53, 54), lt(), 10));
+  }
+
+  @Test
+  public void orNone103() {
+    Check.that(LocalDate.now()).is(notNull().orNone(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orNone104() {
+    Check.that(LocalDate.now()).is(NULL().orNone(ints(1, 52, 3, 4), gt(), 10));
   }
 
   ///////////////////////////////////////////////////////////////////////
@@ -464,6 +509,21 @@ public class ComposablePredicateTest {
   }
 
   @Test
+  public void andAll103() {
+    Check.that(LocalDate.now()).is(notNull().andAll(ints(1, 2, 3, 4), lt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andAll104() {
+    Check.that(LocalDate.now()).is(NULL().andAll(ints(1, 2, 3, 4), lt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andAll105() {
+    Check.that(LocalDate.now()).is(notNull().andAll(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test
   public void andAny100() {
     Check.that(LocalDate.now())
         .is(notNull()
@@ -475,6 +535,26 @@ public class ComposablePredicateTest {
   public void andAny101() {
     Check.that(LocalDate.now())
         .is(valid().andAny(of("hello", "bar"), substringOf(), "foo, world"));
+  }
+
+  @Test
+  public void andAny102() {
+    Check.that(LocalDate.now()).is(notNull().andAny(ints(51, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andAny103() {
+    Check.that(LocalDate.now()).is(NULL().andAny(ints(51, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andAny105() {
+    Check.that(LocalDate.now()).is(notNull().andAny(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andAny106() {
+    Check.that(LocalDate.now()).is(NULL().andAny(ints(1, 2, 3, 54), gt(), 10));
   }
 
   @Test
@@ -493,6 +573,25 @@ public class ComposablePredicateTest {
   public void andNone102() {
     Check.that(LocalDate.now())
         .is(valid().andNone(of("hello", "bar"), substringOf(), "foo bar"));
+  }
+
+  @Test
+  public void andNone103() {
+    Check.that(LocalDate.now()).is(notNull().andNone(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andNone104() {
+    Check.that(LocalDate.now()).is(NULL().andNone(ints(1, 2, 3, 4), gt(), 10));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andNone105() {
+    Check.that(LocalDate.now()).is(notNull().andNone(ints(51, 2, 3, 4), gt(), 10));
+  }
+
+  private static int[] ints(int... ints) {
+    return ints;
   }
 
 }
