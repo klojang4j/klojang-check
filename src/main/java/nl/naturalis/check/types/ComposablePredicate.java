@@ -62,7 +62,7 @@ import static nl.naturalis.check.types.Private.*;
  * @see IntObjRelation
  * @see ObjIntRelation
  */
-@SuppressWarnings({"unchecked", "rawtypes", "UnnecessaryLocalVariable"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public interface ComposablePredicate<T> extends Predicate<T> {
 
   /**
@@ -147,8 +147,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <V> ComposablePredicate<V> orElse(Predicate<?> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || ((Predicate) test).test(x);
+    return x -> meFirst(x) || ((Predicate) test).test(x);
   }
 
   /**
@@ -171,11 +170,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <O, V> ComposablePredicate<V> orElse(Relation<?, ? super O> relation,
+  default <O, V> ComposablePredicate<V> orElse(Relation<?, O> relation,
       O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || ((Relation) relation).exists(x, object);
+    return x -> meFirst(x) || ((Relation) relation).exists(x, object);
   }
 
   /**
@@ -190,8 +188,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <V> ComposablePredicate<V> orNot(Predicate<?> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || !((Predicate) test).test(x);
+    return x -> meFirst(x) || !((Predicate) test).test(x);
   }
 
   /**
@@ -210,11 +207,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <O, V> ComposablePredicate<V> orNot(Relation<?, ? super O> relation,
+  default <O, V> ComposablePredicate<V> orNot(Relation<?, O> relation,
       O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || !((Relation) relation).exists(x, object);
+    return x -> meFirst(x) || !((Relation) relation).exists(x, object);
   }
 
   /**
@@ -238,13 +234,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, V> ComposablePredicate<V> orAll(Collection<S> subjects,
-      Relation<? super S, ?> relation) {
+  default <S, V> ComposablePredicate<V> orAll(Collection<? extends S> subjects,
+      Relation<S, ?> relation) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) || subjects.stream().allMatch(y -> r.exists(y, x));
+    return x -> meFirst(x)
+        || subjects.stream().allMatch(y -> ((Relation) relation).exists(y, x));
   }
 
   /**
@@ -263,13 +258,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, V> ComposablePredicate<V> orAny(Collection<S> subjects,
-      Relation<? super S, ?> relation) {
+  default <S, V> ComposablePredicate<V> orAny(Collection<? extends S> subjects,
+      Relation<S, ?> relation) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) || subjects.stream().anyMatch(y -> r.exists(y, x));
+    return x -> meFirst(x)
+        || subjects.stream().anyMatch(y -> ((Relation) relation).exists(y, x));
   }
 
   /**
@@ -288,13 +282,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, V> ComposablePredicate<V> orNone(Collection<S> subjects,
-      Relation<? super S, ?> relation) {
+  default <S, V> ComposablePredicate<V> orNone(Collection<? extends S> subjects,
+      Relation<S, ?> relation) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) || subjects.stream().noneMatch(y -> r.exists(y, x));
+    return x -> meFirst(x)
+        || subjects.stream().noneMatch(y -> ((Relation) relation).exists(y, x));
   }
 
   /**
@@ -317,8 +310,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <U, V> ComposablePredicate<V> orThat(U value, Predicate<U> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || test.test(value);
+    return x -> meFirst(x) || test.test(value);
   }
 
   /**
@@ -341,8 +333,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       Relation<S, O> relation,
       O object) {
     Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || relation.exists(subject, object);
+    return x -> meFirst(x) || relation.exists(subject, object);
   }
 
   /**
@@ -365,8 +356,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <U, V> ComposablePredicate<V> orNot(U value, Predicate<U> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || !test.test(value);
+    return x -> meFirst(x) || !test.test(value);
   }
 
   /**
@@ -389,8 +379,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       Relation<S, O> relation,
       O object) {
     Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) || !relation.exists(subject, object);
+    return x -> meFirst(x) || !relation.exists(subject, object);
   }
 
   /**
@@ -412,12 +401,11 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orAll(Collection<S> subjects,
-      Relation<? super S, ?> relation, O object) {
+      Relation<S, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) || subjects.stream().allMatch(y -> r.exists(y, object));
+    return x -> meFirst(x)
+        || subjects.stream().allMatch(y -> relation.exists(y, object));
   }
 
   /**
@@ -439,12 +427,11 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orAny(Collection<S> subjects,
-      Relation<? super S, ?> relation, O object) {
+      Relation<S, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) || subjects.stream().anyMatch(y -> r.exists(y, object));
+    return x -> meFirst(x)
+        || subjects.stream().anyMatch(y -> relation.exists(y, object));
   }
 
   /**
@@ -466,13 +453,11 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orNone(Collection<S> subjects,
-      Relation<? super S, ?> relation, O object) {
+      Relation<S, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x)
-        || subjects.stream().noneMatch(y -> r.exists(y, object));
+    return x -> meFirst(x)
+        || subjects.stream().noneMatch(y -> relation.exists(y, object));
   }
 
   /**
@@ -487,8 +472,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <V> ComposablePredicate<V> andAlso(Predicate<?> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && ((Predicate) test).test(x);
+    return x -> meFirst(x) && ((Predicate) test).test(x);
   }
 
   /**
@@ -507,11 +491,9 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <O, V> ComposablePredicate<V> andAlso(Relation<?, ? super O> relation,
-      O object) {
+  default <O, V> ComposablePredicate<V> andAlso(Relation<?, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && ((Relation) relation).exists(x, object);
+    return x -> meFirst(x) && ((Relation) relation).exists(x, object);
   }
 
   /**
@@ -527,8 +509,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <V> ComposablePredicate<V> andNot(Predicate<?> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && !((Predicate) test).test(x);
+    return x -> meFirst(x) && !((Predicate) test).test(x);
   }
 
   /**
@@ -547,11 +528,9 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <O, V> ComposablePredicate<V> andNot(Relation<?, ? super O> relation,
-      O object) {
+  default <O, V> ComposablePredicate<V> andNot(Relation<?, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && !((Relation) relation).exists(x, object);
+    return x -> meFirst(x) && !((Relation) relation).exists(x, object);
   }
 
   /**
@@ -570,13 +549,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, V> ComposablePredicate<V> andAll(Collection<S> subjects,
-      Relation<? super S, ?> relation) {
+  default <S, V> ComposablePredicate<V> andAll(Collection<? extends S> subjects,
+      Relation<S, ?> relation) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) && subjects.stream().allMatch(y -> r.exists(y, x));
+    return x -> meFirst(x) && subjects.stream()
+        .allMatch(y -> ((Relation) relation).exists(y, x));
   }
 
   /**
@@ -595,13 +573,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, V> ComposablePredicate<V> andAny(Collection<S> subjects,
-      Relation<? super S, ?> relation) {
+  default <S, V> ComposablePredicate<V> andAny(Collection<? extends S> subjects,
+      Relation<S, ?> relation) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) && subjects.stream().anyMatch(y -> r.exists(y, x));
+    return x -> meFirst(x)
+        && subjects.stream().anyMatch(y -> ((Relation) relation).exists(y, x));
   }
 
   /**
@@ -620,13 +597,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, V> ComposablePredicate<V> andNone(Collection<S> subjects,
-      Relation<? super S, ?> relation) {
+  default <S, V> ComposablePredicate<V> andNone(Collection<? extends S> subjects,
+      Relation<S, ?> relation) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) && subjects.stream().noneMatch(y -> r.exists(y, x));
+    return x -> meFirst(x)
+        && subjects.stream().noneMatch(y -> ((Relation) relation).exists(y, x));
   }
 
   /**
@@ -649,8 +625,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <U, V> ComposablePredicate<V> andThat(U value, Predicate<U> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && test.test(value);
+    return x -> meFirst(x) && test.test(value);
   }
 
   /**
@@ -673,8 +648,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       Relation<S, O> relation,
       O object) {
     Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && relation.exists(subject, object);
+    return x -> meFirst(x) && relation.exists(subject, object);
   }
 
   /**
@@ -697,8 +671,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <U, V> ComposablePredicate<V> andNot(U value, Predicate<U> test) {
     Objects.requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && !test.test(value);
+    return x -> meFirst(x) && !test.test(value);
   }
 
   /**
@@ -721,8 +694,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       Relation<S, O> relation,
       O object) {
     Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
-    Predicate self = this;
-    return x -> self.test(x) && !relation.exists(subject, object);
+    return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
   /**
@@ -743,13 +715,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, O, V> ComposablePredicate<V> andAll(Collection<S> subjects,
-      Relation<? super S, ?> relation, O object) {
+  default <S, O, V> ComposablePredicate<V> andAll(Collection<? extends S> subjects,
+      Relation<S, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) && subjects.stream().allMatch(y -> r.exists(y, object));
+    return x -> meFirst(x)
+        && subjects.stream().allMatch(y -> relation.exists(y, object));
   }
 
   /**
@@ -770,13 +741,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, O, V> ComposablePredicate<V> andAny(Collection<S> subjects,
-      Relation<? super S, ?> relation, O object) {
+  default <S, O, V> ComposablePredicate<V> andAny(Collection<? extends S> subjects,
+      Relation<S, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) && subjects.stream().anyMatch(y -> r.exists(y, object));
+    return x -> meFirst(x)
+        && subjects.stream().anyMatch(y -> relation.exists(y, object));
   }
 
   /**
@@ -802,14 +772,16 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, O, V> ComposablePredicate<V> andNone(Collection<S> subjects,
-      Relation<? super S, ?> relation, O object) {
+  default <S, O, V> ComposablePredicate<V> andNone(Collection<? extends S> subjects,
+      Relation<S, O> relation, O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     checkSubjects(subjects);
-    Predicate self = this;
-    Relation r = relation;
-    return x -> self.test(x) && subjects.stream().noneMatch(y -> r.exists(y,
-        object));
+    return x -> meFirst(x)
+        && subjects.stream().noneMatch(y -> relation.exists(y, object));
+  }
+
+  private <V> boolean meFirst(V v) {
+    return ComposablePredicate.this.test((T) v);
   }
 
 }
