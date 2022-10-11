@@ -58,14 +58,50 @@ public class ComposablePredicateTest {
   }
 
   @Test
-  public void orNotPredicate00() {
+  public void orElseBoolean00() {
+    Check.that(9.3).is(eval(LT(), 10D).orElse(10 > 11));
+  }
+
+  @Test
+  public void orElseBoolean01() {
+    Check.that(9.3).is(eval(LT(), 8D).orElse(10 < 11));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orElseBoolean02() {
+    Check.that(9.3).is(eval(LT(), 8D).orElse(10 > 11));
+  }
+
+  @Test
+  public void orEval00() {
+    Check.that(9.3).is(eval(LT(), 10D).orEval(() -> 10 > 11));
+  }
+
+  @Test
+  public void orEval01() {
+    Check.that(9.3).is(eval(LT(), 8D).orEval(() -> 10 < 11));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orEval02() {
+    Check.that(9.3).is(eval(LT(), 8D).orEval(() -> 10 > 11));
+  }
+
+  @Test
+  public void orNotPredicate01() {
     Check.that(List.of("foo", "bar")).is(empty().orNot(NULL()));
     Check.that(List.of("foo", "bar"))
         .is(notEmpty().orNot(blank())); // Yes, we can do this !!
   }
 
+  @Test
+  public void orNotPredicate00() {
+    Check.that((Integer) 8).is(eval(LT(), 10).orNot(x -> (int) x % 2 == 0));
+    Check.that((Integer) 8).is(eval(GT(), 10).orNot(x -> (int) x % 3 == 0));
+  }
+
   @Test(expected = IllegalArgumentException.class)
-  public void orNotPredicate01() {
+  public void orNotPredicate02() {
     Check.that("hello world").is(eval((String s) -> s.length() > 100)
         .orNot((String s) -> s.charAt(1) == 'e'));
   }
@@ -330,6 +366,36 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void andAlsoRelation04() {
     Check.that(List.of()).is(notEmpty().andAlso(contains(), "foo"));
+  }
+
+  @Test
+  public void andAlsoBoolean00() {
+    Check.that(9.3).is(eval(LT(), 10D).andAlso(10 < 11));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andAlsoBoolean01() {
+    Check.that(9.3).is(eval(LT(), 8D).andAlso(10 < 11));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andAlsoBoolean02() {
+    Check.that(9.3).is(eval(LT(), 10D).andAlso(10 > 11));
+  }
+
+  @Test
+  public void andEval00() {
+    Check.that(9.3).is(eval(LT(), 10D).andEval(() -> 10 < 11));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andEval01() {
+    Check.that(9.3).is(eval(LT(), 8D).andEval(() -> 10 < 11));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andEval02() {
+    Check.that(9.3).is(eval(LT(), 10D).andEval(() -> 10 > 11));
   }
 
   @Test
