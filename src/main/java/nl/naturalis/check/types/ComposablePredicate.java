@@ -162,8 +162,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * }</pre></blockquote>
    *
    * @param relation the relationship test to combine this test with
-   * @param object the object of the provided {@code Relation}, with the value
-   *     of
+   * @param object the object of the provided {@code Relation}, with the value of
    *     <i>this</i> {@code ComposablePredicate} now becoming the <i>subject</i> of
    *     that relation
    * @param <O> the type of the object of the provided {@code Relation}
@@ -200,7 +199,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * test or if the expression supplied by the {@code Supplier} evaluates to
    * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
    * called if the value fails to pass this test. Useful if evaluating the expression
-   * is not necessarily trivial.
+   * is not trivial.
    *
    * @param test the supplier of a boolean expression
    * @param <V> the type of the value tested by the returned
@@ -327,10 +326,9 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if
-   * another value manages to pass the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if another value manages to pass the other test.
    *
    * <blockquote><pre>{@code
    * Check.that(file1).is(readable().orThat(file2, writable()));
@@ -340,8 +338,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param test the test to combine this test with
    * @param <U> the type of the value to be tested by the other test
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> orThat(U value, Predicate<U> test) {
@@ -350,10 +348,9 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if
-   * another value manages to pass the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -361,8 +358,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orThat(S subject,
@@ -373,10 +370,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if
-   * another value manages to pass the negation of the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if another value manages to pass the negation of the other
+   * test.
    *
    * <blockquote><pre>{@code
    * Check.that(file1).is(readable().orThat(file2, writable()));
@@ -386,8 +383,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param test the test to combine this test with
    * @param <U> the type of the value to be tested by the other test
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> orNot(U value, Predicate<U> test) {
@@ -396,10 +393,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if
-   * another value manages to pass the negation of the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if another value manages to pass the negation of the other
+   * test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -407,8 +404,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orNot(S subject,
@@ -419,11 +416,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if all
-   * values in the specified collection have the specified relation to the specified
-   * object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if all values in the specified collection have the specified
+   * relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
@@ -432,8 +428,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orAll(Collection<S> subjects,
@@ -445,19 +441,18 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if all
-   * values in the specified collection have the specified relation to the specified
-   * object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if all values in the specified collection have the specified
+   * relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified {@code Relation}
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> orAll(int[] subjects,
@@ -469,11 +464,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if at
-   * least one value in the specified collection has the specified relation to the
-   * specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if at least one value in the specified collection has the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
@@ -482,8 +476,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orAny(Collection<S> subjects,
@@ -495,19 +489,18 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if at
-   * least one value in the specified collection has the specified relation to the
-   * specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if at least one value in the specified collection has the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified {@code Relation}
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> orAny(int[] subjects,
@@ -519,11 +512,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if
-   * none of the values in the specified collection have the specified relation to
-   * the specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if none of the values in the specified collection have the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
@@ -532,8 +524,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> orNone(Collection<S> subjects,
@@ -545,19 +537,18 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the disjunction (OR) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test or if
-   * none of the values in the specified collection have the specified relation to
-   * the specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test or if none of the values in the specified collection have the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified {@code Relation}
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> orNone(int[] subjects,
@@ -626,7 +617,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * test and if the expression supplied by the {@code Supplier} evaluates to
    * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
    * called if the value passes this test. Useful if evaluating the boolean
-   * expression is not necessarily trivial.
+   * expression is not trivial.
    *
    * @param test the supplier of a boolean expression
    * @param <V> the type of the value tested by the returned
@@ -748,10 +739,9 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * another value manages to pass the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if another value manages to pass the other test.
    *
    * <blockquote><pre>{@code
    * Check.that(file1).is(readable().andThat(file2, writable()));
@@ -761,8 +751,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param test the test to combine this test with
    * @param <U> the type of the value to be tested by the other test
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> andThat(U value, Predicate<U> test) {
@@ -771,10 +761,9 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * another value manages to pass the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -782,8 +771,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> andThat(S subject,
@@ -794,10 +783,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * another value manages to pass the negation of the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if another value manages to pass the negation of the other
+   * test.
    *
    * <blockquote><pre>{@code
    * Check.that(file1).is(readable().andThat(file2, writable()));
@@ -807,8 +796,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param test the test to combine this test with
    * @param <U> the type of the value to be tested by the other test
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> andNot(U value, Predicate<U> test) {
@@ -817,10 +806,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * another value manages to pass the negation of the other test.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if another value manages to pass the negation of the other
+   * test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -828,8 +817,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> andNot(S subject,
@@ -840,11 +829,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * all values in the specified collection have the specified relation to the
-   * specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if all values in the specified collection have the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
@@ -853,8 +841,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> andAll(Collection<? extends S> subjects,
@@ -866,19 +854,18 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * all values in the specified collection have the specified relation to the
-   * specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if all values in the specified collection have the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified {@code Relation}
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> andAll(int[] subjects,
@@ -890,11 +877,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if at
-   * least one value in the specified collection has the specified relation to the
-   * specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if at least one value in the specified collection has the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
@@ -903,8 +889,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> andAny(Collection<? extends S> subjects,
@@ -916,19 +902,18 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if at
-   * least one value in the specified collection has the specified relation to the
-   * specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if at least one value in the specified collection has the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified {@code Relation}
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> andAny(int[] subjects,
@@ -940,11 +925,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * none of the values in the specified collection have the specified relation to
-   * the specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if none of the values in the specified collection have the
+   * specified relation to the specified object.
    *
    * <blockquote><pre>{@code
    * // import static java.util.List.of;
@@ -958,8 +942,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <S, O, V> ComposablePredicate<V> andNone(Collection<? extends S> subjects,
@@ -971,19 +955,18 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It is, in fact,
-   * the conjunction (AND) of two completely separate tests for two completely
-   * separate values. A value will pass the new test if it passes this test and if
-   * none of the values in the specified collection have the specified relation to
-   * the specified object.
+   * Returns a new test combining this test and the specified test. It combines, in
+   * effect, two checks on two different values. A value will pass the new test if it
+   * passes this test and if none of the values in the specified collection have the
+   * specified relation to the specified object.
    *
    * @param subjects a collection of subjects for the specified {@code Relation}.
    *     The collection must contain at least one element.
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified {@code Relation}
    * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that's the type of
-   *     the value being tested by <i>this</i> {@code ComposablePredicate}.
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> andNone(int[] subjects,

@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.List.of;
 import static nl.naturalis.check.CommonChecks.*;
@@ -292,7 +293,7 @@ public class ComposablePredicateTest {
 
   @Test
   public void andAlsoPredicate00() {
-    Check.that(List.of("foo", "bar")).is(notEmpty().andAlso(notNull()));
+    Check.that(Optional.of(3.3F)).is(notEmpty().andAlso(notNull()));
   }
 
   @Test(expected = ClassCastException.class)
