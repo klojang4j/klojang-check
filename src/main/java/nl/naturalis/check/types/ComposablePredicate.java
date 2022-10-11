@@ -14,23 +14,70 @@ import static nl.naturalis.check.types.Private.*;
  * An extension of {@link Predicate} that acts as a bridge between {@code Predicate}
  * and the other interfaces in this package in that it enables the composition of new
  * tests from any number of instances of {@code Predicate}, {@code IntPredicate},
- * {@code Relation}, {@code IntRelation}, {@code ObjIntRelation}. Note that the newly
- * formed test is no longer associated with any predefined error message, even if it
- * was composed solely of checks from the {@link CommonChecks} class.
+ * {@code Relation}, {@code IntRelation}, {@code ObjIntRelation}. It does override
+ * any method of {@code Predicate}. Instead, it supplements it with an extensive set
+ * of {@code default} methods that allow the composition to take place. These methods
+ * can be divided along two axes: <b>{@code and}</b> vs. <b>{@code or}</b> methods on
+ * the one hand, and methods that combine two checks on the same value vs. methods
+ * that combine checks on two different values on the other.
+ *
+ * <h2>AND vs. OR Compositions</h2>
+ *
+ * <p>Generally, you will have more use for compositions expressing a logical
+ * disjunction (OR), as the chain of checks following {@code Check.that(...)} already
+ * constitutes a logical conjunction (AND). For example, this statement:
+ *
+ * <blockquote><pre>{@code
+ * Check.that(numChairs).is(positive()).is(lte(), 4).is(even());
+ * }</pre></blockquote>
+ *
+ * <p>requires the number of chairs to be both positive <i>and</i> less than 5
+ * <i>and</i> even. If the number of chairs needs to pass just one of these tests,
+ * write:
+ *
+ * <blockquote><pre>{@code
+ * Check.that(numChairs).is(positive().orElse(lte(), 4).orElse(even()));
+ * }</pre></blockquote>
+ *
+ * <p>Nevertheless, you might still want to use the {@code and} methods for
+ * conciseness:
+ *
+ * <blockquote><pre>{@code
+ * // import static java.util.List.of;
+ * Check.that(string).is(notNull().andAll(of("foo", "bar", "teapot"), substringOf());
+ * }</pre></blockquote>
+ *
+ * <h2>Combining Checks on Different Values</h2>
+ *
+ * <p>This is useful if the validity of one value is dependent on another value
+ * satisfying some criterion:
+ *
+ * <blockquote><pre>{@code
+ * Check.that(list1).is(empty().orThat(list2, contains(), "foo"));
+ * }</pre></blockquote>
+ *
+ * <p>The second check continues nicely in the idiom of Naturalis Check, but,
+ * strictly speaking, it is semantic sugar and, depending on your taste, you can also
+ * just write:
+ *
+ * <blockquote><pre>{@code
+ * Check.that(list1).is(empty().orThat(list2.contains("foo"));
+ * }</pre></blockquote>
  *
  * <h2>Generics</h2>
  *
  * <p>Even though the type parameter for {@code ComposablePredicate} is {@code <T>},
  * the type parameter for the predicates and relations it strings together is not
  * {@code <? super T>}, as you would ordinarily expect. Instead, it is simply
- * {@code <?>}. This allows checks like {@link CommonChecks#notNull() notNull()},
- * which can be applied to any type of value, to be followed by checks that target
- * more specific types of values. For example, the following code would not compile
- * if the type of the first argument to {@code orElse()} were
- * {@code Relation<? super T, O>} instead of simply {@code Relation<?, O>}:
+ * {@code <?>}. This allows checks like {@link CommonChecks#notNull() notNull()} and
+ * {@link CommonChecks#notEmpty() notEmpty()}, which can be applied to any type of
+ * value, to be followed by checks that can only be applied to a specific type of
+ * values. For example, the following code would not compile if the type of the first
+ * argument to {@code orElse()} were {@code Relation<? super T, O>} instead of simply
+ * {@code Relation<?, O>}:
  *
  * <blockquote><pre>{@code
- * Check.that(List.of("foo", "bar")).is(NULL().orElse(contains(), "foo"));
+ * Check.that(List.of("foo", "bar")).is(empty().orElse(contains(), "foo"));
  * }</pre></blockquote>
  *
  * <p>The downside is that it is easier for a composition of tests to harbor a type
@@ -162,7 +209,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * }</pre></blockquote>
    *
    * @param relation the relationship test to combine this test with
-   * @param object the object of the provided {@code Relation}, with the value of
+   * @param object the object of the provided {@code Relation}, with the value
+   *     of
    *     <i>this</i> {@code ComposablePredicate} now becoming the <i>subject</i> of
    *     that relation
    * @param <O> the type of the object of the provided {@code Relation}
@@ -175,40 +223,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       O object) {
     Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     return x -> meFirst(x) || ((Relation) relation).exists(x, object);
-  }
-
-  /**
-   * Returns a new test combining this test with the specified free-form test. A
-   * value will pass the new test if it passes this test or if the provided
-   * expression evaluates to {@code true}.
-   *
-   * @param test the boolean expression to evaluate if the value fails to pass
-   *     this test
-   * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
-   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
-   * @return a new test combining this test and the specified free-form test
-   */
-  default <V> ComposablePredicate<V> orElse(boolean test) {
-    return x -> meFirst(x) || test;
-  }
-
-  /**
-   * Returns a new test combining this test with the free-form test supplied by the
-   * specified {@code Supplier}. A value will pass the new test if it passes this
-   * test or if the expression supplied by the {@code Supplier} evaluates to
-   * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
-   * called if the value fails to pass this test. Useful if evaluating the expression
-   * is not trivial.
-   *
-   * @param test the supplier of a boolean expression
-   * @param <V> the type of the value tested by the returned
-   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
-   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
-   * @return a new test combining this test and the specified free-form test
-   */
-  default <V> ComposablePredicate<V> orEval(Supplier<Boolean> test) {
-    return x -> meFirst(x) || test.get();
   }
 
   /**
@@ -367,6 +381,40 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       O object) {
     Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
     return x -> meFirst(x) || relation.exists(subject, object);
+  }
+
+  /**
+   * Returns a new test combining this test with the specified free-form test. A
+   * value will pass the new test if it passes this test or if the provided
+   * expression evaluates to {@code true}.
+   *
+   * @param test the boolean expression to evaluate if the value fails to pass
+   *     this test
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default <V> ComposablePredicate<V> orThat(boolean test) {
+    return x -> meFirst(x) || test;
+  }
+
+  /**
+   * Returns a new test combining this test with the free-form test supplied by the
+   * specified {@code Supplier}. A value will pass the new test if it passes this
+   * test or if the expression supplied by the {@code Supplier} evaluates to
+   * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
+   * called if the value fails to pass this test. Useful if evaluating the expression
+   * is not trivial.
+   *
+   * @param test the supplier of a boolean expression
+   * @param <V> the type of the value tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default <V> ComposablePredicate<V> orEval(Supplier<Boolean> test) {
+    return x -> meFirst(x) || test.get();
   }
 
   /**

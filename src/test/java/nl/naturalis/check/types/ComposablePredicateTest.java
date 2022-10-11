@@ -58,18 +58,18 @@ public class ComposablePredicateTest {
   }
 
   @Test
-  public void orElseBoolean00() {
-    Check.that(9.3).is(eval(LT(), 10D).orElse(10 > 11));
+  public void orThatBoolean00() {
+    Check.that(9.3).is(eval(LT(), 10D).orThat(10 > 11));
   }
 
   @Test
-  public void orElseBoolean01() {
-    Check.that(9.3).is(eval(LT(), 8D).orElse(10 < 11));
+  public void orThatBoolean01() {
+    Check.that(9.3).is(eval(LT(), 8D).orThat(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void orElseBoolean02() {
-    Check.that(9.3).is(eval(LT(), 8D).orElse(10 > 11));
+  public void orThatBoolean02() {
+    Check.that(9.3).is(eval(LT(), 8D).orThat(10 > 11));
   }
 
   @Test
