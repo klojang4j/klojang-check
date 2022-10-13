@@ -99,10 +99,10 @@ final class CustomMsgFormatter {
   private static final Map<String, Function<Object[], String>> ARG_LOOKUPS =
       Map.of(
           "test", CustomMsgFormatter::getCheckName,
-          "arg",  args -> toShortString(args[1],MAX_STRING_WIDTH),
+          "arg",  args -> toShortString(args[1], MAX_STRING_WIDTH),
           "type", args -> getArgumentType(args),
           "name", CustomMsgFormatter::getArgumentName,
-          "obj",  args -> toShortString(args[4],MAX_STRING_WIDTH));
+          "obj",  args -> toShortString(args[4], MAX_STRING_WIDTH));
   //@formatter:on
 
   private static String getArgVal(String arg, Object[] args) {
