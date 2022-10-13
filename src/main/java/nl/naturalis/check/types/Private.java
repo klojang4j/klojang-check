@@ -11,16 +11,11 @@ import static java.util.Objects.requireNonNull;
 
 final class Private {
 
-  static final String TEST_MUST_NOT_BE_NULL = "test must not be null";
-  static final String RELATION_MUST_NOT_BE_NULL = "relation must not be null";
-
+  private static final String TEST_MUST_NOT_BE_NULL = "test must not be null";
+  private static final String RELATION_MUST_NOT_BE_NULL = "relation must not be null";
+  private static final String QUANTIFIER_MUST_NOT_BE_NULL = "quantifier must not be null";
   private static final String ERR_NO_OBJECT = "at least one object required";
-
-  static void checkSubjects(Collection<?> values) {
-    if (requireNonNull(values, "collection must not be null").size() == 0) {
-      throw new IllegalArgumentException(ERR_NO_OBJECT);
-    }
-  }
+  private static final String ARRAY_MUST_NOT_BE_NULL = "array must not be null";
 
   static void checkArg(Predicate<?> test) {
     requireNonNull(test, TEST_MUST_NOT_BE_NULL);
@@ -34,6 +29,10 @@ final class Private {
     requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
   }
 
+  static void checkArg(IntObjRelation<?> relation) {
+    requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+  }
+
   static void checkArg(IntRelation relation) {
     requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
   }
@@ -43,7 +42,7 @@ final class Private {
       Object[] objects) {
     requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     requireNonNull(quantifier, QUANTIFIER_MUST_NOT_BE_NULL);
-    if (requireNonNull(objects, "at least one object required").length == 0) {
+    if (requireNonNull(objects, ARRAY_MUST_NOT_BE_NULL).length == 0) {
       throw new IllegalArgumentException(ERR_NO_OBJECT);
     }
   }
@@ -53,19 +52,19 @@ final class Private {
       int[] objects) {
     requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
     requireNonNull(quantifier, QUANTIFIER_MUST_NOT_BE_NULL);
-    if (requireNonNull(objects, "array must not be null").length == 0) {
+    if (requireNonNull(objects, ARRAY_MUST_NOT_BE_NULL).length == 0) {
       throw new IllegalArgumentException(ERR_NO_OBJECT);
     }
   }
 
   static void checkObjects(int[] values) {
-    if (requireNonNull(values, "array must not be null").length == 0) {
+    if (requireNonNull(values, ARRAY_MUST_NOT_BE_NULL).length == 0) {
       throw new IllegalArgumentException(ERR_NO_OBJECT);
     }
   }
 
   static void checkObjects(Object[] values) {
-    if (requireNonNull(values, "array must not be null").length == 0) {
+    if (requireNonNull(values, ARRAY_MUST_NOT_BE_NULL).length == 0) {
       throw new IllegalArgumentException(ERR_NO_OBJECT);
     }
   }
@@ -91,7 +90,5 @@ final class Private {
       case NONE -> stream(objects).noneMatch(o -> relation.exists(subject, o));
     };
   }
-
-  private static final String QUANTIFIER_MUST_NOT_BE_NULL = "quantifier must not be null";
 
 }

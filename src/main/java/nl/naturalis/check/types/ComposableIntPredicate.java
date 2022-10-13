@@ -2,30 +2,27 @@ package nl.naturalis.check.types;
 
 import nl.naturalis.check.Quantifier;
 
-import java.util.Collection;
-import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static java.util.Arrays.stream;
 import static nl.naturalis.check.types.Private.*;
 
 /**
  * An extension of {@link IntPredicate} that acts as a bridge between
- * {@code IntPredicate} and the other interfaces in this package in that it enables
- * the composition of new tests from any number of instances of {@code IntPredicate},
- * {@code Predicate}, {@code Relation}, {@code IntRelation}, {@code ObjIntRelation}.
- * It does not override any method of {@code Predicate}. Instead, it supplements it
- * with a comprehensive set of {@code default} methods that allow the composition to
- * take place.  For more information, see {@link ComposablePredicate}.
+ * {@code IntPredicate} and the relational interfaces in this package. It enables the
+ * composition of new tests from any number of instances of {@code IntPredicate},
+ * {@code IntPredicate}, {@code Relation}, {@code IntRelation} and
+ * {@code IntObjRelation}. It does not override any method of {@code IntPredicate}.
+ * Instead, it extends it with a comprehensive set of {@code default} methods that
+ * allow the composition to take place. For more information, see
+ * {@link ComposableIntPredicate}.
  *
- * @see ComposablePredicate
  * @see Relation
  * @see IntRelation
  * @see IntObjRelation
- * @see ObjIntRelation
  */
+@SuppressWarnings({"unchecked"})
 public interface ComposableIntPredicate extends IntPredicate {
 
   /**
@@ -51,26 +48,46 @@ public interface ComposableIntPredicate extends IntPredicate {
   /**
    * Converts a {@code IntPredicate} to the equivalent
    * {@code ComposableIntPredicate}, so it can become part of a composition. This
-   * method can be used to convert a predefined {@code Predicate} constant from
+   * method can be used to convert a predefined {@code IntPredicate} constant from
    * outside Naturalis Check to a {@code ComposableIntPredicate}, or to hard-cast a
    * lambda or method reference to a {@code ComposableIntPredicate}, so the compiler
    * will treat it as such. Note that this method is only needed if the
    * {@code IntPredicate}, lambda or method reference is to be the <i>first</i> test
    * of the composition.
    *
-   * @param test the {@code Predicate}
+   * @param test the {@code IntPredicate}
    * @return the equivalent {@code ComposableIntPredicate}
    */
   static ComposableIntPredicate validIntIf(IntPredicate test) {
+    checkArg(test);
     return test::test;
   }
 
   /**
-   * Converts an {@code IntRelation} to a {@code ComposableIntPredicate}. More
+   * Converts an {@code IntObjRelation} to a {@code ComposableIntPredicate}. More
    * precisely: this method returns a {@code ComposableIntPredicate} that evaluates
    * to {@code true} if the value being tested has the specified relation to the
-   * specified value. Note that this method is only needed if the {@code IntRelation}
-   * is to be the <i>first</i> test of the composition.
+   * specified value. Note that this method is only needed if the {@code Relation} is
+   * to be the <i>first</i> test of the composition.
+   *
+   * @param relation the relation
+   * @param object the object of the relation
+   * @param <O> the type of the object of the relation
+   * @return a {@code ComposableIntPredicate} that evaluates to {@code true} if the
+   *     value being tested has the specified relation to the specified value
+   */
+  static <O> ComposableIntPredicate validIntIf(IntObjRelation<O> relation,
+      O object) {
+    checkArg(relation);
+    return s -> relation.exists(s, object);
+  }
+
+  /**
+   * Converts an {@code Relation} to a {@code ComposableIntPredicate}. More
+   * precisely: this method returns a {@code ComposableIntPredicate} that evaluates
+   * to {@code true} if the value being tested has the specified relation to the
+   * specified value. Note that this method is only needed if the {@code Relation} is
+   * to be the <i>first</i> test of the composition.
    *
    * @param relation the relation
    * @param object the object of the relation
@@ -78,12 +95,22 @@ public interface ComposableIntPredicate extends IntPredicate {
    *     value being tested has the specified relation to the specified value
    */
   static ComposableIntPredicate validIntIf(IntRelation relation, int object) {
+    checkArg(relation);
     return s -> relation.exists(s, object);
   }
 
   /**
+   * Returns the negation of this predicate.
+   *
+   * @return the negation of this predicate
+   */
+  default ComposableIntPredicate negated() {
+    return x -> !meFirst(x);
+  }
+
+  /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test or the specified test.
+   * the new test if it passes <i>this</i> test or the specified test.
    *
    * @param test the test to combine this test with
    * @return a new test combining this test and the specified test
@@ -95,28 +122,27 @@ public interface ComposableIntPredicate extends IntPredicate {
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test or if it has the specified relation to the
-   * specified value.
+   * the new test if it passes <i>this</i> test or if it has the specified relation
+   * to the specified value.
    *
    * <blockquote><pre>{@code
    * Check.that("foo bar").is(empty().orElse(hasSubstring(), "foo"));
    * }</pre></blockquote>
    *
    * @param relation the relationship test to combine this test with
-   * @param object the object of the provided {@code IntRelation}, with the value
-   *     of
-   *     <i>this</i> {@code ComposableIntPredicate} now becoming the <i>subject</i>
-   *     of that relation
+   * @param object the object of the specified relation, with the value of this
+   *     {@code ComposablePredicate} now becoming the subject of that relation
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orElse(IntRelation relation, int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkArg(relation);
     return x -> meFirst(x) || relation.exists(x, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test or the negation of the specified test.
+   * the new test if it passes <i>this</i> test or the negation of the specified
+   * test.
    *
    * @param test the test to combine this test with
    * @return a new test combining this test and the specified test
@@ -128,111 +154,70 @@ public interface ComposableIntPredicate extends IntPredicate {
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test or if it does not have the specified
+   * the new test if it passes <i>this</i> test or if it does not have the specified
    * relation to the specified value.
    *
    * @param relation the relationship test to combine this test with
-   * @param object the object of the provided {@code IntRelation}, with the value
-   *     of
-   *     <i>this</i> {@code ComposableIntPredicate} now becoming the <i>subject</i>
-   *     of that relation
+   * @param object the object of the specified relation, with the value of this
+   *     {@code ComposablePredicate} now becoming the subject of that relation
    * @return a new test combining this test and the specified test
    */
-  default ComposableIntPredicate orNot(IntRelation relation,
-      int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+  default ComposableIntPredicate orNot(IntRelation relation, int object) {
+    checkArg(relation);
     return x -> meFirst(x) || !relation.exists(x, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test or if all values in the specified collection
-   * have the specified relation to that value.
+   * the new test if it passes <i>this</i> test or if it has a particular relation to
+   * the specified set of values.
    *
-   * <blockquote><pre>{@code
-   * // import static java.util.List.of;
-   * Check.that("foo bar").is(empty().orAll(of("foo", "bar"), substringOf());
-   * }</pre></blockquote>
-   *
-   * @param subjects a collection of subjects for the specified
-   *     {@code IntRelation}, with the value of <i>this</i>
-   *     {@code ComposableIntPredicate} now becoming the
-   *     <i>object</i> of that relation. The collection must contain at least one
-   *     element.
    * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the value against
    * @return a new test combining this test and the specified test
    */
-  default ComposableIntPredicate orAll(int[] subjects, IntRelation relation) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
+  default ComposableIntPredicate or(IntRelation relation,
+      Quantifier quantifier,
+      int... objects) {
+    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
-        || stream(subjects).allMatch(y -> relation.exists(y, x));
+        || testAgainstArray(x, relation, quantifier, objects);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test or if at least one value in the specified
-   * collection has the specified relation to that value.
-   *
-   * @param subjects a collection of subjects for the specified
-   *     {@code IntRelation}, with the value of <i>this</i>
-   *     {@code ComposableIntPredicate} now becoming the
-   *     <i>object</i> of that relation. The collection must contain at least one
-   *     element.
-   * @param relation the relationship test to combine this test with
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate orAny(int[] subjects,
-      IntRelation relation) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        || stream(subjects).anyMatch(y -> relation.exists(y, x));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test or if none of the values in the specified
-   * collection have the specified relation to that value.
-   *
-   * @param subjects a collection of subjects for the specified
-   *     {@code IntRelation}, with the value of <i>this</i>
-   *     {@code ComposableIntPredicate} now becoming the
-   *     <i>object</i> of that relation. The collection must contain at least one
-   *     element.
-   * @param relation the relationship test to combine this test with
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate orNone(int[] subjects, IntRelation relation) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        || stream(subjects).noneMatch(y -> relation.exists(y, x));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if another value manages to pass the other test.
-   *
-   * <blockquote><pre>{@code
-   * Check.that(file1).is(readable().orThat(file2, writable()));
-   * }</pre></blockquote>
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the other test.
    *
    * @param value the value to be tested by the specified test
    * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
+   * @param <T> the type of the value tested by the predicate
    * @return a new test combining this test and the specified test
    */
-  default <U> ComposableIntPredicate orThat(U value, Predicate<U> test) {
+  default <T> ComposableIntPredicate orThat(T value, Predicate<T> test) {
     checkArg(test);
     return x -> meFirst(x) || test.test(value);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if another value manages to pass the other test.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the other test.
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @return a new test combining this test and the specified test
+   */
+  default ComposableIntPredicate orThat(int value, IntPredicate test) {
+    checkArg(test);
+    return x -> meFirst(x) || test.test(value);
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -244,30 +229,62 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate orThat(S subject,
       Relation<S, O> relation,
       O object) {
-    Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
+    checkArg(relation);
     return x -> meFirst(x) || relation.exists(subject, object);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if another value manages to pass the negation of the other
-   * test.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the other test.
    *
-   * @param value the value to be tested by the specified test
-   * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
    * @return a new test combining this test and the specified test
    */
-  default <U> ComposableIntPredicate orNot(U value, Predicate<U> test) {
+  default ComposableIntPredicate orThat(int subject,
+      IntRelation relation,
+      int object) {
+    checkArg(relation);
+    return x -> meFirst(x) || relation.exists(subject, object);
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the negation of the other
+   * test.
+   *
+   * @param value the value to be tested by the specified predicate
+   * @param test the test to combine this test with
+   * @param <T> the type of values being tested by the specified predicate
+   * @return a new test combining this test and the specified test
+   */
+  default <T> ComposableIntPredicate orNot(T value, Predicate<T> test) {
     checkArg(test);
     return x -> meFirst(x) || !test.test(value);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if another value manages to pass the negation of the other
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the negation of the other
+   * test.
+   *
+   * @param value the value to be tested by the specified predicate
+   * @param test the test to combine this test with
+   * @return a new test combining this test and the specified test
+   */
+  default ComposableIntPredicate orNot(int value, IntPredicate test) {
+    checkArg(test);
+    return x -> meFirst(x) || !test.test(value);
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the negation of the other
    * test.
    *
    * @param subject the subject of the specified relation
@@ -280,158 +297,56 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate orNot(S subject,
       Relation<S, O> relation,
       O object) {
-    Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
+    checkArg(relation);
     return x -> meFirst(x) || !relation.exists(subject, object);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if another value manages to pass the negation of the other
-   * test.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if <i>another</i> value ({@code subject}) has a particular
+   * relation to the specified set of values.
    *
-   * @param subject the subject of the specified relation
+   * @param subject the subject of the specified {@code Relation}
    * @param relation the relationship test to combine this test with
-   * @param object the object of the specified relation
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
+   * @param <S> the type of the subject of the relation
+   * @param <O> the type of the object of the relation
+   * @param <P> the type of the values fed as "objects" into the relation
    * @return a new test combining this test and the specified test
    */
-  default ComposableIntPredicate orNot(int subject,
-      IntRelation relation,
-      int object) {
-    Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
-    return x -> meFirst(x) || !relation.exists(subject, object);
+  default <S, O, P extends O> ComposableIntPredicate or(S subject,
+      Relation<S, O> relation, Quantifier quantifier, P... objects) {
+    checkArgs(relation, quantifier, objects);
+    Private.checkObjects(objects);
+    return x -> meFirst(x)
+        || testAgainstArray(subject, relation, quantifier, objects);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if all values in the specified collection have the specified
-   * relation to the specified object.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if <i>another</i> value ({@code subject}) has a particular
+   * relation to the specified set of values.
    *
-   * @param subjects a collection of subjects for the specified {@code Relation}.
-   *     The collection must contain at least one element.
+   * @param subject the subject of the relation
    * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code Relation}
-   * @param <S> the type of the subject of the specified relation
-   * @param <O> the type of the object of the specified relation
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
    * @return a new test combining this test and the specified test
    */
-  default <S, O> ComposableIntPredicate orAll(Collection<S> subjects,
-      Relation<S, O> relation, O object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkSubjects(subjects);
+  default ComposableIntPredicate or(int subject,
+      IntRelation relation, Quantifier quantifier, int... objects) {
+    checkArgs(relation, quantifier, objects);
+    checkObjects(objects);
     return x -> meFirst(x)
-        || subjects.stream().allMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if all values in the specified collection have the specified
-   * relation to the specified object.
-   *
-   * @param subjects a collection of subjects for the specified
-   *     {@code IntRelation}. The array must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code IntRelation}
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate orAll(int[] subjects,
-      IntRelation relation,
-      int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        || stream(subjects).allMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if at least one value in the specified collection has the
-   * specified relation to the specified object.
-   *
-   * @param subjects a collection of subjects for the specified {@code Relation}.
-   *     The collection must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code Relation}
-   * @param <S> the type of the subject of the specified relation
-   * @param <O> the type of the object of the specified relation
-   * @return a new test combining this test and the specified test
-   */
-  default <S, O> ComposableIntPredicate orAny(Collection<? extends S> subjects,
-      Relation<S, O> relation, O object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkSubjects(subjects);
-    return x -> meFirst(x)
-        || subjects.stream().anyMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if at least one value in the specified collection has the
-   * specified relation to the specified object.
-   *
-   * @param subjects a collection of subjects for the specified
-   *     {@code IntRelation}. The array must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code IntRelation}
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate orAny(int[] subjects,
-      IntRelation relation, int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        || stream(subjects).anyMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if none of the values in the specified collection have the
-   * specified relation to the specified object.
-   *
-   * @param subjects a collection of subjects for the specified {@code Relation}.
-   *     The collection must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code Relation}
-   * @param <S> the type of the subject of the specified relation
-   * @param <O> the type of the object of the specified relation
-   * @return a new test combining this test and the specified test
-   */
-  default <S, O> ComposableIntPredicate orNone(Collection<? extends S> subjects,
-      Relation<S, O> relation, O object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkSubjects(subjects);
-    return x -> meFirst(x)
-        || subjects.stream().noneMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test or if none of the values in the specified collection have the
-   * specified relation to the specified object.
-   *
-   * @param subjects an array of int values used as subjects for the specified
-   *     {@code IntRelation}. The array must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code IntRelation}
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate orNone(int[] subjects,
-      IntRelation relation, int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        || stream(subjects).noneMatch(y -> relation.exists(y, object));
+        || testAgainstArray(subject, relation, quantifier, objects);
   }
 
   /**
    * Returns a new test combining this test with the specified free-form test. A
-   * value will pass the new test if it passes this test or if the provided
+   * value will pass the new test if it passes <i>this</i> test or if the provided
    * expression evaluates to {@code true}.
    *
    * @param test the boolean expression to evaluate if the value fails to pass
@@ -444,11 +359,11 @@ public interface ComposableIntPredicate extends IntPredicate {
 
   /**
    * Returns a new test combining this test with the free-form test supplied by the
-   * specified {@code Supplier}. A value will pass the new test if it passes this
-   * test or if the expression supplied by the {@code Supplier} evaluates to
-   * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
-   * called if the value fails to pass this test. Useful if evaluating the expression
-   * could be expensive.
+   * specified {@code Supplier}. A value will pass the new test if it passes
+   * <i>this</i> test or if the expression supplied by the {@code Supplier}
+   * evaluates to {@code true}. The supplier's {@link Supplier#get() get()} method
+   * will only be called if the value fails to pass this test. Useful if evaluating
+   * the expression could be expensive.
    *
    * @param test the supplier of a boolean expression
    * @return a new test combining this test and the specified free-form test
@@ -477,19 +392,45 @@ public interface ComposableIntPredicate extends IntPredicate {
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test and if it has the specified relation to the
-   * specified value.
+   * the new test if it passes <i>this</i> test and if it has the specified relation
+   * to the specified value.
    *
    * @param relation the relationship test to combine this test with
-   * @param object the object of the provided {@code IntRelation}, with the value
-   *     of
-   *     <i>this</i> {@code ComposableIntPredicate} now becoming the <i>subject</i>
-   *     of that relation
+   * @param object the object of the relation, with the value being tested now
+   *     becoming the subject of the relation
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andAlso(IntRelation relation, int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+    checkArg(relation);
     return x -> meFirst(x) && relation.exists(x, object);
+  }
+
+  /**
+   * Returns a new test combining this test with the specified free-form test. A
+   * value will pass the new test if it passes <i>this</i> test and if the provided
+   * expression evaluates to {@code true}.
+   *
+   * @param test the boolean expression to evaluate if the value fails to pass
+   *     this test
+   * @return a new test combining this test and the specified free-form test
+   */
+  default ComposableIntPredicate and(boolean test) {
+    return x -> meFirst(x) && test;
+  }
+
+  /**
+   * Returns a new test combining this test with the free-form test supplied by the
+   * specified {@code Supplier}. A value will pass the new test if it passes
+   * <i>this</i> test and if the expression supplied by the {@code Supplier}
+   * evaluates to {@code true}. The supplier's {@link Supplier#get() get()} method
+   * will only be called if the value passes this test. Useful if evaluating the
+   * boolean expression could be expensive.
+   *
+   * @param test the supplier of a boolean expression
+   * @return a new test combining this test and the specified free-form test
+   */
+  default ComposableIntPredicate andEval(Supplier<Boolean> test) {
+    return x -> meFirst(x) && test.get();
   }
 
   /**
@@ -507,107 +448,71 @@ public interface ComposableIntPredicate extends IntPredicate {
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test and if it does not have the specified
+   * the new test if it passes <i>this</i> test and if it does not have the specified
    * relation to the specified value.
    *
    * @param relation the relationship test to combine this test with
-   * @param object the object of the provided {@code IntRelation}, with the value
-   *     of
-   *     <i>this</i> {@code ComposableIntPredicate} now becoming the <i>subject</i>
-   *     of that relation
+   * @param object the object of the relation, with the value being tested now
+   *     becoming the subject of the relation
    * @return a new test combining this test and the specified test
    */
-  default ComposableIntPredicate andNot(IntRelation relation, int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
+  default ComposableIntPredicate andNot(IntRelation relation,
+      int object) {
+    checkArg(relation);
     return x -> meFirst(x) && !relation.exists(x, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test and if all values in the specified
-   * collection have the specified relation to that value.
+   * the new test if it passes <i>this</i> test and if it has a particular relation
+   * to the specified set of values.
    *
-   * @param subjects an array of int values used as subjects for the specified
-   *     {@code IntRelation}, with the value of <i>this</i>
-   *     {@code ComposableIntPredicate} now becoming the
-   *     <i>object</i> of that relation. The collection must contain at least one
-   *     element.
    * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the value against
    * @return a new test combining this test and the specified test
    */
-  default ComposableIntPredicate andAll(int[] subjects,
-      IntRelation relation) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x) && stream(subjects)
-        .allMatch(y -> relation.exists(y, x));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test and if at least one value in the specified
-   * collection has the specified relation to that value.
-   *
-   * @param subjects an array of int values used as subjects for the specified
-   *     {@code IntRelation}, with the value of <i>this</i>
-   *     {@code ComposableIntPredicate} now becoming the
-   *     <i>object</i> of that relation. The collection must contain at least one
-   *     element.
-   * @param relation the relationship test to combine this test with
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate andAny(int[] subjects,
-      IntRelation relation) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
+  default ComposableIntPredicate and(IntRelation relation,
+      Quantifier quantifier,
+      int... objects) {
+    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
-        && stream(subjects).anyMatch(y -> relation.exists(y, x));
+        && testAgainstArray(x, relation, quantifier, objects);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes this test and if none of the values in the specified
-   * collection have the specified relation to that value.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the other test.
    *
-   * @param subjects an array of int values used as subjects for the specified
-   *     {@code IntRelation}, with the value of <i>this</i>
-   *     {@code ComposableIntPredicate} now becoming the
-   *     <i>object</i> of that relation. The collection must contain at least one
-   *     element.
-   * @param relation the relationship test to combine this test with
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate andNone(int[] subjects,
-      IntRelation relation) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        && stream(subjects).noneMatch(y -> relation.exists(y, x));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if another value manages to pass the other test.
-   *
-   * <blockquote><pre>{@code
-   * Check.that(file1).is(readable().andThat(file2, writable()));
-   * }</pre></blockquote>
-   *
-   * @param value the value to be tested by the specified test
+   * @param value the value to be tested by the specified predicate
    * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
+   * @param <T> the type of values being tested by the specified predicate
    * @return a new test combining this test and the specified test
    */
-  default <U> ComposableIntPredicate andThat(U value, Predicate<U> test) {
+  default <T> ComposableIntPredicate andThat(T value, Predicate<T> test) {
     checkArg(test);
     return x -> meFirst(x) && test.test(value);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if another value manages to pass the other test.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the other test.
+   *
+   * @param value the value to be tested by the specified predicate
+   * @param test the test to combine this test with
+   * @return a new test combining this test and the specified test
+   */
+  default ComposableIntPredicate andThat(int value, IntPredicate test) {
+    checkArg(test);
+    return x -> meFirst(x) && test.test(value);
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -619,33 +524,50 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate andThat(S subject,
       Relation<S, O> relation,
       O object) {
-    Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
+    checkArg(relation);
     return x -> meFirst(x) && relation.exists(subject, object);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if another value manages to pass the negation of the other
-   * test.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the other test.
    *
-   * @param value the value to be tested by the specified test
-   * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
    * @return a new test combining this test and the specified test
    */
-  default <U> ComposableIntPredicate andNot(U value, Predicate<U> test) {
+  default ComposableIntPredicate andThat(int subject,
+      IntRelation relation,
+      int object) {
+    checkArg(relation);
+    return x -> meFirst(x) && relation.exists(subject, object);
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the negation of the other
+   * test.
+   *
+   * @param value the value to be tested by the specified predicate
+   * @param test the test to combine this test with
+   * @param <T> the type of values being tested by the specified predicate
+   * @return a new test combining this test and the specified test
+   */
+  default <T> ComposableIntPredicate andNot(T value, Predicate<T> test) {
     checkArg(test);
     return x -> meFirst(x) && !test.test(value);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if another value manages to pass the negation of the other
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the negation of the other
    * test.
    *
-   * @param value the value to be tested by the specified test
+   * @param value the value to be tested by the specified predicate
    * @param test the test to combine this test with
    * @return a new test combining this test and the specified test
    */
@@ -655,9 +577,9 @@ public interface ComposableIntPredicate extends IntPredicate {
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if another value manages to pass the negation of the other
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the negation of the other
    * test.
    *
    * @param subject the subject of the specified relation
@@ -670,14 +592,14 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate andNot(S subject,
       Relation<S, O> relation,
       O object) {
-    Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
+    checkArg(relation);
     return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if another value manages to pass the negation of the other
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the negation of the other
    * test.
    *
    * @param subject the subject of the specified relation
@@ -688,167 +610,49 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate andNot(int subject,
       IntRelation relation,
       int object) {
-    Objects.requireNonNull(relation, TEST_MUST_NOT_BE_NULL);
+    checkArg(relation);
     return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if all values in the specified collection have the
-   * specified relation to the specified object.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if <i>another</i> value ({@code subject}) has a particular
+   * relation to the specified set of values.
    *
-   * @param subjects a collection of subjects for the specified {@code Relation}.
-   *     The collection must contain at least one element.
+   * @param subject the subject of the specified {@code Relation}
    * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code Relation}
-   * @param <S> the type of the subject of the specified relation
-   * @param <O> the type of the object of the specified relation
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
+   * @param <S> the type of the subject of the relation
+   * @param <O> the type of the object of the relation
+   * @param <P> the type of the values fed as "objects" into the relation
    * @return a new test combining this test and the specified test
    */
-  default <S, O> ComposableIntPredicate andAll(Collection<? extends S> subjects,
-      Relation<S, O> relation, O object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkSubjects(subjects);
+  default <S, O, P extends O> ComposableIntPredicate and(S subject,
+      Relation<S, O> relation, Quantifier quantifier, P... objects) {
+    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
-        && subjects.stream().allMatch(y -> relation.exists(y, object));
+        && testAgainstArray(subject, relation, quantifier, objects);
   }
 
   /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if all values in the specified collection have the
-   * specified relation to the specified object.
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if <i>another</i> value ({@code subject}) has a particular
+   * relation to the specified set of values.
    *
-   * @param subjects an array of int values used as subjects for the specified
-   *     {@code IntRelation}. The array must contain at least one element.
+   * @param subject the subject of the relation
    * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code IntRelation}
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
    * @return a new test combining this test and the specified test
    */
-  default ComposableIntPredicate andAll(int subject,
+  default ComposableIntPredicate and(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(objects);
-    return x -> meFirst(x) &&
-        testAgainstArray(subject, relation, quantifier, objects);
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if at least one value in the specified collection has the
-   * specified relation to the specified object.
-   *
-   * @param subjects a collection of subjects for the specified {@code Relation}.
-   *     The collection must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code Relation}
-   * @param <S> the type of the subject of the specified relation
-   * @param <O> the type of the object of the specified relation
-   * @return a new test combining this test and the specified test
-   */
-  default <S, O> ComposableIntPredicate andAny(Collection<? extends S> subjects,
-      Relation<S, O> relation, O object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkSubjects(subjects);
+    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
-        && subjects.stream().anyMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if at least one value in the specified collection has the
-   * specified relation to the specified object.
-   *
-   * @param subjects an array of int values used as subjects for the specified
-   *     {@code IntRelation}. The array must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code IntRelation}
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate andAny(int[] subjects,
-      IntRelation relation, int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        && stream(subjects).anyMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if none of the values in the specified collection have the
-   * specified relation to the specified object.
-   *
-   * <blockquote><pre>{@code
-   * // import static java.util.List.of;
-   * Check.that("foo bar").is(valid().andNone(of("hello", "world"), substringOf());
-   * }</pre></blockquote>
-   *
-   * @param subjects a collection of subjects for the specified {@code Relation}.
-   *     The collection must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code Relation}
-   * @param <S> the type of the subject of the specified relation
-   * @param <O> the type of the object of the specified relation
-   * @return a new test combining this test and the specified test
-   */
-  default <S, O> ComposableIntPredicate andNone(Collection<? extends S> subjects,
-      Relation<S, O> relation, O object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkSubjects(subjects);
-    return x -> meFirst(x)
-        && subjects.stream().noneMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test and the specified test. It combines, in
-   * effect, two checks on two different values. A value will pass the new test if it
-   * passes this test and if none of the values in the specified collection have the
-   * specified relation to the specified object.
-   *
-   * @param subjects an array of int values used as subjects for the specified
-   *     {@code IntRelation}. The array must contain at least one element.
-   * @param relation the relationship test to combine this test with
-   * @param object the object of the specified {@code IntRelation}
-   * @return a new test combining this test and the specified test
-   */
-  default ComposableIntPredicate andNone(int[] subjects,
-      IntRelation relation, int object) {
-    Objects.requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    checkObjects(subjects);
-    return x -> meFirst(x)
-        && stream(subjects).noneMatch(y -> relation.exists(y, object));
-  }
-
-  /**
-   * Returns a new test combining this test with the specified free-form test. A
-   * value will pass the new test if it passes this test and if the provided
-   * expression evaluates to {@code true}.
-   *
-   * @param test the boolean expression to evaluate if the value fails to pass
-   *     this test
-   * @return a new test combining this test and the specified free-form test
-   */
-  default ComposableIntPredicate and(boolean test) {
-    return x -> meFirst(x) && test;
-  }
-
-  /**
-   * Returns a new test combining this test with the free-form test supplied by the
-   * specified {@code Supplier}. A value will pass the new test if it passes this
-   * test and if the expression supplied by the {@code Supplier} evaluates to
-   * {@code true}. The supplier's {@link Supplier#get() get()} method will only be
-   * called if the value passes this test. Useful if evaluating the expression could
-   * be expensive.
-   *
-   * @param test the supplier of a boolean expression
-   * @return a new test combining this test and the specified free-form test
-   */
-  default ComposableIntPredicate andEval(Supplier<Boolean> test) {
-    return x -> meFirst(x) && test.get();
+        && testAgainstArray(subject, relation, quantifier, objects);
   }
 
   private boolean meFirst(int i) {

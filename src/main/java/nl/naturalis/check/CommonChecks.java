@@ -31,9 +31,9 @@ import static nl.naturalis.check.MsgRelation.*;
  * }</pre>
  * </blockquote>
  * <p>
- * For ease of reading, the documentation for the checks will use the term "argument"
- * for the value being tested, but it might just as well be a local variable, a
- * field, a program argument, a system property, etc.
+ * For ease of reading, the documentation for the checks will often use the term
+ * "argument" for the value being tested, but it might just as well be a local
+ * variable, a field, a program argument, a system property, etc.
  *
  * @author Ayco Holleman
  */
@@ -479,7 +479,7 @@ public final class CommonChecks {
   //////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Verifies that an integer is even.
+   * Verifies that the argument is an even integer.
    *
    * @return a function implementing the test described above
    */
@@ -492,7 +492,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is odd.
+   * Verifies that the argument is an odd integer.
    *
    * @return a function implementing the test described above
    */
@@ -505,7 +505,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is greater than zero.
+   * Verifies that the argument is a positive integer.
    *
    * @return a function implementing the test described above
    */
@@ -518,7 +518,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is less than zero.
+   * Verifies that the argument is a negative integer.
    *
    * @return a function implementing the test described above
    */
@@ -531,7 +531,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is 0 (zero).
+   * Verifies that the argument is zero (0).
    *
    * @return a function implementing the test described above
    */

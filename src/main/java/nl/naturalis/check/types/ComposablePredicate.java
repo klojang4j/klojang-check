@@ -10,14 +10,15 @@ import static nl.naturalis.check.types.Private.*;
 
 /**
  * An extension of {@link Predicate} that acts as a bridge between {@code Predicate}
- * and the relational interfaces. It enables the composition of new tests from any
- * number of instances of {@code Predicate}, {@code IntPredicate}, {@code Relation},
- * {@code IntRelation} and {@code IntObjRelation}. It does not override any method of
- * {@code Predicate}. Instead, it extends it with a comprehensive set of
- * {@code default} methods that allow the composition to take place. These methods
- * can be divided along two axes: <b>{@code and}</b> vs. <b>{@code or}</b> methods,
- * and methods that execute two checks on a single value vs. methods that effectively
- * constitute a single check on a pair of interrelated values.
+ * and the relational interfaces in this package. It enables the composition of new
+ * tests from any number of instances of {@code Predicate}, {@code IntPredicate},
+ * {@code Relation}, {@code IntRelation} and {@code IntObjRelation}. It does not
+ * override any method of {@code Predicate}. Instead, it extends it with a
+ * comprehensive set of {@code default} methods that allow the composition to take
+ * place. These methods can be divided along two axes: <b>{@code and}</b> vs.
+ * <b>{@code or}</b> methods, and methods that execute two checks on a single value
+ * vs. methods that effectively constitute a single check on a pair of interrelated
+ * values.
  *
  * <h2>AND vs. OR Compositions</h2>
  *
@@ -105,8 +106,8 @@ import static nl.naturalis.check.types.Private.*;
  * Check.that(myArrayList).is(empty().orThat(myArrayList, contains(), "foo"));
  * }</pre></blockquote>
  *
- * <p>Note, however, that the {@code orThat()} methods are primarily meant to join
- * tests on two completely unrelated values:
+ * <p>Note, however, that the {@code orThat()} method is primarily meant to test
+ * interrelated values.
  *
  * <blockquote><pre>{@code
  * Check.that(list1).is(empty().orThat(list2, contains(), "foo"));
@@ -194,11 +195,20 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   }
 
   /**
+   * Returns the negation of this predicate.
+   *
+   * @return the negation of this predicate
+   */
+  default ComposablePredicate<T> negated() {
+    return x -> !meFirst(x);
+  }
+
+  /**
    * Returns a new test combining this test and the specified test. A value will pass
    * the new test if it passes <i>this</i> test or the specified test.
    *
    * @param test the test to combine this test with
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -218,12 +228,10 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * }</pre></blockquote>
    *
    * @param relation the relationship test to combine this test with
-   * @param object the object of the provided {@code Relation}, with the value
-   *     of
-   *     <i>this</i> {@code ComposablePredicate} now becoming the <i>subject</i> of
-   *     that relation
+   * @param object the object of the specified relation, with the value of this
+   *     {@code ComposablePredicate} now becoming the subject of that relation
    * @param <O> the type of the object of the provided {@code Relation}
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -240,7 +248,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * test.
    *
    * @param test the test to combine this test with
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -261,7 +269,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *     <i>this</i> {@code ComposablePredicate} now becoming the <i>subject</i> of
    *     that relation
    * @param <O> the type of the object of the provided {@code Relation}
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -282,7 +290,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param objects the set of values to test the value against
    * @param <O> the type of the object of the relation
    * @param <P> the type of the values fed as "objects" into the relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -306,8 +314,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *
    * @param value the value to be tested by the specified test
    * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
-   * @param <V> the type of the value tested by the returned
+   * @param <U> the type of the value being tested by the specified predicate
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -327,7 +335,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param object the object of the specified relation
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -351,8 +359,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *
    * @param value the value to be tested by the specified test
    * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
-   * @param <V> the type of the value tested by the returned
+   * @param <U> the type of the value being tested by the specified predicate
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -373,7 +381,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param object the object of the specified relation
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -398,7 +406,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the relation
    * @param <O> the type of the object of the relation
    * @param <P> the type of the values fed as "objects" into the relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -421,7 +429,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param relation the relationship test to combine this test with
    * @param quantifier a logical quantifier modulating the relationship
    * @param objects the set of values to test the subject against
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -441,7 +449,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *
    * @param test the boolean expression to evaluate if the value fails to pass
    *     this test
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified free-form test
@@ -454,13 +462,12 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * Returns a new test combining this test with the free-form test supplied by the
    * specified {@code Supplier}. A value will pass the new test if it passes
    * <i>this</i> test or if the expression supplied by the {@code Supplier}
-   * evaluates
-   * to {@code true}. The supplier's {@link Supplier#get() get()} method will only be
-   * called if the value fails to pass this test. Useful if evaluating the expression
-   * could be expensive.
+   * evaluates to {@code true}. The supplier's {@link Supplier#get() get()} method
+   * will only be called if the value fails to pass this test. Useful if evaluating
+   * the expression could be expensive.
    *
    * @param test the supplier of a boolean expression
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified free-form test
@@ -480,7 +487,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * the new test if it passes both this test and the specified test.
    *
    * @param test the test to combine this test with
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -499,7 +506,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param object the object of the relation, with the value being tested now
    *     becoming the subject of the relation
    * @param <O> the type of the object of the provided {@code Relation}
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -516,7 +523,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *
    * @param test the boolean expression to evaluate if the value fails to pass
    *     this test
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified free-form test
@@ -534,7 +541,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * boolean expression could be expensive.
    *
    * @param test the supplier of a boolean expression
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified free-form test
@@ -549,7 +556,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * test.
    *
    * @param test the test to combine this test with
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -568,7 +575,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param object the object of the relation, with the value being tested now
    *     becoming the subject of the relation
    * @param <O> the type of the object of the provided {@code Relation}
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -588,7 +595,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param objects the set of values to test the value against
    * @param <O> the type of the object of the relation
    * @param <P> the type of the values fed as "objects" into the relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -612,8 +619,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *
    * @param value the value to be tested by the specified test
    * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
-   * @param <V> the type of the value tested by the returned
+   * @param <U> the type of the value being tested by the specified predicate
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -633,7 +640,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param object the object of the specified relation
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -657,8 +664,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *
    * @param value the value to be tested by the specified test
    * @param test the test to combine this test with
-   * @param <U> the type of the value to be tested by the other test
-   * @param <V> the type of the value tested by the returned
+   * @param <U> the type of the value being tested by the specified predicate
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -679,7 +686,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param object the object of the specified relation
    * @param <S> the type of the subject of the specified relation
    * @param <O> the type of the object of the specified relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -704,7 +711,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param <S> the type of the subject of the relation
    * @param <O> the type of the object of the relation
    * @param <P> the type of the values fed as "objects" into the relation
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
@@ -726,7 +733,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @param relation the relationship test to combine this test with
    * @param quantifier a logical quantifier modulating the relationship
    * @param objects the set of values to test the subject against
-   * @param <V> the type of the value tested by the returned
+   * @param <V> the type of the value that is tested by the returned
    *     {@code ComposablePredicate}. Note that in actual fact, that really is the
    *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
