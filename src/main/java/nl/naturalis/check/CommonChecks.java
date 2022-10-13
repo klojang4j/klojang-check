@@ -483,7 +483,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static IntPredicate even() {
+  public static ComposableIntPredicate even() {
     return x -> x % 2 == 0;
   }
 
@@ -496,7 +496,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static IntPredicate odd() {
+  public static ComposableIntPredicate odd() {
     return x -> x % 2 == 1;
   }
 
@@ -509,7 +509,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static IntPredicate positive() {
+  public static ComposableIntPredicate positive() {
     return x -> x > 0;
   }
 
@@ -522,7 +522,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static IntPredicate negative() {
+  public static ComposableIntPredicate negative() {
     return x -> x < 0;
   }
 
@@ -535,7 +535,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static IntPredicate zero() {
+  public static ComposableIntPredicate zero() {
     return x -> x == 0;
   }
 

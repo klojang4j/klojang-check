@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static nl.naturalis.check.CommonChecks.*;
+import static nl.naturalis.check.Quantifier.*;
 import static nl.naturalis.check.types.ComposablePredicate.*;
 
 public class ComposablePredicateTest {
@@ -18,6 +19,9 @@ public class ComposablePredicateTest {
   public void orElsePredicate00() {
     Check.that(List.of("foo", "bar")).is(empty().orElse(notEmpty()));
     Check.that(List.of("foo", "bar")).is(notEmpty().orElse(empty()));
+    Check.that("hello").is(validIf((String s) -> s.charAt(1) == 'e')
+        .orElse(validIf((String s) -> s.charAt(1) == 'f'))
+    );
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -27,8 +31,9 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orElsePredicate02() {
-    Check.that("hello world").is(eval((String s) -> s.charAt(1) == 'f')
-        .orElse((String s) -> s.charAt(1) == 'g'));
+    Check.that("hello world")
+        .is(validIf((String s) -> s.charAt(1) == 'f')
+            .orElse((String s) -> s.charAt(1) == 'g'));
   }
 
   @Test(expected = ClassCastException.class)
@@ -59,32 +64,32 @@ public class ComposablePredicateTest {
 
   @Test
   public void orThatBoolean00() {
-    Check.that(9.3).is(eval(LT(), 10D).orThat(10 > 11));
+    Check.that(9.3).is(validIf(LT(), 10D).or(10 > 11));
   }
 
   @Test
   public void orThatBoolean01() {
-    Check.that(9.3).is(eval(LT(), 8D).orThat(10 < 11));
+    Check.that(9.3).is(validIf(LT(), 8D).or(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orThatBoolean02() {
-    Check.that(9.3).is(eval(LT(), 8D).orThat(10 > 11));
+    Check.that(9.3).is(validIf(LT(), 8D).or(10 > 11));
   }
 
   @Test
   public void orEval00() {
-    Check.that(9.3).is(eval(LT(), 10D).orEval(() -> 10 > 11));
+    Check.that(9.3).is(validIf(LT(), 10D).orEval(() -> 10 > 11));
   }
 
   @Test
   public void orEval01() {
-    Check.that(9.3).is(eval(LT(), 8D).orEval(() -> 10 < 11));
+    Check.that(9.3).is(validIf(LT(), 8D).orEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orEval02() {
-    Check.that(9.3).is(eval(LT(), 8D).orEval(() -> 10 > 11));
+    Check.that(9.3).is(validIf(LT(), 8D).orEval(() -> 10 > 11));
   }
 
   @Test
@@ -96,13 +101,14 @@ public class ComposablePredicateTest {
 
   @Test
   public void orNotPredicate00() {
-    Check.that((Integer) 8).is(eval(LT(), 10).orNot(x -> (int) x % 2 == 0));
-    Check.that((Integer) 8).is(eval(GT(), 10).orNot(x -> (int) x % 3 == 0));
+    Check.that((Integer) 8).is(validIf(LT(), 10).orNot(x -> (int) x % 2 == 0));
+    Check.that((Integer) 8).is(validIf(GT(), 10).orNot(x -> (int) x % 3 == 0));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate02() {
-    Check.that("hello world").is(eval((String s) -> s.length() > 100)
+    Check.that("hello world").is(ComposablePredicate.validIf((String s) -> s.length()
+            > 100)
         .orNot((String s) -> s.charAt(1) == 'e'));
   }
 
@@ -114,71 +120,73 @@ public class ComposablePredicateTest {
 
   @Test(expected = ClassCastException.class)
   public void orNotRelation01() {
-    Check.that(42F).is(eval((Float f) -> f > 50F).orNot(contains(), "bozo"));
+    Check.that(42F).is(ComposablePredicate.validIf((Float f) -> f > 50F)
+        .orNot(contains(), "bozo"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation02() {
-    Check.that(42L).is(eval((Long l) -> l > 50).orNot((Long l) -> l % 2 == 0));
+    Check.that(42L).is(ComposablePredicate.validIf((Long l) -> l > 50)
+        .orNot((Long l) -> l % 2 == 0));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation03() {
-    Check.that(42L).is(eval(GTE(), 50L).orNot(60, LT(), 70));
+    Check.that(42L).is(validIf(GTE(), 50L).orNot(60, LT(), 70));
   }
 
   @Test
   public void orAny00() {
     Check.that("hello, world")
-        .is(invalid().orAny(of("foo", "world"), substringOf()));
+        .is(invalid().or(hasSubstring(), anyOf(), "foo", "world"));
   }
 
   @Test
   public void orAny01() {
     Check.that("hello, world")
-        .is(notEmpty().orAny(of("foo", "bar"), substringOf()));
+        .is(notEmpty().or(hasSubstring(), anyOf(), "foo", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orAny02() {
     Check.that("hello, world")
-        .is(empty().orAny(of("foo", "bar"), substringOf()));
+        .is(empty().or(hasSubstring(), anyOf(), "foo", "bar"));
   }
 
   @Test
   public void orAll00() {
     Check.that("hello, world")
-        .is(invalid().orAll(of("hello", "world"), substringOf()));
+        .is(invalid().or(hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test
   public void orAll01() {
     Check.that("hello, world")
-        .is(notEmpty().orAll(of("foo", "bar"), substringOf()));
+        .is(notEmpty().or(hasSubstring(), allOf(), "foo", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orAll02() {
     Check.that("hello, world")
-        .is(empty().orAll(of("hello", "bar"), substringOf()));
+        .is(empty().or(hasSubstring(), allOf(), "hello", "bar"));
   }
 
   @Test
   public void orNone00() {
     Check.that("hello, world")
-        .is(invalid().orNone(of("foo", "bar"), substringOf()));
+        .is(invalid().or(hasSubstring(), noneOf(), "foo", "bar"));
   }
 
   @Test
   public void orNone01() {
     Check.that("hello, world")
-        .is(notEmpty().orNone(of("hello", "bar"), substringOf()));
+        .is(notEmpty().or(hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNone02() {
     Check.that("hello, world")
-        .is(empty().orNone(of("hello", "bar"), substringOf()));
+        .is(empty().or(hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test
@@ -218,7 +226,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate102() {
-    Check.that(42L).is(eval(GTE(), 100L).orNot("", empty()));
+    Check.that(42L).is(validIf(GTE(), 100L).orNot("", empty()));
   }
 
   @Test
@@ -231,96 +239,94 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation102() {
-    Check.that(Year.of(2001)).is(eval(GT(), Year.of(3000))
+    Check.that(Year.of(2001)).is(validIf(GT(), Year.of(3000))
         .orNot("foo", substringOf(), "foo bar"));
   }
 
   @Test
   public void orAll100() {
-    Check.that(LocalDate.now())
-        .is(NULL().orAll(of("hello", "world"), substringOf(), "hello, world"));
-    Check.that(LocalDate.now())
-        .is(notNull().orAll(of("hello", "world"), substringOf(), "foo, world"));
+    Check.that(LocalDate.now()).is(NULL()
+        .or("hello, world", hasSubstring(), allOf(), "hello", "world"));
+    Check.that(LocalDate.now()).is(notNull()
+        .or("foo, world", hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orAll101() {
-    Check.that(42F).is(eval(GTE(), 100F).orAll(of(1, 2, 3, 4, 5), GT(), 10));
+    Check.that(42F).is(validIf(GTE(), 100F).or(10, GT(), allOf(), 1, 2, 3, 200));
   }
 
   @Test
   public void orAll102() {
-    Check.that(LocalDate.now()).is(NULL().orAll(ints(1, 2, 3, 4), lt(), 10));
+    Check.that(LocalDate.now()).is(NULL().or(10, gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test
   public void orAll103() {
-    Check.that(LocalDate.now()).is(notNull().orAll(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().or(10, gt(), allOf(), 1, 2, 3, 200));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orAll104() {
-    Check.that(LocalDate.now()).is(NULL().orAll(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(NULL().or(10, gt(), allOf(), 1, 2, 3, 200));
   }
 
   @Test
   public void orAny100() {
     Check.that(LocalDate.now())
-        .is(NULL().orAny(of("hello", "foo"), substringOf(), "hello, world"));
+        .is(NULL().or("hello, world", hasSubstring(), anyOf(), "hello", "foo"));
     Check.that(LocalDate.now())
-        .is(notNull().orAny(of("hello", "bar"), substringOf(), "foo, world"));
+        .is(notNull().or("foo, world", hasSubstring(), anyOf(), "hello", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orAny101() {
     Check.that(LocalDate.now())
-        .is(invalid().orAny(of("hello", "bar"), substringOf(), "foo, world"));
+        .is(invalid().or("foo, world", hasSubstring(), anyOf(), "hello", "bar"));
   }
 
   @Test
   public void orAny102() {
-    Check.that(LocalDate.now()).is(NULL().orAny(ints(1, 52, 53, 54), lt(), 10));
+    Check.that(LocalDate.now()).is(NULL().or(10, gt(), anyOf(), 1, 52, 53, 54));
   }
 
   @Test
   public void orAny103() {
-    Check.that(LocalDate.now()).is(notNull().orAny(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().or(10, lt(), anyOf(), 1, 2, 3, 4));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orAny104() {
-    Check.that(LocalDate.now()).is(NULL().orAny(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(NULL().or(10, lt(), anyOf(), 1, 2, 3, 4));
   }
 
   @Test
   public void orNone100() {
     Check.that(LocalDate.now())
-        .is(NULL().orNone(of("hello", "foo"), substringOf(), "bar, world"));
+        .is(NULL().or("bar, world", hasSubstring(), noneOf(), "hello", "foo"));
     Check.that(LocalDate.now())
-        .is(notNull().orNone(of("hello", "bar"), substringOf(), "foo, world"));
+        .is(notNull().or("foo, world", hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNone101() {
     Check.that(LocalDate.now())
-        .is(invalid().orNone(of("hello", "bar"),
-            substringOf(),
-            "hello, world"));
+        .is(invalid().or("hello, world", hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test
   public void orNone102() {
-    Check.that(LocalDate.now()).is(NULL().orNone(ints(51, 52, 53, 54), lt(), 10));
+    Check.that(LocalDate.now()).is(NULL().or(10, gt(), noneOf(), 51, 52, 53, 54));
   }
 
   @Test
   public void orNone103() {
-    Check.that(LocalDate.now()).is(notNull().orNone(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().or(10, gt(), noneOf(), 1, 2, 3, 4));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNone104() {
-    Check.that(LocalDate.now()).is(NULL().orNone(ints(1, 52, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(NULL().or(10, gt(), noneOf(), 1, 52, 3, 4));
   }
 
   ///////////////////////////////////////////////////////////////////////
@@ -340,20 +346,20 @@ public class ComposablePredicateTest {
   @Test
   public void andAlsoRelation00() {
     Check.that(List.of("foo", "bar"))
-        .is(ComposablePredicate.eval((List l) -> l.size() < 100)
+        .is(ComposablePredicate.validIf((List l) -> l.size() < 100)
             .andAlso(contains(), "foo"));
   }
 
   @Test
   public void andAlsoRelation01() {
-    Check.that(Year.now()).is(ComposablePredicate.eval(GT(), Year.of(2000))
+    Check.that(Year.now()).is(ComposablePredicate.validIf(GT(), Year.of(2000))
         .andAlso(LT(), Year.of(3000)));
   }
 
   @Test
   public void andAlsoRelation02() {
     Check.that(List.of("foo", "bar"))
-        .is(ComposablePredicate.eval((List l) -> l.size() < 100)
+        .is(ComposablePredicate.validIf((List l) -> l.size() < 100)
             .andAlso((List l) -> l.size() > 1)
             .andAlso(contains(), "foo"));
   }
@@ -370,32 +376,32 @@ public class ComposablePredicateTest {
 
   @Test
   public void andAlsoBoolean00() {
-    Check.that(9.3).is(eval(LT(), 10D).andAlso(10 < 11));
+    Check.that(9.3).is(validIf(LT(), 10D).and(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAlsoBoolean01() {
-    Check.that(9.3).is(eval(LT(), 8D).andAlso(10 < 11));
+    Check.that(9.3).is(validIf(LT(), 8D).and(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAlsoBoolean02() {
-    Check.that(9.3).is(eval(LT(), 10D).andAlso(10 > 11));
+    Check.that(9.3).is(validIf(LT(), 10D).and(10 > 11));
   }
 
   @Test
   public void andEval00() {
-    Check.that(9.3).is(eval(LT(), 10D).andEval(() -> 10 < 11));
+    Check.that(9.3).is(validIf(LT(), 10D).andEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval01() {
-    Check.that(9.3).is(eval(LT(), 8D).andEval(() -> 10 < 11));
+    Check.that(9.3).is(validIf(LT(), 8D).andEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval02() {
-    Check.that(9.3).is(eval(LT(), 10D).andEval(() -> 10 > 11));
+    Check.that(9.3).is(validIf(LT(), 10D).andEval(() -> 10 > 11));
   }
 
   @Test
@@ -412,7 +418,7 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void andNotPredicate02() {
     Check.that(List.of("foo", "bar")).is(
-        ComposablePredicate.eval((List<String> list) -> list.size() > 100)
+        ComposablePredicate.validIf((List<String> list) -> list.size() > 100)
             .andNot(empty()));
   }
 
@@ -434,62 +440,61 @@ public class ComposablePredicateTest {
   @Test
   public void andAny00() {
     Check.that("hello, world")
-        .is(valid().andAny(of("foo", "world"), substringOf()));
+        .is(valid().and(hasSubstring(), anyOf(), "foo", "world"));
   }
 
   @Test
   public void andAny01() {
     Check.that("hello, world")
-        .is(notEmpty().andAny(of("wor", "bar"), substringOf()));
+        .is(notEmpty().and(hasSubstring(), anyOf(), "wor", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAny02() {
     Check.that("hello, world")
-        .is(empty().andAny(of("foo", "bar"), substringOf()));
+        .is(empty().and(hasSubstring(), anyOf(), "foo", "bar"));
   }
 
   @Test
   public void andAll00() {
     Check.that("hello, world")
-        .is(valid().andAll(of("hello", "world"), substringOf()));
+        .is(valid().and(hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test
   public void andAll01() {
-    Check.that("hello, world")
-        .is(notEmpty().andAll(of("hel", "wor"), substringOf()));
+    Check.that("hello, world").is(
+        notEmpty().and(hasSubstring(), allOf(), "hel", "wor"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAll02() {
     Check.that("hello, world")
-        .is(empty().andAll(of("hello", "bar"), substringOf()));
+        .is(empty().and(hasSubstring(), allOf(), "hello", "bar"));
   }
 
   @Test
   public void andNone00() {
     Check.that("hello, world")
-        .is(valid().andNone(of("foo", "bar"), substringOf()));
+        .is(valid().and(hasSubstring(), noneOf(), "foo", "bar"));
   }
 
   @Test
   public void andNone01() {
     Check.that("hello, world")
-        .is(notEmpty().andNone(of("foo", "bar"), substringOf()));
+        .is(notEmpty().and(hasSubstring(), noneOf(), "foo", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone02() {
-    Check.that("hello, world").is(ComposablePredicate.eval((String s) -> s.length()
-            < 100)
-        .andNone(of("hello", "bar"), substringOf()));
+    Check.that("hello, world").is(validIf((String s) -> s.length() < 100)
+        .and(hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone03() {
     Check.that("hello, world")
-        .is(notEmpty().andNone(of("hell", "bar"), substringOf()));
+        .is(notEmpty().and(hasSubstring(), noneOf(), "hell", "bar"));
   }
 
   @Test
@@ -509,7 +514,7 @@ public class ComposablePredicateTest {
 
   @Test
   public void andThatRelation00() {
-    Check.that("foo").is(ComposablePredicate.eval((String s) -> s.length() < 100)
+    Check.that("foo").is(ComposablePredicate.validIf((String s) -> s.length() < 100)
         .andThat("bar", hasSubstring(), "ba"));
   }
 
@@ -559,35 +564,35 @@ public class ComposablePredicateTest {
   public void andAll100() {
     Check.that(LocalDate.now())
         .is(notNull()
-            .andAll(of("hello", "world"), substringOf(), "hello, world"));
+            .and("hello, world", hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAll101() {
-    Check.that(LocalDate.now())
-        .is(NULL().andAll(of("hello", "world"), substringOf(), "hello, world"));
+    Check.that(LocalDate.now()).is(NULL()
+        .and("hello, world", hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAll102() {
-    Check.that(LocalDate.now())
-        .is(notNull()
-            .andAll(of("hello", "world"), substringOf(), "foo, world"));
+    Check.that(LocalDate.now()).is(notNull()
+        .and("foo, world", hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test
   public void andAll103() {
-    Check.that(LocalDate.now()).is(notNull().andAll(ints(1, 2, 3, 4), lt(), 10));
+    Check.that(LocalDate.now()).is(notNull()
+        .and(10, gt(), allOf(), 1, 2, 3, 4, 5));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAll104() {
-    Check.that(LocalDate.now()).is(NULL().andAll(ints(1, 2, 3, 4), lt(), 10));
+    Check.that(LocalDate.now()).is(NULL().and(10, gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAll105() {
-    Check.that(LocalDate.now()).is(notNull().andAll(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().and(10, gt(), allOf(), 1, 2, 11, 3));
   }
 
   @Test
@@ -595,70 +600,70 @@ public class ComposablePredicateTest {
     Check.that(LocalDate.now())
         .is(notNull()
             .andAlso(GT(), LocalDate.of(1800, 1, 1))
-            .andAny(of("hello", "foo"), substringOf(), "hello, world"));
+            .and("hello, world", hasSubstring(), anyOf(), "hello", "foo"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAny101() {
     Check.that(LocalDate.now())
-        .is(valid().andAny(of("hello", "bar"), substringOf(), "foo, world"));
+        .is(valid().and("foo, world", hasSubstring(), anyOf(), "hello", "bar"));
   }
 
   @Test
   public void andAny102() {
-    Check.that(LocalDate.now()).is(notNull().andAny(ints(51, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().and(10, gt(), anyOf(), 1, 2, 13));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAny103() {
-    Check.that(LocalDate.now()).is(NULL().andAny(ints(51, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(NULL().and(10, gt(), anyOf(), 1, 2, 13));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAny105() {
-    Check.that(LocalDate.now()).is(notNull().andAny(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().and(10, lt(), anyOf(), 1, 2, 3));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAny106() {
-    Check.that(LocalDate.now()).is(NULL().andAny(ints(1, 2, 3, 54), gt(), 10));
+    Check.that(LocalDate.now()).is(NULL().and(10, lt(), anyOf(), 1, 2, 3));
   }
 
   @Test
   public void andNone100() {
-    Check.that(Year.now()).is(eval(GT(), Year.of(2000))
-        .andNone(of("hello", "foo"), substringOf(), "bar, world"));
+    Check.that(Year.now()).is(validIf(GT(), Year.of(2000))
+        .and("bar, world", hasSubstring(), noneOf(), "hello", "foo"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone101() {
     Check.that(LocalDate.now())
-        .is(invalid().andNone(of("hello", "bar"), substringOf(), "hello, world"));
+        .is(invalid().and("hello, world", hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone102() {
     Check.that(LocalDate.now())
-        .is(valid().andNone(of("hello", "bar"), substringOf(), "foo bar"));
+        .is(valid().and("foo bar", hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test
   public void andNone103() {
-    Check.that(LocalDate.now()).is(notNull().andNone(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().and(10, lt(), noneOf(), 1, 2, 3));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone104() {
-    Check.that(LocalDate.now()).is(NULL().andNone(ints(1, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(NULL().and(10, lt(), noneOf(), 1, 2, 3));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone105() {
-    Check.that(LocalDate.now()).is(notNull().andNone(ints(51, 2, 3, 4), gt(), 10));
+    Check.that(LocalDate.now()).is(notNull().and(10, lt(), noneOf(), 1, 20, 3));
   }
 
-  private static int[] ints(int... ints) {
-    return ints;
-  }
+  //  private static int[] ints(int... ints) {
+  //    return ints;
+  //  }
 
 }
