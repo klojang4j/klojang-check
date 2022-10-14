@@ -736,4 +736,58 @@ public class CommonChecksTest {
     Check.that("foo").is(instanceOf(), FileOutputStream.class);
   }
 
+  @Test
+  public void plainInt00() {
+    Check.that("23").is(plainInt());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainInt01() {
+    Check.that("+23").is(plainInt());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainInt02() {
+    Check.that("-23").is(plainInt());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainInt03() {
+    Check.that("99999999999999999999").is(plainInt());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainInt04() {
+    long l = (int) Integer.MAX_VALUE + 1;
+    String s = String.valueOf(l);
+    Check.that(s).is(plainInt());
+  }
+
+  @Test
+  public void plainShort00() {
+    Check.that("23").is(plainShort());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainShort01() {
+    Check.that("+23").is(plainShort());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainShort02() {
+    Check.that("-23").is(plainShort());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainShort03() {
+    Check.that("99999999999999999999").is(plainShort());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void plainShort04() {
+    long l = (short) Short.MAX_VALUE + 1;
+    String s = String.valueOf(l);
+    Check.that(s).is(plainShort());
+  }
+
 }

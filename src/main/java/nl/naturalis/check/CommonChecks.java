@@ -266,7 +266,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static ComposablePredicate<String> plainShort() {
-    return StringCheckImpls::isPlainInt;
+    return StringCheckImpls::isPlainShort;
   }
 
   /**

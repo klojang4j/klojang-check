@@ -4,9 +4,10 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static nl.naturalis.check.CommonChecks.indexInclusiveOf;
-import static nl.naturalis.check.CommonChecks.indexOf;
+import static nl.naturalis.check.CommonChecks.*;
 
 public class CheckImplsTest {
 
@@ -138,6 +139,136 @@ public class CheckImplsTest {
   @Test(expected = InvalidCheckException.class)
   public void indexOf00() {
     Check.that(6).is(indexOf(), new ByteArrayOutputStream());
+  }
+
+  @Test
+  public void isEmpty00() {
+    Check.that(Map.of()).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isEmpty01() {
+    Check.that(Map.of(1, 1)).is(empty());
+  }
+
+  @Test
+  public void isEmpty02() {
+    Check.that(Result.of(null)).is(empty());
+  }
+
+  @Test
+  public void isEmpty03() {
+    Check.that(Result.notAvailable()).is(empty());
+  }
+
+  @Test
+  public void isEmpty04() {
+    Check.that(Result.of("")).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isEmpty05() {
+    Check.that(Result.of("666")).is(empty());
+  }
+
+  @Test
+  public void isEmpty06() {
+    Check.that(new String[0]).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isEmpty07() {
+    Check.that(new String[] {"hi"}).is(empty());
+  }
+
+  @Test
+  public void isEmpty08() {
+    Check.that(new int[0]).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isEmpty09() {
+    Check.that(new int[] {666}).is(empty());
+  }
+
+  @Test
+  public void isEmpty10() {
+    Check.that(Optional.empty()).is(empty());
+  }
+
+  @Test
+  public void isEmpty11() {
+    Check.that(Optional.of(List.of())).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isEmpty12() {
+    Check.that(Optional.of(List.of(1))).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty00() {
+    Check.that(Map.of()).is(notEmpty());
+  }
+
+  @Test
+  public void isNotEmpty01() {
+    Check.that(Map.of(1, 1)).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty02() {
+    Check.that(Result.of(null)).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty03() {
+    Check.that(Result.notAvailable()).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty04() {
+    Check.that(Result.of("")).is(notEmpty());
+  }
+
+  @Test
+  public void isNotEmpty05() {
+    Check.that(Result.of("666")).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty06() {
+    Check.that(new String[0]).is(notEmpty());
+  }
+
+  @Test
+  public void isNotEmpty07() {
+    Check.that(new String[] {"hi"}).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty08() {
+    Check.that(new int[0]).is(notEmpty());
+  }
+
+  @Test
+  public void isNotEmpty09() {
+    Check.that(new int[] {666}).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty10() {
+    Check.that(Optional.empty()).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty11() {
+    Check.that(Optional.of(List.of())).is(notEmpty());
+  }
+
+  @Test
+  public void isNotEmpty12() {
+    Check.that(Optional.of(List.of(1))).is(notEmpty());
   }
 
 }
