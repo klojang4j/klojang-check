@@ -948,36 +948,36 @@ public final class CommonChecks {
   }
 
   private static final Map<Class<?>, Predicate<String>> parsables = Map.of(
-      int.class, StringCheckImpls::isInt,
-      long.class, StringCheckImpls::isLong,
-      short.class, StringCheckImpls::isShort,
-      byte.class, StringCheckImpls::isByte,
-      double.class, StringCheckImpls::isDouble,
-      float.class, StringCheckImpls::isFloat
+      Integer.class, StringCheckImpls::isInt,
+      Long.class, StringCheckImpls::isLong,
+      Short.class, StringCheckImpls::isShort,
+      Byte.class, StringCheckImpls::isByte,
+      Double.class, StringCheckImpls::isDouble,
+      Float.class, StringCheckImpls::isFloat
   );
 
   /**
-   * Verifies that a string can be parsed into a number of the specified type,
-   * without loss of information. The provided type must be a primitive number type,
-   * like {@code long.class} or {@code float.class}. Any other type will result in an
+   * Verifies that a string can be parsed into a {@code Number} of the specified
+   * type, without loss of information. The provided type must be one of the "basic"
+   * {@code Number} types: {@code Integer}, {@code Double}, {@code Float},
+   * {@code Long}, {@code Short}, {@code Byte}. Any other type will result in an
    * {@link InvalidCheckException}. As for the integral types: the string to be
    * parsed may have a fractional part as long as it consists of zeros only;
    * scientific notation is allowed, too, as long as the fractional part effectively
    * consists of zeros only.
    *
-   * @param <T> the type of the number into which to parse the string (must be a
-   *     primitive number type)
+   * @param <T> the type of the {@code Number} into which to parse the string
    * @return a function implementing the test described above
    * @see #plainInt()
    * @see #plainShort()
    */
-  public static <T> Relation<String, Class<T>> parsableAs() {
+  public static <T extends Number> Relation<String, Class<T>> parsableAs() {
     return (x, y) -> {
       Predicate<String> p = parsables.get(y);
       if (p != null) {
         return p.test(x);
       }
-      throw new InvalidCheckException("not a primitive number type: " + y);
+      throw new InvalidCheckException("unsupported number type: " + y);
     };
   }
 

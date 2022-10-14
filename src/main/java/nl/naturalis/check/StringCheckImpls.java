@@ -17,9 +17,9 @@ final class StringCheckImpls {
   private static final BigDecimal MAX_DOUBLE_BD =
       new BigDecimal(Double.toString(Double.MAX_VALUE));
 
-  private static final BigDecimal BIG_MIN_FLOAT =
+  private static final BigDecimal MIN_FLOAT_BD =
       new BigDecimal(Float.toString(Float.MIN_VALUE));
-  private static final BigDecimal BIG_MAX_FLOAT =
+  private static final BigDecimal MAX_FLOAT_BD =
       new BigDecimal(Float.toString(Float.MAX_VALUE));
 
   private static final BigDecimal MIN_LONG_BD = new BigDecimal(Long.MIN_VALUE);
@@ -85,8 +85,9 @@ final class StringCheckImpls {
       } catch (NumberFormatException e) {
         return false;
       }
-      BigDecimal x = bd.abs();
-      return x.compareTo(MIN_DOUBLE_BD) >= 0 && x.compareTo(MAX_DOUBLE_BD) <= 0;
+      return bd.equals(BigDecimal.ZERO)
+          || ((bd = bd.abs()).compareTo(MIN_DOUBLE_BD) >= 0
+                  && bd.compareTo(MAX_DOUBLE_BD) <= 0);
     }
     return false;
   }
@@ -99,8 +100,9 @@ final class StringCheckImpls {
       } catch (NumberFormatException e) {
         return false;
       }
-      BigDecimal x = bd.abs();
-      return x.compareTo(BIG_MIN_FLOAT) >= 0 && x.compareTo(BIG_MAX_FLOAT) <= 0;
+      return bd.equals(BigDecimal.ZERO)
+          || ((bd = bd.abs()).compareTo(MIN_FLOAT_BD) >= 0
+                  && bd.compareTo(MAX_FLOAT_BD) <= 0);
     }
     return false;
   }
