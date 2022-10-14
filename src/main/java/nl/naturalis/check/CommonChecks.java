@@ -1001,23 +1001,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <T> IntObjRelation<T> indexOf() {
-    return (x, y) -> {
-      if (x < 0) {
-        return false;
-      } else if (y instanceof String s) {
-        return x < s.length();
-      } else if (y instanceof List<?> l) {
-        return x < l.size();
-      } else if (y.getClass().isArray()) {
-        try {
-          return x < (int) arrayLength(y.getClass()).invoke(y);
-        } catch (Throwable t) {
-          throw new InvalidCheckException(t.toString());
-        }
-      }
-      throw new InvalidCheckException(
-          "indexOf() check only applicable to String, List and array");
-    };
+    return CheckImpls::isIndexOf;
   }
 
   static {
@@ -1042,23 +1026,7 @@ public final class CommonChecks {
    * @see Check#fromTo(Object[], int, int)
    */
   public static <T> IntObjRelation<T> indexInclusiveOf() {
-    return (x, y) -> {
-      if (x < 0) {
-        return false;
-      } else if (y instanceof String s) {
-        return x <= s.length();
-      } else if (y instanceof List<?> l) {
-        return x <= l.size();
-      } else if (y.getClass().isArray()) {
-        try {
-          return x <= (int) arrayLength(y.getClass()).invoke(y);
-        } catch (Throwable t) {
-          throw new InvalidCheckException(t.toString());
-        }
-      }
-      throw new InvalidCheckException(
-          "indexInclusiveOf() check only applicable to String, List and array");
-    };
+    return CheckImpls::isIndexInclusiveOf;
   }
 
   static {

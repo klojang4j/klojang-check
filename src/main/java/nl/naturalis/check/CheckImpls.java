@@ -96,6 +96,42 @@ final class CheckImpls {
     }
   }
 
+  static <T> boolean isIndexOf(int idx, T obj) {
+    if (idx < 0) {
+      return false;
+    } else if (obj instanceof String s) {
+      return idx < s.length();
+    } else if (obj instanceof List<?> l) {
+      return idx < l.size();
+    } else if (obj.getClass().isArray()) {
+      try {
+        return idx < getArrayLength(obj);
+      } catch (Throwable t) {
+        throw new InvalidCheckException(t.toString());
+      }
+    }
+    throw new InvalidCheckException(
+        "indexOf() not applicable to " + obj.getClass());
+  }
+
+  static <T> boolean isIndexInclusiveOf(int idx, T obj) {
+    if (idx < 0) {
+      return false;
+    } else if (obj instanceof String s) {
+      return idx <= s.length();
+    } else if (obj instanceof List<?> l) {
+      return idx <= l.size();
+    } else if (obj.getClass().isArray()) {
+      try {
+        return idx <= getArrayLength(obj);
+      } catch (Throwable t) {
+        throw new InvalidCheckException(t.toString());
+      }
+    }
+    throw new InvalidCheckException(
+        "indexInclusiveOf() not applicable to " + obj.getClass());
+  }
+
   private static boolean dne(Collection<?> coll) {
     if (coll.isEmpty()) {
       return false;

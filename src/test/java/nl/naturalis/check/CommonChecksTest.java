@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static nl.naturalis.check.CommonChecks.*;
 import static nl.naturalis.check.TestUtil.*;
@@ -685,6 +686,11 @@ public class CommonChecksTest {
   @Test(expected = IllegalArgumentException.class)
   public void parsableAsFloat11() {
     Check.that("12*6").is(parsableAs(), Float.class);
+  }
+
+  @Test(expected = InvalidCheckException.class)
+  public void parsableAs00() {
+    Check.that("12*6").is(parsableAs(), AtomicLong.class);
   }
 
   @Test

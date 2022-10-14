@@ -8,7 +8,7 @@ import java.util.Objects;
 import static nl.naturalis.check.Check.illegalNullValue;
 
 /**
- * Simple value container where the value is explicitly allowed to be null. This
+ * A value container where the value is explicitly allowed to be {@code null}. This
  * class is meant to be used as the return value of methods that would otherwise
  * return {@code null} as the result of a computation, but also if the computation
  * yielded no result. The {@link java.util.HashMap} class is a prime example. If its
