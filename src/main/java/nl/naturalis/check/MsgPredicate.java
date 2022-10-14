@@ -72,57 +72,6 @@ final class MsgPredicate {
         : x.name() + " must be null or blank (was " + toStr(x.arg()) + ')';
   }
 
-  static PrefabMsgFormatter msgInt32() {
-    //@formatter:off
-    return x -> x.negated()
-        ? x.name() + " must not be parsable into an int (was " + toStr(x.arg()) + ')'
-        : x.name() + " cannot be parsed into an int (was " + toStr(x.arg()) + ')';
-    //@formatter:on
-  }
-
-  static PrefabMsgFormatter msgInt64() {
-    //@formatter:off
-    return x -> x.negated()
-        ? x.name() + " must not be parsable into a long (was " + toStr(x.arg()) + ')'
-        : x.name() + " cannot be parsed into a long (was " + toStr(x.arg()) + ')';
-    //@formatter:on
-  }
-
-  static PrefabMsgFormatter msgInt16() {
-    //@formatter:off
-    return x -> x.negated()
-        ? x.name() + " must not be parsable into a short (was " + toStr(x.arg()) + ')'
-        : x.name() + " cannot be parsed into a short (was " + toStr(x.arg()) + ')';
-    //@formatter:on
-  }
-
-  static PrefabMsgFormatter msgInt8() {
-    //@formatter:off
-    return x ->
-        x.negated()
-            ? x.name() + " must not be parsable into a byte (was " + toStr(x.arg()) + ')'
-            : x.name() + " cannot be parsed into a byte (was " + toStr(x.arg()) + ')';
-    //@formatter:on
-  }
-
-  static PrefabMsgFormatter msgFloat32() {
-    //@formatter:off
-    return x ->
-        x.negated()
-            ? x.name() + " must not be parsable into a float (was " + toStr(x.arg()) + ')'
-            : x.name() + " cannot be parsed into a float (was " + toStr(x.arg()) + ')';
-    //@formatter:on
-  }
-
-  static PrefabMsgFormatter msgFloat64() {
-    //@formatter:off
-    return x ->
-        x.negated()
-            ? x.name() + " must not be parsable into a double (was " + toStr(x.arg()) + ')'
-            : x.name() + " cannot be parsed into a double (was " + toStr(x.arg()) + ')';
-    //@formatter:on
-  }
-
   static PrefabMsgFormatter msgArray() {
     //@formatter:off
     return x -> x.arg() instanceof Class<?> c

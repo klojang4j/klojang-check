@@ -4,7 +4,6 @@ import nl.naturalis.check.types.*;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 import static java.lang.invoke.MethodHandles.arrayLength;
@@ -16,10 +15,11 @@ import static nl.naturalis.check.MsgPredicate.*;
 import static nl.naturalis.check.MsgRelation.*;
 
 /**
- * Defines various common checks on arguments, variables, object state, etc. The
- * checks have short, informative error messages associated with them, so you don't
- * have to invent them yourself. Unless specified otherwise, they <i>only</i> test
- * what they are documented to be testing. <b>They will not do a preliminary null
+ * Defines various common checks on arguments, variables, object state, program
+ * input, etc. The checks have short, informative error messages associated with
+ * them, so you don't have to invent them yourself. It is important to realize that
+ * these checks only test what they are documented to be testing. Many of them do
+ * nothing but return a method reference. <b>They will not do a preliminary null
  * check</b>. If the argument might be {@code null}, always start with the
  * {@link #notNull()} check. Otherwise, a raw, unprocessed
  * {@link NullPointerException} will be thrown from the check <i>itself</i>, rather
@@ -37,7 +37,6 @@ import static nl.naturalis.check.MsgRelation.*;
  *
  * @author Ayco Holleman
  */
-@SuppressWarnings("rawtypes")
 public final class CommonChecks {
 
   static final Map<Object, PrefabMsgFormatter> MESSAGE_PATTERNS;
@@ -75,9 +74,9 @@ public final class CommonChecks {
    *
    * <p>Note that, mostly for convenience, the {@link #NULL()}, {@link #yes()} and
    * {@link #empty()} checks are the only ones that come with their negation:
-   * {@link #notNull()}, {@link #no()} and {@link #notEmpty()}. The other checks need
-   * to be inverted using the {@code isNot(...)} and {@code notHas(...)} methods on
-   * the {@link Check} class.
+   * {@code notNull()}, {@link #no()} and {@link #notEmpty()}. The other checks need
+   * to be inverted using the {@code isNot(...)} and {@code notHas(...)} methods of
+   * {@link ObjectCheck} and {@link IntCheck}.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -180,10 +179,9 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is not {@code null} and, if it is an array,
    * {@code Collection} or {@code Map}, that it does not contain any {@code null}
-   * values. It may still be an <i>empty</i> (zero-length) array, {@code Collection}
-   * or {@code Map}, however. For maps, both keys and values are tested for
+   * values. It may still be an <i>empty</i> array, {@code Collection} or
+   * {@code Map}, however. For maps, both keys and values are tested for
    * {@code null}.
-   *
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -249,110 +247,26 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument can be parsed into a 32-bit integer
-   * (a&#46;k&#46;a&#46; an {@code int}). Equivalent to
-   * {@link StringCheckImpls#isInt(String) NumberMethods::isInt}.
-   *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
+   * Verifies that a string consists of digits only, by implication contains no '+'
+   * or '-' sign, contains no leading zeros, and can be parsed into an {@code int}
+   * (by implication non-negative).
    *
    * @return a function implementing the test described above
    */
-  public static ComposablePredicate<String> int32() {
-    return StringCheckImpls::isInt;
-  }
-
-  static {
-    setMetadata(int32(), MsgPredicate.msgInt32(), "int32");
+  public static ComposablePredicate<String> plainInt() {
+    return StringCheckImpls::isPlainInt;
   }
 
   /**
-   * Verifies that the argument can be parsed into a 64-bit integer
-   * (a&#46;k&#46;a&#46; a {@code long}).
-   *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
-   *
-   * @return a function implementing the test described above
-   */
-  public static ComposablePredicate<String> int64() {
-    return StringCheckImpls::isLong;
-  }
-
-  static {
-    setMetadata(int64(), msgInt64(), "int64");
-  }
-
-  /**
-   * Verifies that the argument can be parsed into a 16-bit integer
-   * (a&#46;k&#46;a&#46; a {@code short}). Equivalent to
-   * {@link StringCheckImpls#isShort(String) NumberMethods::isShort}.
-   *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
+   * Verifies that a string consists of digits only, by implication contains no '+'
+   * or '-' sign, contains no leading zeros, and can be parsed into a {@code short}
+   * (by implication non-negative). Useful, for example, for parsing TCP port
+   * numbers.
    *
    * @return a function implementing the test described above
    */
-  public static ComposablePredicate<String> int16() {
-    return StringCheckImpls::isShort;
-  }
-
-  static {
-    setMetadata(int16(), msgInt16(), "int16");
-  }
-
-  /**
-   * Verifies that the argument can be parsed into an 8-bit integer
-   * (a&#46;k&#46;a&#46; a {@code byte}). Equivalent to
-   * {@link StringCheckImpls#isByte(String) NumberMethods::isByte}.
-   *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
-   *
-   * @return a function implementing the test described above
-   */
-  public static ComposablePredicate<String> int8() {
-    return StringCheckImpls::isByte;
-  }
-
-  static {
-    setMetadata(int8(), msgInt8(), "int8");
-  }
-
-  /**
-   * Verifies that the argument can be parsed into a 32-bit floating point value
-   * (a&#46;k&#46;a&#46; a {@code float}). Equivalent to
-   * {@link StringCheckImpls#isFloat(String) NumberMethods::isFloat}.
-   *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
-   *
-   * @return a function implementing the test described above
-   */
-  public static ComposablePredicate<String> float32() {
-    return StringCheckImpls::isFloat;
-  }
-
-  static {
-    setMetadata(float32(), msgFloat32(), "float32");
-  }
-
-  /**
-   * Verifies that the argument can be parsed into a 64-bit floating point value
-   * (a&#46;k&#46;a&#46; a {@code double}). Equivalent to
-   * {@link StringCheckImpls#isDouble(String) NumberMethods::isDouble}.
-   *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
-   *
-   * @return a function implementing the test described above
-   */
-  public static ComposablePredicate<String> float64() {
-    return StringCheckImpls::isDouble;
-  }
-
-  static {
-    setMetadata(float64(), msgFloat64(), "float64");
+  public static ComposablePredicate<String> plainShort() {
+    return StringCheckImpls::isPlainInt;
   }
 
   /**
@@ -548,7 +462,7 @@ public final class CommonChecks {
   //////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Verifies that an integer has a particular value.
+   * Verifies that the argument equals the specified {@code int} value.
    *
    * @return a function implementing the test described above
    */
@@ -561,7 +475,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is not equal to a particular value.
+   * Verifies that the argument does not equal the specified {@code int} value.
    *
    * @return a function implementing the test described above
    */
@@ -574,7 +488,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is greater than a particular value.
+   * Verifies that the argument is greater than the specified {@code int} value.
    *
    * @return a function implementing the test described above
    */
@@ -587,7 +501,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is greater than or equal to a particular value.
+   * Verifies that the argument is greater than or equal to the specified {@code int}
+   * value.
    *
    * @return a function implementing the test described above
    */
@@ -600,7 +515,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is less than a particular value.
+   * Verifies that the argument is less than the specified {@code int} value.
    *
    * @return a function implementing the test described above
    */
@@ -613,7 +528,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is less than or equal to a particular value.
+   * Verifies that the argument is less than or equal to the specified {@code int}
+   * value.
    *
    * @return a function implementing the test described above
    */
@@ -626,16 +542,12 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that an integer is a whole multiple of a particular integer.
+   * Verifies that the argument is a multiple of the specified {@code int} value.
    *
    * @return a function implementing the test described above
    */
   public static IntRelation multipleOf() {
     return (x, y) -> x % y == 0;
-  }
-
-  public static IntRelation multipleOf(int obj) {
-    return (x, ignore) -> x % obj == 0;
   }
 
   static {
@@ -664,13 +576,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is greater than another value. This is the "big
-   * brother" of the {@link #gt()} check and specifically enables to validation of
-   * non-{@code int} primitive numbers and primitive number wrappers (including
-   * {@code Integer}). However, it can be used to check any value that is an instance
-   * of {@link Comparable}.
+   * Verifies that the argument is greater than another value.
    *
-   * @param <S> the type of the values being compared
+   * @param <T> the type of the values being compared
    * @return a function implementing the test described above
    * @see CommonProperties#unbox()
    * @see #gt()
@@ -684,13 +592,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is less than another value. This is the "big brother"
-   * of the {@link #lt()} check and specifically enables to validation of
-   * non-{@code int} primitive numbers and primitive number wrappers (including
-   * {@code Integer}). However, it can be used to check any value that is an instance
-   * of {@link Comparable}.
+   * Verifies that the argument is less than another value.
    *
-   * @param <S> the type of the values being compared
+   * @param <T> the type of the values being compared
    * @return a function implementing the test described above
    * @see CommonProperties#unbox()
    * @see #lt()
@@ -704,11 +608,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is greater than or equal to another value. This is
-   * the "big brother" of the {@link #gte()} check and specifically enables to
-   * validation of non-{@code int} primitive numbers and primitive number wrappers
-   * (including {@code Integer}). However, it can be used to check any value that is
-   * an instance of {@link Comparable}.
+   * Verifies that the argument is greater than or equal to another value.
    *
    * @param <T> the type of the values being compared
    * @return a function implementing the test described above
@@ -724,11 +624,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is less than or equal to another value. This is the
-   * "big brother" of the {@link #lte()} check and specifically enables to validation
-   * of non-{@code int} primitive numbers and primitive number wrappers (including
-   * {@code Integer}). However, it can be used to check any value that is an instance
-   * of {@link Comparable}.
+   * Verifies that the argument is less than or equal to another value.
    *
    * @param <T> the type of the values being compared
    * @return a function implementing the test described above
@@ -744,7 +640,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a value references the same object as another value
+   * Verifies that a value references the same object as another value.
    *
    * @param <S> the type of the subject of the relationship (which is the value
    *     being tested) (the subject of the {@code Relation})
@@ -778,8 +674,9 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is an instance of a particular class or interface.
    *
-   * @param <S> the type of the subject of the relationship (which is the value
-   *     being tested)
+   * @param <S> the type of the subject of the relation (which is the value being
+   *     tested)
+   * @param <O> the type of the object of the relation
    * @return a function implementing the test described above
    */
   public static <S, O extends Class<?>> Relation<S, O> instanceOf() {
@@ -794,9 +691,11 @@ public final class CommonChecks {
    * Verifies that the argument is a supertype of another type. In other words, that
    * the other type extends, implements, or is equal to the argument.
    *
+   * @param <S> the type of the subject's class
+   * @param <O> the type of the object's class
    * @return a function that implements the test described above
    */
-  public static <T, U> Relation<Class<T>, Class<U>> supertypeOf() {
+  public static <S, O> Relation<Class<S>, Class<O>> supertypeOf() {
     return Class::isAssignableFrom;
   }
 
@@ -808,9 +707,11 @@ public final class CommonChecks {
    * Verifies that the argument is a subtype of another type. In other words, that it
    * extends or implements the other type.
    *
+   * @param <S> the type of the subject's class
+   * @param <O> the type of the object's class
    * @return a function that implements the test described above
    */
-  public static <T, U> Relation<Class<T>, Class<U>> subtypeOf() {
+  public static <S, O> Relation<Class<S>, Class<O>> subtypeOf() {
     return (x, y) -> y.isAssignableFrom(x);
   }
 
@@ -1046,6 +947,44 @@ public final class CommonChecks {
     setMetadata(endsWith(), msgEndsWith(), "endsWith");
   }
 
+  private static final Map<Class<?>, Predicate<String>> parsables = Map.of(
+      int.class, StringCheckImpls::isInt,
+      long.class, StringCheckImpls::isLong,
+      short.class, StringCheckImpls::isShort,
+      byte.class, StringCheckImpls::isByte,
+      double.class, StringCheckImpls::isDouble,
+      float.class, StringCheckImpls::isFloat
+  );
+
+  /**
+   * Verifies that a string can be parsed into a number of the specified type,
+   * without loss of information. The provided type must be a primitive number type,
+   * like {@code long.class} or {@code float.class}. Any other type will result in an
+   * {@link InvalidCheckException}. As for the integral types: the string to be
+   * parsed may have a fractional part as long as it consists of zeros only;
+   * scientific notation is allowed, too, as long as the fractional part effectively
+   * consists of zeros only.
+   *
+   * @param <T> the type of the number into which to parse the string (must be a
+   *     primitive number type)
+   * @return a function implementing the test described above
+   * @see #plainInt()
+   * @see #plainShort()
+   */
+  public static <T> Relation<String, Class<T>> parsableAs() {
+    return (x, y) -> {
+      Predicate<String> p = parsables.get(y);
+      if (p != null) {
+        return p.test(x);
+      }
+      throw new InvalidCheckException("not a primitive number type: " + y);
+    };
+  }
+
+  static {
+    setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
+  }
+
   //////////////////////////////////////////////////////////////////////////////////
   // IntObjRelation
   //////////////////////////////////////////////////////////////////////////////////
@@ -1128,32 +1067,22 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is greater than, or equal to the first integer in the
-   * provided {@code int} array, and less than the second. This check can be made
-   * more concise using {@link ArrayMethods#ints(int...) ArrayMethods.ints}:
-   *
-   * <blockquote><pre>{@code
-   * Check.that(age).is(inRangeOf(), ints(15, 65));
-   * }</pre></blockquote>
+   * provided {@code int} array, and less than the second.
    *
    * @return a function implementing the test described above
    */
-  public static IntObjRelation<int[]> inRangeOf() {
+  public static IntObjRelation<int[]> inRange() {
     return (x, y) -> x >= y[0] && x < y[1];
   }
 
   static {
-    setMetadata(inRangeOf(), msgInRangeOf(), "inRangeOf");
+    setMetadata(inRange(), msgInRange(), "inRange");
   }
 
   /**
    * Verifies that the argument is greater than, or equal to the first integer in the
    * provided {@code int} array, and less than, or equal to the second (like the SQL
-   * BETWEEN operator). This check can be made more concise using
-   * {@link ArrayMethods#ints(int...) ArrayMethods.ints}:
-   *
-   * <blockquote><pre>{@code
-   * Check.that(age).is(between(), ints(15, 65));
-   * }</pre></blockquote>
+   * BETWEEN operator).
    *
    * @return a function implementing the test described above
    */
@@ -1167,8 +1096,6 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is present in the specified {@code int} array.
-   * Equivalent to
-   * {@link ArrayMethods#isElementOf(int, int[]) ArrayMethods::isElementOf}.
    *
    * @return a function implementing the test described above
    */

@@ -1,8 +1,5 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.PrefabMsgFormatter;
-import nl.naturalis.check.MsgUtil;
-
 import java.util.List;
 
 import static nl.naturalis.check.Misc.*;
@@ -45,7 +42,7 @@ final class MsgIntObjRelation {
     };
   }
 
-  static PrefabMsgFormatter msgInRangeOf() {
+  static PrefabMsgFormatter msgInRange() {
     return x -> {
       int[] ints = (int[]) x.obj();
       int min = ints[0];

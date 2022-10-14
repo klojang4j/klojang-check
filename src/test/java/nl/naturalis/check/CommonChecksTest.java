@@ -333,39 +333,59 @@ public class CommonChecksTest {
   }
 
   @Test
-  public void integer00() {
-    Check.that("42").is(int32());
-    assertTrue(true);
+  public void parsableAsInt00() {
+    Check.that("0").is(parsableAs(), int.class);
   }
 
   @Test
-  public void integer01() {
-    Check.that("42.5").isNot(int32());
-    assertTrue(true);
+  public void parsableAsInt01() {
+    Check.that("-1").is(parsableAs(), int.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void parsableAsInt02() {
+    Check.that("   -1").is(parsableAs(), int.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void parsableAsInt03() {
+    Check.that("-   1").is(parsableAs(), int.class);
   }
 
   @Test
-  public void integer02() {
-    Check.that("").isNot(int32());
-    assertTrue(true);
+  public void parsableAsInt04() {
+    Check.that("000001").is(parsableAs(), int.class);
   }
 
   @Test
-  public void integer03() {
-    Check.that((String) null).isNot(int32());
-    assertTrue(true);
+  public void parsableAsInt05() {
+    Check.that("3.0000000000000000000").is(parsableAs(), int.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void parsableAsInt06() {
+    Check.that("3.00000000000000000006").is(parsableAs(), int.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void parsableAsInt07() {
+    Check.that("99999999999999999999999999999999999999999999999999999999999")
+        .is(parsableAs(), int.class);
   }
 
   @Test
-  public void integer04() {
-    Check.that("" + Long.MAX_VALUE).isNot(int32());
-    assertTrue(true);
+  public void parsableAsInt08() {
+    Check.that("4.2E4").is(parsableAs(), int.class);
   }
 
-  @Test
-  public void integer05() {
-    Check.that("00042").is(int32());
-    assertTrue(true);
+  @Test(expected = IllegalArgumentException.class)
+  public void parsableAsInt09() {
+    Check.that("4.23456E4").is(parsableAs(), int.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void parsableAsInt10() {
+    Check.that("12*6").is(parsableAs(), int.class);
   }
 
   @Test

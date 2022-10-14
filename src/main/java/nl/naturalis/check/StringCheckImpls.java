@@ -1,6 +1,7 @@
 package nl.naturalis.check;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import static java.math.BigDecimal.ONE;
 
@@ -25,18 +26,51 @@ final class StringCheckImpls {
 
   private static final BigDecimal MAX_LONG_BD = new BigDecimal(Long.MAX_VALUE);
 
+  private static final BigDecimal MIN_INT_BD = new BigDecimal(Integer.MIN_VALUE);
+
+  private static final BigDecimal MAX_INT_BD = new BigDecimal(Integer.MAX_VALUE);
+
+  private static final BigDecimal MIN_SHORT_BD = new BigDecimal(Short.MIN_VALUE);
+
+  private static final BigDecimal MAX_SHORT_BD = new BigDecimal(Short.MAX_VALUE);
+
+  private static final BigDecimal MIN_BYTE_BD = new BigDecimal(Byte.MIN_VALUE);
+
+  private static final BigDecimal MAX_BYTE_BD = new BigDecimal(Byte.MAX_VALUE);
+
+  private static final int MAX_INT_STR_LEN =
+      String.valueOf(Integer.MAX_VALUE).length();
+
+  private static final int MAX_SHORT_STR_LEN =
+      String.valueOf(Short.MAX_VALUE).length();
+
   private StringCheckImpls() {
     throw new UnsupportedOperationException();
   }
 
-  static boolean isInt(String s) {
-    return isIntegral(s, Integer.MIN_VALUE, Integer.MAX_VALUE);
+  static boolean isLong(String s) {
+    return parsable(s, MIN_LONG_BD, MAX_LONG_BD);
   }
 
-  static boolean isLong(String s) {
-    if (notEmpty(s)) {
+  static boolean isInt(String s) {
+    return parsable(s, MIN_INT_BD, MAX_INT_BD);
+  }
+
+  static boolean isShort(String s) {
+    return parsable(s, MIN_SHORT_BD, MAX_SHORT_BD);
+  }
+
+  static boolean isByte(String s) {
+    return parsable(s, MIN_BYTE_BD, MAX_BYTE_BD);
+  }
+
+  private static boolean parsable(String s, BigDecimal min, BigDecimal max) {
+    if (!s.isEmpty()) {
       try {
-        return fitsIntoLong(new BigDecimal(s));
+        BigDecimal bd;
+        return isRound(bd = new BigDecimal(s))
+            && bd.compareTo(min) >= 0
+            && bd.compareTo(max) <= 0;
       } catch (NumberFormatException ignored) {
       }
     }
@@ -44,7 +78,7 @@ final class StringCheckImpls {
   }
 
   static boolean isDouble(String s) {
-    if (notEmpty(s)) {
+    if (!s.isEmpty()) {
       BigDecimal bd;
       try {
         bd = new BigDecimal(s);
@@ -58,7 +92,7 @@ final class StringCheckImpls {
   }
 
   static boolean isFloat(String s) {
-    if (notEmpty(s)) {
+    if (!s.isEmpty()) {
       BigDecimal bd;
       try {
         bd = new BigDecimal(s);
@@ -69,14 +103,6 @@ final class StringCheckImpls {
       return x.compareTo(BIG_MIN_FLOAT) >= 0 && x.compareTo(BIG_MAX_FLOAT) <= 0;
     }
     return false;
-  }
-
-  static boolean isShort(String s) {
-    return isIntegral(s, Short.MIN_VALUE, Short.MAX_VALUE);
-  }
-
-  static boolean isByte(String s) {
-    return isIntegral(s, Byte.MIN_VALUE, Byte.MAX_VALUE);
   }
 
   static boolean isRound(double d) {
@@ -98,26 +124,30 @@ final class StringCheckImpls {
         /*|| bd.remainder(ONE).signum() == 0 */;
   }
 
-  private static boolean isIntegral(String s, long minVal, long maxVal) {
-    if (notEmpty(s)) {
-      try {
-        BigDecimal bd = new BigDecimal(s);
-        long l;
-        return isRound(bd) && (l = bd.longValue()) >= minVal && l <= maxVal;
-      } catch (NumberFormatException ignored) {
-      }
+  static boolean isPlainInt(String s) {
+    return isPlain(s, MAX_INT_STR_LEN, 31);
+  }
+
+  static boolean isPlainShort(String s) {
+    return isPlain(s, MAX_SHORT_STR_LEN, 15);
+  }
+
+  private static boolean isPlain(String s, int maxStrLen, int maxBitLen) {
+    if (s.isEmpty() || s.length() > maxStrLen) {
+      return false;
+    } else if (s.charAt(0) == '0') {
+      return s.length() == 1;
     }
-    return false;
-  }
-
-  private static boolean fitsIntoLong(BigDecimal bd) {
-    return isRound(bd)
-        && bd.compareTo(MIN_LONG_BD) >= 0
-        && bd.compareTo(MAX_LONG_BD) <= 0;
-  }
-
-  private static boolean notEmpty(String s) {
-    return s != null && !s.isEmpty();
+    // check for '+' and '-'
+    char c;
+    if ((c = s.charAt(0)) < '0' || c > '9') {
+      return false;
+    }
+    try {
+      return new BigInteger(s).bitLength() <= maxBitLen;
+    } catch (NumberFormatException e) {
+      return false;
+    }
   }
 
 }
