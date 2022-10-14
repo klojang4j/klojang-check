@@ -2,7 +2,6 @@ package nl.naturalis.check;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.IntFunction;
 
 import static java.lang.invoke.MethodHandles.arrayElementGetter;
 import static java.lang.invoke.MethodHandles.arrayLength;
@@ -53,39 +52,37 @@ final class Misc {
       int maxEntries) {
     if (obj == null) {
       return "null";
-    } else if ((obj instanceof String s && s.length() <= maxLen)
-        || obj instanceof Number) {
-      return obj.toString();
     }
     String s;
     if (obj instanceof Class<?> c) {
       s = simpleClassName(c);
     } else if (obj instanceof Collection<?> c) {
       Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
-      String suffix = c.size() > maxElems ? ", ...]" : "]";
-      s = '[' + implodeCollection(c, stringifier, maxElems) + suffix;
+      s = delimit0(implodeCollection(c, stringifier, maxElems), c.size(), maxElems);
     } else if (obj instanceof Map<?, ?> m) {
       Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
-      String suffix = m.size() > maxElems ? ", ...}" : "}";
-      s = '{' + implodeCollection(m.entrySet(), stringifier, maxElems) + suffix;
+      s = delimit1(implodeCollection(m.entrySet(), stringifier, maxElems),
+          m.size(),
+          maxElems);
     } else if (obj instanceof Map.Entry<?, ?> e) {
       s = entryToString(e, maxLen, maxElems, maxEntries);
     } else if (obj instanceof int[] ints) {
-      s = imploded(implodeInts(ints, maxElems), ints.length, maxElems);
+      s = delimit0(implodeInts(ints, maxElems), ints.length, maxElems);
     } else if (obj instanceof Object[] objs) {
       Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
-      s = imploded(implodeArray(objs, stringifier, maxElems), objs.length, maxElems);
+      s = delimit0(implodeArray(objs, stringifier, maxElems), objs.length, maxElems);
     } else if (obj.getClass().isArray()) {
       Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
-      s = imploded(
-          implodeAny(obj, stringifier, maxElems), getArrayLength(obj), maxElems);
+      s = delimit0(implodeAny(obj, stringifier, maxElems),
+          getArrayLength(obj),
+          maxElems);
     } else {
       s = obj.toString();
     }
     return ellipsis(s, maxLen);
   }
 
-  private static String imploded(String imploded, int len, int maxElems) {
+  private static String delimit0(String imploded, int len, int maxElems) {
     if (len == 0) {
       return "[]";
     } else {
@@ -96,6 +93,20 @@ final class Misc {
         suffix = " (+" + (len - maxElems) + ")]";
       }
       return '[' + imploded + suffix;
+    }
+  }
+
+  private static String delimit1(String imploded, int len, int maxElems) {
+    if (len == 0) {
+      return "{}";
+    } else {
+      String suffix;
+      if (len <= maxElems) {
+        suffix = "}";
+      } else {
+        suffix = " (+" + (len - maxElems) + ")}";
+      }
+      return '{' + imploded + suffix;
     }
   }
 
@@ -119,10 +130,6 @@ final class Misc {
       return ArrayInfo.create(clazz).name();
     }
     return clazz.getName();
-  }
-
-  static String describe(int val) {
-    return "int";
   }
 
   private static String entryToString(Map.Entry<?, ?> e,
