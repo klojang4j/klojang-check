@@ -106,10 +106,10 @@ final class MsgPredicate {
         : x.name() + " must be an existing directory (was " + x.arg() + ')';
   }
 
-  static PrefabMsgFormatter msgFileExists() {
+  static PrefabMsgFormatter msgFound() {
     return x -> x.negated()
         ? x.name() + " must not exist (was " + x.arg() + ')'
-        : x.name() + " must exist (was " + x.arg() + ')';
+        : "file not found: " + x.arg();
   }
 
   static PrefabMsgFormatter msgReadable() {

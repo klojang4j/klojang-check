@@ -2,10 +2,11 @@ package nl.naturalis.check;
 
 import nl.naturalis.check.exceptions.DuplicateValueException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static nl.naturalis.check.exceptions.DuplicateValueException.ValueType;
@@ -15,18 +16,20 @@ import static nl.naturalis.check.exceptions.DuplicateValueException.ValueType;
  * always), for each type of exception, three exception factories are provided:
  *
  * <ol>
- *   <li>A {@code public static final} class constant of type {@code Function<String, Exception>}.
- *       This function can be used as the first argument to the {@linkplain Check#on(Function, int)
- *       Check.on(...)} static factory methods.
- *   <li>A method that takes a {@code String} (the error message) and returns a {@code
- *       Supplier<Exception>}. The {@code Supplier} passes the string to the exception's
- *       constructor. The {@code Supplier} can be used as the last argument to
- *       {@linkplain ObjectCheck#is(Predicate, String, Object...)}  checks} that allow you to supply
- *       your own exception.
- *   <li>A method that takes no arguments and returns a {@code Supplier<Exception>}. The {@code
- *       Supplier} instantiates the {@code Exception} using its no-arg constructor. This {@code
- *       Supplier}, too, can be used as the last argument to checks that allow you to supply your own
- *       exception.
+ *   <li>A {@code public static final} class constant of type
+ *      {@code Function<String, Exception>}. This function can be used as the first
+ *      argument to the {@code Check.on(...)} methods of hte {@link Check} class. It
+ *      sets the default exception, to be thrown if the value fails to pass any of
+ *      the subsequent tests.
+ *   <li>A method that takes a {@code String} (the error message) and returns a
+ *      {@code Supplier<Exception>}. The {@code Supplier} will pass the string to
+ *      the exception's constructor when requested to supply the exception. The
+ *      {@code Supplier} can be used as the last argument to checks that allow you
+ *      to specify an alternative exception.
+ *   <li>A method that takes no arguments and returns a {@code Supplier<Exception>}.
+ *      The {@code Supplier} will instantiate the exception using its no-arg
+ *      constructor. This {@code Supplier}, too, can be used as the last argument to
+ *      checks that allow you to specify an alternative exception.
  * </ol>
  *
  * <p>The following examples make this more concrete:
@@ -35,19 +38,19 @@ import static nl.naturalis.check.exceptions.DuplicateValueException.ValueType;
  *
  * <pre>{@code
  * Check.on(STATE, file, "file").is(writable());
- * // shortcut for:
+ * // is shortcut for:
  * Check.on(IllegalStateException::new, file, "file").is(writable());
  *
  * Check.on(STATE, file).is(writable(), "file not writable");
- * // shortcut for:
+ * // is shortcut for:
  * Check.on(IllegalStateException::new, file).is(writable(), "file not writable");
  *
  * Check.that(file).is(writable(), illegalState("file not writable"));
- * // shortcut for:
+ * // is shortcut for:
  * Check.that(file).is(writable(), () -> new IllegalStateException("file not writable"));
  *
  * Check.that(file).is(writable(), illegalState());
- * // shortcut for:
+ * // is shortcut for:
  * Check.that(file).is(writable(), () -> new IllegalStateException());
  * }</pre>
  *
@@ -73,10 +76,14 @@ public final class CommonExceptions {
       IndexOutOfBoundsException::new;
 
   /**
-   * A {@code Function} that takes a string and returns an {@code IOException}.
    * Shortcut for {@code IOException::new}.
    */
   public static final Function<String, IOException> IO = IOException::new;
+
+  /**
+   * Shortcut for {@code FileNotFoundException::new}.
+   */
+  public static final Function<String, FileNotFoundException> FILE = FileNotFoundException::new;
 
   /**
    * Shortcut for {@code NullPointerException::new}.
@@ -98,21 +105,13 @@ public final class CommonExceptions {
   /**
    * Shortcut for {@code IllegalArgumentException::new}. Included for completeness.
    * {@code IllegalArgumentException} already is the exception that is thrown by
-   * default:
-   *
-   * <blockquote><pre>{@code
-   * Check.on(ARGUMENT, foo, "foo").is(int32());
-   * // is equivalent to:
-   * Check.that(foo, "foo").is(int32());
-   * }</pre></blockquote>
+   * default if a value fails to pass a test.
    */
   public static final Function<String, IllegalArgumentException> ARGUMENT =
       IllegalArgumentException::new;
 
   /**
-   * Returns a {@code Supplier} of an {@code IllegalStateException}. The supplier
-   * will pass the specified message to the constructor of
-   * {@code IllegalStateException}.
+   * Returns a {@code Supplier} of an {@code IllegalStateException}.
    *
    * @param message the exception message
    * @return a {@code Supplier} of an {@code IllegalStateException}
@@ -122,7 +121,7 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code IllegalStateException}. The supplier
+   * Returns a {@code Supplier} of an {@link IllegalStateException}. The supplier
    * will call the no-arg constructor of {@code IllegalStateException}.
    *
    * @return a {@code Supplier} of an {@code IllegalStateException}
@@ -132,30 +131,27 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code IllegalArgumentException}. The supplier
-   * will pass the specified message to the constructor of
-   * {@code IllegalArgumentException}.
+   * Returns a {@code Supplier} of an {@link IllegalArgumentException}.
    *
    * @param message the exception message
    * @return a {@code Supplier} of an {@code IllegalArgumentException}
    */
-  public static Supplier<IllegalStateException> illegalArgument(String message) {
-    return () -> new IllegalStateException(message);
+  public static Supplier<IllegalArgumentException> illegalArgument(String message) {
+    return () -> new IllegalArgumentException(message);
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code IllegalStateException}. The supplier
-   * will call the no-arg constructor of {@code IllegalStateException}.
+   * Returns a {@code Supplier} of an {@link IllegalArgumentException}. The supplier
+   * will call the no-arg constructor of {@code IllegalArgumentException}.
    *
-   * @return a {@code Supplier} of an {@code IllegalStateException}
+   * @return a {@code Supplier} of an {@code IllegalArgumentException}
    */
-  public static Supplier<IllegalStateException> illegalArgument() {
-    return IllegalStateException::new;
+  public static Supplier<IllegalArgumentException> illegalArgument() {
+    return IllegalArgumentException::new;
   }
 
   /**
-   * A {@code Supplier} of an {@code IndexOutOfBoundsException} for the specified
-   * index.
+   * Returns a {@code Supplier} of an {@link IndexOutOfBoundsException}.
    *
    * @param index the out-of-bounds index
    * @return a {@code Supplier} of an {@code IndexOutOfBoundsException}
@@ -166,8 +162,18 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code IOException}. The supplier will pass the
-   * specified message to the constructor of {@code IOException}.
+   * Returns a {@code Supplier} of an {@link IndexOutOfBoundsException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of an {@code IndexOutOfBoundsException}
+   * @see IndexOutOfBoundsException#IndexOutOfBoundsException(int)
+   */
+  public static Supplier<IndexOutOfBoundsException> indexOutOfBounds(String message) {
+    return () -> new IndexOutOfBoundsException(message);
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IOException}.
    *
    * @param message the exception message
    * @return a {@code Supplier} of an {@code IOException}
@@ -177,7 +183,7 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code IOException}. The supplier will call the
+   * Returns a {@code Supplier} of an {@link IOException}. The supplier will call the
    * no-arg constructor of {@code IOException}.
    *
    * @return a {@code Supplier} of an {@code IOException}
@@ -187,30 +193,47 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code NullPointerException}. The supplier will
-   * pass the specified message to the constructor of {@code NullPointerException}.
+   * Returns a {@code Supplier} of a {@link FileNotFoundException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of a {@link FileNotFoundException}
+   */
+  public static Supplier<FileNotFoundException> fileNotFound(String message) {
+    return () -> new FileNotFoundException(message);
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link FileNotFoundException}.
+   *
+   * @param f the {@link File} object corresponding to the non-existent file
+   * @return a {@code Supplier} of a {@link FileNotFoundException}
+   */
+  public static Supplier<FileNotFoundException> fileNotFound(File f) {
+    return () -> new FileNotFoundException("file not found: " + f);
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link NullPointerException}.
    *
    * @param message the exception message
    * @return a {@code Supplier} of an {@code NullPointerException}
    */
-  public static Supplier<NullPointerException> NPE(String message) {
+  public static Supplier<NullPointerException> npe(String message) {
     return () -> new NullPointerException(message);
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code NullPointerException}. The supplier will
+   * Returns a {@code Supplier} of a {@link NullPointerException}. The supplier will
    * call the no-arg constructor of {@code NullPointerException}.
    *
    * @return a {@code Supplier} of an {@code NullPointerException}
    */
-  public static Supplier<NullPointerException> NPE() {
+  public static Supplier<NullPointerException> npe() {
     return NullPointerException::new;
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code NoSuchElementException}. The supplier
-   * will pass the specified message to the constructor of
-   * {@code NoSuchElementException}.
+   * Returns a {@code Supplier} of an {@link NoSuchElementException}.
    *
    * @param message the exception message
    * @return a {@code Supplier} of an {@code NoSuchElementException}
@@ -220,7 +243,7 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of an {@code NoSuchElementException}. The supplier
+   * Returns a {@code Supplier} of an {@link NoSuchElementException}. The supplier
    * will call the no-arg constructor of {@code NoSuchElementException}.
    *
    * @return a {@code Supplier} of an {@code NoSuchElementException}
@@ -230,8 +253,7 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of a {@code DuplicateValueException}. To be used if
-   * the duplicate value was meant to be used as a map key.
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
    *
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
@@ -240,35 +262,42 @@ public final class CommonExceptions {
   }
 
   /**
-   * Returns a {@code Supplier} of a {@code DuplicateValueException}. To be used if
-   * the duplicate value was meant to be used as a map key.
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
    *
    * @param key the key found to be a duplicate
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
-  public static Supplier<DuplicateValueException> duplicateKey(String key) {
+  public static Supplier<DuplicateValueException> duplicateKey(Object key) {
     return () -> new DuplicateValueException(ValueType.KEY, key);
   }
 
   /**
-   * Returns a {@code Supplier} of a {@code DuplicateValueException}. To be used if
-   * the duplicate value was meant to be added to a {@code Set}.
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
    *
    * @param element the element found to be a duplicate
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
-  public static Supplier<DuplicateValueException> duplicateElement(String element) {
+  public static Supplier<DuplicateValueException> duplicateElement(Object element) {
     return () -> new DuplicateValueException(ValueType.ELEMENT, element);
   }
 
   /**
-   * Returns a {@code Supplier} of a {@code DuplicateValueException}. To be used if
-   * the duplicate value was meant to be added to a {@code Set}.
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
    *
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
   public static Supplier<DuplicateValueException> duplicateElement() {
     return () -> new DuplicateValueException(ValueType.ELEMENT);
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of a {@code DuplicateValueException}
+   */
+  public static Supplier<DuplicateValueException> duplicateValue(String message) {
+    return () -> new DuplicateValueException(message);
   }
 
 }

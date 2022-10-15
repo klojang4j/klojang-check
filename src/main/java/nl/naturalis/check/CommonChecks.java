@@ -135,6 +135,7 @@ public final class CommonChecks {
    *   <li>it is an empty {@link Collection}
    *   <li>it is an empty {@link Map}
    *   <li>it is an empty {@link Emptyable}
+   *   <li>it is an empty {@link File}
    *   <li>it is a zero-length array
    *   <li>it is an empty {@link Optional} <b>or</b> an {@code Optional}
    *      containing an empty value
@@ -156,10 +157,7 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is not empty. More precisely: it verifies the
-   * negation of the {@link #empty()} test. If your intention is to verify
-   * non-emptiness, using this test affirmatively - {@code is(notEmpty())} - might be
-   * slightly more performant than using the {@code empty()} check negatively -
-   * {@code isNot(empty())}, at least while the JVM is warming up.
+   * negation of the {@link #empty()} test.
    *
    * <p>This check performs an implicit null check, so can be safely executed
    * without (or instead of) executing the {@link #notNull()} check first.
@@ -178,7 +176,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is not {@code null} and, if it is an array,
    * {@code Collection} or {@code Map}, that it does not contain any {@code null}
-   * values. It may still be an <i>empty</i> array, {@code Collection} or
+   * values. It could still be an <i>empty</i> array, {@code Collection} or
    * {@code Map}, however. For maps, both keys and values are tested for
    * {@code null}.
    *
@@ -202,15 +200,21 @@ public final class CommonChecks {
    *
    * <ul>
    *   <li>it is a non-empty {@link CharSequence}
-   *   <li>it is a non-empty {@link Collection} containing only <i>deep-not-empty</i>
-   *       elements
-   *   <li>it is a non-empty {@link Map} containing only <i>deep-not-empty</i> keys and
-   *       values
-   *   <li>it is a <i>deep-not-empty</i> {@link Emptyable}
-   *   <li>it is a non-zero-length {@code Object[]} containing only <i>deep-not-empty</i>
-   *       elements
+   *   <li>it is a non-empty {@link Collection} containing only
+   *      <i>deep-not-empty</i> elements
+   *   <li>it is a non-empty {@link Map} containing only <i>deep-not-empty</i> keys
+   *      and values
+   *   <li>it is a deep-not-empty {@link Emptyable}
+   *   <li>it is a non-zero-length {@code Object[]} containing only
+   *      <i>deep-not-empty</i> elements
    *   <li>it is a non-zero-length array of primitive values
-   *   <li>it is a non-empty {@link Optional} containing a <i>deep-not-empty</i> value
+   *   <li>it is a non-empty {@link Optional} containing a <i>deep-not-empty</i>
+   *      value
+   *   <li>it is a {@link File} containing at least one non-whitespace character.
+   *      Consequently, this check could be expensive if the argument is a large
+   *      {@code File}. Also note that this check will not verify that the file
+   *      exists in the first place. If in doubt, execute the {@link #file()} check
+   *      first.
    *   <li>it is a non-null object of any other type
    * </ul>
    *
@@ -320,17 +324,22 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a file is present on the file system. Equivalent to
+   * Verifies that the specified file is present on the file system. Equivalent to
    * {@link File#exists() File::exists}.
    *
+   * <blockquote><pre>{@code
+   * Check.that(file).is(found(), fileNotFound(file));
+   * }</pre></blockquote>
+   *
    * @return a function implementing the test described above
+   * @see CommonExceptions#fileNotFound(File)
    */
-  public static ComposablePredicate<File> fileExists() {
+  public static ComposablePredicate<File> found() {
     return File::exists;
   }
 
   static {
-    setMetadata(fileExists(), msgFileExists(), "fileExists");
+    setMetadata(found(), msgFound(), "found");
   }
 
   /**
@@ -955,59 +964,62 @@ public final class CommonChecks {
   }
 
   private static final Map<Class<?>, Predicate<String>> numerical = Map.of(
-      Integer.class, StringCheckImpls::isIntExact,
-      Long.class, StringCheckImpls::isLongExact,
-      Short.class, StringCheckImpls::isShortExact,
-      Byte.class, StringCheckImpls::isByteExact,
-      Double.class, StringCheckImpls::isDouble,
-      Float.class, StringCheckImpls::isFloat
+      long.class, StringCheckImpls::isLongExact,
+      int.class, StringCheckImpls::isIntExact,
+      short.class, StringCheckImpls::isShortExact,
+      byte.class, StringCheckImpls::isByteExact,
+      double.class, StringCheckImpls::isDouble,
+      float.class, StringCheckImpls::isFloat
   );
 
   /**
-   * Verifies that a string can be parsed into a {@code Number} of the specified type
-   * without loss of information. The provided type must be one of the "basic"
-   * {@code Number} types: {@code Integer}, {@code Double}, {@code Float},
-   * {@code Long}, {@code Short}, {@code Byte}.
+   * Verifies that a string can be parsed into a number of the specified type without
+   * loss of information. The provided type must be one of the <i>primitive</i>
+   * number types: {@code long}, {@code int}, {@code short}, {@code byte},
+   * {@code double} or {@code float}. Specifying a wrapper type (e.g.
+   * {@code Integer}) will result in an {@link InvalidCheckException}.
    *
-   * @param <T> the type of the {@code Number} into which to parse the string
+   * @param <T> the type of the number into which to parse the string
    * @return a function implementing the test described above
-   * @see #parsable
+   * @see #parsableAs
    * @see #plainInt()
    * @see #plainShort()
    */
-  public static <T extends Number> Relation<String, Class<T>> numerical() {
+  public static <T extends Number> Relation<String, Class<T>> valueOf() {
     return (x, y) -> {
       Predicate<String> p = numerical.get(y);
       if (p != null) {
         return p.test(x);
       }
-      throw new InvalidCheckException("unsupported type: " + y);
+      throw typeNotSupported(y);
     };
   }
 
   private static final Map<Class<?>, Predicate<String>> parsable = Map.of(
-      Integer.class, StringCheckImpls::isInt,
-      Long.class, StringCheckImpls::isLong,
-      Short.class, StringCheckImpls::isShort,
-      Byte.class, StringCheckImpls::isByte,
-      Double.class, StringCheckImpls::isDouble,
-      Float.class, StringCheckImpls::isFloat
+      int.class, StringCheckImpls::isInt,
+      long.class, StringCheckImpls::isLong,
+      short.class, StringCheckImpls::isShort,
+      byte.class, StringCheckImpls::isByte,
+      double.class, StringCheckImpls::isDouble,
+      float.class, StringCheckImpls::isFloat
   );
 
   /**
    * Verifies that a string can be parsed into a {@code Number} of the specified type
-   * without loss of information. The provided type must be one of the "basic"
-   * {@code Number} types: {@code Integer}, {@code Double}, {@code Float},
-   * {@code Long}, {@code Short}, {@code Byte}. The difference with the
-   * {@link #numerical()} check is that, for the integral types, the string to be
-   * parsed is allowed to have a fractional part as long as it consists of zeros
-   * only. Scientific notation is allowed, too, as long as the effective fractional
-   * part consists of zeros only. For {@code Double} and {@code Float} there is no
+   * without loss of information. The provided type must be one of the
+   * <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
+   * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g.
+   * {@code Integer}) will result in an {@link InvalidCheckException}. The difference
+   * between this check and the {@link #valueOf()} check is that this check allows
+   * the string to be parsed to have a fractional part, even if the target type is an
+   * integral type (like {@code int}), as long as it consists of zeros only.
+   * Scientific notation is allowed, too, as long as the effective fractional part
+   * consists of zeros only. For {@code Double} and {@code Float} there is no
    * difference between the two checks.
    *
-   * @param <T> the type of the {@code Number} into which to parse the string
+   * @param <T> the type of the number into which to parse the string
    * @return a function implementing the test described above
-   * @see #numerical()
+   * @see #valueOf()
    * @see #plainInt()
    * @see #plainShort()
    */
@@ -1017,7 +1029,7 @@ public final class CommonChecks {
       if (p != null) {
         return p.test(x);
       }
-      throw new InvalidCheckException("unsupported type: " + y);
+      throw typeNotSupported(y);
     };
   }
 
@@ -1138,9 +1150,13 @@ public final class CommonChecks {
     tmp1.put(test, name);
   }
 
-  private static <T> T notApplicable(String check, Object arg) {
+  private static InvalidCheckException typeNotSupported(Class<?> type) {
+    return new InvalidCheckException("type not supported: " + type);
+  }
+
+  private static InvalidCheckException notApplicable(String check, Object arg) {
     String msg = String.format("\"%s\" not applicable to %s", check, arg.getClass());
-    throw new InvalidCheckException(msg);
+    return new InvalidCheckException(msg);
   }
 
 }

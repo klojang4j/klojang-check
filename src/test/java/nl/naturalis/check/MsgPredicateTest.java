@@ -457,10 +457,10 @@ public class MsgPredicateTest {
     Path p = Path.of("bla", "foo", "bla", "bar");
     File file = p.toFile();
     try {
-      Check.that(file, "xenon").is(fileExists());
+      Check.that(file, "xenon").is(found());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("xenon must exist (was " + file + ")", e.getMessage());
+      assertEquals("file not found: bla/foo/bla/bar", e.getMessage());
       return;
     }
     fail();
@@ -470,7 +470,7 @@ public class MsgPredicateTest {
   public void fileExists01() throws IOException {
     File f = File.createTempFile("foo234", null);
     try {
-      Check.that(f, "xenon").isNot(fileExists());
+      Check.that(f, "xenon").isNot(found());
     } finally {
       f.delete();
     }

@@ -1,5 +1,8 @@
 package nl.naturalis.check;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 import static nl.naturalis.check.Misc.getArrayLength;
@@ -31,34 +34,40 @@ final class CheckImpls {
     return arg == null
         || (arg instanceof CharSequence cs && cs.length() == 0)
         || (arg instanceof Collection<?> c && c.size() == 0)
+        || (isArray(arg) && getArrayLength(arg) == 0)
         || (arg instanceof Map<?, ?> m && m.size() == 0)
         || (arg instanceof Object[] x && x.length == 0)
-        || (arg instanceof Emptyable e && e.isEmpty())
         || (arg instanceof Optional<?> o && (o.isEmpty() || isEmpty(o.get())))
-        || (isArray(arg) && getArrayLength(arg) == 0);
+        || (arg instanceof Emptyable e && e.isEmpty())
+        || (arg instanceof File f && fileSize(f) == 0)
+        ;
   }
 
   static <T> boolean isNotEmpty(T arg) {
     return arg != null
         && (!(arg instanceof CharSequence cs) || cs.length() != 0)
         && (!(arg instanceof Collection<?> c) || c.size() != 0)
+        && (!isArray(arg) || getArrayLength(arg) != 0)
         && (!(arg instanceof Map<?, ?> m) || m.size() != 0)
         && (!(arg instanceof Object[] x) || x.length != 0)
-        && (!isArray(arg) || getArrayLength(arg) != 0)
         && (!(arg instanceof Optional<?> o)
                 || (o.isPresent() && isNotEmpty(o.get())))
-        && (!(arg instanceof Emptyable e) || !e.isEmpty());
+        && (!(arg instanceof Emptyable e) || !e.isEmpty())
+        && (!(arg instanceof File f) || fileSize(f) != 0)
+        ;
   }
 
   static boolean isDeepNotEmpty(Object arg) {
     return arg != null
         && (!(arg instanceof CharSequence cs) || cs.length() > 0)
         && (!(arg instanceof Collection<?> c) || dne(c))
+        && (!isArray(arg) || getArrayLength(arg) != 0)
         && (!(arg instanceof Map<?, ?> m) || dne(m))
         && (!(arg instanceof Object[] x) || dne(x))
-        && (!isArray(arg) || getArrayLength(arg) != 0)
         && (!(arg instanceof Optional<?> o) || dne(o))
-        && (!(arg instanceof Emptyable e) || e.isDeepNotEmpty());
+        && (!(arg instanceof Emptyable e) || e.isDeepNotEmpty())
+        && (!(arg instanceof File f) || isBlankFile(f))
+        ;
   }
 
   static boolean isDeepNotNull(Object arg) {
@@ -168,6 +177,34 @@ final class CheckImpls {
 
   private static boolean isArray(Object obj) {
     return obj.getClass().isArray();
+  }
+
+  private static long fileSize(File f) {
+    try {
+      return Files.size(f.toPath());
+    } catch (IOException e) {
+      throw new InvalidCheckException(e.toString());
+    }
+  }
+
+  private static boolean isBlankFile(File f) {
+    try (InputStream in = new FileInputStream(f)) {
+      var isr = new InputStreamReader(in, StandardCharsets.UTF_8);
+      if (!isr.ready()) {
+        var buf = new char[128];
+        int count = isr.read(buf, 0, 128);
+        do {
+          for (int i = 0; i < count; ++i) {
+            if (!Character.isWhitespace(buf[i])) {
+              return false;
+            }
+          }
+        } while (!isr.ready());
+      }
+    } catch (IOException e) {
+      throw new InvalidCheckException(e.toString());
+    }
+    return true;
   }
 
 }

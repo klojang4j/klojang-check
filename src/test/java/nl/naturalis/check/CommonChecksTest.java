@@ -5,12 +5,11 @@ import org.junit.Test;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static nl.naturalis.check.CommonChecks.*;
 import static nl.naturalis.check.TestUtil.*;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CommonChecksTest {
 
@@ -374,6 +373,19 @@ public class CommonChecksTest {
   @Test(expected = IllegalArgumentException.class)
   public void instanceOf01() {
     Check.that("foo").is(instanceOf(), FileOutputStream.class);
+  }
+
+  @Test
+  public void ok00() {
+    int i = Check.that("9").is(valueOf(), int.class).ok(Integer::valueOf);
+    assertEquals(9, i);
+  }
+
+  @Test
+  public void then00() {
+    AtomicInteger ai = new AtomicInteger();
+    Check.that("-9").is(valueOf(), byte.class).then(s -> ai.set(Integer.valueOf(s)));
+    assertEquals(-9, ai.get());
   }
 
 }
