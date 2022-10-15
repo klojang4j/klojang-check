@@ -48,6 +48,22 @@ final class StringCheckImpls {
     throw new UnsupportedOperationException();
   }
 
+  static boolean isLongExact(String s) {
+    return isExact(s, 63);
+  }
+
+  static boolean isIntExact(String s) {
+    return isExact(s, 31);
+  }
+
+  static boolean isShortExact(String s) {
+    return isExact(s, 15);
+  }
+
+  static boolean isByteExact(String s) {
+    return isExact(s, 7);
+  }
+
   static boolean isLong(String s) {
     return parsable(s, MIN_LONG_BD, MAX_LONG_BD);
   }
@@ -62,19 +78,6 @@ final class StringCheckImpls {
 
   static boolean isByte(String s) {
     return parsable(s, MIN_BYTE_BD, MAX_BYTE_BD);
-  }
-
-  private static boolean parsable(String s, BigDecimal min, BigDecimal max) {
-    if (!s.isEmpty()) {
-      try {
-        BigDecimal bd;
-        return isRound(bd = new BigDecimal(s))
-            && bd.compareTo(min) >= 0
-            && bd.compareTo(max) <= 0;
-      } catch (NumberFormatException ignored) {
-      }
-    }
-    return false;
   }
 
   static boolean isDouble(String s) {
@@ -107,11 +110,7 @@ final class StringCheckImpls {
     return false;
   }
 
-  static boolean isRound(double d) {
-    return isRound(new BigDecimal(Double.toString(d)));
-  }
-
-  static boolean isRound(BigDecimal bd) {
+  private static boolean isRound(BigDecimal bd) {
     // NB The 1st check is cheap and catches a lot of the cases.
     // The 2nd second is superfluous in the presence of the 3rd.
     // However, it still catches quite a few cases and seems
@@ -150,6 +149,29 @@ final class StringCheckImpls {
     } catch (NumberFormatException e) {
       return false;
     }
+  }
+
+  private static boolean isExact(String s, int bitLength) {
+    if (!s.isEmpty()) {
+      try {
+        return new BigInteger(s).bitLength() <= bitLength;
+      } catch (NumberFormatException ignored) {
+      }
+    }
+    return false;
+  }
+
+  private static boolean parsable(String s, BigDecimal min, BigDecimal max) {
+    if (!s.isEmpty()) {
+      try {
+        BigDecimal bd;
+        return isRound(bd = new BigDecimal(s))
+            && bd.compareTo(min) >= 0
+            && bd.compareTo(max) <= 0;
+      } catch (NumberFormatException ignored) {
+      }
+    }
+    return false;
   }
 
 }

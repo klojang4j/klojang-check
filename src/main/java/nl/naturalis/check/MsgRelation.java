@@ -145,6 +145,14 @@ final class MsgRelation {
     //@formatter:off
   }
 
+  static PrefabMsgFormatter msgNumerical() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not be parsable into " + simpleClassName(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " cannot be parsed into " + simpleClassName(x.obj()) + WAS + toStr(x.arg()) + ')';
+    //@formatter:off
+  }
+
   static PrefabMsgFormatter msgParsableAs() {
     //@formatter:off
     return x -> x.negated()

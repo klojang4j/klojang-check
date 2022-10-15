@@ -1,16 +1,9 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.ArrayInfo;
-import nl.naturalis.check.PrefabMsgFormatter;
-
 import static nl.naturalis.check.MsgUtil.className;
 import static nl.naturalis.check.MsgUtil.toStr;
 
 final class MsgPredicate {
-
-  private static final String NULL = "null";
-  private static final String TRUE = "true";
-  private static final String FALSE = "false";
 
   private MsgPredicate() {}
 
@@ -70,6 +63,23 @@ final class MsgPredicate {
     return x -> x.negated()
         ? x.name() + " must not be null or blank (was " + toStr(x.arg()) + ')'
         : x.name() + " must be null or blank (was " + toStr(x.arg()) + ')';
+  }
+
+
+  static PrefabMsgFormatter msgPlainInt() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not be a plain integer (was " + toStr(x.arg()) + ')' // BS begets BS
+        : x.name() + " must be a plain integer: no +/- sign, no leading zeros (was " + toStr(x.arg()) + ')';
+    //@formatter:on
+  }
+
+  static PrefabMsgFormatter msgPlainShort() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not be a plain short (was " + toStr(x.arg()) + ')' // BS begets BS
+        : x.name() + " must be a plain 16-bit integer: no +/- sign, no leading zeros (was " + toStr(x.arg()) + ')';
+    //@formatter:on
   }
 
   static PrefabMsgFormatter msgArray() {

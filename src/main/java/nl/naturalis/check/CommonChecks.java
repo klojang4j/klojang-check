@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static java.lang.invoke.MethodHandles.arrayLength;
 import static nl.naturalis.check.MsgIntObjRelation.*;
 import static nl.naturalis.check.MsgIntPredicate.*;
 import static nl.naturalis.check.MsgIntRelation.*;
@@ -247,9 +246,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a string consists of digits only, by implication contains no '+'
-   * or '-' sign, contains no leading zeros, and can be parsed into an {@code int}
-   * (by implication non-negative).
+   * Verifies that a string consists of digits only and (by implication) contains no
+   * '+' or '-' sign, and contains no leading zeros, and can be parsed into an
+   * integer (by implication non-negative).
    *
    * @return a function implementing the test described above
    */
@@ -257,16 +256,24 @@ public final class CommonChecks {
     return StringCheckImpls::isPlainInt;
   }
 
+  static {
+    setMetadata(plainInt(), msgPlainInt(), "plainInt");
+  }
+
   /**
-   * Verifies that a string consists of digits only, by implication contains no '+'
-   * or '-' sign, contains no leading zeros, and can be parsed into a {@code short}
-   * (by implication non-negative). Useful, for example, for parsing TCP port
-   * numbers.
+   * Verifies that a string consists of digits only and (by implication) contains no
+   * '+' or '-' sign, and contains no leading zeros, and can be parsed into a
+   * half-precision integer (by implication non-negative). Useful, for example, for
+   * parsing TCP port numbers.
    *
    * @return a function implementing the test described above
    */
   public static ComposablePredicate<String> plainShort() {
     return StringCheckImpls::isPlainShort;
+  }
+
+  static {
+    setMetadata(plainShort(), msgPlainShort(), "plainShort");
   }
 
   /**
@@ -356,9 +363,9 @@ public final class CommonChecks {
 
   /**
    * Verifies that an {@code Optional} contains a value. Note that this check differs
-   * from the {@link #empty()} check in that it only verifies that {@code Optional}
-   * is not empty. The {@code empty()} check (in its negation) additionally requires
-   * that the value it contains is itself non-empty.
+   * from the {@link #empty()} check in that it only verifies that the
+   * {@code Optional} is not empty. The {@code empty()} check (in its negation)
+   * additionally requires that the value it contains is itself non-empty.
    *
    * @param <T> the type of the value contained in the {@code Optional}
    * @return a function implementing the test described above
@@ -947,7 +954,38 @@ public final class CommonChecks {
     setMetadata(endsWith(), msgEndsWith(), "endsWith");
   }
 
-  private static final Map<Class<?>, Predicate<String>> parsables = Map.of(
+  private static final Map<Class<?>, Predicate<String>> numerical = Map.of(
+      Integer.class, StringCheckImpls::isIntExact,
+      Long.class, StringCheckImpls::isLongExact,
+      Short.class, StringCheckImpls::isShortExact,
+      Byte.class, StringCheckImpls::isByteExact,
+      Double.class, StringCheckImpls::isDouble,
+      Float.class, StringCheckImpls::isFloat
+  );
+
+  /**
+   * Verifies that a string can be parsed into a {@code Number} of the specified type
+   * without loss of information. The provided type must be one of the "basic"
+   * {@code Number} types: {@code Integer}, {@code Double}, {@code Float},
+   * {@code Long}, {@code Short}, {@code Byte}.
+   *
+   * @param <T> the type of the {@code Number} into which to parse the string
+   * @return a function implementing the test described above
+   * @see #parsable
+   * @see #plainInt()
+   * @see #plainShort()
+   */
+  public static <T extends Number> Relation<String, Class<T>> numerical() {
+    return (x, y) -> {
+      Predicate<String> p = numerical.get(y);
+      if (p != null) {
+        return p.test(x);
+      }
+      throw new InvalidCheckException("unsupported type: " + y);
+    };
+  }
+
+  private static final Map<Class<?>, Predicate<String>> parsable = Map.of(
       Integer.class, StringCheckImpls::isInt,
       Long.class, StringCheckImpls::isLong,
       Short.class, StringCheckImpls::isShort,
@@ -957,27 +995,29 @@ public final class CommonChecks {
   );
 
   /**
-   * Verifies that a string can be parsed into a {@code Number} of the specified
-   * type, without loss of information. The provided type must be one of the "basic"
+   * Verifies that a string can be parsed into a {@code Number} of the specified type
+   * without loss of information. The provided type must be one of the "basic"
    * {@code Number} types: {@code Integer}, {@code Double}, {@code Float},
-   * {@code Long}, {@code Short}, {@code Byte}. Any other type will result in an
-   * {@link InvalidCheckException}. As for the integral types: the string to be
-   * parsed may have a fractional part as long as it consists of zeros only;
-   * scientific notation is allowed, too, as long as the fractional part effectively
-   * consists of zeros only.
+   * {@code Long}, {@code Short}, {@code Byte}. The difference with the
+   * {@link #numerical()} check is that, for the integral types, the string to be
+   * parsed is allowed to have a fractional part as long as it consists of zeros
+   * only. Scientific notation is allowed, too, as long as the effective fractional
+   * part consists of zeros only. For {@code Double} and {@code Float} there is no
+   * difference between the two checks.
    *
    * @param <T> the type of the {@code Number} into which to parse the string
    * @return a function implementing the test described above
+   * @see #numerical()
    * @see #plainInt()
    * @see #plainShort()
    */
   public static <T extends Number> Relation<String, Class<T>> parsableAs() {
     return (x, y) -> {
-      Predicate<String> p = parsables.get(y);
+      Predicate<String> p = parsable.get(y);
       if (p != null) {
         return p.test(x);
       }
-      throw new InvalidCheckException("unsupported number type: " + y);
+      throw new InvalidCheckException("unsupported type: " + y);
     };
   }
 
