@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
 
@@ -57,6 +58,11 @@ public class ResultTest {
     assertEquals(Result.of(42), Result.notAvailable().or(Result.of(42)));
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void or01() {
+    Result.notAvailable().or(Result.notAvailable());
+  }
+
   @Test
   public void isEmpty00() {
     assertTrue(Result.notAvailable().isEmpty());
@@ -73,7 +79,31 @@ public class ResultTest {
     assertFalse(Result.of(Set.of()).isDeepNotEmpty());
     assertTrue(Result.of("hi there").isDeepNotEmpty());
     assertTrue(Result.of(Set.of(1, 2, 3)).isDeepNotEmpty());
+  }
 
+  @Test
+  public void ifAvailable00() {
+    AtomicReference ar = new AtomicReference<>("bar");
+    Result<String> r = Result.of("foo");
+    r.ifAvailable(s -> ar.set(s));
+    assertEquals("foo", ar.get());
+  }
+
+  @Test
+  public void ifAvailable01() {
+    AtomicReference ar = new AtomicReference<>("bar");
+    Result<String> r = Result.notAvailable();
+    r.ifAvailable(s -> ar.set(s));
+    assertEquals("bar", ar.get());
+  }
+
+  @Test
+  public void isAvailable00() {
+    assertFalse(Result.notAvailable().isAvailable());
+    assertTrue(Result.notAvailable().isUnavailable());
+    assertTrue(Result.of(null).isAvailable());
+    assertFalse(Result.of(null).isUnavailable());
+    assertFalse(Result.of("foo").isUnavailable());
   }
 
 }

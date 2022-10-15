@@ -158,6 +158,16 @@ public class ObjectCheckTest {
   }
 
   @Test
+  public void is_Relation_CustomMsg01() {
+    Check.that("aaa").is(LT(), "bbb", "invalid value");
+  }
+
+  @Test
+  public void is_Relation_CustomMsg02() {
+    Check.that("aaa").is(LT(), "bbb", "invalid value: ${arg}");
+  }
+
+  @Test
   public void isNot_Relation_CustomMsg00() {
     try {
       Check.that(3.14).isNot(GT(), 1.41, "You say: ${0}=${arg}", "PI");
@@ -169,16 +179,29 @@ public class ObjectCheckTest {
     fail();
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  public void is_Relation_CustomExc00() {
-    Check.that(MONDAY).is(GTE(),
-        THURSDAY,
-        () -> new UnsupportedOperationException());
+  @Test
+  public void isNot_Relation_CustomMsg01() {
+    String s = Check.that("aaa")
+        .is(LT(), "bbb", "invalid value").ok(String::toUpperCase);
+    assertEquals("AAA", s);
+  }
+
+  @Test
+  public void isNot_Relation_CustomMsg02() {
+    String s = Check.that("aaa").is(LT(), "bbb", "invalid value: ${0}", "foo").ok();
+    assertEquals("aaa", s);
   }
 
   @Test(expected = UnsupportedOperationException.class)
   public void isNot_Relation_CustomExc00() {
-    Check.that(8.22).isNot(GT(), 3.5, () -> new UnsupportedOperationException());
+    double d = Check.that(8.22)
+        .isNot(GT(), 3.5, () -> new UnsupportedOperationException()).ok();
+    assertEquals(8.22, d);
+  }
+
+  public void isNot_Relation_CustomExc01() {
+    Check.that("foo")
+        .isNot(EQ(), 3.5, () -> new UnsupportedOperationException());
   }
 
   @Test

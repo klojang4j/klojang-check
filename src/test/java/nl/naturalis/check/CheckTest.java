@@ -36,6 +36,15 @@ public class CheckTest {
     Assert.fail();
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void notNull02() {
+    Check.notNull(null, "foo");
+  }
+
+  public void notNull03() {
+    Check.notNull("bar", "foo");
+  }
+
   @Test
   public void fail01() {
     String s = "hello";
@@ -123,6 +132,19 @@ public class CheckTest {
   }
 
   @Test
+  public void fail09() {
+    Object o = null;
+    try {
+      o = Check.fail("foo bar");
+    } catch (IllegalArgumentException e) {
+      assertNull(o);
+      assertEquals("foo bar", e.getMessage());
+      return;
+    }
+    Assert.fail();
+  }
+
+  @Test
   public void offsetLength00() {
     Check.offsetLength(new byte[0], 0, 0);
     Check.offsetLength(new byte[1], 0, 0);
@@ -199,15 +221,20 @@ public class CheckTest {
 
   @Test
   public void fromTo00() {
-    Check.fromTo("123", 0, 0);
+    assertEquals(0, Check.fromTo("123", 0, 0));
     Check.fromTo("123", 3, 3);
-    Check.fromTo("123", 2, 3);
+    assertEquals(1, Check.fromTo("123", 2, 3));
     Check.fromTo(List.of(1, 2, 3), 0, 0);
     Check.fromTo(List.of(1, 2, 3), 3, 3);
     Check.fromTo(List.of(1, 2, 3), 2, 3);
-    Check.fromTo(3, 0, 0);
-    Check.fromTo(3, 3, 3);
-    Check.fromTo(3, 2, 3);
+    assertEquals(0, Check.fromTo(3, 0, 0));
+    assertEquals(0, Check.fromTo(3, 3, 3));
+    assertEquals(1, Check.fromTo(3, 2, 3));
+    assertEquals(3, Check.fromTo(3, 0, 3));
+    assertEquals(2, Check.fromTo(
+        new Double[] {0.0, 1.1, 2.2, 3.3, 4.4, 5.5}, 1, 3));
+    assertEquals(6, Check.fromTo(
+        new Double[] {0.0, 1.1, 2.2, 3.3, 4.4, 5.5}, 0, 6));
   }
 
   @Test(expected = IndexOutOfBoundsException.class)
