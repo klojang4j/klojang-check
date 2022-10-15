@@ -375,17 +375,4 @@ public class CommonChecksTest {
     Check.that("foo").is(instanceOf(), FileOutputStream.class);
   }
 
-  @Test
-  public void ok00() {
-    int i = Check.that("9").is(valueOf(), int.class).ok(Integer::valueOf);
-    assertEquals(9, i);
-  }
-
-  @Test
-  public void then00() {
-    AtomicInteger ai = new AtomicInteger();
-    Check.that("-9").is(valueOf(), byte.class).then(s -> ai.set(Integer.valueOf(s)));
-    assertEquals(-9, ai.get());
-  }
-
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.*;
 
 import static nl.naturalis.check.Check.DEF_ARG_NAME;
+import static nl.naturalis.check.InvalidCheckException.typeNotSupported;
 import static nl.naturalis.check.MsgUtil.simpleClassName;
 
 /**
@@ -383,10 +384,8 @@ public class CommonProperties {
   //@formatter:off
   private static final Map<Class<?>, UnaryOperator<? extends Number>> absFunctions = Map.of(
       Integer.class,        n -> n.intValue() >= 0 ? n : Integer.valueOf(-n.intValue()),
-      AtomicInteger.class,  n -> n.intValue() >= 0 ? n : new AtomicInteger(-n.intValue()),
       Double.class,         n -> n.doubleValue() >= 0 ? n : Double.valueOf(-n.doubleValue()),
       Long.class,           n -> n.longValue() >= 0 ? n : Long.valueOf(-n.longValue()),
-      AtomicLong.class,     n -> n.longValue() >= 0 ? n : new AtomicLong(-n.longValue()),
       Float.class,          n -> n.floatValue() >= 0 ? n : Float.valueOf(-n.floatValue()),
       Short.class,          n -> n.shortValue() >= 0 ? n : Short.valueOf((short) -n.shortValue()),
       Byte.class,           n -> n.byteValue() >= 0 ? n : Byte.valueOf((byte) -n.byteValue()),
@@ -395,7 +394,10 @@ public class CommonProperties {
   //@formatter:on
 
   /**
-   * Returns the absolute value of a {@code Number}.
+   * Returns the absolute value of a {@code Number}. The following {@code Number}
+   * types are supported: {@code Integer}, {@code Double}, {@code Long},
+   * {@code Float}, {@code Short}, {@code Byte}, {@code BigInteger},
+   * {@code BigDecimal}.
    *
    * @param <T> The type of the {@code Number}
    * @return The absolute value of a {@code Number}
@@ -406,7 +408,7 @@ public class CommonProperties {
       if (op != null) {
         return (T) op.apply(n);
       }
-      throw new InvalidCheckException("type not supported: " + n.getClass());
+      throw typeNotSupported(n.getClass());
     };
   }
 

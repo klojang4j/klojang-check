@@ -1,11 +1,13 @@
 package nl.naturalis.check;
 
 import nl.naturalis.check.types.*;
+import nl.naturalis.check.util.Result;
 
 import java.io.File;
 import java.util.*;
 import java.util.function.Predicate;
 
+import static nl.naturalis.check.InvalidCheckException.typeNotSupported;
 import static nl.naturalis.check.MsgIntObjRelation.*;
 import static nl.naturalis.check.MsgIntPredicate.*;
 import static nl.naturalis.check.MsgIntRelation.*;
@@ -1148,15 +1150,6 @@ public final class CommonChecks {
       String name) {
     tmp0.put(test, message);
     tmp1.put(test, name);
-  }
-
-  private static InvalidCheckException typeNotSupported(Class<?> type) {
-    return new InvalidCheckException("type not supported: " + type);
-  }
-
-  private static InvalidCheckException notApplicable(String check, Object arg) {
-    String msg = String.format("\"%s\" not applicable to %s", check, arg.getClass());
-    return new InvalidCheckException(msg);
   }
 
 }

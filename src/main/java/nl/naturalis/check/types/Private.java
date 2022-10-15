@@ -1,8 +1,7 @@
 package nl.naturalis.check.types;
 
-import nl.naturalis.check.Quantifier;
+import nl.naturalis.check.util.Quantifier;
 
-import java.util.Collection;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 

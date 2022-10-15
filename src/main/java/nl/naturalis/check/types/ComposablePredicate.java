@@ -1,7 +1,7 @@
 package nl.naturalis.check.types;
 
 import nl.naturalis.check.CommonChecks;
-import nl.naturalis.check.Quantifier;
+import nl.naturalis.check.util.Quantifier;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;

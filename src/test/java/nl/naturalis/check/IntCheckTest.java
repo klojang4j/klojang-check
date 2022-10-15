@@ -2,11 +2,13 @@ package nl.naturalis.check;
 
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static nl.naturalis.check.CommonChecks.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static nl.naturalis.check.CommonProperties.*;
 import static nl.naturalis.check.TestUtil.*;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class IntCheckTest {
 
@@ -336,6 +338,47 @@ public class IntCheckTest {
             box(),
             x -> x.getClass().equals(Integer.class),
             () -> new IndexOutOfBoundsException());
+  }
+
+  @Test
+  public void ok01() {
+    int i = Check.that(-9).is(lt(), 10).ok(x -> x + 1);
+    assertEquals(-8, i);
+  }
+
+  @Test
+  public void then01() {
+    AtomicInteger ai = new AtomicInteger();
+    Check.that(7).is(lt(), 8).then(ai::set);
+    assertEquals(7, ai.get());
+  }
+
+  @Test
+  public void and00() {
+    assertTrue(
+        Check.that(1).is(eq(), 1).and(2).is(eq(), 2).getClass()
+            == IntCheck.class);
+  }
+
+  @Test
+  public void and01() {
+    assertTrue(
+        Check.that(1).is(eq(), 1).and(2, "foo").is(eq(), 2).getClass()
+            == IntCheck.class);
+  }
+
+  @Test
+  public void and02() {
+    assertTrue(
+        Check.that(1).is(eq(), 1).and("bar").is(EQ(), "bar").getClass()
+            == ObjectCheck.class);
+  }
+
+  @Test
+  public void and03() {
+    assertTrue(
+        Check.that(1).is(eq(), 1).and("bar", "foo").is(EQ(), "bar").getClass()
+            == ObjectCheck.class);
   }
 
 }

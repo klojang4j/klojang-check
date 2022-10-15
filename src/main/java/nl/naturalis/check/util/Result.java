@@ -1,11 +1,13 @@
-package nl.naturalis.check;
+package nl.naturalis.check.util;
 
+import nl.naturalis.check.CommonChecks;
 import nl.naturalis.check.function.ThrowingConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static nl.naturalis.check.Check.illegalNullValue;
+import static nl.naturalis.check.CommonChecks.deepNotEmpty;
+import static nl.naturalis.check.CommonChecks.empty;
 
 /**
  * A value container where the value is explicitly allowed to be {@code null}. This
@@ -100,9 +102,8 @@ public final class Result<T> implements Emptyable {
    */
   public <X extends Throwable> void ifAvailable(ThrowingConsumer<T, X> consumer)
       throws X {
-    if (consumer == null) {
-      throw illegalNullValue();
-    } else if (isAvailable()) {
+    Objects.requireNonNull(consumer);
+    if (isAvailable()) {
       consumer.accept(val);
     }
   }
@@ -127,10 +128,10 @@ public final class Result<T> implements Emptyable {
    * @return this instance or the provided instance
    */
   public Result<T> or(Result<T> alternative) {
-    if (alternative == null) {
-      throw illegalNullValue();
-    } else if (alternative == NONE) {
-      throw new IllegalArgumentException("Result.notAvailable() not allowed");
+    Objects.requireNonNull(alternative);
+    if (alternative == NONE) {
+      throw new IllegalArgumentException(
+          "alternative must not beResult.notAvailable()");
     }
     return isAvailable() ? this : alternative;
   }
@@ -143,7 +144,7 @@ public final class Result<T> implements Emptyable {
    */
   @Override
   public boolean isEmpty() {
-    return this == NONE || CheckImpls.isEmpty(val);
+    return this == NONE || empty().test(val);
   }
 
   /**
@@ -154,7 +155,7 @@ public final class Result<T> implements Emptyable {
    */
   @Override
   public boolean isDeepNotEmpty() {
-    return this != NONE && CheckImpls.isDeepNotEmpty(val);
+    return this != NONE && deepNotEmpty().test(val);
   }
 
   @Override

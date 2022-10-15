@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static nl.naturalis.check.CommonChecks.*;
-import static nl.naturalis.check.Quantifier.*;
+import static nl.naturalis.check.util.Quantifier.*;
 import static nl.naturalis.check.types.ComposablePredicate.*;
 
 public class ComposablePredicateTest {

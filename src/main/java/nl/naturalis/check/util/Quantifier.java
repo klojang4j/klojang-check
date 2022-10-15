@@ -1,7 +1,9 @@
-package nl.naturalis.check;
+package nl.naturalis.check.util;
 
 /**
- * Symbolic constants for logical quantifiers.
+ * Symbolic constants for logical quantifiers. Used by
+ * {@link nl.naturalis.check.types.ComposablePredicate} to modulate the relation
+ * between a value and a value domain.
  */
 public enum Quantifier {
 

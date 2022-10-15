@@ -1,5 +1,6 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.util.Result;
 import org.junit.Test;
 
 import java.io.File;

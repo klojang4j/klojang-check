@@ -1,5 +1,7 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.util.Emptyable;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -188,21 +190,24 @@ final class CheckImpls {
   }
 
   private static boolean isBlankFile(File f) {
-    try (InputStream in = new FileInputStream(f)) {
-      var isr = new InputStreamReader(in, StandardCharsets.UTF_8);
-      if (!isr.ready()) {
-        var buf = new char[128];
-        int count = isr.read(buf, 0, 128);
-        do {
-          for (int i = 0; i < count; ++i) {
-            if (!Character.isWhitespace(buf[i])) {
-              return false;
+    if (fileSize(f) != 0) {
+      int BUF_SIZE = 128;
+      try (InputStream in = new FileInputStream(f)) {
+        try (var isr = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+          var buf = new char[BUF_SIZE];
+          int x = isr.read(buf, 0, BUF_SIZE);
+          while (x != -1) {
+            for (int y = 0; y < x; ++y) {
+              if (!Character.isWhitespace(buf[y])) {
+                return false;
+              }
             }
+            x = isr.read(buf, 0, BUF_SIZE);
           }
-        } while (!isr.ready());
+        }
+      } catch (IOException e) {
+        throw new InvalidCheckException(e.toString());
       }
-    } catch (IOException e) {
-      throw new InvalidCheckException(e.toString());
     }
     return true;
   }

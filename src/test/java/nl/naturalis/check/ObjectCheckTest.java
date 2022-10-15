@@ -2,14 +2,15 @@ package nl.naturalis.check;
 
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.THURSDAY;
 import static nl.naturalis.check.CommonChecks.*;
 import static nl.naturalis.check.CommonProperties.strlen;
 import static nl.naturalis.check.CommonProperties.unbox;
 import static nl.naturalis.check.TestUtil.ints;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ObjectCheckTest {
 
@@ -178,6 +179,47 @@ public class ObjectCheckTest {
   @Test(expected = UnsupportedOperationException.class)
   public void isNot_Relation_CustomExc00() {
     Check.that(8.22).isNot(GT(), 3.5, () -> new UnsupportedOperationException());
+  }
+
+  @Test
+  public void ok00() {
+    int i = Check.that("9").is(valueOf(), int.class).ok(Integer::valueOf);
+    assertEquals(9, i);
+  }
+
+  @Test
+  public void then00() {
+    AtomicInteger ai = new AtomicInteger();
+    Check.that("-9").is(valueOf(), byte.class).then(s -> ai.set(Integer.valueOf(s)));
+    assertEquals(-9, ai.get());
+  }
+
+  @Test
+  public void and00() {
+    assertTrue(
+        Check.that("1").is(EQ(), "1").and("2").is(EQ(), "2").getClass()
+            == ObjectCheck.class);
+  }
+
+  @Test
+  public void and01() {
+    assertTrue(
+        Check.that("1").is(EQ(), "1").and("2", "foo").is(EQ(), "2").getClass()
+            == ObjectCheck.class);
+  }
+
+  @Test
+  public void and02() {
+    assertTrue(
+        Check.that("1").is(EQ(), "1").and(2).is(eq(), 2).getClass()
+            == IntCheck.class);
+  }
+
+  @Test
+  public void and03() {
+    assertTrue(
+        Check.that("1").is(EQ(), "1").and(2, "foo").is(eq(), 2).getClass()
+            == IntCheck.class);
   }
 
 }

@@ -1,4 +1,6 @@
-package nl.naturalis.check;
+package nl.naturalis.check.util;
+
+import nl.naturalis.check.CommonChecks;
 
 import java.lang.runtime.ObjectMethods;
 

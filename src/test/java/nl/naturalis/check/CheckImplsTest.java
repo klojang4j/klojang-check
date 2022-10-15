@@ -1,8 +1,12 @@
 package nl.naturalis.check;
 
+import nl.naturalis.check.util.Result;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -207,6 +211,37 @@ public class CheckImplsTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
+  public void isEmpty13() throws IOException {
+    File tmp = File.createTempFile("foo", "bar");
+    try {
+      Files.writeString(tmp.toPath(), "     Hi there");
+      Check.that(tmp).is(empty());
+    } finally {
+      tmp.delete();
+    }
+  }
+
+  @Test
+  public void isEmpty14() throws IOException {
+    File tmp = File.createTempFile("foo", "bar");
+    try {
+      Check.that(tmp).is(empty());
+    } finally {
+      tmp.delete();
+    }
+  }
+
+  @Test
+  public void isEmpty15() throws IOException {
+    Check.that(new String[] {}).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isEmpty16() throws IOException {
+    Check.that(new String[] {"hello", "world"}).is(empty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
   public void isNotEmpty00() {
     Check.that(Map.of()).is(notEmpty());
   }
@@ -269,6 +304,81 @@ public class CheckImplsTest {
   @Test
   public void isNotEmpty12() {
     Check.that(Optional.of(List.of(1))).is(notEmpty());
+  }
+
+  @Test
+  public void isNotEmpty13() throws IOException {
+    File tmp = File.createTempFile("foo", "bar");
+    try {
+      Files.writeString(tmp.toPath(), "     Hi there");
+      Check.that(tmp).is(notEmpty());
+    } finally {
+      tmp.delete();
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty14() throws IOException {
+    File tmp = File.createTempFile("foo", "bar");
+    try {
+      Check.that(tmp).is(notEmpty());
+    } finally {
+      tmp.delete();
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isNotEmpty15() throws IOException {
+    Check.that(new String[] {}).is(notEmpty());
+  }
+
+  @Test
+  public void isNotEmpty16() throws IOException {
+    Check.that(new String[] {"hello", "world"}).is(notEmpty());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void isDeepNotEmpty00() throws IOException {
+    File tmp = File.createTempFile("foo", "bar");
+    try {
+      Files.writeString(tmp.toPath(), "       Hi there        ");
+      Check.that(tmp).is(deepNotEmpty());
+    } finally {
+      tmp.delete();
+    }
+  }
+
+  @Test
+  public void isDeepNotEmpty01() throws IOException {
+    File tmp = File.createTempFile("foo", "bar");
+    try {
+      Files.writeString(tmp.toPath(), "             \t\n             ");
+      Check.that(tmp).is(deepNotEmpty());
+    } finally {
+      tmp.delete();
+    }
+  }
+
+  @Test
+  public void isDeepNotEmpty02() throws IOException {
+    File tmp = File.createTempFile("foo", "bar");
+    try {
+      Check.that(tmp).is(deepNotEmpty());
+    } finally {
+      tmp.delete();
+    }
+  }
+
+  @Test
+  public void inArray00() {
+    String[] array = {"to", "be", null, "not", "to", "be"};
+    Check.that(null).is(inArray(), array);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void inArray01() {
+    String[] array = {"to", "be", "or", "not", "to", "be"};
+    Check.that(null).is(inArray(), array);
   }
 
 }

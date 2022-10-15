@@ -11,7 +11,7 @@
  */
 module nl.naturalis.check {
   exports nl.naturalis.check;
-  exports nl.naturalis.check.exceptions;
+  exports nl.naturalis.check.util;
   exports nl.naturalis.check.function;
   exports nl.naturalis.check.types;
 }

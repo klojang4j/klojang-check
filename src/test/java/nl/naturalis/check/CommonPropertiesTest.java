@@ -4,13 +4,18 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.DayOfWeek;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ToIntFunction;
 
+import static nl.naturalis.check.CommonChecks.EQ;
 import static nl.naturalis.check.CommonProperties.*;
 import static org.junit.Assert.*;
 import static nl.naturalis.check.TestUtil.*;
@@ -299,6 +304,86 @@ public class CommonPropertiesTest {
     propName = formatProperty(-6F, null, ABS(), Function.class);
     System.out.println(propName);
     assertEquals("abs(Float)", propName);
+  }
+
+  @Test
+  public void ABS01() {
+    Check.that(-100L).has(ABS(), EQ(), 100L);
+  }
+
+  @Test
+  public void ABS02() {
+    Check.that(100L).has(ABS(), EQ(), 100L);
+  }
+
+  @Test
+  public void ABS03() {
+    Check.that(-100D).has(ABS(), EQ(), 100D);
+  }
+
+  @Test
+  public void ABS04() {
+    Check.that(100D).has(ABS(), EQ(), 100D);
+  }
+
+  @Test
+  public void ABS05() {
+    Check.that(-100F).has(ABS(), EQ(), 100F);
+  }
+
+  @Test
+  public void ABS06() {
+    Check.that(100F).has(ABS(), EQ(), 100F);
+  }
+
+  @Test
+  public void ABS07() {
+    Check.that(Short.valueOf("-100")).has(ABS(), EQ(), (short) 100);
+  }
+
+  @Test
+  public void ABS08() {
+    Check.that(Short.valueOf("100")).has(ABS(), EQ(), (short) 100);
+  }
+
+  @Test
+  public void ABS09() {
+    Check.that(Byte.valueOf("-100")).has(ABS(), EQ(), (byte) 100);
+  }
+
+  @Test
+  public void ABS10() {
+    Check.that(Byte.valueOf("100")).has(ABS(), EQ(), (byte) 100);
+  }
+
+  @Test
+  public void ABS11() {
+    Check.that(Integer.valueOf("-100")).has(ABS(), EQ(), 100);
+  }
+
+  @Test
+  public void ABS12() {
+    Check.that(Integer.valueOf("100")).has(ABS(), EQ(), 100);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void ABS13() {
+    Check.that(Integer.valueOf("-100")).has(ABS(), EQ(), 101);
+  }
+
+  @Test
+  public void ABS14() {
+    Check.that(new BigInteger("-100")).has(ABS(), EQ(), new BigInteger("100"));
+  }
+
+  @Test
+  public void ABS15() {
+    Check.that(new BigDecimal("-100.13")).has(ABS(), EQ(), new BigDecimal("100.13"));
+  }
+
+  @Test(expected = InvalidCheckException.class)
+  public void ABS16() {
+    Check.that(new AtomicInteger(-100)).has(ABS(), EQ(), new AtomicInteger(100));
   }
 
   @Test

@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static nl.naturalis.check.CommonChecks.*;
-import static nl.naturalis.check.Quantifier.*;
+import static nl.naturalis.check.util.Quantifier.*;
 import static nl.naturalis.check.types.ComposableIntPredicate.*;
 
 public class ComposableIntPredicateTest {

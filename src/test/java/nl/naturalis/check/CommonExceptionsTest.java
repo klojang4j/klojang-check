@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.exceptions.DuplicateValueException;
+import nl.naturalis.check.util.DuplicateValueException;
 import org.junit.Test;
 
 import java.io.File;

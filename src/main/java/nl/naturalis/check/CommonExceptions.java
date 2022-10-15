@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.exceptions.DuplicateValueException;
+import nl.naturalis.check.util.DuplicateValueException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static nl.naturalis.check.exceptions.DuplicateValueException.ValueType;
+import static nl.naturalis.check.util.DuplicateValueException.Usage;
 
 /**
  * Provides factories for some commonly thrown exceptions. Typically (but not
@@ -258,7 +258,7 @@ public final class CommonExceptions {
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
   public static Supplier<DuplicateValueException> duplicateKey() {
-    return () -> new DuplicateValueException(ValueType.KEY);
+    return () -> new DuplicateValueException(Usage.KEY);
   }
 
   /**
@@ -268,7 +268,7 @@ public final class CommonExceptions {
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
   public static Supplier<DuplicateValueException> duplicateKey(Object key) {
-    return () -> new DuplicateValueException(ValueType.KEY, key);
+    return () -> new DuplicateValueException(Usage.KEY, key);
   }
 
   /**
@@ -278,7 +278,7 @@ public final class CommonExceptions {
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
   public static Supplier<DuplicateValueException> duplicateElement(Object element) {
-    return () -> new DuplicateValueException(ValueType.ELEMENT, element);
+    return () -> new DuplicateValueException(Usage.ELEMENT, element);
   }
 
   /**
@@ -287,7 +287,7 @@ public final class CommonExceptions {
    * @return a {@code Supplier} of a {@code DuplicateValueException}
    */
   public static Supplier<DuplicateValueException> duplicateElement() {
-    return () -> new DuplicateValueException(ValueType.ELEMENT);
+    return () -> new DuplicateValueException(Usage.ELEMENT);
   }
 
   /**
