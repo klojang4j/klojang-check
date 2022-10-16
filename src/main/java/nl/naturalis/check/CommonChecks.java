@@ -1,6 +1,6 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.types.*;
+import nl.naturalis.check.relation.*;
 import nl.naturalis.check.util.Result;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package nl.naturalis.check.types;
+package nl.naturalis.check.relation;
 
 import nl.naturalis.check.util.Quantifier;
 
@@ -6,7 +6,7 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static nl.naturalis.check.types.Private.*;
+import static nl.naturalis.check.relation.Private.*;
 
 /**
  * An extension of {@link IntPredicate} that acts as a bridge between

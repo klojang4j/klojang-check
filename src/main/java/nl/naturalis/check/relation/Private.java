@@ -1,4 +1,4 @@
-package nl.naturalis.check.types;
+package nl.naturalis.check.relation;
 
 import nl.naturalis.check.util.Quantifier;
 

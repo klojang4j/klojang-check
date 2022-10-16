@@ -2,9 +2,9 @@ package nl.naturalis.check;
 
 import nl.naturalis.check.function.ThrowingConsumer;
 import nl.naturalis.check.function.ThrowingFunction;
-import nl.naturalis.check.types.IntObjRelation;
-import nl.naturalis.check.types.IntRelation;
-import nl.naturalis.check.types.Relation;
+import nl.naturalis.check.relation.IntObjRelation;
+import nl.naturalis.check.relation.IntRelation;
+import nl.naturalis.check.relation.Relation;
 
 import java.util.function.*;
 

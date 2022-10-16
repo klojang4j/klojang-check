@@ -1,4 +1,4 @@
-package nl.naturalis.check.types;
+package nl.naturalis.check.relation;
 
 /**
  * Defines some kind of relationship between an object and an integer. For example,

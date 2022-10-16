@@ -1,13 +1,11 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.types.Relation;
+import nl.naturalis.check.relation.Relation;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.*;
 
 import static nl.naturalis.check.Check.DEF_ARG_NAME;

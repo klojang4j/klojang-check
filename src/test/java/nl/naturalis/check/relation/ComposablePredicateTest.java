@@ -1,4 +1,4 @@
-package nl.naturalis.check.types;
+package nl.naturalis.check.relation;
 
 import nl.naturalis.check.Check;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import static java.util.List.of;
 import static nl.naturalis.check.CommonChecks.*;
 import static nl.naturalis.check.util.Quantifier.*;
-import static nl.naturalis.check.types.ComposablePredicate.*;
+import static nl.naturalis.check.relation.ComposablePredicate.*;
 
 public class ComposablePredicateTest {
 

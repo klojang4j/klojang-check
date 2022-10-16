@@ -1,7 +1,7 @@
 package nl.naturalis.check;
 
-import nl.naturalis.check.types.IntObjRelation;
-import nl.naturalis.check.types.IntRelation;
+import nl.naturalis.check.relation.IntObjRelation;
+import nl.naturalis.check.relation.IntRelation;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;

@@ -1,4 +1,4 @@
-package nl.naturalis.check.types;
+package nl.naturalis.check.relation;
 
 /**
  * Defines a relationship between two objects. For example, if x is a {@code Map} and

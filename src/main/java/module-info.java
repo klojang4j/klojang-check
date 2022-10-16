@@ -13,5 +13,5 @@ module nl.naturalis.check {
   exports nl.naturalis.check;
   exports nl.naturalis.check.util;
   exports nl.naturalis.check.function;
-  exports nl.naturalis.check.types;
+  exports nl.naturalis.check.relation;
 }
