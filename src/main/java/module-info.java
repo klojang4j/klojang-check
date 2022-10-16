@@ -9,7 +9,7 @@
  *
  * @author Ayco Holleman
  */
-module nl.naturalis.check {
+module org.klojang.check {
   exports org.klojang.check;
   exports org.klojang.check.util;
   exports org.klojang.check.function;
