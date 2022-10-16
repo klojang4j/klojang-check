@@ -7,7 +7,7 @@
 
     <groupId>nl.naturalis.check</groupId>
     <artifactId>naturalis-check</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
 
     <name>Naturalis Java Utility Library</name>
     <description>Naturalis Java Utility Library</description>
