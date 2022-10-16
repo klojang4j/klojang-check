@@ -10,8 +10,8 @@
  * @author Ayco Holleman
  */
 module nl.naturalis.check {
-  exports nl.naturalis.check;
-  exports nl.naturalis.check.util;
-  exports nl.naturalis.check.function;
-  exports nl.naturalis.check.relation;
+  exports org.klojang.check;
+  exports org.klojang.check.util;
+  exports org.klojang.check.function;
+  exports org.klojang.check.relation;
 }
