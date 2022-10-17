@@ -4,8 +4,8 @@ import static org.klojang.check.Check.DEF_ARG_NAME;
 
 import java.util.function.*;
 
-import org.klojang.check.function.ThrowingIntConsumer;
-import org.klojang.check.function.ThrowingIntFunction;
+import org.klojang.check.fallible.FallibleIntConsumer;
+import org.klojang.check.fallible.FallibleIntFunction;
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
 
@@ -61,7 +61,7 @@ public final class IntCheck<X extends Exception> {
    * @throws X2 if the transformation function fails while processing the
    *     {@code int} value
    */
-  public <R, X2 extends Throwable> R ok(ThrowingIntFunction<R, X2> transformer)
+  public <R, X2 extends Throwable> R ok(FallibleIntFunction<R, X2> transformer)
       throws X2 {
     return transformer.apply(arg);
   }
@@ -75,7 +75,7 @@ public final class IntCheck<X extends Exception> {
    *     processing the value
    * @throws X2 if the consumer fails while processing the value
    */
-  public <X2 extends Throwable> void then(ThrowingIntConsumer<X2> consumer)
+  public <X2 extends Throwable> void then(FallibleIntConsumer<X2> consumer)
       throws X2 {
     consumer.accept(arg);
   }

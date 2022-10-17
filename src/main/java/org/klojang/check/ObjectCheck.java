@@ -6,8 +6,8 @@ import static org.klojang.check.MsgUtil.getPrefabMessage;
 
 import java.util.function.*;
 
-import org.klojang.check.function.ThrowingConsumer;
-import org.klojang.check.function.ThrowingFunction;
+import org.klojang.check.fallible.FallibleConsumer;
+import org.klojang.check.fallible.FallibleFunction;
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
 import org.klojang.check.relation.Relation;
@@ -63,7 +63,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @return the value computed by the function
    * @throws X2 The exception potentially thrown by the {@code Function}
    */
-  public <R, X2 extends Throwable> R ok(ThrowingFunction<T, R, X2> transformer)
+  public <R, X2 extends Throwable> R ok(FallibleFunction<T, R, X2> transformer)
       throws X2 {
     return transformer.apply(arg);
   }
@@ -77,7 +77,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     processing the value
    * @throws X2 if the consumer fails while processing the value
    */
-  public <X2 extends Throwable> void then(ThrowingConsumer<T, X2> consumer) throws
+  public <X2 extends Throwable> void then(FallibleConsumer<T, X2> consumer) throws
       X2 {
     consumer.accept(arg);
   }

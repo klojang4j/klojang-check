@@ -12,33 +12,34 @@ import org.klojang.check.util.Quantifier;
  * An extension of {@link Predicate} that acts as a bridge between {@code Predicate}
  * and the relational interfaces in this package. It enables the composition of new
  * tests from any number of instances of {@code Predicate}, {@code IntPredicate},
- * {@code Relation}, {@code IntRelation} and {@code IntObjRelation}. It does not
- * override any method of {@code Predicate}. Instead, it extends it with a
- * comprehensive set of {@code default} methods that allow the composition to take
- * place. These methods can be divided along two axes: <b>{@code and}</b> vs.
- * <b>{@code or}</b> methods, and methods that execute two checks on a single value
- * vs. methods that effectively constitute a single check on a pair of interrelated
- * values.
+ * {@code Relation}, {@code IntRelation} and {@code IntObjRelation}.
+ * {@code ComposablePredicate} does not override any method of {@code Predicate}.
+ * Instead, it extends it with a comprehensive set of {@code default} methods that
+ * allow the composition to take place. These methods can be divided along two axes:
+ * <b>{@code and}</b> vs. <b>{@code or}</b> methods on the one hand and, on the
+ * other, methods that execute two checks on a single value vs. methods that
+ * effectively constitute a single check on two interdependent values.
  *
  * <h2>AND vs. OR Compositions</h2>
  *
  * <p>Generally, you will have more use for compositions expressing a logical
- * disjunction (OR), as the chain of checks following {@code Check.that(...)} already
- * constitutes a logical conjunction (AND). For example, this statement:
+ * disjunction (OR), as the chain of checks following
+ * {@link org.klojang.check.Check#that(Object) Check.that(...)} already constitutes a
+ * logical conjunction (AND). For example, this statement:
  *
  * <blockquote><pre>{@code
- * Check.that(numChairs).is(positive()).is(lte(), 4).is(even());
+ * Check.that(numChairs).is(positive()).is(lt(), 5).is(even());
  * }</pre></blockquote>
  *
- * <p>requires the number of chairs to be both positive <b>and</b> less than, or
- * equal to 4 <b>and</b> even. If the number of chairs needs to pass just one of
+ * <p>requires the number of chairs to be positive <b>and</b> less than 5
+ * <b>and</b> even. If the number of chairs needs to pass just one of
  * these tests, write:
  *
  * <blockquote><pre>{@code
- * Check.that(numChairs).is(positive().orElse(lte(), 4).orElse(even()));
+ * Check.that(numChairs).is(positive().orElse(lt(), 5).orElse(even()));
  * }</pre></blockquote>
  *
- * <p>Nevertheless, you may still want to use the {@code and} methods for
+ * <p>Nevertheless, you might still want to use the {@code and()} methods for
  * conciseness:
  *
  * <blockquote><pre>{@code
@@ -46,14 +47,14 @@ import org.klojang.check.util.Quantifier;
  * }</pre></blockquote>
  *
  * <p>In the above example, the argument is tested against a domain of values.
- * Strictly speaking, the domain should be expressed through a {@link java.util.Set},
+ * Strictly speaking, the domain should be modeled as a {@link java.util.Set Set},
  * but for convenience it is a varargs array. See {@link Quantifier} for the
  * {@code allOf()} argument.
  *
- * <h2>Testing Interrelated Values</h2>
+ * <h2>Testing Interdependent Values</h2>
  *
- * <p>This is useful, for example, if the validity of one argument depends upon the
- * value of another:
+ * <p>Sometimes, an argument, field or variable cannot be tested in isolation. Its
+ * validity depends on the value of another argument, field or variable:
  *
  * <blockquote><pre>{@code
  * Check.that(electionRigged).is(yes().or(winner, EQ(), me);
@@ -63,8 +64,8 @@ import org.klojang.check.util.Quantifier;
  * lost it. Note, however, that, in principle, the two checks could be completely
  * unrelated. There is no under-the-hood mechanism that enforces the interrelatedness
  * of the values. Thus it is up to the client whether to use this type of composition
- * as intended. Also note that second check continues nicely in the idiom of
- * Naturalis Check. Strictly speaking, however, that is just syntactic sugar and,
+ * as intended. Also note that the second check continues nicely in the idiom of
+ * Klojang Check. Strictly speaking, however, that is now only syntactic sugar and,
  * depending on your taste, you can also just write:
  *
  * <blockquote><pre>{@code
@@ -124,7 +125,8 @@ public interface ComposablePredicate<T> extends Predicate<T> {
 
   /**
    * Returns a {@code ComposablePredicate} that always evaluates to {@code true}. Can
-   * be used as the first of a series of AND-joined checks.
+   * be used as the first of a series of AND-joined check, assuming you can do
+   * without a {@link CommonChecks#notNull() notNull()}.
    *
    * @param <T> the type of the value being tested (which is ignored by the
    *     returned {@code ComposablePredicate})

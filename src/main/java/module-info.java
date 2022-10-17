@@ -12,6 +12,6 @@
 module org.klojang.check {
   exports org.klojang.check;
   exports org.klojang.check.util;
-  exports org.klojang.check.function;
+  exports org.klojang.check.fallible;
   exports org.klojang.check.relation;
 }

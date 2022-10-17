@@ -1,10 +1,10 @@
-package org.klojang.check.function;
+package org.klojang.check.fallible;
 
 import java.util.function.BiFunction;
 
 /**
- * An alternative to Java's {@link BiFunction} interface where the {@code apply}
- * method is allowed to throw a checked exception.
+ * An alternative to Java's {@link BiFunction} interface that allows the functional
+ * method to throw a checked exception.
  *
  * @param <T> the type of the 1st argument
  * @param <U> the type of the 2nd argument
@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
  * @author Ayco Holleman
  */
 @FunctionalInterface
-public interface ThrowingBiFunction<T, U, R, X extends Throwable> {
+public interface FallibleBiFunction<T, U, R, X extends Throwable> {
 
   /**
    * Applies this function to the given arguments.

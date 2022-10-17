@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import org.klojang.check.CommonChecks;
-import org.klojang.check.function.ThrowingConsumer;
+import org.klojang.check.fallible.FallibleConsumer;
 
 /**
  * A value container where the value is explicitly allowed to be {@code null}. This
@@ -100,7 +100,7 @@ public final class Result<T> implements Emptyable {
    * @param <X> the type of the exception thrown by the consumer
    * @throws X if the consumer experiences an error
    */
-  public <X extends Throwable> void ifAvailable(ThrowingConsumer<T, X> consumer)
+  public <X extends Throwable> void ifAvailable(FallibleConsumer<T, X> consumer)
       throws X {
     Objects.requireNonNull(consumer);
     if (isAvailable()) {
