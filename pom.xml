@@ -5,12 +5,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>nl.naturalis.check</groupId>
-    <artifactId>naturalis-check</artifactId>
-    <version>1.0.1</version>
+    <groupId>org.klojang</groupId>
+    <artifactId>klojang-check</artifactId>
+    <version>1.0.2</version>
 
-    <name>Naturalis Java Utility Library</name>
-    <description>Naturalis Java Utility Library</description>
+    <name>Klojang Check!</name>
+    <description>Light-weight Java module dedicated to Defensive Programming</description>
 
     <properties>
 
@@ -53,15 +53,7 @@
 
 
     <distributionManagement>
-        <repository>
-            <id>naturalis</id>
-            <url>http://mvnrepository.naturalis.io/repository/naturalis/</url>
-        </repository>
-        <snapshotRepository>
-            <id>naturalis</id>
-            <url>http://mvnrepository.naturalis.io/repository/naturalis/</url>
-        </snapshotRepository>
-    </distributionManagement>
+     </distributionManagement>
 
     <dependencies>
         <dependency>
