@@ -1,1 +1,1 @@
-moduleSearchIndex = [{"l":"nl.naturalis.common"}];updateSearchResults();
+moduleSearchIndex = [{"l":"org.klojang.check"}];updateSearchResults();

@@ -3,7 +3,7 @@ package org.klojang.check.fallible;
 import java.util.function.Function;
 
 /**
- * An alternative to Java's {@link Function} interface that allows the functional
+ * An alternative to the {@link Function} interface that allows the functional
  * method to throw a checked exception.
  *
  * @param <T> the type of the input variable

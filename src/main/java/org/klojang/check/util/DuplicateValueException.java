@@ -13,12 +13,15 @@ import static org.klojang.check.util.DuplicateValueException.Usage.VALUE;
 /**
  * Indicates that insertion into a {@linkplain java.util.Map Map},
  * {@linkplain java.util.Set Set} or some other uniqueness-enforcing data structure
- * failed because the value to be inserted turned out to be a duplicate.
+ * failed because the value to be inserted turned out to be a duplicate. Klojang
+ * Check does not itself ever throw a {@code DuplicateValueException}, but the error
+ * condition it represents is general and important enough to merit inclusion as a
+ * common exception in the {@link CommonExceptions} class.
  */
 public class DuplicateValueException extends RuntimeException {
 
   /**
-   * Symbolic constants for how the value meant to be used.
+   * Symbolic constants for the intended usage of the value.
    */
   public enum Usage {
     /**
@@ -31,8 +34,7 @@ public class DuplicateValueException extends RuntimeException {
      */
     ELEMENT,
     /**
-     * The value was meant to be used for some other uniqueness-enforcing mechanism
-     * or data structure.
+     * The value was meant to be used for some other uniqueness-enforcing purpose.
      */
     VALUE;
 

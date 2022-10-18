@@ -4,7 +4,7 @@ import static org.klojang.check.MsgUtil.toStr;
 
 import org.klojang.check.PrefabMsgFormatter;
 
-public final class MsgObjIntRelation {
+final class MsgObjIntRelation {
 
   private MsgObjIntRelation() {
     throw new AssertionError();

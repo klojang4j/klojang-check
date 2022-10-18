@@ -1,9 +1,13 @@
-package org.klojang.check.util;
+package org.klojang.check.relation;
 
 /**
- * Symbolic constants for logical quantifiers. Used by
- * {@link org.klojang.check.relation.ComposablePredicate} to modulate the relation
- * between a value and a value domain.
+ * Symbolic constants for logical quantifiers. {@link ComposablePredicate} and
+ * {@link ComposableIntPredicate} let you use logical quantifiers to define not just
+ * a {@linkplain Relation relation} between one value and another value, but also a
+ * relation between one value and a set of other values (a value domain).
+ *
+ * @see ComposablePredicate
+ * @see ComposableIntPredicate
  */
 public enum Quantifier {
 
@@ -16,7 +20,7 @@ public enum Quantifier {
    */
   ANY,
   /**
-   * Symbolic constant for the negation existential quantifier (¬∃).
+   * Symbolic constant for the negation of the existential quantifier (¬∃).
    */
   NONE;
 

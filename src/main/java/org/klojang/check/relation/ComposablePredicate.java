@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.klojang.check.CommonChecks;
-import org.klojang.check.util.Quantifier;
 
 /**
  * An extension of {@link Predicate} that acts as a bridge between {@code Predicate}

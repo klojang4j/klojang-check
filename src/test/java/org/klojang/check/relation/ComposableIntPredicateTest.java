@@ -2,11 +2,10 @@ package org.klojang.check.relation;
 
 import org.junit.Test;
 import org.klojang.check.Check;
-import org.klojang.check.relation.ComposableIntPredicate;
 
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.relation.ComposableIntPredicate.*;
-import static org.klojang.check.util.Quantifier.*;
+import static org.klojang.check.relation.Quantifier.*;
 
 import java.util.List;
 

@@ -10,21 +10,22 @@ import org.klojang.check.CommonChecks;
 import org.klojang.check.fallible.FallibleConsumer;
 
 /**
- * A value container where the value is explicitly allowed to be {@code null}. This
- * class is meant to be used as the return value of methods that would otherwise
- * return {@code null} as the result of a computation, but also if the computation
- * yielded no result. The {@link java.util.HashMap} class is a prime example. If its
- * {@code get} method returns {@code null}, you still don't know whether the
- * requested key was absent, or whether it was present, but associated with value
- * {@code null}.
+ * A value container that explicitly allows the value to be {@code null}. This class
+ * is meant to be used as the return value of methods that would otherwise return
+ * {@code null} both as the legitimate outcome of a computation and as a signal that
+ * the computation yielded no result. The {@link java.util.HashMap} class is a prime
+ * example. If its {@code get} method returns {@code null}, it is still not clear
+ * whether the requested key was absent, or whether it was present, but associated
+ * with value {@code null}.
  *
  * <p>Another scenario (and one that we can control) would be iterating over an
  * array and returning a particular element, if found. If the element can itself
- * legitimately be {@code null}, it is not clear any longer what a return value of
- * {@code null} actually means: not present or "really" {@code null}. Using the
- * {@code Result} class, you would return a {@code Result} containing {@code null} if
- * the element was present but {@code null}. If the element was not present, you
- * would return {@link Result#notAvailable()}.
+ * legitimately be {@code null}, it is not clear what a return value of {@code null}
+ * actually means: not present or "really" {@code null}.
+ *
+ * <p>Using the {@code Result} class, you would return a {@code Result} containing
+ * {@code null} if the element was present but {@code null}. If the element was not
+ * present, you would return {@link Result#notAvailable()}.
  *
  * @param <T> the type of the result value
  */
@@ -66,29 +67,34 @@ public final class Result<T> implements Emptyable {
    * Returns the result.
    *
    * @return the value
-   * @throws NoSuchElementException if this {@code Result} does not contain a
-   *     proper result value
+   * @throws NoSuchElementException if no result is available
    */
-  public T get() {
-    if (!isAvailable()) {
-      throw new NoSuchElementException("no result available");
+  public T get() throws NoSuchElementException {
+    if (this != NONE) {
+      return val;
     }
-    return val;
+    throw new NoSuchElementException("no result available");
   }
 
   /**
-   * Returns {@code true} if this {@code Result} represents a legitimate outcome
-   * (even if possibly {@code null}). If so, the result value can be retrieved via
-   * the {@link #get()} method. If not, calling the {@code get()} method will result
-   * in a {@link NoSuchElementException}.
+   * Returns {@code true} if the operation that produced this {@code Result}
+   * successfully computed the result. If so, the result value can be retrieved via
+   * the {@link #get()} method. If not, calling {@code get()} method will result in a
+   * {@link NoSuchElementException}.
    *
-   * @return {@code true} if this {@code Result} represents a legitimate outcome
-   *     (even if possibly {@code null})
+   * @return {@code true} if a result could be computed
    */
   public boolean isAvailable() {
     return this != NONE;
   }
 
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} could
+   * not compute a proper result.
+   *
+   * @return {@code true} if the operation that produced this {@code Result} could
+   *     not compute a proper result
+   */
   public boolean isUnavailable() {
     return this == NONE;
   }
@@ -119,15 +125,17 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns this {@code Result} if it represents an available result, else the
-   * provided {@code Result}.
+   * Returns this {@code Result} if it contains a proper result value (possibly
+   * {@code null}), else the provided {@code Result}.
    *
    * @param alternative the {@code Result} to return if this {@code Result} is
    *     {@link Result#notAvailable() Result.notAvailable()}. Must not be
    *     {@code null}, and must not be {@code Result.notAvailable()}.
    * @return this instance or the provided instance
+   * @throws IllegalArgumentException if the specified {@code Result} is
+   *     {@code Result.notAvailable()}
    */
-  public Result<T> or(Result<T> alternative) {
+  public Result<T> or(Result<T> alternative) throws IllegalArgumentException {
     Objects.requireNonNull(alternative);
     if (alternative == NONE) {
       throw new IllegalArgumentException(
@@ -137,8 +145,8 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns {@code true} if this instance is {@link Result#notAvailable()}, or if
-   * the result value is empty as per the {@link CommonChecks#empty() empty()} test.
+   * Returns {@code true} if no result is available <i>or</i> if the result value is
+   * empty as per the {@link CommonChecks#empty() empty()} test.
    *
    * @return {@code true} if no result is available or the result value is empty.
    */
@@ -148,20 +156,27 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns {@code true} a result is available and it is recursively non-empty as
-   * per the {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
+   * Returns {@code true} a result is available and is recursively non-empty as per
+   * the {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
    *
-   * @return {@code true} if a result is available and it is deep-not-empty
+   * @return {@code true} if a result is available and is deep-not-empty
    */
   @Override
   public boolean isDeepNotEmpty() {
     return this != NONE && deepNotEmpty().test(val);
   }
 
+  /**
+   * Returns {@code true} if the specified object is a {@code Result} that either is
+   * <i>this</i> {@code Result} or contains the same value.
+   *
+   * @param obj the object to compare this instance with
+   * @return whether this instance equals the specified object.
+   */
   @Override
   public boolean equals(Object obj) {
     return this == obj
-        || (obj instanceof Result<?> other && Objects.equals(val, other.val));
+        || (obj instanceof Result<?> o && Objects.equals(val, o.val));
   }
 
   /**

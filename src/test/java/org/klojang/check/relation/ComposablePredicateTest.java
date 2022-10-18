@@ -2,7 +2,6 @@ package org.klojang.check.relation;
 
 import org.junit.Test;
 import org.klojang.check.Check;
-import org.klojang.check.relation.ComposablePredicate;
 
 import java.time.LocalDate;
 import java.time.Year;
@@ -12,7 +11,7 @@ import java.util.Optional;
 import static java.util.List.of;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.relation.ComposablePredicate.*;
-import static org.klojang.check.util.Quantifier.*;
+import static org.klojang.check.relation.Quantifier.*;
 
 public class ComposablePredicateTest {
 

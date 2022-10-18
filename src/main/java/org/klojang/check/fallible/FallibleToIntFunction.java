@@ -3,8 +3,8 @@ package org.klojang.check.fallible;
 import java.util.function.ToIntFunction;
 
 /**
- * An alternative to Java's {@link ToIntFunction} interface that allows the
- * functional method to throw a checked exception.
+ * An alternative to the {@link ToIntFunction} interface that allows the functional
+ * method to throw a checked exception.
  *
  * @param <T> The type of the input variable
  * @param <X> The type of the exception potentially being thrown

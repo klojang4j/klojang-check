@@ -3,7 +3,7 @@ package org.klojang.check.fallible;
 import java.util.function.IntSupplier;
 
 /**
- * An alternative to Java's {@link IntSupplier} interface that allows the functional
+ * An alternative to the {@link IntSupplier} interface that allows the functional
  * method to throw a checked exception.
  *
  * @param <X> the type of the exception potentially being thrown

@@ -3,7 +3,7 @@ package org.klojang.check.fallible;
 import java.util.function.Consumer;
 
 /**
- * An alternative to Java's {@link Consumer} interface that allows the functional
+ * An alternative to the {@link Consumer} interface that allows the functional
  * method to throw a checked exception.
  *
  * @param <T> the type of the input to the operation

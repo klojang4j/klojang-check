@@ -3,7 +3,7 @@ package org.klojang.check.fallible;
 import java.util.function.BiFunction;
 
 /**
- * An alternative to Java's {@link BiFunction} interface that allows the functional
+ * An alternative to the {@link BiFunction} interface that allows the functional
  * method to throw a checked exception.
  *
  * @param <T> the type of the 1st argument

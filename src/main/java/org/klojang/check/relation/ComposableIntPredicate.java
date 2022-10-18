@@ -6,8 +6,6 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.klojang.check.util.Quantifier;
-
 /**
  * An extension of {@link IntPredicate} that acts as a bridge between
  * {@code IntPredicate} and the relational interfaces in this package. It enables the
