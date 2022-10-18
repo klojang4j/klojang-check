@@ -137,10 +137,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Verifies that the argument is an array or, if it is a <code>Class</code> object, that
  it is an array type.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="relation/ComposablePredicate.html" title="interface in org.klojang.check.relation">ComposablePredicate</a>&lt;<a href="util/Result.html" title="class in org.klojang.check.util">Result</a>&lt;T&gt;&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="relation/ComposablePredicate.html" title="interface in org.klojang.check.relation">ComposablePredicate</a>&lt;<a href="util/Result.html" title="class in org.klojang.check.aux">Result</a>&lt;T&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#available()" class="member-name-link">available</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Verifies that a <a href="util/Result.html" title="class in org.klojang.check.util">result</a> is available.</div>
+<div class="block">Verifies that a <a href="util/Result.html" title="class in org.klojang.check.aux">result</a> is available.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="relation/IntObjRelation.html" title="interface in org.klojang.check.relation">IntObjRelation</a>&lt;int[]&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#between()" class="member-name-link">between</a>()</code></div>
@@ -824,8 +824,8 @@ O extends <a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/
 <li>
 <section class="detail" id="available()">
 <h3>available</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="relation/ComposablePredicate.html" title="interface in org.klojang.check.relation">ComposablePredicate</a>&lt;<a href="util/Result.html" title="class in org.klojang.check.util">Result</a>&lt;T&gt;&gt;</span>&nbsp;<span class="element-name">available</span>()</div>
-<div class="block">Verifies that a <a href="util/Result.html" title="class in org.klojang.check.util">result</a> is available. Note that this check
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="relation/ComposablePredicate.html" title="interface in org.klojang.check.relation">ComposablePredicate</a>&lt;<a href="util/Result.html" title="class in org.klojang.check.aux">Result</a>&lt;T&gt;&gt;</span>&nbsp;<span class="element-name">available</span>()</div>
+<div class="block">Verifies that a <a href="util/Result.html" title="class in org.klojang.check.aux">result</a> is available. Note that this check
  differs from the <a href="#empty()"><code>empty()</code></a> check in that it only verifies that
  <code>Result</code> contains a value. The <code>empty()</code> check (in its negation)
  additionally requires that the value it contains is itself non-empty.</div>

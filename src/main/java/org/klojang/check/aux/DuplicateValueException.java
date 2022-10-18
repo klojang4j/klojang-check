@@ -1,14 +1,11 @@
-package org.klojang.check.util;
+package org.klojang.check.aux;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.klojang.check.Check;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
-import static org.klojang.check.util.DuplicateValueException.Usage.VALUE;
+import static org.klojang.check.aux.DuplicateValueException.Usage.VALUE;
 
 /**
  * Indicates that insertion into a {@linkplain java.util.Map Map},

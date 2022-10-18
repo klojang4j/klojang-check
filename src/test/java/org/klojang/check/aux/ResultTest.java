@@ -1,7 +1,6 @@
-package org.klojang.check.util;
+package org.klojang.check.aux;
 
 import org.junit.Test;
-import org.klojang.check.util.Result;
 
 import java.util.List;
 import java.util.NoSuchElementException;

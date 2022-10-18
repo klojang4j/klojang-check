@@ -1,4 +1,4 @@
-package org.klojang.check.util;
+package org.klojang.check.aux;
 
 import static org.klojang.check.CommonChecks.deepNotEmpty;
 import static org.klojang.check.CommonChecks.empty;

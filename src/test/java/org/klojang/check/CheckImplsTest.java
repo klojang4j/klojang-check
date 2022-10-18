@@ -1,9 +1,7 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
-import org.klojang.check.InvalidCheckException;
-import org.klojang.check.util.Result;
+import org.klojang.check.aux.Result;
 
 import static org.klojang.check.CommonChecks.*;
 

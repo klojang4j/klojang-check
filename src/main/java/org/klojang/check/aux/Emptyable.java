@@ -1,6 +1,4 @@
-package org.klojang.check.util;
-
-import java.lang.runtime.ObjectMethods;
+package org.klojang.check.aux;
 
 import org.klojang.check.CommonChecks;
 

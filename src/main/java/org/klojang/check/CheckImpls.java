@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 
-import org.klojang.check.util.Emptyable;
+import org.klojang.check.aux.Emptyable;
 
 /*
  * Implementations of checks in the CommonChecks class that require more than 1 or 2

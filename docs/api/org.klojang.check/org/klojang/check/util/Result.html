@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="dc.created" content="2022-10-18">
-<meta name="description" content="declaration: module: org.klojang.check, package: org.klojang.check.util, class: Result">
+<meta name="description" content="declaration: module: org.klojang.check, package: org.klojang.check.aux, class: Result">
 <meta name="generator" content="javadoc/ClassWriterImpl">
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../../script-dir/jquery-ui.min.css" title="Style">
@@ -88,11 +88,11 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="module-label-in-type">Module</span>&nbsp;<a href="../../../../module-summary.html">org.klojang.check</a></div>
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">org.klojang.check.util</a></div>
+<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">org.klojang.check.aux</a></div>
 <h1 title="Class Result" class="title">Class Result&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">org.klojang.check.util.Result&lt;T&gt;</div>
+<div class="inheritance">org.klojang.check.aux.Result&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -101,12 +101,12 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="Emptyable.html" title="interface in org.klojang.check.util">Emptyable</a></code></dd>
+<dd><code><a href="Emptyable.html" title="interface in org.klojang.check.aux">Emptyable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">Result&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="Emptyable.html" title="interface in org.klojang.check.util">Emptyable</a></span></div>
+implements <a href="Emptyable.html" title="interface in org.klojang.check.aux">Emptyable</a></span></div>
 <div class="block">A value container where the value is explicitly allowed to be <code>null</code>. This
  class is meant to be used as the return value of methods that would otherwise
  return <code>null</code> as the result of a computation, but also if the computation
@@ -176,19 +176,19 @@ implements <a href="Emptyable.html" title="interface in org.klojang.check.util">
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isUnavailable()" class="member-name-link">isUnavailable</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;U&gt;&nbsp;<a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;U&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;U&gt;&nbsp;<a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;U&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#notAvailable()" class="member-name-link">notAvailable</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a special <code>Result</code> instance signifying the absence of a result.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;U&gt;&nbsp;<a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;U&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;U&gt;&nbsp;<a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;U&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#of(U)" class="member-name-link">of</a><wbr>(U&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a <code>Result</code> containing the specified value (possibly
  <code>null</code>).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#or(org.klojang.check.util.Result)" class="member-name-link">or</a><wbr>(<a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;&nbsp;alternative)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#or(org.klojang.check.util.Result)" class="member-name-link">or</a><wbr>(<a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;&nbsp;alternative)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns this <code>Result</code> if it represents an available result, else the
  provided <code>Result</code>.</div>
@@ -224,7 +224,7 @@ implements <a href="Emptyable.html" title="interface in org.klojang.check.util">
 <li>
 <section class="detail" id="of(U)">
 <h3 id="of(java.lang.Object)">of</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;U&gt;</span>&nbsp;<span class="return-type"><a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;U&gt;</span>&nbsp;<span class="element-name">of</span><wbr><span class="parameters">(U&nbsp;value)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;U&gt;</span>&nbsp;<span class="return-type"><a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;U&gt;</span>&nbsp;<span class="element-name">of</span><wbr><span class="parameters">(U&nbsp;value)</span></div>
 <div class="block">Returns a <code>Result</code> containing the specified value (possibly
  <code>null</code>).</div>
 <dl class="notes">
@@ -240,7 +240,7 @@ implements <a href="Emptyable.html" title="interface in org.klojang.check.util">
 <li>
 <section class="detail" id="notAvailable()">
 <h3>notAvailable</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;U&gt;</span>&nbsp;<span class="return-type"><a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;U&gt;</span>&nbsp;<span class="element-name">notAvailable</span>()</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;U&gt;</span>&nbsp;<span class="return-type"><a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;U&gt;</span>&nbsp;<span class="element-name">notAvailable</span>()</div>
 <div class="block">Returns a special <code>Result</code> instance signifying the absence of a result.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
@@ -317,7 +317,7 @@ implements <a href="Emptyable.html" title="interface in org.klojang.check.util">
 <li>
 <section class="detail" id="or(org.klojang.check.util.Result)">
 <h3>or</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;</span>&nbsp;<span class="element-name">or</span><wbr><span class="parameters">(<a href="Result.html" title="class in org.klojang.check.util">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;&nbsp;alternative)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;</span>&nbsp;<span class="element-name">or</span><wbr><span class="parameters">(<a href="Result.html" title="class in org.klojang.check.aux">Result</a>&lt;<a href="Result.html" title="type parameter in Result">T</a>&gt;&nbsp;alternative)</span></div>
 <div class="block">Returns this <code>Result</code> if it represents an available result, else the
  provided <code>Result</code>.</div>
 <dl class="notes">
@@ -338,7 +338,7 @@ implements <a href="Emptyable.html" title="interface in org.klojang.check.util">
  the result value is empty as per the <a href="../CommonChecks.html#empty()"><code>empty()</code></a> test.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="Emptyable.html#isEmpty()">isEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="Emptyable.html" title="interface in org.klojang.check.util">Emptyable</a></code></dd>
+<dd><code><a href="Emptyable.html#isEmpty()">isEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="Emptyable.html" title="interface in org.klojang.check.aux">Emptyable</a></code></dd>
 <dt>Returns:</dt>
 <dd><code>true</code> if no result is available or the result value is empty.</dd>
 </dl>
@@ -352,7 +352,7 @@ implements <a href="Emptyable.html" title="interface in org.klojang.check.util">
  per the <a href="../CommonChecks.html#deepNotEmpty()"><code>deepNotEmpty()</code></a> test.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="Emptyable.html#isDeepNotEmpty()">isDeepNotEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="Emptyable.html" title="interface in org.klojang.check.util">Emptyable</a></code></dd>
+<dd><code><a href="Emptyable.html#isDeepNotEmpty()">isDeepNotEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="Emptyable.html" title="interface in org.klojang.check.aux">Emptyable</a></code></dd>
 <dt>Returns:</dt>
 <dd><code>true</code> if a result is available and it is deep-not-empty</dd>
 </dl>

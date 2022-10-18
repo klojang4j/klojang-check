@@ -1,6 +1,6 @@
 package org.klojang.check;
 
-import static org.klojang.check.util.DuplicateValueException.Usage;
+import static org.klojang.check.aux.DuplicateValueException.Usage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.klojang.check.util.DuplicateValueException;
+import org.klojang.check.aux.DuplicateValueException;
 
 /**
  * Provides factories for some commonly thrown exceptions. Typically (but not

@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import org.klojang.check.relation.*;
-import org.klojang.check.util.Result;
+import org.klojang.check.aux.Result;
 
 /**
  * Defines various common checks on arguments, variables, object state, program
