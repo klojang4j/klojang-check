@@ -123,82 +123,10 @@ import org.klojang.check.CommonChecks;
 public interface ComposablePredicate<T> extends Predicate<T> {
 
   /**
-   * Returns a {@code ComposablePredicate} that always evaluates to {@code true}. Can
-   * be used as the first of a series of AND-joined check, assuming you can do
-   * without a {@link CommonChecks#notNull() notNull()}.
-   *
-   * @param <T> the type of the value being tested (which is ignored by the
-   *     returned {@code ComposablePredicate})
-   * @return a {@code ComposablePredicate} that always evaluates to {@code true}
-   */
-  static <T> ComposablePredicate<T> valid() {
-    return x -> true;
-  }
-
-  /**
-   * Returns a {@code ComposablePredicate} that always evaluates to {@code false}.
-   * Can be used as the first of a series of OR-joined checks.
-   *
-   * @param <T> the type of the value being tested (which is ignored by the
-   *     returned {@code ComposablePredicate})
-   * @return a {@code ComposablePredicate} that always evaluates to {@code false}
-   */
-  static <T> ComposablePredicate<T> invalid() {
-    return x -> false;
-  }
-
-  /**
-   * Converts a {@code Predicate} to the equivalent {@code ComposablePredicate}, so
-   * it can become part of a composition. This method can be used to convert a
-   * predefined {@code Predicate} constant from outside Naturalis Check to a
-   * {@code ComposablePredicate}, or to hard-cast a lambda or method reference to a
-   * {@code ComposablePredicate}, so the compiler will treat it as such. Note that
-   * this method is only needed if the {@code Predicate}, lambda or method reference
-   * is to be the <i>first</i> test of the composition.
-   *
-   * <blockquote><pre>{@code
-   * Check.that("hello").is(validIf((String s) -> s.charAt(1) == 'e')
-   *    .orElse((String s) -> s.charAt(1) == 'f'));
-   * }</pre></blockquote>
-   *
-   * @param test the {@code Predicate}
-   * @param <T> the type of the value being tested
-   * @return the equivalent {@code ComposablePredicate}
-   */
-  static <T> ComposablePredicate<T> validIf(Predicate<T> test) {
-    checkArg(test);
-    return test::test;
-  }
-
-  /**
-   * Converts a {@code Relation} to a {@code ComposablePredicate}. More precisely:
-   * this method returns a {@code ComposablePredicate} that evaluates to {@code true}
-   * if the value being tested has the specified relation to the specified value.
-   * Note that this method is only needed if the {@code Relation} is to be the
-   * <i>first</i> test of the composition.
-   *
-   * <blockquote><pre>{@code
-   * Check.that(Year.now()).is(validIf(GT(), Year.of(2000)).andAlso(LT(), Year.of(3000)));
-   * // import static java.util.List.of;
-   * Check.that(42F).is(validIf(GT(), 100F).orAll(of(1, 2, 3, 4, 5), LT(), 10));
-   * }</pre></blockquote>
-   *
-   * @param relation the relation
-   * @param object the object of the relation
-   * @param <S> the type of the subject of the relation
-   * @param <O> the type of the object of the relation
-   * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
-   *     value being tested has the specified relation to the specified value
-   */
-  static <S, O> ComposablePredicate<S> validIf(Relation<S, O> relation, O object) {
-    checkArg(relation);
-    return s -> relation.exists(s, object);
-  }
-
-  /**
    * Returns the negation of this predicate.
    *
    * @return the negation of this predicate
+   * @see Predicate#negate()
    */
   default ComposablePredicate<T> negated() {
     return x -> !meFirst(x);

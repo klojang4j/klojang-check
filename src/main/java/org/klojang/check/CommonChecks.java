@@ -1,5 +1,13 @@
 package org.klojang.check;
 
+import org.klojang.check.aux.Emptyable;
+import org.klojang.check.aux.Result;
+import org.klojang.check.relation.*;
+
+import java.io.File;
+import java.util.*;
+import java.util.function.Predicate;
+
 import static org.klojang.check.InvalidCheckException.typeNotSupported;
 import static org.klojang.check.MsgIntObjRelation.*;
 import static org.klojang.check.MsgIntPredicate.*;
@@ -7,13 +15,6 @@ import static org.klojang.check.MsgIntRelation.*;
 import static org.klojang.check.MsgObjIntRelation.*;
 import static org.klojang.check.MsgPredicate.*;
 import static org.klojang.check.MsgRelation.*;
-
-import java.io.File;
-import java.util.*;
-import java.util.function.Predicate;
-
-import org.klojang.check.relation.*;
-import org.klojang.check.aux.Result;
 
 /**
  * Defines various common checks on arguments, variables, object state, program
@@ -578,7 +579,10 @@ public final class CommonChecks {
 
   /**
    * Verifies that a value equals another value. Equivalent to
-   * {@link Objects#equals(Object) Objects::equals}.
+   * {@link Object#equals(Object) Object::equals}. Note that this method is
+   * <i>not</i> equivalent to {@link Objects#equals(Object, Object) Objects::equals}
+   * and is therefore not null-safe. Execute a {@linkplain #notNull() null check}
+   * first, if necessary.
    *
    * @param <S> the type of the subject of the relationship (which is the value
    *     being tested)
@@ -586,11 +590,28 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <S, O> Relation<S, O> EQ() {
-    return Objects::equals;
+    return Object::equals;
   }
 
   static {
     setMetadata(EQ(), msgEQ(), "EQ");
+  }
+
+  /**
+   * Verifies that a value equals another value. Equivalent to
+   * {@link Object#equals(Object) Object::equals}. Use this check instead of
+   * {@link #EQ()} if you want to make sure you are comparing objects of the same
+   * type.
+   *
+   * @param <T> the type of the objects being compared
+   * @return a function implementing the test described above
+   */
+  public static <T> Comparison<T> equalTo() {
+    return Object::equals;
+  }
+
+  static {
+    setMetadata(equalTo(), msgEQ(), "equalTo"); // recycle message
   }
 
   /**

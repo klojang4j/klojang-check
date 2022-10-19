@@ -3,34 +3,13 @@ package org.klojang.check.relation;
 import org.junit.Test;
 import org.klojang.check.Check;
 
-import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.ComposableIntPredicate.*;
-import static org.klojang.check.relation.Quantifier.*;
-
 import java.util.List;
 
+import static org.klojang.check.CommonChecks.*;
+import static org.klojang.check.relation.ComposeMethods.validIntIf;
+import static org.klojang.check.relation.Quantifier.*;
+
 public class ComposableIntPredicateTest {
-
-  @Test
-  public void validIntIf00() {
-    Check.that(27).is(validIntIf(lt(), 30));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void validIntIf01() {
-    Check.that(27).is(validIntIf(lt(), 20));
-  }
-
-  @Test
-  public void validIntIf02() {
-    Check.that(1).is(validIntIf(indexOf(), List.of(1, 2, 3)));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void validIntIf03() {
-    Check.that(27).is(validIntIf(indexOf(), List.of(1, 2, 3)));
-  }
-
   @Test
   public void negated00() {
     Check.that(27).is(even().negated());
@@ -54,7 +33,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orElsePredicate02() {
-    Check.that(42).is(ComposableIntPredicate.validIntIf(i -> i == 20)
+    Check.that(42).is(validIntIf(i -> i == 20)
         .orElse(i -> i % 20 == 0));
   }
 
@@ -147,7 +126,7 @@ public class ComposableIntPredicateTest {
 
   @Test
   public void orAll00() {
-    Check.that(18).is(invalidInt().or(gt(), allOf(), 1, 2, 3, 4));
+    Check.that(18).is(ComposeMethods.invalidInt().or(gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test
@@ -232,7 +211,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate103() {
-    Check.that(42).is(invalidInt().orNot("", empty()));
+    Check.that(42).is(ComposeMethods.invalidInt().orNot("", empty()));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -387,7 +366,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void andAlsoIntRelation02() {
-    Check.that(23).is(invalidInt().andAlso(lt(), 50));
+    Check.that(23).is(ComposeMethods.invalidInt().andAlso(lt(), 50));
   }
 
   @Test
@@ -447,7 +426,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void andNotPredicate02() {
-    Check.that(0).is(validInt().andNot(zero()));
+    Check.that(0).is(ComposeMethods.validInt().andNot(zero()));
   }
 
   @Test
@@ -482,12 +461,12 @@ public class ComposableIntPredicateTest {
 
   @Test
   public void andAll00() {
-    Check.that(18).is(validInt().and(gt(), allOf(), 1, 2, 3, 4));
+    Check.that(18).is(ComposeMethods.validInt().and(gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAll01() {
-    Check.that(18).is(invalidInt().and(gt(), allOf(), 1, 2, 3, 4));
+    Check.that(18).is(ComposeMethods.invalidInt().and(gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test(expected = IllegalArgumentException.class)
