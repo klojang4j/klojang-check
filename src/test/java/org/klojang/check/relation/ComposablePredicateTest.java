@@ -35,7 +35,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = ClassCastException.class)
   public void orElsePredicate03() {
-    Check.that(List.of("foo", "bar")).is(file().orElse(notEmpty()));
+    Check.that(List.of("foo", "bar")).is(regularFile().orElse(notEmpty()));
   }
 
   @Test
@@ -339,7 +339,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = ClassCastException.class)
   public void andAlsoPredicate01() {
-    Check.that(List.of("foo", "bar")).is(file().andAlso(notEmpty()));
+    Check.that(List.of("foo", "bar")).is(regularFile().andAlso(notEmpty()));
   }
 
   @Test

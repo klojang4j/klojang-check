@@ -94,19 +94,25 @@ final class MsgPredicate {
     //@formatter:on
   }
 
-  static PrefabMsgFormatter msgFile() {
+  static PrefabMsgFormatter msgRegularFile() {
     return x -> x.negated()
-        ? x.name() + " must not exist or not be a normal file (was " + x.arg() + ')'
-        : x.name() + " must be an existing, normal file (was " + x.arg() + ')';
+        ? x.name() + " must not be an existing, regular file (was " + x.arg() + ')'
+        : x.name() + " must be an existing, regular file (was " + x.arg() + ')';
   }
 
   static PrefabMsgFormatter msgDirectory() {
     return x -> x.negated()
-        ? x.name() + " must not exist or not be a directory (was " + x.arg() + ')'
+        ? x.name() + " must not be an existing directory (was " + x.arg() + ')'
         : x.name() + " must be an existing directory (was " + x.arg() + ')';
   }
 
-  static PrefabMsgFormatter msgFound() {
+  static PrefabMsgFormatter msgSymlink() {
+    return x -> x.negated()
+        ? x.name() + " must not be a symbolic link (was " + x.arg() + ')'
+        : x.name() + " must be a symbolic link (was " + x.arg() + ')';
+  }
+
+  static PrefabMsgFormatter msgFileExists() {
     return x -> x.negated()
         ? x.name() + " must not exist (was " + x.arg() + ')'
         : "file not found: " + x.arg();

@@ -5,8 +5,10 @@ import org.klojang.check.aux.Result;
 import org.klojang.check.relation.*;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static org.klojang.check.InvalidCheckException.typeNotSupported;
 import static org.klojang.check.MsgIntObjRelation.*;
@@ -74,8 +76,8 @@ public final class CommonChecks {
    * Verifies that the argument is not null. Equivalent to
    * {@link Objects#nonNull(Object) Objects::nonNull}.
    *
-   * <p>Note that, mostly for convenience, the {@link #NULL()}, {@link #yes()} and
-   * {@link #empty()} checks are the only ones that come with their negation:
+   * <p>Note that, mostly for convenience, {@link #NULL()}, {@link #yes()} and
+   * {@link #empty()} are the only checks that come with their negation:
    * {@code notNull()}, {@link #no()} and {@link #notEmpty()}. The other checks need
    * to be inverted using the {@code isNot(...)} and {@code notHas(...)} methods of
    * {@link ObjectCheck} and {@link IntCheck}.
@@ -144,8 +146,8 @@ public final class CommonChecks {
    *      containing an empty value
    * </ul>
    *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
+   * <p>This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -162,8 +164,8 @@ public final class CommonChecks {
    * Verifies that the argument is not empty. More precisely: it verifies the
    * negation of the {@link #empty()} test.
    *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
+   * <p>This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -178,13 +180,12 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is not {@code null} and, if it is an array,
-   * {@code Collection} or {@code Map}, that it does not contain any {@code null}
-   * values. It could still be an <i>empty</i> array, {@code Collection} or
-   * {@code Map}, however. For maps, both keys and values are tested for
-   * {@code null}.
+   * collection or map, that it does not contain any {@code null} values. It could
+   * still be a zero-length array, collection or map, however. For maps, both keys
+   * and values are tested for {@code null}.
    *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
+   * <p>This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -216,13 +217,13 @@ public final class CommonChecks {
    *   <li>it is a {@link File} containing at least one non-whitespace character.
    *      Consequently, this check could be expensive if the argument is a large
    *      {@code File}. Also note that this check will not verify that the file
-   *      exists in the first place. If in doubt, execute the {@link #file()} check
+   *      exists in the first place. If in doubt, execute the {@link #regularFile()} check
    *      first.
    *   <li>it is a non-null object of any other type
    * </ul>
    *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
+   * <p>This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -239,8 +240,8 @@ public final class CommonChecks {
    * Verifies that the argument is {@code null} or contains whitespace only. Probably
    * more useful when called from an {@code isNot} method.
    *
-   * <p>This check performs an implicit null check, so can be safely executed
-   * without (or instead of) executing the {@link #notNull()} check first.
+   * <p>This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
    *
    * @return a function implementing the test described above
    */
@@ -254,8 +255,8 @@ public final class CommonChecks {
 
   /**
    * Verifies that a string consists of digits only and (by implication) contains no
-   * '+' or '-' sign, and contains no leading zeros, and can be parsed into an
-   * integer (by implication non-negative).
+   * '+' or '-' sign, no leading zeros, and can be parsed into an integer (by
+   * implication non-negative).
    *
    * @return a function implementing the test described above
    */
@@ -269,9 +270,9 @@ public final class CommonChecks {
 
   /**
    * Verifies that a string consists of digits only and (by implication) contains no
-   * '+' or '-' sign, and contains no leading zeros, and can be parsed into a
-   * half-precision integer (by implication non-negative). Useful, for example, for
-   * parsing TCP port numbers.
+   * '+' or '-' sign, no leading zeros, and can be parsed into a half-precision
+   * integer (by implication non-negative). Useful, for example, for parsing TCP port
+   * numbers.
    *
    * @return a function implementing the test described above
    */
@@ -284,8 +285,15 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is an array or, if it is a {@code Class} object, that
-   * it is an array type.
+   * Returns {@code true} if the argument is an array or array <i>type</i>.
+   *
+   * <blockquote><pre>{@code
+   * Object obj = new int[] {1, 2, 3, 4, 5};
+   * Check.that(obj).is(array());             // OK
+   * Check.that(obj.getClass()).is(array());  // OK
+   * obj = "foo";
+   * Check.that(obj).is(array());             // IllegalArgumentException
+   * }</pre></blockquote>
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -299,27 +307,38 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a file is an existing, regular file. Equivalent to
-   * {@link File#isFile() File::isFile}.
+   * Verifies that the argument is an existing, regular file.
    *
    * @return a function implementing the test described above
    */
-  public static ComposablePredicate<File> file() {
-    return File::isFile;
+  public static ComposablePredicate<File> regularFile() {
+    return f -> Files.isRegularFile(f.toPath());
   }
 
   static {
-    setMetadata(file(), msgFile(), "file");
+    setMetadata(regularFile(), msgRegularFile(), "regularFile");
   }
 
   /**
-   * Verifies a file is an existing directory. Equivalent to
-   * {@link File#isDirectory() File::isDirectory}.
+   * Verifies that the argument is an existing directory.
    *
    * @return a function implementing the test described above
    */
   public static ComposablePredicate<File> directory() {
-    return File::isDirectory;
+    return f -> Files.isDirectory(f.toPath());
+  }
+
+  static {
+    setMetadata(directory(), msgDirectory(), "directory");
+  }
+
+  /**
+   * Verifies that the argument is a symbolic link.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate<File> symlink() {
+    return f -> Files.isSymbolicLink(f.toPath());
   }
 
   static {
@@ -331,18 +350,20 @@ public final class CommonChecks {
    * {@link File#exists() File::exists}.
    *
    * <blockquote><pre>{@code
-   * Check.that(file).is(found(), fileNotFound(file));
+   * // import static org.klojang.CommonChecks.fileExists;
+   * // import static org.klojang.CommonExceptions.notFound;
+   * Check.that(file).is(fileExists(), fileNotFound(file));
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    * @see CommonExceptions#fileNotFound(File)
    */
-  public static ComposablePredicate<File> found() {
+  public static ComposablePredicate<File> fileExists() {
     return File::exists;
   }
 
   static {
-    setMetadata(found(), msgFound(), "found");
+    setMetadata(fileExists(), msgFileExists(), "fileExists");
   }
 
   /**
@@ -578,7 +599,7 @@ public final class CommonChecks {
   //////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Verifies that a value equals another value. Equivalent to
+   * Verifies that the argument equals some value. Equivalent to
    * {@link Object#equals(Object) Object::equals}. Note that this method is
    * <i>not</i> equivalent to {@link Objects#equals(Object, Object) Objects::equals}
    * and is therefore not null-safe. Execute a {@linkplain #notNull() null check}
@@ -598,9 +619,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a value equals another value. Equivalent to
+   * Verifies that the argument equals some value. Equivalent to
    * {@link Object#equals(Object) Object::equals}. Use this check instead of
-   * {@link #EQ()} if you want to make sure you are comparing objects of the same
+   * {@link #EQ()} if you need to be sure you are comparing objects of the same
    * type.
    *
    * @param <T> the type of the objects being compared
@@ -697,6 +718,9 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument is either null or equals a particular value.
+   *
+   * <p>This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the subject of the relationship (which is the value
    *     being tested)
@@ -873,7 +897,7 @@ public final class CommonChecks {
    * {@link Collection#containsAll(Collection) Collection::containsAll}.
    *
    * <blockquote><pre>{@code
-   * Check.that(List.of(1,2,3)).is(enclosing(), Set.of(1,2); // true
+   * Check.that(List.of(1,2,3)).is(containsAll(), Set.of(1,2); // true
    * Check.that(List.of(1,2)).is(enclosing(), Set.of(1,2,3); // false
    * }</pre></blockquote>
    *
@@ -883,12 +907,12 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <E, C0 extends Collection<? super E>, C1 extends Collection<E>>
-  Relation<C0, C1> enclosing() {
+  Relation<C0, C1> containsAll() {
     return Collection::containsAll;
   }
 
   static {
-    setMetadata(enclosing(), msgEnclosing(), "enclosing");
+    setMetadata(containsAll(), msgContainsAll(), "containsAll");
   }
 
   /**
@@ -986,6 +1010,82 @@ public final class CommonChecks {
     setMetadata(endsWith(), msgEndsWith(), "endsWith");
   }
 
+  /**
+   * Verifies that the argument matches the specified pattern (that is, the pattern
+   * fully describes the string).
+   * @see #describedBy()
+   * @return a function implementing the test described above
+   */
+  public static Relation<String, Pattern> hasPattern() {
+    return (string, pattern) -> pattern.matcher(string).matches();
+  }
+
+  static {
+    setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
+  }
+
+  /**
+   * Verifies that the argument contains the specified pattern (that is, the pattern
+   * can be found somewhere in the string).
+   *
+   * @see #matching()
+   * @return a function implementing the test described above
+   */
+  public static Relation<String, Pattern> containsPattern() {
+    return (string, pattern) -> pattern.matcher(string).find();
+  }
+
+  static {
+    setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
+  }
+
+  /**
+   * Verifies that the argument matches the specified pattern (that is, the pattern
+   * fully describes the string). The subject (or "left hand side") of this
+   * {@code Relation} is the string to match; the object (or "right hand side") of
+   * the {@code Relation} is the regular expression to be compiled into a
+   * {@link Pattern}.
+   *
+   * <blockquote><pre>{@code
+   * Check.that("abcd123").is(matching(), "\\d{3}"); // yes
+   * Check.that("abcd123").is(matching(), "\\d{4}"); // no
+   * }</pre></blockquote>
+   *
+   * @return a function implementing the test described above
+   */
+  public static Comparison<String> describedBy() {
+    return (string, pattern) ->
+        hasPattern().exists(string, Pattern.compile(pattern));
+  }
+
+  static {
+    setMetadata(describedBy(), msgHasPattern(), "describedBy"); // recycle message
+  }
+
+  /**
+   * Verifies that the argument contains the specified pattern (that is, the pattern
+   * can be found somewhere in the string). The subject (or "left hand side") of this
+   * {@code Relation} is the string to match; the object (or "right hand side") of
+   * the {@code Relation} is the regular expression to be compiled into a
+   * {@link Pattern}.
+   *
+   * <blockquote><pre>{@code
+   * Check.that("abcd123").is(describedBy(), "\\d{3}"); // yes
+   * Check.that("abcd123").is(describedBy(), "\\d{4}"); // no
+   * }</pre></blockquote>
+   *
+   *
+   * @return a function implementing the test described above
+   */
+  public static Comparison<String> matching() {
+    return (string, pattern) ->
+        containsPattern().exists(string, Pattern.compile(pattern));
+  }
+
+  static {
+    setMetadata(matching(), msgContainsPattern(), "matching"); // recycle message
+  }
+
   private static final Map<Class<?>, Predicate<String>> numerical = Map.of(
       long.class, StringCheckImpls::isLongExact,
       int.class, StringCheckImpls::isIntExact,
@@ -1008,7 +1108,7 @@ public final class CommonChecks {
    * @see #plainInt()
    * @see #plainShort()
    */
-  public static <T extends Number> Relation<String, Class<T>> valueOf() {
+  public static <T extends Number> Relation<String, Class<T>> numerical() {
     return (x, y) -> {
       Predicate<String> p = numerical.get(y);
       if (p != null) {
@@ -1016,6 +1116,10 @@ public final class CommonChecks {
       }
       throw typeNotSupported(y);
     };
+  }
+
+  static {
+    setMetadata(numerical(), msgNumerical(), "numerical");
   }
 
   private static final Map<Class<?>, Predicate<String>> parsable = Map.of(
@@ -1033,8 +1137,8 @@ public final class CommonChecks {
    * <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
    * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g.
    * {@code Integer}) will result in an {@link InvalidCheckException}. The difference
-   * between this check and the {@link #valueOf()} check is that this check allows
-   * the string to be parsed to have a fractional part, even if the target type is an
+   * between this check and the {@link #numerical()} check is that this check allows
+   * the string to be parsed to have a fractional part even if the target type is an
    * integral type (like {@code int}), as long as it consists of zeros only.
    * Scientific notation is allowed, too, as long as the effective fractional part
    * consists of zeros only. For {@code Double} and {@code Float} there is no
@@ -1042,7 +1146,7 @@ public final class CommonChecks {
    *
    * @param <T> the type of the number into which to parse the string
    * @return a function implementing the test described above
-   * @see #valueOf()
+   * @see #numerical()
    * @see #plainInt()
    * @see #plainShort()
    */

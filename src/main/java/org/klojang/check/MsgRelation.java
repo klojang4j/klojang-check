@@ -89,7 +89,7 @@ final class MsgRelation {
     //@formatter:off
   }
 
-  static PrefabMsgFormatter msgEnclosing() {
+  static PrefabMsgFormatter msgContainsAll() {
     //@formatter:off
     return x -> x.negated()
         ? x.name() + " must not be superset of " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
@@ -142,6 +142,23 @@ final class MsgRelation {
     return x -> x.negated()
         ? x.name() + " must not end with " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
         : x.name() + " must end with " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+    //@formatter:off
+  }
+
+  static PrefabMsgFormatter msgHasPattern() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not match " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must match " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+    //@formatter:off
+  }
+
+
+  static PrefabMsgFormatter msgContainsPattern() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not contain pattern " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must contain pattern " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
     //@formatter:off
   }
 

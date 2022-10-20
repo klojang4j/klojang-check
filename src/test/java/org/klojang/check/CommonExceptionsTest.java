@@ -61,19 +61,19 @@ public class CommonExceptionsTest {
 
   @Test(expected = FileNotFoundException.class)
   public void fileNotFound00() throws FileNotFoundException {
-    Check.on(FILE, new File("/foo/bar/bla/x/42.d/0--.tmp")).is(found());
+    Check.on(FILE, new File("/foo/bar/bla/x/42.d/0--.tmp")).is(fileExists());
   }
 
   @Test(expected = FileNotFoundException.class)
   public void fileNotFound01() throws FileNotFoundException {
     File f = new File("/foo/bar/bla/x/42.d/0--.tmp");
-    Check.that(f).is(found(), fileNotFound(f));
+    Check.that(f).is(fileExists(), fileNotFound(f));
   }
 
   @Test(expected = FileNotFoundException.class)
   public void fileNotFound02() throws FileNotFoundException {
     File f = new File("/foo/bar/bla/x/42.d/0--.tmp");
-    Check.that(f).is(found(), fileNotFound("file not there"));
+    Check.that(f).is(fileExists(), fileNotFound("file not there"));
   }
 
   @Test(expected = NullPointerException.class)

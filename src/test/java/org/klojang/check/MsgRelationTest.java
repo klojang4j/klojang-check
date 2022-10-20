@@ -1,7 +1,6 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
 import org.klojang.check.relation.Relation;
 
 import java.io.FileOutputStream;
@@ -57,8 +56,8 @@ public class MsgRelationTest {
     Check.that(Set.of("1", "2", "3")).isNot(contains(), "4");
     Check.that((Integer) 2).is(in(), List.of(1, 2, 3));
     Check.that((Integer) 4).isNot(in(), List.of(1, 2, 3));
-    Check.that(Set.of("1", "2", "3")).is(enclosing(), List.of("1", "2"));
-    Check.that(Set.of("1", "4", "5")).isNot(enclosing(), List.of("1", "2"));
+    Check.that(Set.of("1", "2", "3")).is(containsAll(), List.of("1", "2"));
+    Check.that(Set.of("1", "4", "5")).isNot(containsAll(), List.of("1", "2"));
     Check.that(Set.of(MONDAY, TUESDAY, WEDNESDAY))
         .is(enclosedBy(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
     Check.that(Set.of(MONDAY, TUESDAY, SATURDAY))
@@ -613,7 +612,7 @@ public class MsgRelationTest {
   public void supersetOf00() {
     try {
       Check.that(List.of("mccartney", "harrisson", "lennon"), "frodo")
-          .is(enclosing(), List.of("mccartney", "harrisson", "star"));
+          .is(containsAll(), List.of("mccartney", "harrisson", "star"));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
@@ -629,7 +628,7 @@ public class MsgRelationTest {
   public void superset01() {
     try {
       Check.that(List.of("lennon", "mccartney", "harrisson", "star"), "frodo")
-          .isNot(enclosing(), List.of("mccartney", "harrisson", "star"));
+          .isNot(containsAll(), List.of("mccartney", "harrisson", "star"));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(

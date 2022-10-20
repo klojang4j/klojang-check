@@ -1,12 +1,13 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 import static org.klojang.check.CommonChecks.*;
@@ -334,20 +335,93 @@ public class CommonChecksTest {
   }
 
   @Test
-  public void file00() throws IOException {
-    File f = File.createTempFile("foo123", null);
+  public void regularFile00() throws IOException {
+    File f = File.createTempFile("foo" + millis(), null);
     try {
-      Check.that(f).is(file());
+      Check.that(f).is(regularFile());
     } finally {
       f.delete();
     }
-    Check.that(f).isNot(file());
+    Check.that(f).isNot(regularFile());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void regularFile01() {
+    Check.that(new File("/-/-/*.bar/" + millis())).is(regularFile());
   }
 
   @Test
   public void directory00() throws IOException {
-    //    File dir = new File(System.getProperty("user.dir"));
-    //    Check.that(dir).isNot(directory());
+    Path p = Files.createTempDirectory("foo" + millis());
+    try {
+      Check.that(p.toFile()).is(directory());
+    } finally {
+      Files.deleteIfExists(p);
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void directory01() {
+    Check.that(new File("/-/-/*.bar/" + millis())).is(directory());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void symlink01() {
+    Check.that(new File("/-/-/*.bar/" + millis())).is(symlink());
+  }
+
+  @Test
+  public void symlink00() throws IOException {
+    Path p0 = Files.createTempFile("foo", "bar" + millis());
+    Path p1 = Path.of(p0.getParent().toString(), "bozo" + millis());
+    Path p2 = Files.createSymbolicLink(p1, p0);
+    try {
+      Check.that(p2.toFile()).is(symlink());
+    } finally {
+      Files.deleteIfExists(p0);
+      Files.deleteIfExists(p1);
+      Files.deleteIfExists(p2);
+    }
+  }
+
+  @Test
+  public void hasPattern00() {
+    Check.that("abcd123").is(hasPattern(), Pattern.compile("^\\w{4}\\d{3}$"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void hasPattern01() {
+    Check.that("abcd123").is(hasPattern(), Pattern.compile("^\\w{3}\\d{4}$"));
+  }
+
+  @Test
+  public void containsPattern00() {
+    Check.that("abcd123").is(containsPattern(), Pattern.compile("\\w{4}"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void containsPattern01() {
+    Check.that("abcd123").is(hasPattern(), Pattern.compile("foo"));
+  }
+
+  @Test
+  public void describedBy00() {
+    Check.that("abcd123").is(describedBy(), "^\\w{4}\\d{3}$");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void describedBy01() {
+    Check.that("abcd123").is(describedBy(), "\\d{4}");
+  }
+
+  @Test
+  public void matching00() {
+    Check.that("abcd123").is(matching(), "\\d{3}");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void matching01() {
+    Check.that("abcd123").is(matching(), "\\d{4}");
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -374,6 +448,10 @@ public class CommonChecksTest {
   @Test(expected = IllegalArgumentException.class)
   public void instanceOf01() {
     Check.that("foo").is(instanceOf(), FileOutputStream.class);
+  }
+
+  private static long millis() {
+    return System.currentTimeMillis();
   }
 
 }

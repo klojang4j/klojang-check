@@ -1,15 +1,9 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
-import org.klojang.check.CommonChecks;
-import org.klojang.check.IntCheck;
-import org.klojang.check.ObjectCheck;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.time.DayOfWeek.MONDAY;
-import static java.time.DayOfWeek.THURSDAY;
 import static org.junit.Assert.*;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.strlen;
@@ -63,18 +57,9 @@ public class ObjectCheckTest {
         () -> new Exception());
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void is_Predicate00() {
-    try {
       Check.that(new int[2][2], "lolita").is(NULL());
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals(
-          "lolita must be null (was int[2][] of [[0, 0], [0, 0]])",
-          e.getMessage());
-      return;
-    }
-    fail();
   }
 
   @Test
@@ -210,14 +195,14 @@ public class ObjectCheckTest {
 
   @Test
   public void ok00() {
-    int i = Check.that("9").is(valueOf(), int.class).ok(Integer::valueOf);
+    int i = Check.that("9").is(numerical(), int.class).ok(Integer::valueOf);
     assertEquals(9, i);
   }
 
   @Test
   public void then00() {
     AtomicInteger ai = new AtomicInteger();
-    Check.that("-9").is(valueOf(), byte.class).then(s -> ai.set(Integer.valueOf(s)));
+    Check.that("-9").is(numerical(), byte.class).then(s -> ai.set(Integer.valueOf(s)));
     assertEquals(-9, ai.get());
   }
 

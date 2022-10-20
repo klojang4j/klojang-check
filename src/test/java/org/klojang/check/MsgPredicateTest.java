@@ -377,80 +377,20 @@ public class MsgPredicateTest {
   }
 
   @Test
-  public void file00() throws IOException {
-    //    File f = IOMethods.createTempDir();
-    //    try {
-    //      Check.that(f, "lithium").is(file());
-    //    } catch (IllegalArgumentException e) {
-    //      System.out.println(e.getMessage());
-    //      assertEquals("lithium must be an existing, normal file (was " + f + ")",
-    //          e.getMessage());
-    //      return;
-    //    } finally {
-    //      f.delete();
-    //    }
-    //    fail();
-  }
-
-  @Test
   public void file01() throws IOException {
     File f = Path.of("bla", "bla", "bar.foo").toFile();
     try {
-      Check.that(f, "lithium").is(file());
+      Check.that(f, "lithium").is(regularFile());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("lithium must be an existing, normal file (was " + f + ")",
+      assertEquals(
+          "lithium must be an existing, regular file (was " + f + ")",
           e.getMessage());
       return;
     } finally {
       f.delete();
     }
     fail();
-  }
-
-  //@Test(expected = IllegalArgumentException.class)
-  public void file02() throws IOException {
-    //    File f = IOMethods.createTempFile(getClass(), true);
-    //    Check.that(f, "lithium").isNot(file());
-  }
-
-  @Test
-  public void directory00() throws IOException {
-    //    File f = IOMethods.createTempFile();
-    //    try {
-    //      Check.that(f, "thorium").is(directory());
-    //    } catch (IllegalArgumentException e) {
-    //      System.out.println(e.getMessage());
-    //      assertEquals("thorium must be an existing directory (was " + f + ")",
-    //          e.getMessage());
-    //      return;
-    //    } finally {
-    //      f.delete();
-    //    }
-    //    fail();
-  }
-
-  @Test
-  public void directory01() throws IOException {
-    Path p = Path.of("bla", "bla", "bar.foo");
-    File f = p.toFile();
-    try {
-      Check.that(f, "thorium").is(directory());
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("thorium must be an existing directory (was " + f + ")",
-          e.getMessage());
-      return;
-    } finally {
-      f.delete();
-    }
-    fail();
-  }
-
-  //@Test(expected = IllegalArgumentException.class)
-  public void directory02() throws IOException {
-    //    File f = IOMethods.createTempDir();
-    //    Check.that(f, "thorium").isNot(directory());
   }
 
   @Test
@@ -458,7 +398,7 @@ public class MsgPredicateTest {
     Path p = Path.of("bla", "foo", "bla", "bar");
     File file = p.toFile();
     try {
-      Check.that(file, "xenon").is(found());
+      Check.that(file, "xenon").is(fileExists());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("file not found: bla/foo/bla/bar", e.getMessage());
@@ -471,7 +411,7 @@ public class MsgPredicateTest {
   public void fileExists01() throws IOException {
     File f = File.createTempFile("foo234", null);
     try {
-      Check.that(f, "xenon").isNot(found());
+      Check.that(f, "xenon").isNot(fileExists());
     } finally {
       f.delete();
     }
