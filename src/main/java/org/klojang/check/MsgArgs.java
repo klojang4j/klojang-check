@@ -2,7 +2,7 @@ package org.klojang.check;
 
 import org.klojang.check.x.Misc;
 
-record MsgArgs(Object test,
+public record MsgArgs(Object test,
     boolean negated,
     String name,
     Object arg,

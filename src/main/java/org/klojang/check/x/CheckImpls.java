@@ -1,4 +1,4 @@
-package org.klojang.check;
+package org.klojang.check.x;
 
 import static org.klojang.check.x.Misc.getArrayLength;
 
@@ -7,13 +7,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 
+import org.klojang.check.InvalidCheckException;
 import org.klojang.check.aux.Emptyable;
 
 /*
  * Implementations of checks in the CommonChecks class that require more than 1 or 2
  * lines of code.
  */
-final class CheckImpls {
+public final class CheckImpls {
 
   private static final Set<Class<?>> NULL_REPELLERS =
       // Actually, List.of(1) and List.of(1, 2) currently have the same type, but
@@ -32,7 +33,7 @@ final class CheckImpls {
               Set.of(1, 2).getClass(),
               Set.of(1, 2, 3).getClass())));
 
-  static <T> boolean isEmpty(T arg) {
+  public static <T> boolean isEmpty(T arg) {
     return arg == null
         || (arg instanceof CharSequence cs && cs.length() == 0)
         || (arg instanceof Collection<?> c && c.size() == 0)
@@ -45,7 +46,7 @@ final class CheckImpls {
         ;
   }
 
-  static <T> boolean isNotEmpty(T arg) {
+  public static <T> boolean isNotEmpty(T arg) {
     return arg != null
         && (!(arg instanceof CharSequence cs) || cs.length() != 0)
         && (!(arg instanceof Collection<?> c) || c.size() != 0)
@@ -59,7 +60,7 @@ final class CheckImpls {
         ;
   }
 
-  static boolean isDeepNotEmpty(Object arg) {
+  public static boolean isDeepNotEmpty(Object arg) {
     return arg != null
         && (!(arg instanceof CharSequence cs) || cs.length() > 0)
         && (!(arg instanceof Collection<?> c) || dne(c))
@@ -72,7 +73,7 @@ final class CheckImpls {
         ;
   }
 
-  static boolean isDeepNotNull(Object arg) {
+  public static boolean isDeepNotNull(Object arg) {
     if (arg == null) {
       return false;
     } else if (arg instanceof Object[] o) {
@@ -89,7 +90,7 @@ final class CheckImpls {
     return true;
   }
 
-  static <T, U extends T> boolean inArray(U elem, T[] array) {
+  public static <T, U extends T> boolean inArray(U elem, T[] array) {
     if (elem == null) {
       for (T e : array) {
         if (e == null) {
@@ -107,7 +108,7 @@ final class CheckImpls {
     }
   }
 
-  static <T> boolean isIndexOf(int idx, T obj) {
+  public static <T> boolean isIndexOf(int idx, T obj) {
     if (idx < 0) {
       return false;
     } else if (obj instanceof String s) {
@@ -125,7 +126,7 @@ final class CheckImpls {
         "indexOf() not applicable to " + obj.getClass());
   }
 
-  static <T> boolean isIndexInclusiveOf(int idx, T obj) {
+  public static <T> boolean isIndexInclusiveOf(int idx, T obj) {
     if (idx < 0) {
       return false;
     } else if (obj instanceof String s) {

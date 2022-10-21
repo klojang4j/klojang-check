@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 /*
  * Formats client-provided messages.
  */
-final class CustomMsgFormatter {
+public final class CustomMsgFormatter {
 
   private CustomMsgFormatter() {}
 
@@ -39,7 +39,7 @@ final class CustomMsgFormatter {
   // Will be called if the user provided at least one message argument, implying the
   // message pattern will contain ${0}, ${1} etc. and possibly also predefined
   // message arguments like ${arg}, ${name}, ...
-  static String format(String msg, Object[] msgArgs) {
+  public static String format(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {
       return msg;
@@ -58,7 +58,7 @@ final class CustomMsgFormatter {
     } while (true);
   }
 
-  static String formatWithPrefabArgsOnly(String msg, Object[] msgArgs) {
+  public static String formatWithPrefabArgsOnly(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {
       return msg;
@@ -78,7 +78,7 @@ final class CustomMsgFormatter {
   }
 
   // Only positional args: ${0}, ${1}, etc. Used by Check.fail()
-  static String formatSimple(String msg, Object[] msgArgs) {
+  public static String formatSimple(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {
       return msg;

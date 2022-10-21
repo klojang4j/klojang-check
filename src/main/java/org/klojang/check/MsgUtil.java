@@ -2,6 +2,7 @@ package org.klojang.check;
 
 import org.klojang.check.x.ArrayInfo;
 import org.klojang.check.x.Misc;
+import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 import java.util.Collection;
 import java.util.Map;
@@ -11,18 +12,19 @@ import static org.klojang.check.CommonChecks.MESSAGE_PATTERNS;
 import static org.klojang.check.x.Misc.*;
 
 @SuppressWarnings({"rawtypes"})
-final class MsgUtil {
-
-  static final String ERR_NULL_MESSAGE = "message and message arguments must not be null";
+public final class MsgUtil {
 
   private MsgUtil() {
     throw new UnsupportedOperationException();
   }
 
   // Max display width (characters) for stringified values.
-  static final int MAX_STRING_WIDTH = 65;
+  public static final int MAX_STRING_WIDTH = 65;
 
-  static String getPrefabMessage(Object test,
+  public static final String WAS = " (was ";
+
+
+  public static String getPrefabMessage(Object test,
       boolean negated,
       String argName,
       Object argVal,
@@ -43,7 +45,7 @@ final class MsgUtil {
         obj));
   }
 
-  static String getCustomMessage(String msg,
+  public static String getCustomMessage(String msg,
       Object[] msgArgs,
       Object test,
       String argName,
@@ -66,7 +68,7 @@ final class MsgUtil {
     return CustomMsgFormatter.format(msg, all);
   }
 
-  static String toStr(Object val) {
+  public static String toStr(Object val) {
     if (val == null) {
       return "null";
     } else if (val instanceof String s) {
@@ -93,7 +95,7 @@ final class MsgUtil {
     return toShortString(val, MAX_STRING_WIDTH);
   }
 
-  static String className(Object obj) {
+  public static String className(Object obj) {
     if (obj.getClass().getPackageName().startsWith("java.lang")) {
       return simpleClassName(obj);
     }
@@ -102,13 +104,13 @@ final class MsgUtil {
         : Misc.className(obj.getClass());
   }
 
-  static String simpleClassName(Object obj) {
+  public static String simpleClassName(Object obj) {
     return obj.getClass() == Class.class
         ? Misc.simpleClassName((Class) obj)
         : Misc.simpleClassName(obj.getClass());
   }
 
-  static String identify(Object arg) {
+  public static String identify(Object arg) {
     if (arg == null) {
       return null;
     } else if (arg instanceof Enum<?> e) {
@@ -119,6 +121,5 @@ final class MsgUtil {
     return simpleClassName(arg) + '@' + identityHashCode(arg);
   }
 
-  static final String WAS = " (was ";
 
 }

@@ -1,6 +1,6 @@
 package org.klojang.check;
 
-import org.klojang.check.PrefabMsgFormatter;
+import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 final class MsgIntPredicate {
 

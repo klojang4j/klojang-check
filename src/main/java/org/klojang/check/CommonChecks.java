@@ -3,7 +3,9 @@ package org.klojang.check;
 import org.klojang.check.aux.Emptyable;
 import org.klojang.check.aux.Result;
 import org.klojang.check.relation.*;
+import org.klojang.check.x.CheckImpls;
 import org.klojang.check.x.StringCheckImpls;
+import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 import java.io.File;
 import java.nio.file.Files;

@@ -2,7 +2,7 @@ package org.klojang.check;
 
 import static org.klojang.check.MsgUtil.toStr;
 
-import org.klojang.check.PrefabMsgFormatter;
+import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 final class MsgObjIntRelation {
 

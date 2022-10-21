@@ -1,5 +1,7 @@
 package org.klojang.check;
 
+import org.klojang.check.x.msg.PrefabMsgFormatter;
+
 import static org.klojang.check.x.Misc.*;
 
 import java.util.List;
