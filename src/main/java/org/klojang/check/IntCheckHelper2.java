@@ -1,17 +1,17 @@
 package org.klojang.check;
 
-import static org.klojang.check.x.msg.CheckDefs.*;
-import static org.klojang.check.CommonProperties.formatProperty;
-import static org.klojang.check.x.msg.MsgUtil.*;
+import org.klojang.check.relation.IntRelation;
+import org.klojang.check.x.msg.MsgArgs;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
-import org.klojang.check.relation.IntRelation;
-import org.klojang.check.x.msg.MsgArgs;
-import org.klojang.check.x.msg.MsgUtil;
+import static org.klojang.check.CommonProperties.formatProperty;
+import static org.klojang.check.x.msg.CheckDefs.getIntPredicateFormatter;
+import static org.klojang.check.x.msg.CheckDefs.getIntRelationFormatter;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 /**
  * Helper class for IntCheck.
@@ -43,7 +43,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(name, check.arg));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, false, name, val, int.class, null));
+        getPrefabMessage(formatter, test, false, name, val, int.class, null));
   }
 
   IntCheck<E> notHas(IntUnaryOperator prop, IntPredicate test) throws E {
@@ -61,7 +61,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(name, check.arg));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, true, name, val, int.class, null));
+        getPrefabMessage(formatter, test, true, name, val, int.class, null));
   }
 
   IntCheck<E> has(IntUnaryOperator prop, String name, IntPredicate test) throws E {
@@ -75,7 +75,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(name, check.arg));
     }
     throw check.exc.apply(
-        formatMessage(formatter,
+        getPrefabMessage(formatter,
             test,
             false,
             check.FQN(name),
@@ -96,7 +96,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(name, check.arg));
     }
     throw check.exc.apply(
-        formatMessage(formatter,
+        getPrefabMessage(formatter,
             test,
             true,
             check.FQN(name),
@@ -115,7 +115,7 @@ final class IntCheckHelper2<E extends Exception> {
       return check;
     }
     throw check.exc.apply(
-        MsgUtil.getCustomMessage(msg,
+        getCustomMessage(msg,
             msgArgs,
             test,
             check.argName,
@@ -135,7 +135,7 @@ final class IntCheckHelper2<E extends Exception> {
       return check;
     }
     throw check.exc.apply(
-        MsgUtil.getCustomMessage(msg,
+        getCustomMessage(msg,
             msgArgs,
             test,
             check.argName,
@@ -170,7 +170,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultRelationMessage(name, check.arg, obj));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, false, name, val, int.class, obj));
+        getPrefabMessage(formatter, test, false, name, val, int.class, obj));
   }
 
   IntCheck<E> notHas(IntUnaryOperator prop, IntRelation test, int obj) throws E {
@@ -188,7 +188,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultRelationMessage(name, check.arg, obj));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, true, name, val, int.class, obj));
+        getPrefabMessage(formatter, test, true, name, val, int.class, obj));
   }
 
   IntCheck<E> has(IntUnaryOperator prop, String name, IntRelation test, int obj)
@@ -203,7 +203,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultRelationMessage(check.FQN(name), check.arg, obj));
     }
     throw check.exc.apply(
-        formatMessage(formatter,
+        getPrefabMessage(formatter,
             test,
             false,
             check.FQN(name),
@@ -224,7 +224,7 @@ final class IntCheckHelper2<E extends Exception> {
       throw check.exc.apply(defaultRelationMessage(check.FQN(name), check.arg, obj));
     }
     throw check.exc.apply(
-        formatMessage(formatter,
+        getPrefabMessage(formatter,
             test,
             true,
             check.FQN(name),
@@ -245,7 +245,7 @@ final class IntCheckHelper2<E extends Exception> {
       return check;
     }
     throw check.exc.apply(
-        MsgUtil.getCustomMessage(msg,
+        getCustomMessage(msg,
             msgArgs,
             test,
             check.argName,
@@ -266,7 +266,7 @@ final class IntCheckHelper2<E extends Exception> {
       return check;
     }
     throw check.exc.apply(
-        MsgUtil.getCustomMessage(msg,
+        getCustomMessage(msg,
             msgArgs,
             test,
             check.argName,

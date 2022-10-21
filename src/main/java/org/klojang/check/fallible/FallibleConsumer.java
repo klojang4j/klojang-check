@@ -19,6 +19,6 @@ public interface FallibleConsumer<T, X extends Throwable> {
    * @param t the input argument
    * @throws X if the operation fails
    */
-  public void accept(T t) throws X;
+  void accept(T t) throws X;
 
 }

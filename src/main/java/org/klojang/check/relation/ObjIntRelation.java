@@ -1,11 +1,21 @@
 package org.klojang.check.relation;
 
+import org.klojang.check.CommonChecks;
+import org.klojang.check.IntCheck;
+import org.klojang.check.ObjectCheck;
+
 /**
  * Defines some kind of relationship between an object and an integer. For example,
  * if x is an {@code int[]} array containing 6, and y equals 6, then the
  * <b>contain-elements</b> relation exists between x and y. See the
  * {@linkplain nl.naturalis.common.function package description} for more
  * information.
+ *
+ * <p>This interface is included for completeness and because it represents the
+ * {@linkplain #converse() converse} of the {@link IntObjRelation}.
+ * {@link ObjectCheck} and {@link IntCheck} do not currently support checks in the
+ * form of an {@code ObjIntRelation} and the {@link CommonChecks} does not define
+ * any.
  *
  * @param <S> The type of the subject of the relation
  * @author Ayco Holleman
@@ -16,8 +26,8 @@ public interface ObjIntRelation<S> {
 
   /**
    * Returns the converse of this relation, swapping subject and object in the
-   * relationship. Thus, the converse of an {@code IntObjRelation} is an
-   * {@link ObjIntRelation}.
+   * relationship. Thus, the converse of an {@code ObjIntRelation} is an
+   * {@link IntObjRelation}.
    *
    * @return an {@code IntObjRelation} that is the converse of this
    *     {@code ObjIntRelation}.

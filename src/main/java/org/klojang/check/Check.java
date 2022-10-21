@@ -45,11 +45,11 @@ public final class Check {
    * to circular method calls (a.k.a. stack overflow errors). Therefore, if an
    * argument should not be null, don't use Check.notNull.
    */
-  static final IllegalArgumentException illegalNullValue() {
+  private static IllegalArgumentException illegalNullValue() {
     return new IllegalArgumentException("argument must not be null");
   }
 
-  static final IllegalArgumentException illegalNullValue(String argName) {
+  private static IllegalArgumentException illegalNullValue(String argName) {
     return new IllegalArgumentException(argName + " must not be null");
   }
 
@@ -119,6 +119,8 @@ public final class Check {
    * @param arg the value to be validated
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
+   * @throws IllegalArgumentException if the argument is {@code null} or fail any
+   *     of the subsequent tests
    */
   public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T arg)
       throws IllegalArgumentException {
@@ -139,6 +141,8 @@ public final class Check {
    *     method argument probably something close to the parameter name)
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
+   * @throws IllegalArgumentException if the argument is {@code null} or fail any
+   *     of the subsequent tests
    */
   public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T arg,
       String argName)
@@ -338,6 +342,7 @@ public final class Check {
    * @param array the array
    * @param fromIndex the start index of the array segment
    * @param toIndex the end index of the array segment
+   * @param <T> the type of the array elements
    * @return the {@code length} of the array segment
    * @see #fromTo(int, int, int)
    * @see Arrays#copyOfRange(Object[], int, int)
@@ -435,7 +440,7 @@ public final class Check {
    * still declared to return a value of type {@code <T>} so it can be used as the
    * expression for a {@code return} statement.
    *
-   * @param excFactory The supplier of the exception
+   * @param excFactory the supplier of the exception
    * @param <T> the desired type of the return value
    * @param <X> the type of the exception
    * @return nothing, but allows {@code fail} to be used as the expression in a
@@ -447,12 +452,14 @@ public final class Check {
   }
 
   /**
-   * Throws an exception created by the specified exception factory with the
+   * Throws an exception produced by the specified exception factory with the
    * specified message and message arguments.
    *
    * @param <T> the type of the object that would have been returned if it had
    *     passed the checks
    * @param <X> the type of the exception
+   * @param excFactory a function that takes a {@code String} (the exception
+   *     message) and produces an {@code Exception}.
    * @param message The message
    * @param msgArgs The message argument
    * @return nothing, but allows {@code fail} to be used as the expression in a

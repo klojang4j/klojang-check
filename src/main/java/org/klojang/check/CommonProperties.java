@@ -127,6 +127,7 @@ public class CommonProperties {
    * {@code CharSequence::length}.
    *
    * @return The length of a {@code CharSequence}
+   * @param <T> the type of the {@code CharSequence}
    */
   public static <T extends CharSequence> ToIntFunction<T> strlen() {
     return CharSequence::length;
@@ -400,6 +401,7 @@ public class CommonProperties {
    * @param <T> The type of the {@code Number}
    * @return The absolute value of a {@code Number}
    */
+  @SuppressWarnings("unchecked")
   public static <T extends Number> Function<T, T> ABS() {
     return n -> {
       UnaryOperator op = absFunctions.get(n.getClass());

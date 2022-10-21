@@ -1,8 +1,9 @@
 package org.klojang.check.aux;
 
-import java.util.Collection;
-
 import org.klojang.check.Check;
+import org.klojang.check.CommonExceptions;
+
+import java.util.Collection;
 
 import static java.util.stream.Collectors.joining;
 import static org.klojang.check.aux.DuplicateValueException.Usage.VALUE;

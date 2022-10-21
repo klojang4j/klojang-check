@@ -45,7 +45,7 @@ public final class MsgUtil {
         + toStr(obj);
   }
 
-  public static String formatMessage(Function<MsgArgs, String> formatter,
+  public static String getPrefabMessage(Function<MsgArgs, String> formatter,
       Object test,
       boolean negated,
       String argName,

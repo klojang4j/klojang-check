@@ -102,7 +102,7 @@ public final class IntCheck<X extends Exception> {
       throw exc.apply(defaultPredicateMessage(argName, arg));
     }
     throw exc.apply(
-        formatMessage(formatter, test, false, argName, arg, int.class, null));
+        getPrefabMessage(formatter, test, false, argName, arg, int.class, null));
   }
 
   /**
@@ -124,7 +124,7 @@ public final class IntCheck<X extends Exception> {
       throw exc.apply(defaultPredicateMessage(argName, arg));
     }
     throw exc.apply(
-        formatMessage(formatter, test, true, argName, arg, int.class, null));
+        getPrefabMessage(formatter, test, true, argName, arg, int.class, null));
   }
 
   /**
@@ -248,7 +248,7 @@ public final class IntCheck<X extends Exception> {
       throw exc.apply(defaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
-        formatMessage(formatter, test, false, argName, arg, int.class, object));
+        getPrefabMessage(formatter, test, false, argName, arg, int.class, object));
   }
 
   /**
@@ -271,7 +271,7 @@ public final class IntCheck<X extends Exception> {
       throw exc.apply(defaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
-        formatMessage(formatter, test, true, argName, arg, int.class, object));
+        getPrefabMessage(formatter, test, true, argName, arg, int.class, object));
   }
 
   /**
@@ -404,7 +404,7 @@ public final class IntCheck<X extends Exception> {
       throw exc.apply(defaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
-        formatMessage(formatter, test, false, argName, arg, int.class, object));
+        getPrefabMessage(formatter, test, false, argName, arg, int.class, object));
   }
 
   /**
@@ -428,7 +428,7 @@ public final class IntCheck<X extends Exception> {
       throw exc.apply(defaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
-        formatMessage(formatter, test, true, argName, arg, int.class, object));
+        getPrefabMessage(formatter, test, true, argName, arg, int.class, object));
   }
 
   /**

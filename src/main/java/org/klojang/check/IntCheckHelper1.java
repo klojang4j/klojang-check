@@ -1,17 +1,15 @@
 package org.klojang.check;
 
 import org.klojang.check.x.msg.MsgArgs;
-import org.klojang.check.x.msg.MsgUtil;
-
-import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
-import static org.klojang.check.CommonProperties.formatProperty;
-import static org.klojang.check.x.msg.MsgUtil.defaultPredicateMessage;
-import static org.klojang.check.x.msg.MsgUtil.formatMessage;
 
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static org.klojang.check.CommonProperties.formatProperty;
+import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 final class IntCheckHelper1<E extends Exception> {
 
@@ -37,7 +35,7 @@ final class IntCheckHelper1<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, false, name, val, null, null));
+        getPrefabMessage(formatter, test, false, name, val, null, null));
   }
 
   <P> IntCheck<E> notHas(IntFunction<P> prop, Predicate<P> test) throws E {
@@ -52,7 +50,7 @@ final class IntCheckHelper1<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, true, name, val, null, null));
+        getPrefabMessage(formatter, test, true, name, val, null, null));
   }
 
   <P> IntCheck<E> has(IntFunction<P> prop, String name, Predicate<P> test) throws E {
@@ -66,7 +64,7 @@ final class IntCheckHelper1<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, false, check.FQN(name), val, null, null));
+        getPrefabMessage(formatter, test, false, check.FQN(name), val, null, null));
   }
 
   <P> IntCheck<E> notHas(IntFunction<P> prop, String name, Predicate<P> test)
@@ -81,7 +79,7 @@ final class IntCheckHelper1<E extends Exception> {
       throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
-        formatMessage(formatter, test, true, check.FQN(name), val, null, null));
+        getPrefabMessage(formatter, test, true, check.FQN(name), val, null, null));
   }
 
   <P> IntCheck<E> has(IntFunction<P> prop,
@@ -95,7 +93,7 @@ final class IntCheckHelper1<E extends Exception> {
       return check;
     }
     throw check.exc.apply(
-        MsgUtil.getCustomMessage(msg,
+        getCustomMessage(msg,
             msgArgs,
             test,
             check.argName,
@@ -115,7 +113,7 @@ final class IntCheckHelper1<E extends Exception> {
       return check;
     }
     throw check.exc.apply(
-        MsgUtil.getCustomMessage(msg,
+        getCustomMessage(msg,
             msgArgs,
             test,
             check.argName,
