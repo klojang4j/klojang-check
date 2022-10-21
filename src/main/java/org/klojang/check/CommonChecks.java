@@ -963,21 +963,4 @@ public final class CommonChecks {
     };
   }
 
-
-  /* ++++++++++++++ END OF CHECKS ++++++++++++++ */
-
-  //  static {
-  //    MESSAGE_PATTERNS = Map.copyOf(tmp0);
-  //    NAMES = Map.copyOf(tmp1);
-  //    tmp0 = null;
-  //    tmp1 = null;
-  //  }
-  //
-  //  private static void setMetadata(Object test,
-  //      PrefabMsgFormatter message,
-  //      String name) {
-  //    tmp0.put(test, message);
-  //    tmp1.put(test, name);
-  //  }
-
 }

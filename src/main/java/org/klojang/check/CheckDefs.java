@@ -20,7 +20,7 @@ import static org.klojang.check.MsgRelation.*;
 final class CheckDefs {
 
   private static final Map<Predicate<?>, Function<MsgArgs, String>> predicateFormatters;
-  private static final Map<ComposableIntPredicate, Function<MsgArgs, String>> intPredicateFormatters;
+  private static final Map<IntPredicate, Function<MsgArgs, String>> intPredicateFormatters;
   private static final Map<Relation<?, ?>, Function<MsgArgs, String>> relationFormatters;
   private static final Map<IntRelation, Function<MsgArgs, String>> intRelationFormatters;
   private static final Map<IntObjRelation<?>, Function<MsgArgs, String>> intObjRelationFormatters;
