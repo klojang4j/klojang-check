@@ -30,7 +30,9 @@ public final class Check {
    * if a check almost continuously rejects any value thrown at, which would be
    * rather odd (if not suspicious) for a precondition check.
    */
-  public static final Object EOM = new Object();
+  @SuppressWarnings({"unused"})
+  // Remove when above description incorporated somewhere else
+  private static final Object EOM = new Object();
 
   private Check() {
     throw new UnsupportedOperationException();

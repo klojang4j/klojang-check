@@ -8,7 +8,6 @@ import org.klojang.check.ObjectCheck;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.klojang.check.Check.EOM;
 import static org.klojang.check.TestUtil.*;
 
 @SuppressWarnings({"rawtypes"})
@@ -98,7 +97,7 @@ public class CheckTest {
   public void fail06() {
     Integer x = 7;
     try {
-      x = Check.fail("Nothing left to say", EOM);
+      x = Check.fail("Nothing left to say", null);
     } catch (IllegalArgumentException e) {
       assertEquals(7, (int) x);
       assertEquals("Nothing left to say", e.getMessage());
@@ -111,10 +110,10 @@ public class CheckTest {
   public void fail07() {
     String s = "hello";
     try {
-      s = Check.fail("Nothing left to say${0}${1}", EOM, " (except this)");
+      s = Check.fail("Nothing left to say${0}${1}", null, " (except this)");
     } catch (IllegalArgumentException e) {
       assertEquals("hello", s);
-      assertEquals("Nothing left to say" + EOM + " (except this)", e.getMessage());
+      assertEquals("Nothing left to say" + null + " (except this)", e.getMessage());
       return;
     }
     Assert.fail();

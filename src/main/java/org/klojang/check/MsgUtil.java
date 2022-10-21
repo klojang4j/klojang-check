@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import static java.lang.System.identityHashCode;
-import static org.klojang.check.Check.EOM;
 import static org.klojang.check.CommonChecks.MESSAGE_PATTERNS;
 import static org.klojang.check.Misc.*;
 
@@ -48,9 +47,7 @@ final class MsgUtil {
       Object argVal,
       Class<?> argType,
       Object obj) {
-    if (msgArgs == null
-        || (msgArgs.length == 1 && msgArgs[0] == EOM)
-        || msg == null) {
+    if (msgArgs == null || msg == null) {
       return msg;
     } else if (msgArgs.length == 0) {
       return CustomMsgFormatter.formatWithPrefabArgsOnly(msg,

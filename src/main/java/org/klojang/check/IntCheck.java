@@ -131,12 +131,10 @@ public final class IntCheck<X extends Exception> {
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test repetitively, and performance, even while handling the exception, is
-   *     critical, specify <i>exactly</i> one message argument: {@code '\0'} (the
-   *     NULL character). This will cause the message not to be parsed, and simply be
-   *     passed as-is to the exception. (Of course, the message should not contain
-   *     any message arguments then.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -162,12 +160,10 @@ public final class IntCheck<X extends Exception> {
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test repetitively, and performance, even while handling the exception, is
-   *     critical, specify <i>exactly</i> one message argument: {@code '\0'} (the
-   *     NULL character). This will cause the message not to be parsed, and simply be
-   *     passed as-is to the exception. (Of course, the message should not contain
-   *     any message arguments then.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -283,12 +279,10 @@ public final class IntCheck<X extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test repetitively, and performance, even while handling the exception, is
-   *     critical, specify <i>exactly</i> one message argument: {@code '\0'} (the
-   *     NULL character). This will cause the message not to be parsed, and simply be
-   *     passed as-is to the exception. (Of course, the message should not contain
-   *     any message arguments then.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -317,12 +311,10 @@ public final class IntCheck<X extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test repetitively, and performance, even while handling the exception, is
-   *     critical, specify <i>exactly</i> one message argument: {@code '\0'} (the
-   *     NULL character). This will cause the message not to be parsed, and simply be
-   *     passed as-is to the exception. (Of course, the message should not contain
-   *     any message arguments then.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -444,7 +436,10 @@ public final class IntCheck<X extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <O> the type of the object of the {@code IntObjRelation}
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
@@ -475,7 +470,10 @@ public final class IntCheck<X extends Exception> {
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <O> the type of the object of the {@code IntObjRelation}
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
@@ -633,7 +631,10 @@ public final class IntCheck<X extends Exception> {
    *     validated using the specified test
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <P> the type of the extracted value
    * @return this instance
    * @throws X if the property does not pass the test
@@ -654,7 +655,10 @@ public final class IntCheck<X extends Exception> {
    *     validated using the specified test
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <P> the type of the extracted value
    * @return this instance
    * @throws X if the argument is invalid

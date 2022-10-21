@@ -123,12 +123,10 @@ public final class ObjectCheck<T, X extends Exception> {
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test very often, and performance is absolutely essential, specify
-   *     <i>exactly</i> one message argument: {@code '\0'} (the NULL character).
-   *     This will cause the message to remain unparsed. It will be passed on as-is
-   *     to the exception. (Of course, the message should not contain any message
-   *     arguments in that case.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @return this instance
    * @throws X If the argument is invalid
    */
@@ -153,12 +151,10 @@ public final class ObjectCheck<T, X extends Exception> {
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test very often, and performance is absolutely essential, specify
-   *     <i>exactly</i> one message argument: {@code '\0'} (the NULL character).
-   *     This will cause the message to remain unparsed. It will be passed on as-is
-   *     to the exception. (Of course, the message should not contain any message
-   *     arguments in that case.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @return this instance
    * @throws X If the argument is invalid
    */
@@ -266,12 +262,10 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test very often, and performance is absolutely essential, specify
-   *     <i>exactly</i> one message argument: {@code '\0'} (the NULL character).
-   *     This will cause the message to remain unparsed. It will be passed on as-is
-   *     to the exception. (Of course, the message should not contain any message
-   *     arguments in that case.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <O> The type of the value being tested against
    * @return this instance
    * @throws X If the argument is invalid
@@ -302,12 +296,10 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test very often, and performance is absolutely essential, specify
-   *     <i>exactly</i> one message argument: {@code '\0'} (the NULL character).
-   *     This will cause the message to remain unparsed. It will be passed on as-is
-   *     to the exception. (Of course, the message should not contain any message
-   *     arguments in that case.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <O> The type of the value being tested against
    * @return this instance
    * @throws X If the argument is invalid
@@ -471,12 +463,10 @@ public final class ObjectCheck<T, X extends Exception> {
    *     property from a JavaBean
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test very often, and performance is absolutely essential, specify
-   *     <i>exactly</i> one message argument: {@code '\0'} (the NULL character).
-   *     This will cause the message to remain unparsed. It will be passed on as-is
-   *     to the exception. (Of course, the message should not contain any message
-   *     arguments in that case.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <P> the type of the extracted value
    * @return this instance
    * @throws X If the argument is invalid
@@ -499,12 +489,10 @@ public final class ObjectCheck<T, X extends Exception> {
    *     property from a JavaBean
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the argument to fail the
-   *     test very often, and performance is absolutely essential, specify
-   *     <i>exactly</i> one message argument: {@code '\0'} (the NULL character).
-   *     This will cause the message to remain unparsed. It will be passed on as-is
-   *     to the exception. (Of course, the message should not contain any message
-   *     arguments in that case.)
+   * @param msgArgs the message arguments. If you expect the test to fail very
+   *     often, and performance is paramount, even in anomalous situations, specify
+   *     {@code null}. This will cause the message to remain unparsed. It will be
+   *     passed on as-is to the exception.
    * @param <P> the type of the extracted value
    * @return this instance
    * @throws X If the argument is invalid
