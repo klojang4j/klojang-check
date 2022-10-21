@@ -1,8 +1,6 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
-import static org.klojang.check.MsgUtil.toStr;
-
-import org.klojang.check.x.msg.PrefabMsgFormatter;
+import static org.klojang.check.x.msg.MsgUtil.toStr;
 
 final class MsgObjIntRelation {
 

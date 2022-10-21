@@ -1,8 +1,8 @@
 package org.klojang.check;
 
-import static org.klojang.check.Check.DEF_ARG_NAME;
-import static org.klojang.check.CheckDefs.*;
-import static org.klojang.check.MsgUtil.*;
+import static org.klojang.check.x.msg.MsgUtil.DEF_ARG_NAME;
+import static org.klojang.check.x.msg.CheckDefs.*;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 import java.util.function.*;
 
@@ -10,6 +10,7 @@ import org.klojang.check.fallible.FallibleIntConsumer;
 import org.klojang.check.fallible.FallibleIntFunction;
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
+import org.klojang.check.x.msg.MsgArgs;
 
 /**
  * Facilitates the validation of {@code int} values. See the

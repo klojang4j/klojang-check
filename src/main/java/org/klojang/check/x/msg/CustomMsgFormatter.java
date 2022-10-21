@@ -1,11 +1,11 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.klojang.check.x.Misc;
 
-import static org.klojang.check.Check.DEF_ARG_NAME;
+import static org.klojang.check.x.msg.MsgUtil.DEF_ARG_NAME;
 import static org.klojang.check.x.Misc.toShortString;
-import static org.klojang.check.MsgUtil.MAX_STRING_WIDTH;
-import static org.klojang.check.MsgUtil.simpleClassName;
+import static org.klojang.check.x.msg.MsgUtil.MAX_STRING_WIDTH;
+import static org.klojang.check.x.msg.MsgUtil.simpleClassName;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -38,7 +38,7 @@ public final class CustomMsgFormatter {
   // Will be called if the user provided at least one message argument, implying the
   // message pattern will contain ${0}, ${1} etc. and possibly also predefined
   // message arguments like ${arg}, ${name}, ...
-  public static String format(String msg, Object[] msgArgs) {
+  static String format(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {
       return msg;
@@ -57,7 +57,7 @@ public final class CustomMsgFormatter {
     } while (true);
   }
 
-  public static String formatWithPrefabArgsOnly(String msg, Object[] msgArgs) {
+  static String formatWithPrefabArgsOnly(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {
       return msg;

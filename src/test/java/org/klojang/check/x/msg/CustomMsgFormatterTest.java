@@ -1,10 +1,10 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.klojang.check.CommonChecks.instanceOf;
-import static org.klojang.check.CustomMsgFormatter.format;
+import static org.klojang.check.x.msg.CustomMsgFormatter.format;
 import static org.klojang.check.TestUtil.*;
 
 public class CustomMsgFormatterTest {

@@ -1,6 +1,7 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.junit.Test;
+import org.klojang.check.Check;
 import org.klojang.check.aux.Result;
 
 import java.io.File;

@@ -1,5 +1,7 @@
 package org.klojang.check;
 
+import org.klojang.check.x.msg.CustomMsgFormatter;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -37,8 +39,6 @@ public final class Check {
   private Check() {
     throw new UnsupportedOperationException();
   }
-
-  static final String DEF_ARG_NAME = "argument";
 
   /*
    * For internal use only. We don't want to get high on our own stuff as it may lead

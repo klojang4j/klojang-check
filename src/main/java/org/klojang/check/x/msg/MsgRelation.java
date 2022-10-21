@@ -1,8 +1,6 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
-import org.klojang.check.x.msg.PrefabMsgFormatter;
-
-import static org.klojang.check.MsgUtil.*;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 @SuppressWarnings("rawtypes")
 public final class MsgRelation {

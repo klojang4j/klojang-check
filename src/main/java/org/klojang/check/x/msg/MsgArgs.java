@@ -1,4 +1,4 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.klojang.check.x.Misc;
 
@@ -22,7 +22,7 @@ public record MsgArgs(Object test,
 
   @Override
   public String name() {
-    return name == null ? Check.DEF_ARG_NAME : name;
+    return name == null ? MsgUtil.DEF_ARG_NAME : name;
   }
 
   public String typeAndName() {

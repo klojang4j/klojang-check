@@ -1,4 +1,4 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.klojang.check.x.msg.PrefabMsgFormatter;
 

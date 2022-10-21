@@ -1,9 +1,9 @@
 package org.klojang.check;
 
-import static org.klojang.check.Check.DEF_ARG_NAME;
-import static org.klojang.check.CheckDefs.getPredicateFormatter;
-import static org.klojang.check.CheckDefs.getRelationFormatter;
-import static org.klojang.check.MsgUtil.*;
+import static org.klojang.check.x.msg.MsgUtil.DEF_ARG_NAME;
+import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
+import static org.klojang.check.x.msg.CheckDefs.getRelationFormatter;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 import java.util.function.*;
 
@@ -12,6 +12,7 @@ import org.klojang.check.fallible.FallibleFunction;
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
 import org.klojang.check.relation.Relation;
+import org.klojang.check.x.msg.MsgArgs;
 
 /**
  * Facilitates the validation of arbitrarily typed values. See the

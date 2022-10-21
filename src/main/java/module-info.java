@@ -351,6 +351,4 @@ module org.klojang.check {
   exports org.klojang.check.aux;
   exports org.klojang.check.fallible;
   exports org.klojang.check.relation;
-  exports org.klojang.check.x;
-  exports org.klojang.check.x.msg;
 }

@@ -1,10 +1,9 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.klojang.check.x.ArrayInfo;
-import org.klojang.check.x.msg.PrefabMsgFormatter;
 
-import static org.klojang.check.MsgUtil.className;
-import static org.klojang.check.MsgUtil.toStr;
+import static org.klojang.check.x.msg.MsgUtil.className;
+import static org.klojang.check.x.msg.MsgUtil.toStr;
 
 final class MsgPredicate {
 

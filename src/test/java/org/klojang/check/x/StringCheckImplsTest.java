@@ -1,4 +1,4 @@
-package org.klojang.check;
+package org.klojang.check.x;
 
 import org.junit.Test;
 import org.klojang.check.Check;

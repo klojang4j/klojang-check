@@ -1,9 +1,12 @@
 package org.klojang.check;
 
-import static org.klojang.check.CheckDefs.getPredicateFormatter;
+import org.klojang.check.x.msg.MsgArgs;
+import org.klojang.check.x.msg.MsgUtil;
+
+import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
 import static org.klojang.check.CommonProperties.formatProperty;
-import static org.klojang.check.MsgUtil.defaultPredicateMessage;
-import static org.klojang.check.MsgUtil.formatMessage;
+import static org.klojang.check.x.msg.MsgUtil.defaultPredicateMessage;
+import static org.klojang.check.x.msg.MsgUtil.formatMessage;
 
 import java.util.function.Function;
 import java.util.function.IntFunction;

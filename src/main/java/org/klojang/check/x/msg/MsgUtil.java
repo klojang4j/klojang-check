@@ -1,8 +1,7 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.klojang.check.x.ArrayInfo;
 import org.klojang.check.x.Misc;
-import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 import java.util.Collection;
 import java.util.Map;
@@ -14,12 +13,14 @@ import static org.klojang.check.x.Misc.*;
 @SuppressWarnings({"rawtypes"})
 public final class MsgUtil {
 
-  private MsgUtil() {
-    throw new UnsupportedOperationException();
-  }
+  public static final String DEF_ARG_NAME = "argument";
 
   // Max display width (characters) for stringified values.
   public static final int MAX_STRING_WIDTH = 65;
+
+  private MsgUtil() {
+    throw new UnsupportedOperationException();
+  }
 
   public static final String WAS = " (was ";
 

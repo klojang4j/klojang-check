@@ -1,8 +1,8 @@
 package org.klojang.check;
 
-import static org.klojang.check.CheckDefs.*;
+import static org.klojang.check.x.msg.CheckDefs.*;
 import static org.klojang.check.CommonProperties.formatProperty;
-import static org.klojang.check.MsgUtil.*;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -10,6 +10,8 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 import org.klojang.check.relation.IntRelation;
+import org.klojang.check.x.msg.MsgArgs;
+import org.klojang.check.x.msg.MsgUtil;
 
 /**
  * Helper class for IntCheck.

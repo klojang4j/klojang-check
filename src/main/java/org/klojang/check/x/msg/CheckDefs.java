@@ -1,7 +1,6 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.klojang.check.relation.*;
-import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,14 +9,14 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.MsgIntObjRelation.*;
-import static org.klojang.check.MsgIntPredicate.*;
-import static org.klojang.check.MsgIntRelation.*;
-import static org.klojang.check.MsgObjIntRelation.*;
-import static org.klojang.check.MsgPredicate.*;
-import static org.klojang.check.MsgRelation.*;
+import static org.klojang.check.x.msg.MsgIntObjRelation.*;
+import static org.klojang.check.x.msg.MsgIntPredicate.*;
+import static org.klojang.check.x.msg.MsgIntRelation.*;
+import static org.klojang.check.x.msg.MsgObjIntRelation.*;
+import static org.klojang.check.x.msg.MsgPredicate.*;
+import static org.klojang.check.x.msg.MsgRelation.*;
 
-final class CheckDefs {
+public final class CheckDefs {
 
   private static final Map<Predicate<?>, Function<MsgArgs, String>> predicateFormatters;
   private static final Map<IntPredicate, Function<MsgArgs, String>> intPredicateFormatters;

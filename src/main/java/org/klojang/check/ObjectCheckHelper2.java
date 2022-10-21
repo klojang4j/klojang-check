@@ -1,9 +1,9 @@
 package org.klojang.check;
 
-import static org.klojang.check.CheckDefs.*;
+import static org.klojang.check.x.msg.CheckDefs.*;
 import static org.klojang.check.CommonProperties.formatProperty;
-import static org.klojang.check.MsgUtil.*;
-import static org.klojang.check.MsgUtil.formatMessage;
+import static org.klojang.check.x.msg.MsgUtil.*;
+import static org.klojang.check.x.msg.MsgUtil.formatMessage;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -12,6 +12,7 @@ import java.util.function.ToIntFunction;
 
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
+import org.klojang.check.x.msg.MsgArgs;
 
 /**
  * Helper class for ObjectCheck.

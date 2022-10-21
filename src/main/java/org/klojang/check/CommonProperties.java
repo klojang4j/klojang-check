@@ -1,8 +1,8 @@
 package org.klojang.check;
 
-import static org.klojang.check.Check.DEF_ARG_NAME;
+import static org.klojang.check.x.msg.MsgUtil.DEF_ARG_NAME;
 import static org.klojang.check.x.Misc.typeNotSupported;
-import static org.klojang.check.MsgUtil.simpleClassName;
+import static org.klojang.check.x.msg.MsgUtil.simpleClassName;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;

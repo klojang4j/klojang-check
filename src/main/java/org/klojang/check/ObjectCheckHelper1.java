@@ -1,16 +1,17 @@
 package org.klojang.check;
 
-import static org.klojang.check.CheckDefs.getPredicateFormatter;
-import static org.klojang.check.CheckDefs.getRelationFormatter;
+import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
+import static org.klojang.check.x.msg.CheckDefs.getRelationFormatter;
 import static org.klojang.check.CommonProperties.formatProperty;
-import static org.klojang.check.MsgUtil.*;
-import static org.klojang.check.MsgUtil.formatMessage;
+import static org.klojang.check.x.msg.MsgUtil.*;
+import static org.klojang.check.x.msg.MsgUtil.formatMessage;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.klojang.check.relation.Relation;
+import org.klojang.check.x.msg.MsgArgs;
 
 /**
  * Helper class for ObjectCheck.

@@ -1,7 +1,7 @@
-package org.klojang.check;
+package org.klojang.check.x.msg;
 
 import org.junit.Test;
-import org.klojang.check.MsgArgs;
+import org.klojang.check.x.msg.MsgArgs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
