@@ -1,11 +1,14 @@
 package org.klojang.check;
 
+import org.klojang.check.x.ArrayInfo;
+import org.klojang.check.x.Misc;
+
 import java.util.Collection;
 import java.util.Map;
 
 import static java.lang.System.identityHashCode;
 import static org.klojang.check.CommonChecks.MESSAGE_PATTERNS;
-import static org.klojang.check.Misc.*;
+import static org.klojang.check.x.Misc.*;
 
 @SuppressWarnings({"rawtypes"})
 final class MsgUtil {

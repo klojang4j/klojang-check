@@ -555,7 +555,7 @@ public final class IntCheck<X extends Exception> {
    * @throws X if the property does not pass the test
    */
   public <P> IntCheck<X> has(IntFunction<P> property, Predicate<P> test) throws X {
-    return HasIntObj.get(this).has(property, test);
+    return IntCheckHelper1.get(this).has(property, test);
   }
 
   /**
@@ -575,7 +575,7 @@ public final class IntCheck<X extends Exception> {
    */
   public <P> IntCheck<X> notHas(IntFunction<P> property, Predicate<P> test)
       throws X {
-    return HasIntObj.get(this).notHas(property, test);
+    return IntCheckHelper1.get(this).notHas(property, test);
   }
 
   /**
@@ -596,7 +596,7 @@ public final class IntCheck<X extends Exception> {
    */
   public <P> IntCheck<X> has(IntFunction<P> property, String name, Predicate<P> test)
       throws X {
-    return HasIntObj.get(this).has(property, name, test);
+    return IntCheckHelper1.get(this).has(property, name, test);
   }
 
   /**
@@ -618,7 +618,7 @@ public final class IntCheck<X extends Exception> {
   public <P> IntCheck<X> notHas(IntFunction<P> property,
       String name,
       Predicate<P> test) throws X {
-    return HasIntObj.get(this).notHas(property, name, test);
+    return IntCheckHelper1.get(this).notHas(property, name, test);
   }
 
   /**
@@ -642,7 +642,7 @@ public final class IntCheck<X extends Exception> {
   public <P> IntCheck<X> has(
       IntFunction<P> property, Predicate<P> test, String message, Object... msgArgs)
       throws X {
-    return HasIntObj.get(this).has(property, test, message, msgArgs);
+    return IntCheckHelper1.get(this).has(property, test, message, msgArgs);
   }
 
   /**
@@ -666,7 +666,7 @@ public final class IntCheck<X extends Exception> {
   public <P> IntCheck<X> notHas(
       IntFunction<P> property, Predicate<P> test, String message, Object... msgArgs)
       throws X {
-    return HasIntObj.get(this).notHas(property, test, message, msgArgs);
+    return IntCheckHelper1.get(this).notHas(property, test, message, msgArgs);
   }
 
   /**
@@ -686,7 +686,7 @@ public final class IntCheck<X extends Exception> {
    */
   public <P, X2 extends Exception> IntCheck<X> has(
       IntFunction<P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
-    return HasIntObj.get(this).has(property, test, exception);
+    return IntCheckHelper1.get(this).has(property, test, exception);
   }
 
   /**
@@ -706,7 +706,7 @@ public final class IntCheck<X extends Exception> {
    */
   public <P, X2 extends Exception> IntCheck<X> notHas(
       IntFunction<P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
-    return HasIntObj.get(this).has(property, test.negate(), exception);
+    return IntCheckHelper1.get(this).has(property, test.negate(), exception);
   }
 
   /**
@@ -724,7 +724,7 @@ public final class IntCheck<X extends Exception> {
    * @throws X if the property does not pass the test
    */
   public IntCheck<X> has(IntUnaryOperator property, IntPredicate test) throws X {
-    return HasIntInt.get(this).has(property, test);
+    return IntCheckHelper2.get(this).has(property, test);
   }
 
   /**
@@ -742,7 +742,7 @@ public final class IntCheck<X extends Exception> {
    * @throws X if the property does not pass the test
    */
   public IntCheck<X> notHas(IntUnaryOperator property, IntPredicate test) throws X {
-    return HasIntInt.get(this).notHas(property, test);
+    return IntCheckHelper2.get(this).notHas(property, test);
   }
 
   /**
@@ -764,7 +764,7 @@ public final class IntCheck<X extends Exception> {
    */
   public IntCheck<X> has(IntUnaryOperator property, String name, IntPredicate test)
       throws X {
-    return HasIntInt.get(this).has(property, name, test);
+    return IntCheckHelper2.get(this).has(property, name, test);
   }
 
   /**
@@ -787,7 +787,7 @@ public final class IntCheck<X extends Exception> {
   public IntCheck<X> notHas(IntUnaryOperator property,
       String name,
       IntPredicate test) throws X {
-    return HasIntInt.get(this).notHas(property, name, test);
+    return IntCheckHelper2.get(this).notHas(property, name, test);
   }
 
   /**
@@ -809,7 +809,7 @@ public final class IntCheck<X extends Exception> {
       IntPredicate test,
       String message,
       Object... msgArgs) throws X {
-    return HasIntInt.get(this).has(property, test, message, msgArgs);
+    return IntCheckHelper2.get(this).has(property, test, message, msgArgs);
   }
 
   /**
@@ -831,7 +831,7 @@ public final class IntCheck<X extends Exception> {
       IntPredicate test,
       String message,
       Object... msgArgs) throws X {
-    return HasIntInt.get(this).notHas(property, test, message, msgArgs);
+    return IntCheckHelper2.get(this).notHas(property, test, message, msgArgs);
   }
 
   /**
@@ -851,7 +851,7 @@ public final class IntCheck<X extends Exception> {
   public <X2 extends Exception> IntCheck<X> has(
       IntUnaryOperator property, IntPredicate test, Supplier<X2> exception) throws
       X2 {
-    return HasIntInt.get(this).has(property, test, exception);
+    return IntCheckHelper2.get(this).has(property, test, exception);
   }
 
   /**
@@ -871,7 +871,7 @@ public final class IntCheck<X extends Exception> {
   public <X2 extends Exception> IntCheck<X> notHas(IntUnaryOperator property,
       IntPredicate test,
       Supplier<X2> exception) throws X2 {
-    return HasIntInt.get(this).has(property, test.negate(), exception);
+    return IntCheckHelper2.get(this).has(property, test.negate(), exception);
   }
 
   /**
@@ -891,7 +891,7 @@ public final class IntCheck<X extends Exception> {
    */
   public IntCheck<X> has(IntUnaryOperator property, IntRelation test, int object)
       throws X {
-    return HasIntInt.get(this).has(property, test, object);
+    return IntCheckHelper2.get(this).has(property, test, object);
   }
 
   /**
@@ -911,7 +911,7 @@ public final class IntCheck<X extends Exception> {
    */
   public IntCheck<X> notHas(IntUnaryOperator property, IntRelation test, int object)
       throws X {
-    return HasIntInt.get(this).notHas(property, test, object);
+    return IntCheckHelper2.get(this).notHas(property, test, object);
   }
 
   /**
@@ -935,7 +935,7 @@ public final class IntCheck<X extends Exception> {
       IntRelation test,
       int object)
       throws X {
-    return HasIntInt.get(this).has(property, name, test, object);
+    return IntCheckHelper2.get(this).has(property, name, test, object);
   }
 
   /**
@@ -959,7 +959,7 @@ public final class IntCheck<X extends Exception> {
       IntRelation test,
       int object)
       throws X {
-    return HasIntInt.get(this).notHas(property, name, test, object);
+    return IntCheckHelper2.get(this).notHas(property, name, test, object);
   }
 
   /**
@@ -984,7 +984,7 @@ public final class IntCheck<X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return HasIntInt.get(this).has(property, test, object, message, msgArgs);
+    return IntCheckHelper2.get(this).has(property, test, object, message, msgArgs);
   }
 
   /**
@@ -1009,7 +1009,7 @@ public final class IntCheck<X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return HasIntInt.get(this).notHas(property, test, object, message, msgArgs);
+    return IntCheckHelper2.get(this).notHas(property, test, object, message, msgArgs);
   }
 
   /**
@@ -1034,7 +1034,7 @@ public final class IntCheck<X extends Exception> {
       int object,
       Supplier<X2> exception)
       throws X2 {
-    return HasIntInt.get(this).has(property, test, object, exception);
+    return IntCheckHelper2.get(this).has(property, test, object, exception);
   }
 
   /**

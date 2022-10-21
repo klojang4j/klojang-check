@@ -1,13 +1,13 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Misc;
+import org.klojang.check.x.Misc;
 
 import java.io.OutputStream;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.klojang.check.Misc.toShortString;
+import static org.klojang.check.x.Misc.toShortString;
 
 public class MiscTest {
 

@@ -3,6 +3,7 @@ package org.klojang.check;
 import org.klojang.check.aux.Emptyable;
 import org.klojang.check.aux.Result;
 import org.klojang.check.relation.*;
+import org.klojang.check.x.StringCheckImpls;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -10,7 +11,9 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static org.klojang.check.InvalidCheckException.typeNotSupported;
+import static org.klojang.check.x.StringCheckImpls.PARSABLES;
+import static org.klojang.check.x.StringCheckImpls.NUMERICALS;
+import static org.klojang.check.x.Misc.typeNotSupported;
 import static org.klojang.check.MsgIntObjRelation.*;
 import static org.klojang.check.MsgIntPredicate.*;
 import static org.klojang.check.MsgIntRelation.*;
@@ -1086,15 +1089,6 @@ public final class CommonChecks {
     setMetadata(matching(), msgContainsPattern(), "matching"); // recycle message
   }
 
-  private static final Map<Class<?>, Predicate<String>> numerical = Map.of(
-      long.class, StringCheckImpls::isLongExact,
-      int.class, StringCheckImpls::isIntExact,
-      short.class, StringCheckImpls::isShortExact,
-      byte.class, StringCheckImpls::isByteExact,
-      double.class, StringCheckImpls::isDouble,
-      float.class, StringCheckImpls::isFloat
-  );
-
   /**
    * Verifies that a string can be parsed into a number of the specified type without
    * loss of information. The provided type must be one of the <i>primitive</i>
@@ -1110,7 +1104,7 @@ public final class CommonChecks {
    */
   public static <T extends Number> Relation<String, Class<T>> numerical() {
     return (x, y) -> {
-      Predicate<String> p = numerical.get(y);
+      Predicate<String> p = NUMERICALS.get(y);
       if (p != null) {
         return p.test(x);
       }
@@ -1121,15 +1115,6 @@ public final class CommonChecks {
   static {
     setMetadata(numerical(), msgNumerical(), "numerical");
   }
-
-  private static final Map<Class<?>, Predicate<String>> parsable = Map.of(
-      int.class, StringCheckImpls::isInt,
-      long.class, StringCheckImpls::isLong,
-      short.class, StringCheckImpls::isShort,
-      byte.class, StringCheckImpls::isByte,
-      double.class, StringCheckImpls::isDouble,
-      float.class, StringCheckImpls::isFloat
-  );
 
   /**
    * Verifies that a string can be parsed into a {@code Number} of the specified type
@@ -1152,7 +1137,7 @@ public final class CommonChecks {
    */
   public static <T extends Number> Relation<String, Class<T>> parsableAs() {
     return (x, y) -> {
-      Predicate<String> p = parsable.get(y);
+      Predicate<String> p = PARSABLES.get(y);
       if (p != null) {
         return p.test(x);
       }

@@ -6,17 +6,15 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.klojang.check.MsgUtil;
+final class IntCheckHelper1<E extends Exception> {
 
-final class HasIntObj<E extends Exception> {
-
-  static <E0 extends Exception> HasIntObj<E0> get(IntCheck<E0> check) {
-    return new HasIntObj<>(check);
+  static <E0 extends Exception> IntCheckHelper1<E0> get(IntCheck<E0> check) {
+    return new IntCheckHelper1<>(check);
   }
 
   private final IntCheck<E> check;
 
-  private HasIntObj(IntCheck<E> check) {
+  private IntCheckHelper1(IntCheck<E> check) {
     this.check = check;
   }
 

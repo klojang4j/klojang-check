@@ -1,6 +1,6 @@
 package org.klojang.check;
 
-import static org.klojang.check.Misc.*;
+import static org.klojang.check.x.Misc.*;
 
 import java.util.List;
 

@@ -13,15 +13,15 @@ import org.klojang.check.relation.Relation;
 /**
  * Helper class for ObjectCheck.
  */
-final class HasObjObj<T, E extends Exception> {
+final class ObjectCheckHelper1<T, E extends Exception> {
 
-  static <T0, E0 extends Exception> HasObjObj<T0, E0> get(ObjectCheck<T0, E0> check) {
-    return new HasObjObj<>(check);
+  static <T0, E0 extends Exception> ObjectCheckHelper1<T0, E0> get(ObjectCheck<T0, E0> check) {
+    return new ObjectCheckHelper1<>(check);
   }
 
   private final ObjectCheck<T, E> check;
 
-  private HasObjObj(ObjectCheck<T, E> check) {
+  private ObjectCheckHelper1(ObjectCheck<T, E> check) {
     this.check = check;
   }
 

@@ -1,4 +1,7 @@
-package org.klojang.check;
+package org.klojang.check.x;
+
+import org.klojang.check.InvalidCheckException;
+import org.klojang.check.x.ArrayInfo;
 
 import java.util.*;
 import java.util.function.Function;
@@ -7,7 +10,7 @@ import static java.lang.invoke.MethodHandles.arrayElementGetter;
 import static java.lang.invoke.MethodHandles.arrayLength;
 import static java.util.stream.Collectors.joining;
 
-final class Misc {
+public final class Misc {
 
   private static final String SEP = ", ";
 
@@ -17,7 +20,7 @@ final class Misc {
     throw new UnsupportedOperationException();
   }
 
-  static int getArrayLength(Object array) {
+  public static int getArrayLength(Object array) {
     try {
       return (int) arrayLength(array.getClass()).invoke(array);
     } catch (Throwable t) {
@@ -25,10 +28,10 @@ final class Misc {
     }
   }
 
-  static String describe(Object obj) {
+  public static String describe(Object obj) {
     if (obj == null) {
       return "null";
-    } else if (obj instanceof Class clazz) {
+    } else if (obj instanceof Class<?> clazz) {
       return simpleClassName(clazz) + ".class";
     } else if (obj instanceof Collection<?> c) {
       return c.getClass().getSimpleName() + '[' + c.size() + ']';
@@ -40,13 +43,13 @@ final class Misc {
     return obj.getClass().getSimpleName();
   }
 
-  static String toShortString(Object obj, int maxWidth) {
+  public static String toShortString(Object obj, int maxWidth) {
     int maxElements = divUp(maxWidth, 8);
     int maxEntries = divUp(maxWidth, 16);
     return toShortString(obj, maxWidth, maxElements, maxEntries);
   }
 
-  static String toShortString(Object obj,
+  public static String toShortString(Object obj,
       int maxLen,
       int maxElems,
       int maxEntries) {
@@ -110,7 +113,7 @@ final class Misc {
     }
   }
 
-  static String ellipsis(String str, int maxWidth) {
+  public static String ellipsis(String str, int maxWidth) {
     if (str.length() <= maxWidth) {
       return str;
     }
@@ -118,14 +121,14 @@ final class Misc {
     return str.substring(0, newLen) + "...";
   }
 
-  static String simpleClassName(Class<?> clazz) {
+  public static String simpleClassName(Class<?> clazz) {
     if (clazz.isArray()) {
       return ArrayInfo.create(clazz).simpleName();
     }
     return clazz.getSimpleName();
   }
 
-  static String className(Class<?> clazz) {
+  public static String className(Class<?> clazz) {
     if (clazz.isArray()) {
       return ArrayInfo.create(clazz).name();
     }
@@ -162,7 +165,7 @@ final class Misc {
         .collect(joining(SEP));
   }
 
-  static String implodeAny(Object array, Stringifier stringifier, int to) {
+  public static String implodeAny(Object array, Stringifier stringifier, int to) {
     int len = getArrayLength(array);
     int x = Math.min(to, len);
     StringBuilder sb = new StringBuilder();
@@ -181,12 +184,22 @@ final class Misc {
   }
 
   @SuppressWarnings("unchecked")
-  private static <T> T getArrayElement(Object array, int idx) throws Throwable {
+  private static <T> T getArrayElement(Object array, int idx)
+      throws Throwable {
     return (T) arrayElementGetter(array.getClass()).invoke(array, idx);
   }
 
   private static int divUp(int value, int divideBy) {
     return (int) Math.ceil((double) value / (double) divideBy);
+  }
+
+  public static InvalidCheckException typeNotSupported(Class<?> type) {
+    return new InvalidCheckException("type not supported: " + type);
+  }
+
+  public static InvalidCheckException notApplicable(String check, Object arg) {
+    String msg = String.format("\"%s\" not applicable to %s", check, arg.getClass());
+    return new InvalidCheckException(msg);
   }
 
 }

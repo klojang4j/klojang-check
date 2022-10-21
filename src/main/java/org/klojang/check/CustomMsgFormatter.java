@@ -1,8 +1,10 @@
 package org.klojang.check;
 
+import org.klojang.check.x.Misc;
+
 import static org.klojang.check.Check.DEF_ARG_NAME;
 import static org.klojang.check.CommonChecks.NAMES;
-import static org.klojang.check.Misc.toShortString;
+import static org.klojang.check.x.Misc.toShortString;
 import static org.klojang.check.MsgUtil.MAX_STRING_WIDTH;
 import static org.klojang.check.MsgUtil.simpleClassName;
 

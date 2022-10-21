@@ -1,7 +1,9 @@
-package org.klojang.check;
+package org.klojang.check.x;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Map;
+import java.util.function.Predicate;
 
 import static java.math.BigDecimal.ONE;
 
@@ -9,35 +11,40 @@ import static java.math.BigDecimal.ONE;
  * Implementations of string-to-number checks in the CommonChecks class. Separate
  * from the CheckImpl class because there are quite a few of them.
  */
-final class StringCheckImpls {
+public final class StringCheckImpls {
 
   private static final BigDecimal MIN_DOUBLE_BD =
       new BigDecimal(Double.toString(Double.MIN_VALUE));
-
   private static final BigDecimal MAX_DOUBLE_BD =
       new BigDecimal(Double.toString(Double.MAX_VALUE));
-
   private static final BigDecimal MIN_FLOAT_BD =
       new BigDecimal(Float.toString(Float.MIN_VALUE));
   private static final BigDecimal MAX_FLOAT_BD =
       new BigDecimal(Float.toString(Float.MAX_VALUE));
-
+  public static final Map<Class<?>, Predicate<String>> NUMERICALS = Map.of(
+      long.class, StringCheckImpls::isLongExact,
+      int.class, StringCheckImpls::isIntExact,
+      short.class, StringCheckImpls::isShortExact,
+      byte.class, StringCheckImpls::isByteExact,
+      double.class, StringCheckImpls::isDouble,
+      float.class, StringCheckImpls::isFloat
+  );
   private static final BigDecimal MIN_LONG_BD = new BigDecimal(Long.MIN_VALUE);
-
   private static final BigDecimal MAX_LONG_BD = new BigDecimal(Long.MAX_VALUE);
-
   private static final BigDecimal MIN_INT_BD = new BigDecimal(Integer.MIN_VALUE);
-
   private static final BigDecimal MAX_INT_BD = new BigDecimal(Integer.MAX_VALUE);
-
   private static final BigDecimal MIN_SHORT_BD = new BigDecimal(Short.MIN_VALUE);
-
   private static final BigDecimal MAX_SHORT_BD = new BigDecimal(Short.MAX_VALUE);
-
   private static final BigDecimal MIN_BYTE_BD = new BigDecimal(Byte.MIN_VALUE);
-
   private static final BigDecimal MAX_BYTE_BD = new BigDecimal(Byte.MAX_VALUE);
-
+  public static final Map<Class<?>, Predicate<String>> PARSABLES = Map.of(
+      int.class, StringCheckImpls::isInt,
+      long.class, StringCheckImpls::isLong,
+      short.class, StringCheckImpls::isShort,
+      byte.class, StringCheckImpls::isByte,
+      double.class, StringCheckImpls::isDouble,
+      float.class, StringCheckImpls::isFloat
+  );
   private static final int MAX_INT_STR_LEN =
       String.valueOf(Integer.MAX_VALUE).length();
 
@@ -48,39 +55,39 @@ final class StringCheckImpls {
     throw new UnsupportedOperationException();
   }
 
-  static boolean isLongExact(String s) {
+  private static boolean isLongExact(String s) {
     return isExact(s, 63);
   }
 
-  static boolean isIntExact(String s) {
+  private static boolean isIntExact(String s) {
     return isExact(s, 31);
   }
 
-  static boolean isShortExact(String s) {
+  private static boolean isShortExact(String s) {
     return isExact(s, 15);
   }
 
-  static boolean isByteExact(String s) {
+  private static boolean isByteExact(String s) {
     return isExact(s, 7);
   }
 
-  static boolean isLong(String s) {
+  private static boolean isLong(String s) {
     return parsable(s, MIN_LONG_BD, MAX_LONG_BD);
   }
 
-  static boolean isInt(String s) {
+  private static boolean isInt(String s) {
     return parsable(s, MIN_INT_BD, MAX_INT_BD);
   }
 
-  static boolean isShort(String s) {
+  private static boolean isShort(String s) {
     return parsable(s, MIN_SHORT_BD, MAX_SHORT_BD);
   }
 
-  static boolean isByte(String s) {
+  private static boolean isByte(String s) {
     return parsable(s, MIN_BYTE_BD, MAX_BYTE_BD);
   }
 
-  static boolean isDouble(String s) {
+  private static boolean isDouble(String s) {
     if (!s.isEmpty()) {
       BigDecimal bd;
       try {
@@ -95,7 +102,7 @@ final class StringCheckImpls {
     return false;
   }
 
-  static boolean isFloat(String s) {
+  private static boolean isFloat(String s) {
     if (!s.isEmpty()) {
       BigDecimal bd;
       try {
@@ -125,11 +132,11 @@ final class StringCheckImpls {
         /*|| bd.remainder(ONE).signum() == 0 */;
   }
 
-  static boolean isPlainInt(String s) {
+  public static boolean isPlainInt(String s) {
     return isPlain(s, MAX_INT_STR_LEN, 31);
   }
 
-  static boolean isPlainShort(String s) {
+  public static boolean isPlainShort(String s) {
     return isPlain(s, MAX_SHORT_STR_LEN, 15);
   }
 

@@ -1,5 +1,7 @@
 package org.klojang.check;
 
+import org.klojang.check.x.ArrayInfo;
+
 import static org.klojang.check.MsgUtil.className;
 import static org.klojang.check.MsgUtil.toStr;
 

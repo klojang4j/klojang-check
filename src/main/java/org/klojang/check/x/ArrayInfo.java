@@ -1,8 +1,8 @@
-package org.klojang.check;
+package org.klojang.check.x;
 
-record ArrayInfo(Class<?> baseType, int dimensions) {
+public record ArrayInfo(Class<?> baseType, int dimensions) {
 
-  static ArrayInfo create(Class<?> arrayClass) {
+  public static ArrayInfo create(Class<?> arrayClass) {
     var c = arrayClass.getComponentType();
     int i = 1;
     for (; c.isArray(); c = c.getComponentType()) {
@@ -11,7 +11,7 @@ record ArrayInfo(Class<?> baseType, int dimensions) {
     return new ArrayInfo(c, i);
   }
 
-  static String describe(Object array) {
+  public static String describe(Object array) {
     ArrayInfo info = create(array.getClass());
     int len = Misc.getArrayLength(array);
     StringBuilder sb = new StringBuilder(info.baseType.getSimpleName())
@@ -24,11 +24,11 @@ record ArrayInfo(Class<?> baseType, int dimensions) {
     return sb.toString();
   }
 
-  String name() {
+  public String name() {
     return toString(baseType.getName());
   }
 
-  String simpleName() {
+  public String simpleName() {
     return toString(baseType().getSimpleName());
   }
 

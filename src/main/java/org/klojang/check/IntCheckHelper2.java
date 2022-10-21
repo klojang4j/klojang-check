@@ -11,15 +11,15 @@ import org.klojang.check.relation.IntRelation;
 /**
  * Helper class for IntCheck.
  */
-final class HasIntInt<E extends Exception> {
+final class IntCheckHelper2<E extends Exception> {
 
-  static <E0 extends Exception> HasIntInt<E0> get(IntCheck<E0> check) {
-    return new HasIntInt<>(check);
+  static <E0 extends Exception> IntCheckHelper2<E0> get(IntCheck<E0> check) {
+    return new IntCheckHelper2<>(check);
   }
 
   private final IntCheck<E> check;
 
-  private HasIntInt(IntCheck<E> check) {
+  private IntCheckHelper2(IntCheck<E> check) {
     this.check = check;
   }
 

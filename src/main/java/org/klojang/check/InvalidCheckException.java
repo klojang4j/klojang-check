@@ -9,16 +9,7 @@ package org.klojang.check;
  */
 public final class InvalidCheckException extends RuntimeException {
 
-  static InvalidCheckException typeNotSupported(Class<?> type) {
-    return new InvalidCheckException("type not supported: " + type);
-  }
-
-  static InvalidCheckException notApplicable(String check, Object arg) {
-    String msg = String.format("\"%s\" not applicable to %s", check, arg.getClass());
-    return new InvalidCheckException(msg);
-  }
-
-  InvalidCheckException(String message) {
+  public InvalidCheckException(String message) {
     super(message);
   }
 

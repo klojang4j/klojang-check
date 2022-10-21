@@ -1,6 +1,6 @@
 package org.klojang.check;
 
-import static org.klojang.check.Misc.getArrayLength;
+import static org.klojang.check.x.Misc.getArrayLength;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

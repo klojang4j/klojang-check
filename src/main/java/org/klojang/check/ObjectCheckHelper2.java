@@ -15,15 +15,15 @@ import org.klojang.check.relation.IntRelation;
 /**
  * Helper class for ObjectCheck.
  */
-final class HasObjInt<T, E extends Exception> {
+final class ObjectCheckHelper2<T, E extends Exception> {
 
-  static <T0, E0 extends Exception> HasObjInt<T0, E0> get(ObjectCheck<T0, E0> check) {
-    return new HasObjInt<>(check);
+  static <T0, E0 extends Exception> ObjectCheckHelper2<T0, E0> get(ObjectCheck<T0, E0> check) {
+    return new ObjectCheckHelper2<>(check);
   }
 
   private final ObjectCheck<T, E> check;
 
-  private HasObjInt(ObjectCheck<T, E> check) {
+  private ObjectCheckHelper2(ObjectCheck<T, E> check) {
     this.check = check;
   }
 
