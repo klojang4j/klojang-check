@@ -61,7 +61,7 @@ public final class MsgRelation {
         : x.name() + " must contain key " + toStr(x.obj());
   }
 
-  public static PrefabMsgFormatter msgContainingValue() {
+  public static PrefabMsgFormatter msgContainsValue() {
     return x -> x.negated()
         ? x.name() + " must not contain value " + toStr(x.obj())
         : x.name() + " must contain value " + toStr(x.obj());

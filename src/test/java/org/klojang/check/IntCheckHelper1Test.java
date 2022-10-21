@@ -1,18 +1,15 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
 
 import java.time.DayOfWeek;
 import java.util.function.IntPredicate;
-import java.util.function.UnaryOperator;
 
 import static java.time.DayOfWeek.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.klojang.check.CommonChecks.GT;
 
-public class HasIntObjTest {
+public class IntCheckHelper1Test {
 
   private static final DayOfWeek[] days = DayOfWeek.class.getEnumConstants();
 

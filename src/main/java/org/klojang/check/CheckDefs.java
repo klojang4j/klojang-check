@@ -1,0 +1,182 @@
+package org.klojang.check;
+
+import org.klojang.check.relation.*;
+import org.klojang.check.x.msg.PrefabMsgFormatter;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.IntPredicate;
+import java.util.function.Predicate;
+
+import static org.klojang.check.CommonChecks.*;
+import static org.klojang.check.MsgIntObjRelation.*;
+import static org.klojang.check.MsgIntPredicate.*;
+import static org.klojang.check.MsgIntRelation.*;
+import static org.klojang.check.MsgObjIntRelation.*;
+import static org.klojang.check.MsgPredicate.*;
+import static org.klojang.check.MsgRelation.*;
+
+final class CheckDefs {
+
+  private static final Map<Predicate<?>, Function<MsgArgs, String>> predicateFormatters;
+  private static final Map<ComposableIntPredicate, Function<MsgArgs, String>> intPredicateFormatters;
+  private static final Map<Relation<?, ?>, Function<MsgArgs, String>> relationFormatters;
+  private static final Map<IntRelation, Function<MsgArgs, String>> intRelationFormatters;
+  private static final Map<IntObjRelation<?>, Function<MsgArgs, String>> intObjRelationFormatters;
+
+  private static final Map<Object, String> names;
+
+  private static Map<Predicate<?>, Function<MsgArgs, String>> predicateFormattersTemp = new HashMap<>();
+  private static Map<ComposableIntPredicate, Function<MsgArgs, String>> intPredicateFormattersTemp = new HashMap<>();
+  private static Map<Relation<?, ?>, Function<MsgArgs, String>> relationFormattersTemp = new HashMap<>();
+  private static Map<IntRelation, Function<MsgArgs, String>> intRelationFormattersTemp = new HashMap<>();
+  private static Map<IntObjRelation<?>, Function<MsgArgs, String>> intObjRelationFormattersTemp = new HashMap<>();
+
+  private static Map<Object, String> namesTemp = new HashMap<>();
+
+  static {
+    setMetadata(NULL(), msgNull(), "NULL");
+    setMetadata(notNull(), msgNotNull(), "notNull");
+    setMetadata(yes(), msgYes(), "yes");
+    setMetadata(no(), msgNo(), "no");
+    setMetadata(empty(), msgEmpty(), "empty");
+    setMetadata(notEmpty(), msgNotEmpty(), "notEmpty");
+    setMetadata(deepNotNull(), msgDeepNotNull(), "deepNotNull");
+    setMetadata(deepNotEmpty(), msgDeepNotEmpty(), "deepNotEmpty");
+    setMetadata(blank(), msgBlank(), "blank");
+    setMetadata(plainInt(), msgPlainInt(), "plainInt");
+    setMetadata(plainShort(), msgPlainShort(), "plainShort");
+    setMetadata(array(), msgArray(), "array");
+    setMetadata(regularFile(), msgRegularFile(), "regularFile");
+    setMetadata(directory(), msgDirectory(), "directory");
+    setMetadata(symlink(), msgSymlink(), "symlink");
+    setMetadata(fileExists(), msgFileExists(), "fileExists");
+    setMetadata(readable(), msgReadable(), "readable");
+    setMetadata(writable(), msgWritable(), "writable");
+    setMetadata(present(), msgPresent(), "present");
+    setMetadata(available(), msgAvailable(), "available");
+    setMetadata(even(), msgEven(), "even");
+    setMetadata(odd(), msgOdd(), "odd");
+    setMetadata(positive(), msgPositive(), "positive");
+    setMetadata(negative(), msgNegative(), "negative");
+    setMetadata(zero(), msgZero(), "zero");
+    setMetadata(eq(), msgEq(), "eq");
+    setMetadata(ne(), msgNe(), "ne");
+    setMetadata(gt(), msgGt(), "gt");
+    setMetadata(gte(), msgGte(), "gte");
+    setMetadata(lt(), msgLt(), "lt");
+    setMetadata(lte(), msgLte(), "lte");
+    setMetadata(multipleOf(), msgMultipleOf(), "multipleOf");
+    setMetadata(EQ(), msgEQ(), "EQ");
+    setMetadata(equalTo(), msgEQ(), "equalTo"); // recycle message
+    setMetadata(GT(), msgGT(), "GT");
+    setMetadata(LT(), msgLT(), "LT");
+    setMetadata(GTE(), msgGTE(), "GTE");
+    setMetadata(LTE(), msgLTE(), "LTE");
+    setMetadata(sameAs(), msgSameAs(), "sameAs");
+    setMetadata(nullOr(), msgNullOr(), "nullOr");
+    setMetadata(instanceOf(), msgInstanceOf(), "instanceOf");
+    setMetadata(supertypeOf(), msgSupertypeOf(), "supertypeOf");
+    setMetadata(subtypeOf(), msgSubtypeOf(), "subtypeOf");
+    setMetadata(contains(), msgContains(), "contains");
+    setMetadata(containsKey(), msgContainsKey(), "containsKey");
+    setMetadata(containsValue(), msgContainsValue(), "containsValue");
+    setMetadata(in(), msgIn(), "in");
+    setMetadata(keyIn(), msgKeyIn(), "keyIn");
+    setMetadata(valueIn(), msgValueIn(), "valueIn");
+    setMetadata(inArray(), msgIn(), "inArray"); // Recycle message
+    setMetadata(containsAll(), msgContainsAll(), "containsAll");
+    setMetadata(enclosedBy(), msgEnclosedBy(), "enclosedBy");
+    setMetadata(hasSubstring(), msgHasSubstring(), "hasSubstring");
+    setMetadata(substringOf(), msgSubstringOf(), "substringOf");
+    setMetadata(equalsIgnoreCase(), msgEqualsIgnoreCase(), "equalsIgnoreCase");
+    setMetadata(startsWith(), msgStartsWith(), "startsWith");
+    setMetadata(endsWith(), msgEndsWith(), "endsWith");
+    setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
+    setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
+    setMetadata(describedBy(), msgHasPattern(), "describedBy"); // recycle message
+    setMetadata(matching(), msgContainsPattern(), "matching"); // recycle message
+    setMetadata(numerical(), msgNumerical(), "numerical");
+    setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
+    setMetadata(indexOf(), msgIndexOf(), "indexOf");
+    setMetadata(indexInclusiveOf(), msgIndexInclusiveInto(), "indexInclusiveInto");
+    setMetadata(inRange(), msgInRange(), "inRange");
+    setMetadata(between(), msgBetween(), "between");
+    setMetadata(inIntArray(), msgIn(), "inIntArray"); // Recycle message
+
+    predicateFormatters = Map.copyOf(predicateFormattersTemp);
+    intPredicateFormatters = Map.copyOf(intPredicateFormattersTemp);
+    relationFormatters = Map.copyOf(relationFormattersTemp);
+    intRelationFormatters = Map.copyOf(intRelationFormattersTemp);
+    intObjRelationFormatters = Map.copyOf(intObjRelationFormattersTemp);
+    names = Map.copyOf(namesTemp);
+
+    predicateFormattersTemp = null;
+    intPredicateFormattersTemp = null;
+    relationFormattersTemp = null;
+    intRelationFormattersTemp = null;
+    intObjRelationFormattersTemp = null;
+    namesTemp = null;
+  }
+
+  public static String nameOf(Object check) {
+    return names.get(check);
+  }
+
+  public static Function<MsgArgs, String> getPredicateFormatter(Predicate<?> predicate) {
+    return predicateFormatters.get(predicate);
+  }
+
+  public static Function<MsgArgs, String> getIntPredicateFormatter(IntPredicate predicate) {
+    return intPredicateFormatters.get(predicate);
+  }
+
+  public static Function<MsgArgs, String> getRelationFormatter(Relation<?, ?> relation) {
+    return relationFormatters.get(relation);
+  }
+
+  public static Function<MsgArgs, String> getIntRelationFormatter(IntRelation relation) {
+    return intRelationFormatters.get(relation);
+  }
+
+  public static Function<MsgArgs, String> getIntObjRelationFormatter(IntObjRelation<?> relation) {
+    return intObjRelationFormatters.get(relation);
+  }
+
+  private static void setMetadata(Predicate<?> check,
+      PrefabMsgFormatter formatter,
+      String name) {
+    predicateFormattersTemp.put(check, formatter);
+    namesTemp.put(check, name);
+  }
+
+  private static void setMetadata(ComposableIntPredicate check,
+      PrefabMsgFormatter formatter,
+      String name) {
+    intPredicateFormattersTemp.put(check, formatter);
+    namesTemp.put(check, name);
+  }
+
+  private static void setMetadata(Relation<?, ?> check,
+      PrefabMsgFormatter formatter,
+      String name) {
+    relationFormattersTemp.put(check, formatter);
+    namesTemp.put(check, name);
+  }
+
+  private static void setMetadata(IntRelation check,
+      PrefabMsgFormatter formatter,
+      String name) {
+    intRelationFormattersTemp.put(check, formatter);
+    namesTemp.put(check, name);
+  }
+
+  private static void setMetadata(IntObjRelation<?> check,
+      PrefabMsgFormatter formatter,
+      String name) {
+    intObjRelationFormattersTemp.put(check, formatter);
+    namesTemp.put(check, name);
+  }
+
+}

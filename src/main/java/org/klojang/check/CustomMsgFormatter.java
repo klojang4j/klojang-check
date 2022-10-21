@@ -3,7 +3,6 @@ package org.klojang.check;
 import org.klojang.check.x.Misc;
 
 import static org.klojang.check.Check.DEF_ARG_NAME;
-import static org.klojang.check.CommonChecks.NAMES;
 import static org.klojang.check.x.Misc.toShortString;
 import static org.klojang.check.MsgUtil.MAX_STRING_WIDTH;
 import static org.klojang.check.MsgUtil.simpleClassName;
@@ -153,7 +152,7 @@ public final class CustomMsgFormatter {
 
   private static String getCheckName(Object[] args) {
     String name;
-    if ((name = NAMES.get(args[0])) != null) {
+    if ((name = CheckDefs.nameOf(args[0])) != null) {
       return name;
     }
     return args[0].getClass().getSimpleName();

@@ -1,7 +1,6 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
@@ -15,7 +14,7 @@ import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.*;
 import static org.klojang.check.TestUtil.*;
 
-public class HasObjIntTest {
+public class ObjectCheckHelper2Test {
 
   @Test
   public void vanilla00() throws IOException {

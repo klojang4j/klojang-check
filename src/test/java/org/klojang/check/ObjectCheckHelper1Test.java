@@ -1,10 +1,8 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
 
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
@@ -12,7 +10,7 @@ import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.*;
 
-public class HasObjObjTest {
+public class ObjectCheckHelper1Test {
 
   private record Person(String firstName, LocalDate birtDate) {}
 

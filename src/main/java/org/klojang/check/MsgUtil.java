@@ -6,9 +6,9 @@ import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Function;
 
 import static java.lang.System.identityHashCode;
-import static org.klojang.check.CommonChecks.MESSAGE_PATTERNS;
 import static org.klojang.check.x.Misc.*;
 
 @SuppressWarnings({"rawtypes"})
@@ -23,20 +23,34 @@ public final class MsgUtil {
 
   public static final String WAS = " (was ";
 
+  public static String defaultPredicateMessage(String argName, Object argVal) {
+    if (argName == null) {
+      return "invalid value: " + toStr(argVal);
+    }
+    return "invalid value for " + argName + ": " + toStr(argVal);
+  }
 
-  public static String getPrefabMessage(Object test,
+  public static String defaultRelationMessage(String argName,
+      Object argVal,
+      Object obj) {
+    if (argName == null) {
+      return "no such relation between " + toStr(argVal) + " and " + toStr(obj);
+    }
+    return "argument "
+        + argName
+        + ": no such relation between "
+        + toStr(argVal)
+        + " and "
+        + toStr(obj);
+  }
+
+  public static String formatMessage(Function<MsgArgs, String> formatter,
+      Object test,
       boolean negated,
       String argName,
       Object argVal,
       Class<?> argType,
       Object obj) {
-    PrefabMsgFormatter formatter = MESSAGE_PATTERNS.get(test);
-    if (formatter == null) {
-      if (argName == null) {
-        return "invalid value: " + toStr(argVal);
-      }
-      return "invalid value for " + argName + ": " + toStr(argVal);
-    }
     return formatter.apply(new MsgArgs(test,
         negated,
         argName,
@@ -72,7 +86,9 @@ public final class MsgUtil {
     if (val == null) {
       return "null";
     } else if (val instanceof String s) {
-      return s.isBlank() ? '"' + s + '"' : ellipsis(s, MAX_STRING_WIDTH);
+      return s.isBlank()
+          ? '"' + ellipsis(s, MAX_STRING_WIDTH) + '"'
+          : ellipsis(s, MAX_STRING_WIDTH);
     } else if (val instanceof Collection<?> c) {
       if (c.size() == 0) {
         return c.getClass().getSimpleName() + "[0]";
@@ -120,6 +136,5 @@ public final class MsgUtil {
     }
     return simpleClassName(arg) + '@' + identityHashCode(arg);
   }
-
 
 }

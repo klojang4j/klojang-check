@@ -1,6 +1,8 @@
 package org.klojang.check;
 
 import static org.klojang.check.Check.DEF_ARG_NAME;
+import static org.klojang.check.CheckDefs.*;
+import static org.klojang.check.MsgUtil.*;
 
 import java.util.function.*;
 
@@ -94,12 +96,12 @@ public final class IntCheck<X extends Exception> {
     if (test.test(arg)) {
       return this;
     }
-    throw exc.apply(MsgUtil.getPrefabMessage(test,
-        false,
-        argName,
-        arg,
-        int.class,
-        null));
+    Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultPredicateMessage(argName, arg));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, false, argName, arg, int.class, null));
   }
 
   /**
@@ -116,12 +118,12 @@ public final class IntCheck<X extends Exception> {
     if (!test.test(arg)) {
       return this;
     }
-    throw exc.apply(MsgUtil.getPrefabMessage(test,
-        true,
-        argName,
-        arg,
-        int.class,
-        null));
+    Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultPredicateMessage(argName, arg));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, true, argName, arg, int.class, null));
   }
 
   /**
@@ -144,7 +146,7 @@ public final class IntCheck<X extends Exception> {
       return this;
     }
     throw exc.apply(
-        MsgUtil.getCustomMessage(message,
+        getCustomMessage(message,
             msgArgs,
             test,
             argName,
@@ -176,7 +178,7 @@ public final class IntCheck<X extends Exception> {
       return this;
     }
     throw exc.apply(
-        MsgUtil.getCustomMessage(message,
+        getCustomMessage(message,
             msgArgs,
             test,
             argName,
@@ -240,12 +242,12 @@ public final class IntCheck<X extends Exception> {
     if (test.exists(arg, object)) {
       return this;
     }
-    throw exc.apply(MsgUtil.getPrefabMessage(test,
-        false,
-        argName,
-        arg,
-        int.class,
-        object));
+    Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultRelationMessage(argName, arg, object));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, false, argName, arg, int.class, object));
   }
 
   /**
@@ -263,12 +265,12 @@ public final class IntCheck<X extends Exception> {
     if (!test.exists(arg, object)) {
       return this;
     }
-    throw exc.apply(MsgUtil.getPrefabMessage(test,
-        true,
-        argName,
-        arg,
-        int.class,
-        object));
+    Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultRelationMessage(argName, arg, object));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, true, argName, arg, int.class, object));
   }
 
   /**
@@ -294,7 +296,7 @@ public final class IntCheck<X extends Exception> {
       return this;
     }
     throw exc.apply(
-        MsgUtil.getCustomMessage(message,
+        getCustomMessage(message,
             msgArgs,
             test,
             argName,
@@ -327,7 +329,7 @@ public final class IntCheck<X extends Exception> {
       return this;
     }
     throw exc.apply(
-        MsgUtil.getCustomMessage(message,
+        getCustomMessage(message,
             msgArgs,
             test,
             argName,
@@ -396,12 +398,12 @@ public final class IntCheck<X extends Exception> {
     if (test.exists(arg, object)) {
       return this;
     }
-    throw exc.apply(MsgUtil.getPrefabMessage(test,
-        false,
-        argName,
-        arg,
-        int.class,
-        object));
+    Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultRelationMessage(argName, arg, object));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, false, argName, arg, int.class, object));
   }
 
   /**
@@ -420,12 +422,12 @@ public final class IntCheck<X extends Exception> {
     if (!test.exists(arg, object)) {
       return this;
     }
-    throw exc.apply(MsgUtil.getPrefabMessage(test,
-        true,
-        argName,
-        arg,
-        int.class,
-        object));
+    Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultRelationMessage(argName, arg, object));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, true, argName, arg, int.class, object));
   }
 
   /**
@@ -453,7 +455,7 @@ public final class IntCheck<X extends Exception> {
       return this;
     }
     throw exc.apply(
-        MsgUtil.getCustomMessage(message,
+        getCustomMessage(message,
             msgArgs,
             test,
             argName,
@@ -487,7 +489,7 @@ public final class IntCheck<X extends Exception> {
       return this;
     }
     throw exc.apply(
-        MsgUtil.getCustomMessage(message,
+        getCustomMessage(message,
             msgArgs,
             test,
             argName,
@@ -1009,7 +1011,11 @@ public final class IntCheck<X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return IntCheckHelper2.get(this).notHas(property, test, object, message, msgArgs);
+    return IntCheckHelper2.get(this).notHas(property,
+        test,
+        object,
+        message,
+        msgArgs);
   }
 
   /**
@@ -1077,7 +1083,7 @@ public final class IntCheck<X extends Exception> {
    * <p>The new instance inherits the exception factory of this instance.
    *
    * @param arg the value to be validated.
-   * @return an {@link IntCheck} instance for validating the specified value
+   * @return a new {@code IntCheck} instance for validating the specified value
    */
   public IntCheck<X> and(int arg) {
     return new IntCheck<>(arg, DEF_ARG_NAME, exc);
@@ -1089,7 +1095,7 @@ public final class IntCheck<X extends Exception> {
    *
    * @param arg the value to be validated.
    * @param argName the name of the argument, field or variable being validated
-   * @return an {@link IntCheck} instance for validating the specified value
+   * @return a new {@code IntCheck} instance for validating the specified value
    */
   public IntCheck<X> and(int arg, String argName) {
     return new IntCheck<>(arg, argName, exc);

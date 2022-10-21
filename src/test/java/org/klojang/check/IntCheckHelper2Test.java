@@ -1,20 +1,17 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
 
 import java.io.IOException;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
-import java.util.function.ToIntFunction;
-import java.util.function.UnaryOperator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.abs;
 
-public class HasIntIntTest {
+public class IntCheckHelper2Test {
 
   @Test
   public void vanilla00() throws IOException {

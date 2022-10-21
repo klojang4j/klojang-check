@@ -1,8 +1,9 @@
 package org.klojang.check;
 
 import static org.klojang.check.Check.DEF_ARG_NAME;
-import static org.klojang.check.MsgUtil.getCustomMessage;
-import static org.klojang.check.MsgUtil.getPrefabMessage;
+import static org.klojang.check.CheckDefs.getPredicateFormatter;
+import static org.klojang.check.CheckDefs.getRelationFormatter;
+import static org.klojang.check.MsgUtil.*;
 
 import java.util.function.*;
 
@@ -96,7 +97,11 @@ public final class ObjectCheck<T, X extends Exception> {
     if (test.test(arg)) {
       return this;
     }
-    throw exc.apply(getPrefabMessage(test, false, argName, arg, null, null));
+    Function<MsgArgs, String> formatter = getPredicateFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultPredicateMessage(argName, arg));
+    }
+    throw exc.apply(formatMessage(formatter, test, false, argName, arg, null, null));
   }
 
   /**
@@ -113,7 +118,11 @@ public final class ObjectCheck<T, X extends Exception> {
     if (!test.test(arg)) {
       return this;
     }
-    throw exc.apply(getPrefabMessage(test, true, argName, arg, null, null));
+    Function<MsgArgs, String> formatter = getPredicateFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultPredicateMessage(argName, arg));
+    }
+    throw exc.apply(formatMessage(formatter, test, true, argName, arg, null, null));
   }
 
   /**
@@ -230,7 +239,12 @@ public final class ObjectCheck<T, X extends Exception> {
     if (test.exists(arg, object)) {
       return this;
     }
-    throw exc.apply(getPrefabMessage(test, false, argName, arg, null, object));
+    Function<MsgArgs, String> formatter = getRelationFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultPredicateMessage(argName, arg));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, false, argName, arg, null, object));
   }
 
   /**
@@ -250,7 +264,12 @@ public final class ObjectCheck<T, X extends Exception> {
     if (!test.exists(arg, object)) {
       return this;
     }
-    throw exc.apply(getPrefabMessage(test, true, argName, arg, null, object));
+    Function<MsgArgs, String> formatter = getRelationFormatter(test);
+    if (formatter == null) {
+      throw exc.apply(defaultPredicateMessage(argName, arg));
+    }
+    throw exc.apply(
+        formatMessage(formatter, test, true, argName, arg, null, object));
   }
 
   /**
@@ -678,7 +697,11 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper1.get(this).has(property, test, object, message, msgArgs);
+    return ObjectCheckHelper1.get(this).has(property,
+        test,
+        object,
+        message,
+        msgArgs);
   }
 
   /**
@@ -708,7 +731,11 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper1.get(this).notHas(property, test, object, message, msgArgs);
+    return ObjectCheckHelper1.get(this).notHas(property,
+        test,
+        object,
+        message,
+        msgArgs);
   }
 
   /**
@@ -760,7 +787,10 @@ public final class ObjectCheck<T, X extends Exception> {
   public <P, O, X2 extends Exception> ObjectCheck<T, X> notHas(
       Function<T, P> property, Relation<P, O> test, O object, Supplier<X2> exception)
       throws X2 {
-    return ObjectCheckHelper1.get(this).has(property, test.negate(), object, exception);
+    return ObjectCheckHelper1.get(this).has(property,
+        test.negate(),
+        object,
+        exception);
   }
 
   /**
@@ -1110,7 +1140,11 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property, test, object, message, msgArgs);
+    return ObjectCheckHelper2.get(this).has(property,
+        test,
+        object,
+        message,
+        msgArgs);
   }
 
   /**
@@ -1147,7 +1181,11 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, test, object, message, msgArgs);
+    return ObjectCheckHelper2.get(this).notHas(property,
+        test,
+        object,
+        message,
+        msgArgs);
   }
 
   /**
@@ -1209,7 +1247,10 @@ public final class ObjectCheck<T, X extends Exception> {
       IntObjRelation<O> test,
       O object,
       Supplier<X2> exception) throws X2 {
-    return ObjectCheckHelper2.get(this).has(property, test.negate(), object, exception);
+    return ObjectCheckHelper2.get(this).has(property,
+        test.negate(),
+        object,
+        exception);
   }
 
   /**
@@ -1378,7 +1419,11 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property, test, object, message, msgArgs);
+    return ObjectCheckHelper2.get(this).has(property,
+        test,
+        object,
+        message,
+        msgArgs);
   }
 
   /**
@@ -1414,7 +1459,11 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, test, object, message, msgArgs);
+    return ObjectCheckHelper2.get(this).notHas(property,
+        test,
+        object,
+        message,
+        msgArgs);
   }
 
   /**
@@ -1484,7 +1533,10 @@ public final class ObjectCheck<T, X extends Exception> {
       int object,
       Supplier<X2> exception)
       throws X2 {
-    return ObjectCheckHelper2.get(this).has(property, test.negate(), object, exception);
+    return ObjectCheckHelper2.get(this).has(property,
+        test.negate(),
+        object,
+        exception);
   }
 
   /**
@@ -1516,10 +1568,10 @@ public final class ObjectCheck<T, X extends Exception> {
    * instance inherits the exception factory of this instance.
    *
    * @param arg the value to be validated.
-   * @param <T> the type of the value
-   * @return an {@link ObjectCheck} instance for validating the specified value
+   * @param <U> the type of the value
+   * @return a new {@code ObjectCheck} instance for validating the specified value
    */
-  public <T> ObjectCheck<T, X> and(T arg) {
+  public <U> ObjectCheck<U, X> and(U arg) {
     return new ObjectCheck<>(arg, DEF_ARG_NAME, exc);
   }
 
@@ -1530,14 +1582,14 @@ public final class ObjectCheck<T, X extends Exception> {
    *
    * @param arg the value to be validated.
    * @param argName the name of the argument, field or variable being validated
-   * @param <T> the type of the value
-   * @return an {@link ObjectCheck} instance for validating the specified value
+   * @param <U> the type of the value
+   * @return a new {@code ObjectCheck} instance for validating the specified value
    */
-  public <T> ObjectCheck<T, X> and(T arg, String argName) {
+  public <U> ObjectCheck<U, X> and(U arg, String argName) {
     return new ObjectCheck<>(arg, argName, exc);
   }
 
-  String fullyQualified(String propName) {
+  String FQN(String propName) {
     return argName + "." + propName;
   }
 

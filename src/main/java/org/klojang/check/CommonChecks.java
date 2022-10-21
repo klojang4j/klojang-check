@@ -5,7 +5,6 @@ import org.klojang.check.aux.Result;
 import org.klojang.check.relation.*;
 import org.klojang.check.x.CheckImpls;
 import org.klojang.check.x.StringCheckImpls;
-import org.klojang.check.x.msg.PrefabMsgFormatter;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -13,15 +12,9 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static org.klojang.check.x.StringCheckImpls.PARSABLES;
-import static org.klojang.check.x.StringCheckImpls.NUMERICALS;
 import static org.klojang.check.x.Misc.typeNotSupported;
-import static org.klojang.check.MsgIntObjRelation.*;
-import static org.klojang.check.MsgIntPredicate.*;
-import static org.klojang.check.MsgIntRelation.*;
-import static org.klojang.check.MsgObjIntRelation.*;
-import static org.klojang.check.MsgPredicate.*;
-import static org.klojang.check.MsgRelation.*;
+import static org.klojang.check.x.StringCheckImpls.NUMERICALS;
+import static org.klojang.check.x.StringCheckImpls.PARSABLES;
 
 /**
  * Defines various common checks on arguments, variables, object state, program
@@ -48,12 +41,6 @@ import static org.klojang.check.MsgRelation.*;
  */
 public final class CommonChecks {
 
-  static final Map<Object, PrefabMsgFormatter> MESSAGE_PATTERNS;
-  static final Map<Object, String> NAMES;
-
-  private static Map<Object, PrefabMsgFormatter> tmp0 = new HashMap<>(128);
-  private static Map<Object, String> tmp1 = new HashMap<>(128);
-
   private CommonChecks() {
     throw new UnsupportedOperationException();
   }
@@ -73,10 +60,6 @@ public final class CommonChecks {
     return Objects::isNull;
   }
 
-  static {
-    setMetadata(NULL(), msgNull(), "NULL");
-  }
-
   /**
    * Verifies that the argument is not null. Equivalent to
    * {@link Objects#nonNull(Object) Objects::nonNull}.
@@ -94,10 +77,6 @@ public final class CommonChecks {
     return Objects::nonNull;
   }
 
-  static {
-    setMetadata(notNull(), msgNotNull(), "notNull");
-  }
-
   /**
    * Verifies that a condition evaluates to {@code true}. Useful for validating
    * {@code boolean} properties:
@@ -112,10 +91,6 @@ public final class CommonChecks {
     return x -> x;
   }
 
-  static {
-    setMetadata(yes(), msgYes(), "yes");
-  }
-
   /**
    * Verifies that a condition evaluates to {@code false}.
    *
@@ -123,10 +98,6 @@ public final class CommonChecks {
    */
   public static ComposablePredicate<Boolean> no() {
     return x -> !x;
-  }
-
-  static {
-    setMetadata(no(), msgNo(), "no");
   }
 
   /**
@@ -161,10 +132,6 @@ public final class CommonChecks {
     return CheckImpls::isEmpty;
   }
 
-  static {
-    setMetadata(empty(), msgEmpty(), "empty");
-  }
-
   /**
    * Verifies that the argument is not empty. More precisely: it verifies the
    * negation of the {@link #empty()} test.
@@ -177,10 +144,6 @@ public final class CommonChecks {
    */
   public static <T> ComposablePredicate<T> notEmpty() {
     return CheckImpls::isNotEmpty;
-  }
-
-  static {
-    setMetadata(notEmpty(), msgNotEmpty(), "notEmpty");
   }
 
   /**
@@ -197,10 +160,6 @@ public final class CommonChecks {
    */
   public static <T> ComposablePredicate<T> deepNotNull() {
     return CheckImpls::isDeepNotNull;
-  }
-
-  static {
-    setMetadata(deepNotNull(), msgDeepNotNull(), "deepNotNull");
   }
 
   /**
@@ -237,10 +196,6 @@ public final class CommonChecks {
     return CheckImpls::isDeepNotEmpty;
   }
 
-  static {
-    setMetadata(deepNotEmpty(), msgDeepNotEmpty(), "deepNotEmpty");
-  }
-
   /**
    * Verifies that the argument is {@code null} or contains whitespace only. Probably
    * more useful when called from an {@code isNot} method.
@@ -254,10 +209,6 @@ public final class CommonChecks {
     return s -> s == null || s.isBlank();
   }
 
-  static {
-    setMetadata(blank(), msgBlank(), "blank");
-  }
-
   /**
    * Verifies that a string consists of digits only and (by implication) contains no
    * '+' or '-' sign, no leading zeros, and can be parsed into an integer (by
@@ -267,10 +218,6 @@ public final class CommonChecks {
    */
   public static ComposablePredicate<String> plainInt() {
     return StringCheckImpls::isPlainInt;
-  }
-
-  static {
-    setMetadata(plainInt(), msgPlainInt(), "plainInt");
   }
 
   /**
@@ -283,10 +230,6 @@ public final class CommonChecks {
    */
   public static ComposablePredicate<String> plainShort() {
     return StringCheckImpls::isPlainShort;
-  }
-
-  static {
-    setMetadata(plainShort(), msgPlainShort(), "plainShort");
   }
 
   /**
@@ -307,10 +250,6 @@ public final class CommonChecks {
     return x -> x instanceof Class<?> c ? c.isArray() : x.getClass().isArray();
   }
 
-  static {
-    setMetadata(array(), msgArray(), "array");
-  }
-
   /**
    * Verifies that the argument is an existing, regular file.
    *
@@ -318,10 +257,6 @@ public final class CommonChecks {
    */
   public static ComposablePredicate<File> regularFile() {
     return f -> Files.isRegularFile(f.toPath());
-  }
-
-  static {
-    setMetadata(regularFile(), msgRegularFile(), "regularFile");
   }
 
   /**
@@ -333,10 +268,6 @@ public final class CommonChecks {
     return f -> Files.isDirectory(f.toPath());
   }
 
-  static {
-    setMetadata(directory(), msgDirectory(), "directory");
-  }
-
   /**
    * Verifies that the argument is a symbolic link.
    *
@@ -344,10 +275,6 @@ public final class CommonChecks {
    */
   public static ComposablePredicate<File> symlink() {
     return f -> Files.isSymbolicLink(f.toPath());
-  }
-
-  static {
-    setMetadata(directory(), msgDirectory(), "directory");
   }
 
   /**
@@ -367,10 +294,6 @@ public final class CommonChecks {
     return File::exists;
   }
 
-  static {
-    setMetadata(fileExists(), msgFileExists(), "fileExists");
-  }
-
   /**
    * Verifies that a file is readable. Implies that the file exists. Equivalent to
    * {@link File#canRead() File::canRead}.
@@ -381,10 +304,6 @@ public final class CommonChecks {
     return File::canRead;
   }
 
-  static {
-    setMetadata(readable(), msgReadable(), "readable");
-  }
-
   /**
    * Verifies that a file is writable. Implies that the file exists. Equivalent to
    * {@link File#canWrite() File::canWrite}.
@@ -393,10 +312,6 @@ public final class CommonChecks {
    */
   public static ComposablePredicate<File> writable() {
     return File::canWrite;
-  }
-
-  static {
-    setMetadata(writable(), msgWritable(), "writable");
   }
 
   /**
@@ -412,10 +327,6 @@ public final class CommonChecks {
     return Optional::isPresent;
   }
 
-  static {
-    setMetadata(present(), msgPresent(), "present");
-  }
-
   /**
    * Verifies that a {@linkplain Result result} is available. Note that this check
    * differs from the {@link #empty()} check in that it only verifies that
@@ -427,10 +338,6 @@ public final class CommonChecks {
    */
   public static <T> ComposablePredicate<Result<T>> available() {
     return Result::isAvailable;
-  }
-
-  static {
-    setMetadata(available(), msgAvailable(), "available");
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -446,10 +353,6 @@ public final class CommonChecks {
     return x -> x % 2 == 0;
   }
 
-  static {
-    setMetadata(even(), msgEven(), "even");
-  }
-
   /**
    * Verifies that the argument is an odd integer.
    *
@@ -457,10 +360,6 @@ public final class CommonChecks {
    */
   public static ComposableIntPredicate odd() {
     return x -> x % 2 == 1;
-  }
-
-  static {
-    setMetadata(odd(), msgOdd(), "odd");
   }
 
   /**
@@ -472,10 +371,6 @@ public final class CommonChecks {
     return x -> x > 0;
   }
 
-  static {
-    setMetadata(positive(), msgPositive(), "positive");
-  }
-
   /**
    * Verifies that the argument is a negative integer.
    *
@@ -485,10 +380,6 @@ public final class CommonChecks {
     return x -> x < 0;
   }
 
-  static {
-    setMetadata(negative(), msgNegative(), "negative");
-  }
-
   /**
    * Verifies that the argument is zero (0).
    *
@@ -496,10 +387,6 @@ public final class CommonChecks {
    */
   public static ComposableIntPredicate zero() {
     return x -> x == 0;
-  }
-
-  static {
-    setMetadata(zero(), msgZero(), "zero");
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -515,10 +402,6 @@ public final class CommonChecks {
     return (x, y) -> x == y;
   }
 
-  static {
-    setMetadata(eq(), msgEq(), "eq");
-  }
-
   /**
    * Verifies that the argument does not equal the specified {@code int} value.
    *
@@ -528,10 +411,6 @@ public final class CommonChecks {
     return (x, y) -> x != y;
   }
 
-  static {
-    setMetadata(ne(), msgNe(), "ne");
-  }
-
   /**
    * Verifies that the argument is greater than the specified {@code int} value.
    *
@@ -539,10 +418,6 @@ public final class CommonChecks {
    */
   public static IntRelation gt() {
     return (x, y) -> x > y;
-  }
-
-  static {
-    setMetadata(gt(), msgGt(), "gt");
   }
 
   /**
@@ -555,10 +430,6 @@ public final class CommonChecks {
     return (x, y) -> x >= y;
   }
 
-  static {
-    setMetadata(gte(), msgGte(), "gte");
-  }
-
   /**
    * Verifies that the argument is less than the specified {@code int} value.
    *
@@ -566,10 +437,6 @@ public final class CommonChecks {
    */
   public static IntRelation lt() {
     return (x, y) -> x < y;
-  }
-
-  static {
-    setMetadata(lt(), msgLt(), "lt");
   }
 
   /**
@@ -582,10 +449,6 @@ public final class CommonChecks {
     return (x, y) -> x <= y;
   }
 
-  static {
-    setMetadata(lte(), msgLte(), "lte");
-  }
-
   /**
    * Verifies that the argument is a multiple of the specified {@code int} value.
    *
@@ -593,10 +456,6 @@ public final class CommonChecks {
    */
   public static IntRelation multipleOf() {
     return (x, y) -> x % y == 0;
-  }
-
-  static {
-    setMetadata(multipleOf(), msgMultipleOf(), "multipleOf");
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -619,10 +478,6 @@ public final class CommonChecks {
     return Object::equals;
   }
 
-  static {
-    setMetadata(EQ(), msgEQ(), "EQ");
-  }
-
   /**
    * Verifies that the argument equals some value. Equivalent to
    * {@link Object#equals(Object) Object::equals}. Use this check instead of
@@ -634,10 +489,6 @@ public final class CommonChecks {
    */
   public static <T> Comparison<T> equalTo() {
     return Object::equals;
-  }
-
-  static {
-    setMetadata(equalTo(), msgEQ(), "equalTo"); // recycle message
   }
 
   /**
@@ -652,10 +503,6 @@ public final class CommonChecks {
     return (x, y) -> x.compareTo(y) > 0;
   }
 
-  static {
-    setMetadata(GT(), msgGT(), "GT");
-  }
-
   /**
    * Verifies that the argument is less than another value.
    *
@@ -666,10 +513,6 @@ public final class CommonChecks {
    */
   public static <T extends Comparable<T>> Comparison<T> LT() {
     return (x, y) -> x.compareTo(y) < 0;
-  }
-
-  static {
-    setMetadata(LT(), msgLT(), "LT");
   }
 
   /**
@@ -684,10 +527,6 @@ public final class CommonChecks {
     return (x, y) -> x.compareTo(y) >= 0;
   }
 
-  static {
-    setMetadata(GTE(), msgGTE(), "GTE");
-  }
-
   /**
    * Verifies that the argument is less than or equal to another value.
    *
@@ -698,10 +537,6 @@ public final class CommonChecks {
    */
   public static <T extends Comparable<T>> Comparison<T> LTE() {
     return (x, y) -> x.compareTo(y) <= 0;
-  }
-
-  static {
-    setMetadata(LTE(), msgLTE(), "LTE");
   }
 
   /**
@@ -715,10 +550,6 @@ public final class CommonChecks {
    */
   public static <S, O> Relation<S, O> sameAs() {
     return (x, y) -> x == y;
-  }
-
-  static {
-    setMetadata(sameAs(), msgSameAs(), "sameAs");
   }
 
   /**
@@ -735,10 +566,6 @@ public final class CommonChecks {
     return (x, y) -> x == null || x.equals(y);
   }
 
-  static {
-    setMetadata(nullOr(), msgNullOr(), "nullOr");
-  }
-
   /**
    * Verifies that the argument is an instance of a particular class or interface.
    *
@@ -749,10 +576,6 @@ public final class CommonChecks {
    */
   public static <S, O extends Class<?>> Relation<S, O> instanceOf() {
     return (x, y) -> y.isInstance(x);
-  }
-
-  static {
-    setMetadata(instanceOf(), msgInstanceOf(), "instanceOf");
   }
 
   /**
@@ -767,10 +590,6 @@ public final class CommonChecks {
     return Class::isAssignableFrom;
   }
 
-  static {
-    setMetadata(supertypeOf(), msgSupertypeOf(), "supertypeOf");
-  }
-
   /**
    * Verifies that the argument is a subtype of another type. In other words, that it
    * extends or implements the other type.
@@ -781,10 +600,6 @@ public final class CommonChecks {
    */
   public static <S, O> Relation<Class<S>, Class<O>> subtypeOf() {
     return (x, y) -> y.isAssignableFrom(x);
-  }
-
-  static {
-    setMetadata(subtypeOf(), msgSubtypeOf(), "subtypeOf");
   }
 
   /**
@@ -799,10 +614,6 @@ public final class CommonChecks {
     return Collection::contains;
   }
 
-  static {
-    setMetadata(contains(), msgContains(), "contains");
-  }
-
   /**
    * Verifies that a map contains a particular key. Equivalent to
    * {@link Map#containsKey(Object) Map::containsKey}.
@@ -813,10 +624,6 @@ public final class CommonChecks {
    */
   public static <O, S extends Map<? super O, ?>> Relation<S, O> containsKey() {
     return Map::containsKey;
-  }
-
-  static {
-    setMetadata(containsKey(), msgContainsKey(), "containsKey");
   }
 
   /**
@@ -831,10 +638,6 @@ public final class CommonChecks {
     return Map::containsValue;
   }
 
-  static {
-    setMetadata(containsValue(), msgContainingValue(), "containsValue");
-  }
-
   /**
    * Verifies that the argument is an element of a collection.
    *
@@ -844,10 +647,6 @@ public final class CommonChecks {
    */
   public static <S, O extends Collection<? super S>> Relation<S, O> in() {
     return (x, y) -> y.contains(x);
-  }
-
-  static {
-    setMetadata(in(), msgIn(), "in");
   }
 
   /**
@@ -861,10 +660,6 @@ public final class CommonChecks {
     return (x, y) -> y.containsKey(x);
   }
 
-  static {
-    setMetadata(keyIn(), msgKeyIn(), "keyIn");
-  }
-
   /**
    * Verifies the presence of a value within a map.
    *
@@ -874,10 +669,6 @@ public final class CommonChecks {
    */
   public static <S, O extends Map<?, ? super S>> Relation<S, O> valueIn() {
     return (x, y) -> y.containsValue(x);
-  }
-
-  static {
-    setMetadata(valueIn(), msgValueIn(), "valueIn");
   }
 
   /**
@@ -890,10 +681,6 @@ public final class CommonChecks {
    */
   public static <O, S extends O> Relation<S, O[]> inArray() {
     return CheckImpls::inArray;
-  }
-
-  static {
-    setMetadata(inArray(), msgIn(), "inArray"); // Recycle message
   }
 
   /**
@@ -914,10 +701,6 @@ public final class CommonChecks {
   public static <E, C0 extends Collection<? super E>, C1 extends Collection<E>>
   Relation<C0, C1> containsAll() {
     return Collection::containsAll;
-  }
-
-  static {
-    setMetadata(containsAll(), msgContainsAll(), "containsAll");
   }
 
   /**
@@ -943,10 +726,6 @@ public final class CommonChecks {
     return (x, y) -> y.containsAll(x);
   }
 
-  static {
-    setMetadata(enclosedBy(), msgEnclosedBy(), "enclosedBy");
-  }
-
   /**
    * Verifies that the argument contains the specified substring. Equivalent to
    * {@link String#contains(CharSequence) String::contains}.
@@ -955,10 +734,6 @@ public final class CommonChecks {
    */
   public static Relation<String, CharSequence> hasSubstring() {
     return String::contains;
-  }
-
-  static {
-    setMetadata(hasSubstring(), msgHasSubstring(), "hasSubstring");
   }
 
   /**
@@ -970,10 +745,6 @@ public final class CommonChecks {
     return (x, y) -> y.contains(x);
   }
 
-  static {
-    setMetadata(substringOf(), msgSubstringOf(), "substringOf");
-  }
-
   /**
    * Verifies that a value equals ignoring case the specified string.
    *
@@ -981,10 +752,6 @@ public final class CommonChecks {
    */
   public static Relation<String, String> equalsIgnoreCase() {
     return String::equalsIgnoreCase;
-  }
-
-  static {
-    setMetadata(equalsIgnoreCase(), msgEqualsIgnoreCase(), "equalsIgnoreCase");
   }
 
   /**
@@ -997,10 +764,6 @@ public final class CommonChecks {
     return String::startsWith;
   }
 
-  static {
-    setMetadata(startsWith(), msgStartsWith(), "startsWith");
-  }
-
   /**
    * Verifies that the argument ends with the specified substring. Equivalent to
    * {@link String#endsWith(String) String::endsWith}.
@@ -1011,37 +774,26 @@ public final class CommonChecks {
     return String::endsWith;
   }
 
-  static {
-    setMetadata(endsWith(), msgEndsWith(), "endsWith");
-  }
-
   /**
    * Verifies that the argument matches the specified pattern (that is, the pattern
    * fully describes the string).
-   * @see #describedBy()
+   *
    * @return a function implementing the test described above
+   * @see #describedBy()
    */
   public static Relation<String, Pattern> hasPattern() {
     return (string, pattern) -> pattern.matcher(string).matches();
-  }
-
-  static {
-    setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
   }
 
   /**
    * Verifies that the argument contains the specified pattern (that is, the pattern
    * can be found somewhere in the string).
    *
-   * @see #matching()
    * @return a function implementing the test described above
+   * @see #matching()
    */
   public static Relation<String, Pattern> containsPattern() {
     return (string, pattern) -> pattern.matcher(string).find();
-  }
-
-  static {
-    setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
   }
 
   /**
@@ -1063,10 +815,6 @@ public final class CommonChecks {
         hasPattern().exists(string, Pattern.compile(pattern));
   }
 
-  static {
-    setMetadata(describedBy(), msgHasPattern(), "describedBy"); // recycle message
-  }
-
   /**
    * Verifies that the argument contains the specified pattern (that is, the pattern
    * can be found somewhere in the string). The subject (or "left hand side") of this
@@ -1079,16 +827,11 @@ public final class CommonChecks {
    * Check.that("abcd123").is(describedBy(), "\\d{4}"); // no
    * }</pre></blockquote>
    *
-   *
    * @return a function implementing the test described above
    */
   public static Comparison<String> matching() {
     return (string, pattern) ->
         containsPattern().exists(string, Pattern.compile(pattern));
-  }
-
-  static {
-    setMetadata(matching(), msgContainsPattern(), "matching"); // recycle message
   }
 
   /**
@@ -1112,10 +855,6 @@ public final class CommonChecks {
       }
       throw typeNotSupported(y);
     };
-  }
-
-  static {
-    setMetadata(numerical(), msgNumerical(), "numerical");
   }
 
   /**
@@ -1147,10 +886,6 @@ public final class CommonChecks {
     };
   }
 
-  static {
-    setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
-  }
-
   //////////////////////////////////////////////////////////////////////////////////
   // IntObjRelation
   //////////////////////////////////////////////////////////////////////////////////
@@ -1168,10 +903,6 @@ public final class CommonChecks {
    */
   public static <T> IntObjRelation<T> indexOf() {
     return CheckImpls::isIndexOf;
-  }
-
-  static {
-    setMetadata(indexOf(), msgIndexOf(), "indexOf");
   }
 
   /**
@@ -1195,10 +926,6 @@ public final class CommonChecks {
     return CheckImpls::isIndexInclusiveOf;
   }
 
-  static {
-    setMetadata(indexInclusiveOf(), msgIndexInclusiveInto(), "indexInclusiveInto");
-  }
-
   /**
    * Verifies that the argument is greater than, or equal to the first integer in the
    * provided {@code int} array, and less than the second.
@@ -1207,10 +934,6 @@ public final class CommonChecks {
    */
   public static IntObjRelation<int[]> inRange() {
     return (x, y) -> x >= y[0] && x < y[1];
-  }
-
-  static {
-    setMetadata(inRange(), msgInRange(), "inRange");
   }
 
   /**
@@ -1222,10 +945,6 @@ public final class CommonChecks {
    */
   public static IntObjRelation<int[]> between() {
     return (x, y) -> x >= y[0] && x <= y[1];
-  }
-
-  static {
-    setMetadata(between(), msgBetween(), "between");
   }
 
   /**
@@ -1244,24 +963,21 @@ public final class CommonChecks {
     };
   }
 
-  static {
-    setMetadata(inIntArray(), msgIn(), "inIntArray"); // Recycle message
-  }
 
   /* ++++++++++++++ END OF CHECKS ++++++++++++++ */
 
-  static {
-    MESSAGE_PATTERNS = Map.copyOf(tmp0);
-    NAMES = Map.copyOf(tmp1);
-    tmp0 = null;
-    tmp1 = null;
-  }
-
-  private static void setMetadata(Object test,
-      PrefabMsgFormatter message,
-      String name) {
-    tmp0.put(test, message);
-    tmp1.put(test, name);
-  }
+  //  static {
+  //    MESSAGE_PATTERNS = Map.copyOf(tmp0);
+  //    NAMES = Map.copyOf(tmp1);
+  //    tmp0 = null;
+  //    tmp1 = null;
+  //  }
+  //
+  //  private static void setMetadata(Object test,
+  //      PrefabMsgFormatter message,
+  //      String name) {
+  //    tmp0.put(test, message);
+  //    tmp1.put(test, name);
+  //  }
 
 }

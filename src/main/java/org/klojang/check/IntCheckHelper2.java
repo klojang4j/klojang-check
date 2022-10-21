@@ -1,7 +1,10 @@
 package org.klojang.check;
 
+import static org.klojang.check.CheckDefs.*;
 import static org.klojang.check.CommonProperties.formatProperty;
+import static org.klojang.check.MsgUtil.*;
 
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
@@ -33,12 +36,12 @@ final class IntCheckHelper2<E extends Exception> {
         check.argName,
         prop,
         IntUnaryOperator.class);
-    throw check.exc.apply(MsgUtil.getPrefabMessage(test,
-        false,
-        name,
-        val,
-        int.class,
-        null));
+    Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultPredicateMessage(name, check.arg));
+    }
+    throw check.exc.apply(
+        formatMessage(formatter, test, false, name, val, int.class, null));
   }
 
   IntCheck<E> notHas(IntUnaryOperator prop, IntPredicate test) throws E {
@@ -51,12 +54,12 @@ final class IntCheckHelper2<E extends Exception> {
         check.argName,
         prop,
         IntUnaryOperator.class);
-    throw check.exc.apply(MsgUtil.getPrefabMessage(test,
-        true,
-        name,
-        val,
-        int.class,
-        null));
+    Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultPredicateMessage(name, check.arg));
+    }
+    throw check.exc.apply(
+        formatMessage(formatter, test, true, name, val, int.class, null));
   }
 
   IntCheck<E> has(IntUnaryOperator prop, String name, IntPredicate test) throws E {
@@ -65,8 +68,13 @@ final class IntCheckHelper2<E extends Exception> {
     if (test.test(val)) {
       return check;
     }
+    Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultPredicateMessage(name, check.arg));
+    }
     throw check.exc.apply(
-        MsgUtil.getPrefabMessage(test,
+        formatMessage(formatter,
+            test,
             false,
             check.FQN(name),
             val,
@@ -81,8 +89,18 @@ final class IntCheckHelper2<E extends Exception> {
     if (!test.test(val)) {
       return check;
     }
+    Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultPredicateMessage(name, check.arg));
+    }
     throw check.exc.apply(
-        MsgUtil.getPrefabMessage(test, true, check.FQN(name), val, int.class, null));
+        formatMessage(formatter,
+            test,
+            true,
+            check.FQN(name),
+            val,
+            int.class,
+            null));
   }
 
   IntCheck<E> has(IntUnaryOperator prop,
@@ -145,12 +163,12 @@ final class IntCheckHelper2<E extends Exception> {
         check.argName,
         prop,
         IntUnaryOperator.class);
-    throw check.exc.apply(MsgUtil.getPrefabMessage(test,
-        false,
-        name,
-        val,
-        int.class,
-        obj));
+    Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultRelationMessage(name, check.arg, obj));
+    }
+    throw check.exc.apply(
+        formatMessage(formatter, test, false, name, val, int.class, obj));
   }
 
   IntCheck<E> notHas(IntUnaryOperator prop, IntRelation test, int obj) throws E {
@@ -163,12 +181,12 @@ final class IntCheckHelper2<E extends Exception> {
         check.argName,
         prop,
         IntUnaryOperator.class);
-    throw check.exc.apply(MsgUtil.getPrefabMessage(test,
-        true,
-        name,
-        val,
-        int.class,
-        obj));
+    Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultRelationMessage(name, check.arg, obj));
+    }
+    throw check.exc.apply(
+        formatMessage(formatter, test, true, name, val, int.class, obj));
   }
 
   IntCheck<E> has(IntUnaryOperator prop, String name, IntRelation test, int obj)
@@ -178,8 +196,18 @@ final class IntCheckHelper2<E extends Exception> {
     if (test.exists(val, obj)) {
       return check;
     }
+    Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultRelationMessage(check.FQN(name), check.arg, obj));
+    }
     throw check.exc.apply(
-        MsgUtil.getPrefabMessage(test, false, check.FQN(name), val, int.class, obj));
+        formatMessage(formatter,
+            test,
+            false,
+            check.FQN(name),
+            val,
+            int.class,
+            obj));
   }
 
   IntCheck<E> notHas(IntUnaryOperator prop, String name, IntRelation test, int obj)
@@ -189,8 +217,18 @@ final class IntCheckHelper2<E extends Exception> {
     if (!test.exists(val, obj)) {
       return check;
     }
+    Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
+    if (formatter == null) {
+      throw check.exc.apply(defaultRelationMessage(check.FQN(name), check.arg, obj));
+    }
     throw check.exc.apply(
-        MsgUtil.getPrefabMessage(test, true, check.FQN(name), val, int.class, obj));
+        formatMessage(formatter,
+            test,
+            true,
+            check.FQN(name),
+            val,
+            int.class,
+            obj));
   }
 
   IntCheck<E> has(IntUnaryOperator prop,
