@@ -32,7 +32,8 @@ public class IntCheckHelper1Test {
       Check.that(6, "shoe").has((int i) -> days[i], d -> d.equals(MONDAY));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("invalid value for IntFunction.apply(shoe): SUNDAY",
+      assertEquals(
+          "invalid value for IntFunction.apply(6): SUNDAY",
           e.getMessage());
       return;
     }
@@ -45,7 +46,8 @@ public class IntCheckHelper1Test {
       Check.that(6).has((int i) -> days[i], d -> d.equals(MONDAY));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("invalid value for IntFunction.apply(int): SUNDAY",
+      assertEquals(
+          "invalid value for IntFunction.apply(6): SUNDAY",
           e.getMessage());
       return;
     }
@@ -58,7 +60,8 @@ public class IntCheckHelper1Test {
       Check.that(6, "shoe").notHas((int i) -> days[i], d -> d.equals(SUNDAY));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("invalid value for IntFunction.apply(shoe): SUNDAY",
+      assertEquals(
+          "invalid value for IntFunction.apply(6): SUNDAY",
           e.getMessage());
       return;
     }
@@ -71,7 +74,9 @@ public class IntCheckHelper1Test {
       Check.that(6, "shoe").has((int i) -> days[i], "laces", d -> d.equals(MONDAY));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("invalid value for shoe.laces: SUNDAY", e.getMessage());
+      assertEquals(
+          "invalid value for shoe.laces: SUNDAY",
+          e.getMessage());
       return;
     }
     fail();
@@ -85,7 +90,9 @@ public class IntCheckHelper1Test {
           d -> d.equals(SUNDAY));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("invalid value for shoe.laces: SUNDAY", e.getMessage());
+      assertEquals(
+          "invalid value for shoe.laces: SUNDAY",
+          e.getMessage());
       return;
     }
     fail();
@@ -97,7 +104,9 @@ public class IntCheckHelper1Test {
       Check.that(6).notHas((int i) -> days[i], "laces", d -> d.equals(SUNDAY));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("invalid value for laces: SUNDAY", e.getMessage());
+      assertEquals(
+          "invalid value for laces: SUNDAY",
+          e.getMessage());
       return;
     }
     fail();

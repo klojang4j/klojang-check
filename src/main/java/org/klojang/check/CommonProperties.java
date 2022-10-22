@@ -1,8 +1,7 @@
 package org.klojang.check;
 
-import static org.klojang.check.x.msg.MsgUtil.DEF_ARG_NAME;
 import static org.klojang.check.x.Misc.typeNotSupported;
-import static org.klojang.check.x.msg.MsgUtil.simpleClassName;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -126,8 +125,8 @@ public class CommonProperties {
    * Returns the length of a {@code CharSequence}. Equivalent to
    * {@code CharSequence::length}.
    *
-   * @return The length of a {@code CharSequence}
    * @param <T> the type of the {@code CharSequence}
+   * @return The length of a {@code CharSequence}
    */
   public static <T extends CharSequence> ToIntFunction<T> strlen() {
     return CharSequence::length;
@@ -427,8 +426,7 @@ public class CommonProperties {
     BiFunction<Object, String, String> fmt = NAMES.get(getter);
     if (fmt == null) {
       String s0 = getterClass == ToIntFunction.class ? "applyAsInt" : "apply";
-      String s1 = base(argName, arg);
-      return simpleClassName(getterClass) + "." + s0 + "(" + s1 + ")";
+      return simpleClassName(getterClass) + "." + s0 + "(" + toStr(arg) + ")";
     }
     return fmt.apply(arg, argName);
   }
@@ -440,8 +438,7 @@ public class CommonProperties {
     BiFunction<Object, String, String> fmt = NAMES.get(getter);
     if (fmt == null) {
       String s0 = getterClass == IntUnaryOperator.class ? "applyAsInt" : "apply";
-      String s1 = ifNull(argName, "int");
-      return simpleClassName(getterClass) + "." + s0 + "(" + s1 + ")";
+      return simpleClassName(getterClass) + "." + s0 + "(" + arg + ")";
     }
     return fmt.apply(arg, argName);
   }

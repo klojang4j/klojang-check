@@ -31,16 +31,16 @@ public class CommonPropertiesTest {
     Object noSuchGetter = new Object();
     String propName = formatProperty(42, "foo", noSuchGetter, IntFunction.class);
     System.out.println(propName);
-    assertEquals("IntFunction.apply(foo)", propName);
+    assertEquals("IntFunction.apply(42)", propName);
     propName = formatProperty(42, null, noSuchGetter, IntFunction.class);
     System.out.println(propName);
-    assertEquals("IntFunction.apply(int)", propName);
+    assertEquals("IntFunction.apply(42)", propName);
     propName = formatProperty(42, "foo", noSuchGetter, IntUnaryOperator.class);
     System.out.println(propName);
-    assertEquals("IntUnaryOperator.applyAsInt(foo)", propName);
+    assertEquals("IntUnaryOperator.applyAsInt(42)", propName);
     propName = formatProperty(42, null, noSuchGetter, IntUnaryOperator.class);
     System.out.println(propName);
-    assertEquals("IntUnaryOperator.applyAsInt(int)", propName);
+    assertEquals("IntUnaryOperator.applyAsInt(42)", propName);
   }
 
   @Test
@@ -50,16 +50,16 @@ public class CommonPropertiesTest {
     File file = new File("/tmp/foo/bar.txt");
     String propName = formatProperty(file, "sneaky", noSuchGetter, Function.class);
     System.out.println(propName);
-    assertEquals("Function.apply(sneaky)", propName);
+    assertEquals("Function.apply(/tmp/foo/bar.txt)", propName);
     propName = formatProperty(file, null, noSuchGetter, Function.class);
     System.out.println(propName);
-    assertEquals("Function.apply(File)", propName);
+    assertEquals("Function.apply(/tmp/foo/bar.txt)", propName);
     propName = formatProperty(file, "sneaky", noSuchGetter, ToIntFunction.class);
     System.out.println(propName);
-    assertEquals("ToIntFunction.applyAsInt(sneaky)", propName);
+    assertEquals("ToIntFunction.applyAsInt(/tmp/foo/bar.txt)", propName);
     propName = formatProperty(file, null, noSuchGetter, ToIntFunction.class);
     System.out.println(propName);
-    assertEquals("ToIntFunction.applyAsInt(File)", propName);
+    assertEquals("ToIntFunction.applyAsInt(/tmp/foo/bar.txt)", propName);
   }
 
   @Test

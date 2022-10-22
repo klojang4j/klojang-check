@@ -1,6 +1,9 @@
 package org.klojang.check;
 
 import org.junit.Test;
+import org.klojang.check.relation.Comparison;
+import org.klojang.check.relation.IntRelation;
+import org.klojang.check.x.msg.MsgUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -9,6 +12,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.*;
+import static org.klojang.check.relation.ComposeMethods.invalid;
+import static org.klojang.check.relation.ComposeMethods.invalidInt;
+import static org.klojang.check.x.msg.MsgUtil.defaultPredicateMessage;
+import static org.klojang.check.x.msg.MsgUtil.defaultRelationMessage;
 
 public class ObjectCheckHelper1Test {
 
@@ -70,7 +77,9 @@ public class ObjectCheckHelper1Test {
       Check.that(p, "person").has(Person::firstName, NULL());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("Function.apply(person) must be null (was john)", e.getMessage());
+      assertEquals(
+          "Function.apply(Person[firstName=john, birtDate=1966-04-22]) must be null (was john)",
+          e.getMessage());
       return;
     }
     fail();
@@ -83,7 +92,9 @@ public class ObjectCheckHelper1Test {
       Check.that(p, "person").notHas(Person::firstName, notNull());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("Function.apply(person) must be null (was john)", e.getMessage());
+      assertEquals(
+          "Function.apply(Person[firstName=john, birtDate=1966-04-22]) must be null (was john)",
+          e.getMessage());
       return;
     }
     fail();
@@ -162,7 +173,8 @@ public class ObjectCheckHelper1Test {
       Check.that(p, "person").has(Person::birtDate, GT(), LocalDate.of(2000, 1, 1));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("Function.apply(person) must be > 2000-01-01 (was 1966-04-22)",
+      assertEquals(
+          "Function.apply(Person[firstName=john, birtDate=1966-04-22]) must be > 2000-01-01 (was 1966-04-22)",
           e.getMessage());
       return;
     }
@@ -176,7 +188,9 @@ public class ObjectCheckHelper1Test {
       Check.that(p, "person").notHas(Person::firstName, EQ(), "john");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("Function.apply(person) must not equal john", e.getMessage());
+      assertEquals(
+          "Function.apply(Person[firstName=john, birtDate=1966-04-22]) must not equal john",
+          e.getMessage());
       return;
     }
     fail();

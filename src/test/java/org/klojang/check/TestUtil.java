@@ -6,6 +6,7 @@ import org.klojang.check.aux.Result;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.*;
 

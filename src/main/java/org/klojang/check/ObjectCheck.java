@@ -258,7 +258,7 @@ public final class ObjectCheck<T, X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultPredicateMessage(argName, arg));
+      throw exc.apply(defaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, false, argName, arg, null, object));
