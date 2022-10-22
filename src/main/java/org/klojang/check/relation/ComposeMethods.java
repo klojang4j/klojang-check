@@ -2,6 +2,7 @@ package org.klojang.check.relation;
 
 import org.klojang.check.CommonChecks;
 
+import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
@@ -12,9 +13,9 @@ import static org.klojang.check.relation.Private.checkArg;
  * while the predicates in the {@link CommonChecks} class are, in fact, already
  * either a {@link ComposablePredicate} or a {@link ComposableIntPredicate}, the
  * relational interfaces in this package obviously are not, and neither are
- * handwritten lambdas and method references. The utility methods defined here make
- * sure you can still start your composition with a {@link Relation}, lambda or
- * method reference.
+ * handwritten lambdas and method references. The utility methods defined in this
+ * class make sure you can still start your composition with a {@link Relation},
+ * lambda or method reference.
  *
  * @author Ayco Holleman
  */
@@ -49,7 +50,7 @@ public class ComposeMethods {
   }
 
   /**
-   * Returns a {@code ComposablePredicate} that always evaluates to {@code true}.
+   * Returns a {@code ComposablePredicate} that always evaluates to {@code false}.
    * This method can be used as the first of a series of OR-joined checks if there is
    * no need for an initial
    * {@linkplain CommonChecks#notNull() notNull() null check}.
@@ -67,13 +68,67 @@ public class ComposeMethods {
   }
 
   /**
-   * Returns a {@code ComposableIntPredicate} that always evaluates to {@code true}.
+   * Returns a {@code ComposableIntPredicate} that always evaluates to {@code false}.
    * This method can be used as the first of a series of OR-joined checks.
    *
    * @return a {@code ComposableIntPredicate} that always evaluates to {@code false}
    */
   public static ComposableIntPredicate invalidInt() {
     return x -> false;
+  }
+
+  /**
+   * Returns a {@code ComposablePredicate} that evaluates to {@code true} if the
+   * value to be tested has the specified value. The two values are compared using
+   * {@link Objects#equals(Object, Object) Objects.equals()}.
+   *
+   * @param value the value to compare the value to be tested with
+   * @param <T> the type of the value being tested
+   * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
+   *     value to be tested has the specified value
+   */
+  public static <T> ComposablePredicate<T> validWhen(T value) {
+    return x -> Objects.equals(x, value);
+  }
+
+  /**
+   * Returns a {@code ComposablePredicate} that evaluates to {@code true} if the
+   * value to be tested has the specified value.
+   *
+   * @param value the value to compare the value to be tested with
+   * @param <T> the type of the value being tested
+   * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
+   *     value to be tested has the specified value
+   */
+  public static ComposableIntPredicate validIntWhen(int value) {
+    return x -> x == value;
+  }
+
+  /**
+   * Returns a {@code ComposablePredicate} that evaluates to {@code true} if the
+   * value to be tested has the specified value. The two values are compared using
+   * {@link Objects#equals(Object, Object) Objects.equals()}.
+   *
+   * @param value the value to compare the value to be tested with
+   * @param <T> the type of the value being tested
+   * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
+   *     value to be tested has the specified value
+   */
+  public static <T> ComposablePredicate<T> invalidWhen(T value) {
+    return x -> !Objects.equals(x, value);
+  }
+
+  /**
+   * Returns a {@code ComposablePredicate} that evaluates to {@code true} if the
+   * value to be tested has the specified value.
+   *
+   * @param value the value to compare the value to be tested with
+   * @param <T> the type of the value being tested
+   * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
+   *     value to be tested has the specified value
+   */
+  public static ComposableIntPredicate invalidIntWhen(int value) {
+    return x -> x != value;
   }
 
   /**
