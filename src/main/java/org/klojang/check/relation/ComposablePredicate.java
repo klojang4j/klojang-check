@@ -2,6 +2,7 @@ package org.klojang.check.relation;
 
 import static org.klojang.check.relation.Private.*;
 
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -259,6 +260,27 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * checks on two different values. A value will pass the new test if it passes
    * <i>this</i> test or if another value manages to pass the other test.
    *
+   * <blockquote><pre>{@code
+   * Check.that(file1).is(readable().orThat(file2, writable()));
+   * }</pre></blockquote>
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param <V> the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> orThat(int value, IntPredicate test) {
+    checkArg(test);
+    return x -> meFirst(x) || test.test(value);
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the other test.
+   *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified relation
@@ -272,6 +294,26 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <S, O, V> ComposablePredicate<V> orThat(S subject,
       Relation<S, O> relation,
       O object) {
+    checkArg(relation);
+    return x -> meFirst(x) || relation.exists(subject, object);
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test or if another value manages to pass the other test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param <V> the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> orThat(int subject,
+      IntRelation relation,
+      int object) {
     checkArg(relation);
     return x -> meFirst(x) || relation.exists(subject, object);
   }
@@ -559,6 +601,28 @@ public interface ComposablePredicate<T> extends Predicate<T> {
     return x -> meFirst(x) && test.test(value);
   }
 
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the other test.
+   *
+   * <blockquote><pre>{@code
+   * Check.that(file1).is(readable().andThat(file2, writable()));
+   * }</pre></blockquote>
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param <V> the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> andThat(int value, IntPredicate test) {
+    checkArg(test);
+    return x -> meFirst(x) && test.test(value);
+  }
+
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
@@ -577,6 +641,27 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <S, O, V> ComposablePredicate<V> andThat(S subject,
       Relation<S, O> relation,
       O object) {
+    checkArg(relation);
+    return x -> meFirst(x) && relation.exists(subject, object);
+  }
+
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * <i>this</i> test and if another value manages to pass the other test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param <V> the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by <i>this</i> {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default <V> ComposablePredicate<V> andThat(int subject,
+      IntRelation relation,
+      int object) {
     checkArg(relation);
     return x -> meFirst(x) && relation.exists(subject, object);
   }

@@ -3,6 +3,8 @@ package org.klojang.check.relation;
 import org.junit.Test;
 import org.klojang.check.Check;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.ComposeMethods.validIf;
+import static org.klojang.check.relation.ComposeMethods.*;
 import static org.klojang.check.relation.Quantifier.*;
 
 public class ComposablePredicateTest {
@@ -135,7 +137,7 @@ public class ComposablePredicateTest {
   @Test
   public void orAny00() {
     Check.that("hello, world")
-        .is(ComposeMethods.invalid().or(hasSubstring(), anyOf(), "foo", "world"));
+        .is(invalid().or(hasSubstring(), anyOf(), "foo", "world"));
   }
 
   @Test
@@ -153,7 +155,7 @@ public class ComposablePredicateTest {
   @Test
   public void orAll00() {
     Check.that("hello, world")
-        .is(ComposeMethods.invalid().or(hasSubstring(), allOf(), "hello", "world"));
+        .is(invalid().or(hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test
@@ -171,7 +173,7 @@ public class ComposablePredicateTest {
   @Test
   public void orNone00() {
     Check.that("hello, world")
-        .is(ComposeMethods.invalid().or(hasSubstring(), noneOf(), "foo", "bar"));
+        .is(invalid().or(hasSubstring(), noneOf(), "foo", "bar"));
   }
 
   @Test
@@ -198,6 +200,17 @@ public class ComposablePredicateTest {
   }
 
   @Test
+  public void orThatIntPredicate100() {
+    Check.that(null).is(notNull().orThat(2, i -> i < 3));
+    Check.that(null).is(NULL().orThat(2, i -> i > 3));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orThatIntPredicate101() {
+    Check.that(null).is(notNull().orThat(3, even()));
+  }
+
+  @Test
   public void orThatRelation00() {
     Check.that("foo").is(blank().orThat("bar", hasSubstring(), "ba"));
     Check.that("   ").is(blank().orThat("bar", hasSubstring(), "ba"));
@@ -209,6 +222,19 @@ public class ComposablePredicateTest {
   }
 
   @Test
+  public void orThatIntRelation100() {
+    Check.that(null).is(notNull().orThat(1, ne(), 2));
+    Check.that(null).is(NULL().orThat(1, eq(), 2));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orThatIntRelation101() {
+    Check.that(OutputStream.class).is(
+        validIf(subtypeOf(), File.class).orThat(1, eq(), 2));
+  }
+
+
+  @Test
   public void orNotPredicate100() {
     Check.that(List.of("foo", "bar"))
         .is(empty().orNot("hello", s -> s.length() > 100));
@@ -218,7 +244,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate101() {
-    Check.that(42L).is(ComposeMethods.invalid().orNot("", empty()));
+    Check.that(42L).is(invalid().orNot("", empty()));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -279,7 +305,7 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void orAny101() {
     Check.that(LocalDate.now())
-        .is(ComposeMethods.invalid()
+        .is(invalid()
             .or("foo, world", hasSubstring(), anyOf(), "hello", "bar"));
   }
 
@@ -309,7 +335,7 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void orNone101() {
     Check.that(LocalDate.now())
-        .is(ComposeMethods.invalid()
+        .is(invalid()
             .or("hello, world", hasSubstring(), noneOf(), "hello", "bar"));
   }
 
@@ -439,7 +465,7 @@ public class ComposablePredicateTest {
   @Test
   public void andAny00() {
     Check.that("hello, world")
-        .is(ComposeMethods.valid().and(hasSubstring(), anyOf(), "foo", "world"));
+        .is(valid().and(hasSubstring(), anyOf(), "foo", "world"));
   }
 
   @Test
@@ -457,7 +483,7 @@ public class ComposablePredicateTest {
   @Test
   public void andAll00() {
     Check.that("hello, world")
-        .is(ComposeMethods.valid().and(hasSubstring(), allOf(), "hello", "world"));
+        .is(valid().and(hasSubstring(), allOf(), "hello", "world"));
   }
 
   @Test
@@ -475,7 +501,7 @@ public class ComposablePredicateTest {
   @Test
   public void andNone00() {
     Check.that("hello, world")
-        .is(ComposeMethods.valid().and(hasSubstring(), noneOf(), "foo", "bar"));
+        .is(valid().and(hasSubstring(), noneOf(), "foo", "bar"));
   }
 
   @Test
@@ -512,6 +538,21 @@ public class ComposablePredicateTest {
   }
 
   @Test
+  public void andThatIntPredicate100() {
+    Check.that("foo").is(valid().andThat(2, even()));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andThatIntPredicate101() {
+    Check.that("foo").is(invalid().andThat(2, even()));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andThatIntPredicate102() {
+    Check.that("foo").is(valid().andThat(2, odd()));
+  }
+
+  @Test
   public void andThatRelation00() {
     Check.that("foo").is(validIf((String s) -> s.length() < 100)
         .andThat("bar", hasSubstring(), "ba"));
@@ -520,6 +561,21 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void andThatRelation01() {
     Check.that("foo").is(blank().andThat("bar", hasSubstring(), "foo"));
+  }
+
+  @Test
+  public void andThatIntRelation100() {
+    Check.that(null).is(NULL().andThat(1, lt(), 2));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andThatIntRelation101() {
+    Check.that(null).is(notNull().andThat(1, lt(), 2));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void andThatIntRelation102() {
+    Check.that(null).is(NULL().andThat(2, lt(), 1));
   }
 
   @Test
@@ -605,7 +661,7 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void andAny101() {
     Check.that(LocalDate.now())
-        .is(ComposeMethods.valid()
+        .is(valid()
             .and("foo, world", hasSubstring(), anyOf(), "hello", "bar"));
   }
 
@@ -638,14 +694,14 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void andNone101() {
     Check.that(LocalDate.now())
-        .is(ComposeMethods.invalid()
+        .is(invalid()
             .and("hello, world", hasSubstring(), noneOf(), "hello", "bar"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone102() {
     Check.that(LocalDate.now())
-        .is(ComposeMethods.valid()
+        .is(valid()
             .and("foo bar", hasSubstring(), noneOf(), "hello", "bar"));
   }
 

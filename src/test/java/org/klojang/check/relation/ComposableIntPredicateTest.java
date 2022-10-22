@@ -160,14 +160,19 @@ public class ComposableIntPredicateTest {
     Check.that(27).is(odd().orThat("bar", s -> s.length() > 100));
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void orThatPredicate101() {
+    Check.that(28).is(odd().orThat("bar", s -> s.length() > 100));
+  }
+
+  @Test
+  public void orThatIntPredicate100() {
     Check.that(28).is(odd().orThat(2, i -> i < 3));
     Check.that(27).is(odd().orThat(2, i -> i > 3));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void orThatPredicate102() {
+  public void orThatIntPredicate101() {
     Check.that(28).is(odd().orThat(3, even()));
   }
 
