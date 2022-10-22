@@ -53,7 +53,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.argName, val));
+      throw check.exc.apply(defaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, null));
@@ -153,7 +153,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, val, obj));
+       throw check.exc.apply(defaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, obj));

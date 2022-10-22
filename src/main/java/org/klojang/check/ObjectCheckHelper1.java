@@ -158,13 +158,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-      // Yes, that's correct: we pass null as the property name, and we pass the
-      // property name as the property value. This will yield the most intelligible
-      // error message. We anyhow don't have much to brew a property name from, and
-      // what we have looks like "Function.apply(42.0)" - assuming 42.0 was the
-      // argument. That looks much more like the value than the name of what we are
-      // comparing to obj.
-      throw check.exc.apply(defaultRelationMessage(null, name, obj));
+       throw check.exc.apply(defaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, null, obj));

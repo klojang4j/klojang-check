@@ -72,7 +72,7 @@ final class IntCheckHelper2<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, check.arg));
+      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), check.arg));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -93,7 +93,7 @@ final class IntCheckHelper2<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, check.arg));
+      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), check.arg));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -167,13 +167,7 @@ final class IntCheckHelper2<E extends Exception> {
         IntUnaryOperator.class);
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      // Yes, that's correct: we pass null as the property name, and we pass the
-      // property name as the property value. This will yield the most intelligible
-      // error message. We anyhow don't have much to brew a property name from, and
-      // what we have looks like "Function.apply(42.0)" - assuming 42.0 was the
-      // argument. That looks much more like the value than the name of what we are
-      // comparing to obj.
-      throw check.exc.apply(defaultRelationMessage(null, name, obj));
+      throw check.exc.apply(defaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, int.class, obj));
@@ -191,7 +185,7 @@ final class IntCheckHelper2<E extends Exception> {
         IntUnaryOperator.class);
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, check.arg, obj));
+      throw check.exc.apply(defaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, obj));
@@ -227,7 +221,7 @@ final class IntCheckHelper2<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), check.arg, obj));
+      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
