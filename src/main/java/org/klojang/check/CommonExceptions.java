@@ -18,7 +18,7 @@ import org.klojang.check.aux.DuplicateValueException;
  * <ol>
  *   <li>A {@code public static final} class constant of type
  *      {@code Function<String, Exception>}. This function can be used as the first
- *      argument to the {@code Check.on(...)} methods of hte {@link Check} class. It
+ *      argument to the {@code Check.on(...)} methods of the {@link Check} class. It
  *      sets the default exception, to be thrown if the value fails to pass any of
  *      the subsequent tests.
  *   <li>A method that takes a {@code String} (the error message) and returns a
@@ -111,7 +111,7 @@ public final class CommonExceptions {
       IllegalArgumentException::new;
 
   /**
-   * Returns a {@code Supplier} of an {@code IllegalStateException}.
+   * Returns a {@code Supplier} of an {@link IllegalStateException}.
    *
    * @param message the exception message
    * @return a {@code Supplier} of an {@code IllegalStateException}
@@ -218,7 +218,7 @@ public final class CommonExceptions {
    * @param message the exception message
    * @return a {@code Supplier} of an {@code NullPointerException}
    */
-  public static Supplier<NullPointerException> npe(String message) {
+  public static Supplier<NullPointerException> NPE(String message) {
     return () -> new NullPointerException(message);
   }
 
@@ -228,7 +228,7 @@ public final class CommonExceptions {
    *
    * @return a {@code Supplier} of an {@code NullPointerException}
    */
-  public static Supplier<NullPointerException> npe() {
+  public static Supplier<NullPointerException> NPE() {
     return NullPointerException::new;
   }
 

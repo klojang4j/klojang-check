@@ -31,6 +31,7 @@
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
         <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
         <jacoco.version>0.8.8</jacoco.version>
@@ -195,7 +196,6 @@
                         <id>check-style</id>
                         <configuration>
                             <configLocation>google_checks.xml</configLocation>
-                            <encoding>UTF-8</encoding>
                             <failsOnError>true</failsOnError>
                             <consoleOutput>true</consoleOutput>
                             <includeTestSourceDirectory>true
@@ -243,43 +243,32 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <failOnWarnings>false</failOnWarnings>
-                    <quiet>true</quiet>
-                    <doclint>none</doclint>
-                </configuration>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>attach</id>
+                        <id>attach-sources</id>
                         <goals>
-                            <goal>aggregate-jar</goal>
+                            <goal>jar-no-fork</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>create-apidocs</id>
-                        <goals>
-                            <goal>aggregate</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                        <phase>install</phase>
-                        <configuration>
-                            <doctitle>Naturalis Common ${project.version}</doctitle>
-                            <description>
-                                Light-weight Java language extensions module with
-                                zero dependencies outside the java.base module.
-                            </description>
-                            <detectLinks>true</detectLinks>
-                            <show>protected</show>
-                            <excludes>src/test/**/*</excludes>
-                            <sourcepath>src/main/java</sourcepath>
-                        </configuration>
                     </execution>
                 </executions>
-            </plugin-->
-        </plugins>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+         </plugins>
     </build>
 </project>

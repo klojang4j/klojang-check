@@ -1,22 +1,22 @@
 package org.klojang.check.aux;
 
-import static org.klojang.check.CommonChecks.deepNotEmpty;
-import static org.klojang.check.CommonChecks.empty;
+import org.klojang.check.CommonChecks;
+import org.klojang.check.fallible.FallibleConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import org.klojang.check.CommonChecks;
-import org.klojang.check.fallible.FallibleConsumer;
+import static org.klojang.check.CommonChecks.deepNotEmpty;
+import static org.klojang.check.CommonChecks.empty;
 
 /**
  * A value container that explicitly allows the value to be {@code null}. This class
  * is meant to be used as the return value of methods that would otherwise return
- * {@code null} both as the legitimate outcome of a computation and as a signal that
- * the computation yielded no result. The {@link java.util.HashMap} class is a prime
- * example. If its {@code get} method returns {@code null}, it is still not clear
- * whether the requested key was absent, or whether it was present, but associated
- * with value {@code null}.
+ * {@code null} both as the legitimate outcome of a computation <i>and</i> as a
+ * signal that the computation yielded no result. The {@link java.util.HashMap} class
+ * is a prime example. If its {@code get} method returns {@code null}, it is not
+ * clear whether the requested key was absent, or whether it was present, but
+ * associated with value {@code null}.
  *
  * <p>Another scenario (and one that we can control) would be iterating over an
  * array and returning a particular element, if found. If the element can itself

@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 
-import org.klojang.check.InvalidCheckException;
+import org.klojang.check.CorruptCheckException;
 import org.klojang.check.aux.Emptyable;
 
 /*
@@ -119,10 +119,10 @@ public final class CheckImpls {
       try {
         return idx < getArrayLength(obj);
       } catch (Throwable t) {
-        throw new InvalidCheckException(t.toString());
+        throw new CorruptCheckException(t.toString());
       }
     }
-    throw new InvalidCheckException(
+    throw new CorruptCheckException(
         "indexOf() not applicable to " + obj.getClass());
   }
 
@@ -137,10 +137,10 @@ public final class CheckImpls {
       try {
         return idx <= getArrayLength(obj);
       } catch (Throwable t) {
-        throw new InvalidCheckException(t.toString());
+        throw new CorruptCheckException(t.toString());
       }
     }
-    throw new InvalidCheckException(
+    throw new CorruptCheckException(
         "indexInclusiveOf() not applicable to " + obj.getClass());
   }
 
@@ -186,7 +186,7 @@ public final class CheckImpls {
     try {
       return Files.size(f.toPath());
     } catch (IOException e) {
-      throw new InvalidCheckException(e.toString());
+      throw new CorruptCheckException(e.toString());
     }
   }
 
@@ -207,7 +207,7 @@ public final class CheckImpls {
           }
         }
       } catch (IOException e) {
-        throw new InvalidCheckException(e.toString());
+        throw new CorruptCheckException(e.toString());
       }
     }
     return true;

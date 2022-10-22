@@ -8,15 +8,18 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Provides static factory methods for {@link IntCheck} and {@link ObjectCheck}
- * instances. The {@code Check} class also contains a few validation methods itself,
+ * The central class of this Java module. All checks start out here. The
+ * {@code Check} class provides static factory methods for {@link IntCheck} and
+ * {@link ObjectCheck} instances, which do the actual orchestration of the checks to
+ * be executed. The {@code Check} class contains a few validation methods itself,
  * like {@link #fromTo(int, int, int) Check.fromTo} and
  * {@link #offsetLength(int, int, int) Check.offsetLength}. These stand somewhat
- * apart from the rest of the Naturalis Check framework as they test multiple things
- * at once. They are included for convenience and for optimal performance.
+ * apart from the rest of the Klojang Check framework test multiple things at once.
+ * They are included for convenience and for optimal performance.
  *
- * <p>See the {@linkplain org.klojang.check package description} for a detailed
- * description of validating preconditions and postconditions using Naturalis Check.
+ * <p>See the <a href="../../../module-summary.html">module summary</a> for a
+ * detailed description of validating preconditions and postconditions using Klojang
+ * Check.
  *
  * @author Ayco Holleman
  */

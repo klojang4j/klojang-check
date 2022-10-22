@@ -689,7 +689,7 @@ public final class CommonChecks {
    * {@link Collection#containsAll(Collection) Collection::containsAll}.
    *
    * <blockquote><pre>{@code
-   * Check.that(List.of(1,2,3)).is(containsAll(), Set.of(1,2); // true
+   * Check.that(List.of(1,2,3)).is(enclosing(), Set.of(1,2); // true
    * Check.that(List.of(1,2)).is(enclosing(), Set.of(1,2,3); // false
    * }</pre></blockquote>
    *
@@ -699,7 +699,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <E, C0 extends Collection<? super E>, C1 extends Collection<E>>
-  Relation<C0, C1> containsAll() {
+  Relation<C0, C1> enclosing() {
     return Collection::containsAll;
   }
 
@@ -839,7 +839,7 @@ public final class CommonChecks {
    * loss of information. The provided type must be one of the <i>primitive</i>
    * number types: {@code long}, {@code int}, {@code short}, {@code byte},
    * {@code double} or {@code float}. Specifying a wrapper type (e.g.
-   * {@code Integer}) will result in an {@link InvalidCheckException}.
+   * {@code Integer}) will result in an {@link CorruptCheckException}.
    *
    * @param <T> the type of the number into which to parse the string
    * @return a function implementing the test described above
@@ -862,13 +862,12 @@ public final class CommonChecks {
    * without loss of information. The provided type must be one of the
    * <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
    * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g.
-   * {@code Integer}) will result in an {@link InvalidCheckException}. The difference
-   * between this check and the {@link #numerical()} check is that this check allows
-   * the string to be parsed to have a fractional part even if the target type is an
-   * integral type (like {@code int}), as long as it consists of zeros only.
-   * Scientific notation is allowed, too, as long as the effective fractional part
-   * consists of zeros only. For {@code Double} and {@code Float} there is no
-   * difference between the two checks.
+   * {@code Integer}) will result in an {@link CorruptCheckException}. Contrary to
+   * the {@link #numerical()}, this check allows the string to contain a fractional
+   * part even if the target type is an integral type (like {@code int}), as long as
+   * it consists of zeros only. Scientific notation is allowed, too, as long as the
+   * effective fractional part consists of zeros only. For {@code Double} and
+   * {@code Float} there is no difference between the two checks.
    *
    * @param <T> the type of the number into which to parse the string
    * @return a function implementing the test described above
@@ -894,7 +893,7 @@ public final class CommonChecks {
    * Verifies that the argument is a valid index into the specified array,
    * {@code List} or {@code String}. No preliminary check is done to ensure the
    * provided object actually is an array, {@code List} or {@code String}. An
-   * {@link InvalidCheckException} is thrown if it is not. Execute the
+   * {@link CorruptCheckException} is thrown if it is not. Execute the
    * {@link #instanceOf()} or {@link #array()} check first, if necessary.
    *
    * @param <T> the type of the object of the {@code IntObjRelation} - must be a
@@ -913,7 +912,7 @@ public final class CommonChecks {
    * {@link List#subList(int, int) List.subList}. These operations allow both the
    * "from" index and the "to" index to be equal to the length of the array, string
    * or list. No preliminary check is done to ensure the provided object actually is
-   * an array, {@code List} or {@code String}. An {@link InvalidCheckException} is
+   * an array, {@code List} or {@code String}. An {@link CorruptCheckException} is
    * thrown if it is not. Execute the {@link #instanceOf()} or {@link #array()} check
    * first, if necessary.
    *

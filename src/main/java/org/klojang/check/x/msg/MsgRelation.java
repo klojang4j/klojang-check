@@ -89,7 +89,7 @@ public final class MsgRelation {
     //@formatter:off
   }
 
-  public static PrefabMsgFormatter msgContainsAll() {
+  public static PrefabMsgFormatter msgEnclosing() {
     //@formatter:off
     return x -> x.negated()
         ? x.name() + " must not be superset of " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'

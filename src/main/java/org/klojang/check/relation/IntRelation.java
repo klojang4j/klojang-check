@@ -3,7 +3,7 @@ package org.klojang.check.relation;
 /**
  * Defines a relationship between two integers. For example, if x equals 5 and y
  * equals 3, then the <b>is-greater-than</b> relation exists between x and y. See the
- * {@linkplain nl.naturalis.common.function package description} for more
+ * {@linkplain org.klojang.check.relation package description} for more
  * information.
  *
  * @author Ayco Holleman

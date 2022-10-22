@@ -4,7 +4,7 @@ package org.klojang.check.relation;
  * Defines a relationship between an integer and an object. For example, if x equals
  * 6, and y is an {@code int[]} array containing 6, then the <b>is-element-of</b>
  * relation exists between x and y. See the
- * {@linkplain nl.naturalis.common.function package description} for more
+ * {@linkplain org.klojang.check.relation package description} for more
  * information.
  *
  * @param <O> the type of the object of the relation

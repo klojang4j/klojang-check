@@ -1,10 +1,8 @@
 /**
- * <p>
- * Klojang Check is a light-weight Java module that provides a concise and convenient
+ * <p>Klojang Check is a light-weight Java module that provides a concise and convenient
  * way of validating preconditions and postconditions.
- * <p>
- * <p>
- * Precondition checks are concerned with validating method arguments, object state,
+ *
+ * <p>Precondition checks are concerned with validating method arguments, object state,
  * program input and other things that must be right before you will even consider
  * continuing with code implementing the business logic. Postcondition checks
  * validate computational outcomes, possibly stored as intermediate results in local
@@ -30,12 +28,12 @@
  * checks on the same value, as the above example illustrates.
  *
  * <p>There are two types of check objects:
- * {@linkplain org.klojang.check.IntCheck}, for validating {@code int} values, and
- * {@link org.klojang.check.ObjectCheck ObjectCheck&lt;T&gt;}, for validating values
- * of type {@code <T>}. You cannot directly instantiate these classes. You obtain an
- * instance of them through the static factory methods on the
- * {@linkplain org.klojang.check.Check} class. In the example above, the
- * {@link org.klojang.check.Check#that(int) that} static factory method returns an
+ * {@linkplain org.klojang.check.IntCheck IntCheck}, for validating {@code int}
+ * values, and {@link org.klojang.check.ObjectCheck ObjectCheck&lt;T&gt;}, for
+ * validating values of type {@code <T>}. You cannot directly instantiate these
+ * classes. You obtain an instance of them through the static factory methods on the
+ * {@linkplain org.klojang.check.Check Check} class. In the example above, the
+ * {@link org.klojang.check.Check#that(int) that()} static factory method returns an
  * {@code IntCheck} object.
  *
  *
@@ -91,16 +89,17 @@
  * <h2>Types of Checks</h2>
  * <p>
  * The checks you pass to the {@code is(...)} methods fall apart in two broad
- * categories: implementations of {@link java.util.function.Predicate} and
- * {@link java.util.function.IntPredicate} on the one hand, and implementations of
- * {@link nl.naturalis.check.Relation} and its sister interfaces on the other. The
- * latter are not part of the JDK. They can be thought of as a "BiPredicate" (which
- * neither exists in the JDK): a function that takes <i>two</i> arguments and returns
- * a boolean. If the two arguments have a particular relation, defined by the
- * implementation, to each other, the relation is said to <i>exist</i> and the
- * function returns {@code true}. Within the context of Klojang Check, the first
- * argument is always the value to be validated, while the second argument is the
- * value that it is to be validated against. In the examples above,
+ * categories: implementations of {@link java.util.function.Predicate Predicate} and
+ * {@link java.util.function.IntPredicate IntPredicate} on the one hand, and
+ * implementations of
+ * {@link org.klojang.check.relation.Relation Relation} and its sister interfaces on
+ * the other. The latter are not part of the JDK. They can be thought of as a
+ * "BiPredicate" (which neither exists in the JDK): a function that takes <i>two</i>
+ * arguments and returns a boolean. If the two arguments have a particular relation,
+ * defined by the implementation, to each other, the relation is said to
+ * <i>exist</i> and the function returns {@code true}. Within the context of Klojang
+ * Check, the first argument is always the value to be validated, while the second
+ * argument is the value that it is to be validated against. In the examples above,
  * {@linkplain org.klojang.check.CommonChecks#positive() positive()},
  * {@linkplain org.klojang.check.CommonChecks#even() even()},
  * {@linkplain org.klojang.check.CommonChecks#empty() empty()} and
@@ -112,7 +111,7 @@
  * {@linkplain org.klojang.check.CommonChecks#containsKey() containingKey()} are
  * checks implemented as a {@code Relation} or one of its sister interfaces. For more
  * information, see the package description of
- * {@linkplain nl.naturalis.common.function}.
+ * {@linkplain org.klojang.check.relation}.
  *
  *
  *
@@ -156,7 +155,7 @@
  *   <li><b><code>${test}</code></b> The name of the check that was executed.
  *      E.g. "lt" or "instanceOf" or "notNull".
  *   <li><b><code>${arg}</code></b> The value being validated.
- *   <li><b><code>${type}</code></b> The simple class name of the value.
+ *   <li><b><code>${type}</code></b> The simple class name of the value's class.
  *   <li><b><code>${name}</code></b> The name of the parameter, field or variable
  *      being validated, or, possibly, something more descriptive (like "vehicle" in
  *      one of the above examples). Providing a name can be useful when validating
@@ -166,13 +165,14 @@
  *      defaults to "argument".
  *   <li><b><code>${obj}</code></b> The object of the relationship, in case the
  *      check took the form of a
- *      {@linkplain nl.naturalis.check.Relation} or one of its sister
- *      interfaces. For example, for the
+ *      {@linkplain org.klojang.check.relation.Relation Relation} or one of its
+ *      sister interfaces. For example, for the
  *      {@linkplain org.klojang.check.CommonChecks#instanceOf() instanceOf()} check,
  *      <code>${obj}</code> would be the class that the argument must be an instance
  *      of (<code>Car.class</code> in the example above). For checks expressed
- *      through a {@linkplain java.util.function.Predicate} or
- *      {@linkplain java.util.function.IntPredicate}, ${obj} will be {@code null}.
+ *      through a {@linkplain java.util.function.Predicate Predicate} or
+ *      {@linkplain java.util.function.IntPredicate IntPredicate}, ${obj} will be
+ *      {@code null}.
  * </ol>
  * <p>
  * Here is an example where you don't provide any message arguments yourself, yet
@@ -181,10 +181,6 @@
  * <blockquote><pre>{@code
  * Check.that(word).is(keyIn(), dictionary, "Missing key \"${arg}\" in map ${obj}");
  * }</pre></blockquote>
- * <p>
- * Note that message arguments are not stringified using
- * {@link java.util.Objects#toString(java.lang.Object) Objects.toString} but using
- * {@link nl.naturalis.common.StringMethods#toShortString(java.lang.Object, int) StringMethods.toShortString}.
  *
  *
  *
@@ -224,12 +220,12 @@
  *  .ok();
  * }</pre></blockquote>
  *
- * <p>The {@linkplain org.klojang.check.CommonProperties} class provides some
- * commonly used properties of well-known classes and interfaces, like the
- * {@code size} property of a {@code Collection}. As with the {@code CommonChecks}
- * class, these properties are already associated with a descriptive name of the
- * property they expose. Thus, the error message to be generated requires minimal
- * input from you:
+ * <p>The {@linkplain org.klojang.check.CommonProperties CommonProperties} class
+ * provides some commonly used properties of well-known classes and interfaces, like
+ * the {@code size} property of a {@code Collection}. As with the
+ * {@code CommonChecks} class, these properties are already associated with a
+ * descriptive name of the property they expose. Thus, the error message to be
+ * generated requires minimal input from you:
  *
  * <blockquote><pre>{@code
  * Check.notNull(emps, "employees").has(size(), gte(), 100);
@@ -313,7 +309,7 @@
  * }</pre></blockquote>
  *
  * <p>Here, too, Klojang Check provides some useful shortcuts through the
- * {@linkplain org.klojang.check.CommonExceptions} class:
+ * {@linkplain org.klojang.check.CommonExceptions CommonExceptions} class:
  *
  * <blockquote><pre>{@code
  * Check.that(word)
@@ -338,13 +334,9 @@
  * function to the {@code ok()} method that applies some sort of transformation to
  * the validated value:
  *
- * <blockquote>
- *
- * <pre>{@code
+ * <blockquote><pre>{@code
  * Car car = Check.that(obj).is(instanceOf(), Car.class).ok(Class::cast);
- * }</pre>
- *
- * </blockquote>
+ * }</pre></blockquote>
  */
 module org.klojang.check {
   exports org.klojang.check;

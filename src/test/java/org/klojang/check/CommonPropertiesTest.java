@@ -1,8 +1,6 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
-import org.klojang.check.InvalidCheckException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,7 +9,6 @@ import java.math.BigInteger;
 import java.time.DayOfWeek;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
@@ -383,7 +380,7 @@ public class CommonPropertiesTest {
     Check.that(new BigDecimal("-100.13")).has(ABS(), EQ(), new BigDecimal("100.13"));
   }
 
-  @Test(expected = InvalidCheckException.class)
+  @Test(expected = CorruptCheckException.class)
   public void ABS16() {
     Check.that(new AtomicInteger(-100)).has(ABS(), EQ(), new AtomicInteger(100));
   }

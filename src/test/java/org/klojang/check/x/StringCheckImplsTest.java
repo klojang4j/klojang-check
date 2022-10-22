@@ -2,7 +2,7 @@ package org.klojang.check.x;
 
 import org.junit.Test;
 import org.klojang.check.Check;
-import org.klojang.check.InvalidCheckException;
+import org.klojang.check.CorruptCheckException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -521,7 +521,7 @@ public class StringCheckImplsTest {
     Check.that("12*6").is(parsableAs(), float.class);
   }
 
-  @Test(expected = InvalidCheckException.class)
+  @Test(expected = CorruptCheckException.class)
   public void parsableAs00() {
     Check.that("12*6").is(parsableAs(), AtomicLong.class);
   }

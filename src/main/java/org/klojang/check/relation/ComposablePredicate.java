@@ -144,7 +144,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> orElse(Predicate<?> test) {
-    checkArg(test);
     return x -> meFirst(x) || ((Predicate) test).test(x);
   }
 
@@ -168,7 +167,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <O, V> ComposablePredicate<V> orElse(Relation<?, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) || ((Relation) relation).exists(x, object);
   }
 
@@ -184,7 +182,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> orNot(Predicate<?> test) {
-    checkArg(test);
     return x -> meFirst(x) || !((Predicate) test).test(x);
   }
 
@@ -206,7 +203,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <O, V> ComposablePredicate<V> orNot(Relation<?, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) || !((Relation) relation).exists(x, object);
   }
 
@@ -228,7 +224,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <O, P extends O, V> ComposablePredicate<V> or(Relation<V, O> relation,
       Quantifier quantifier,
       P... objects) {
-    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
         || testAgainstArray(x, relation, quantifier, objects);
   }
@@ -251,7 +246,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> orThat(U value, Predicate<U> test) {
-    checkArg(test);
     return x -> meFirst(x) || test.test(value);
   }
 
@@ -272,7 +266,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> orThat(int value, IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) || test.test(value);
   }
 
@@ -294,7 +287,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <S, O, V> ComposablePredicate<V> orThat(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) || relation.exists(subject, object);
   }
 
@@ -314,7 +306,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <V> ComposablePredicate<V> orThat(int subject,
       IntRelation relation,
       int object) {
-    checkArg(relation);
     return x -> meFirst(x) || relation.exists(subject, object);
   }
 
@@ -337,7 +328,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> orNot(U value, Predicate<U> test) {
-    checkArg(test);
     return x -> meFirst(x) || !test.test(value);
   }
 
@@ -360,7 +350,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <S, O, V> ComposablePredicate<V> orNot(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) || !relation.exists(subject, object);
   }
 
@@ -384,8 +373,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <S, O, P extends O, V> ComposablePredicate<V> or(S subject,
       Relation<S, O> relation, Quantifier quantifier, P... objects) {
-    checkArgs(relation, quantifier, objects);
-    Private.checkObjects(objects);
     return x -> meFirst(x)
         || testAgainstArray(subject, relation, quantifier, objects);
   }
@@ -407,8 +394,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <V> ComposablePredicate<V> or(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-    checkArgs(relation, quantifier, objects);
-    checkObjects(objects);
     return x -> meFirst(x)
         || testAgainstArray(subject, relation, quantifier, objects);
   }
@@ -464,8 +449,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> andAlso(Predicate<?> test) {
-    checkArg(test);
-    return x -> meFirst(x) && ((Predicate) test).test(x);
+     return x -> meFirst(x) && ((Predicate) test).test(x);
   }
 
   /**
@@ -483,7 +467,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <O, V> ComposablePredicate<V> andAlso(Relation<?, O> relation, O object) {
-    checkArg(relation);
     return x -> meFirst(x) && ((Relation) relation).exists(x, object);
   }
 
@@ -533,7 +516,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> andNot(Predicate<?> test) {
-    checkArg(test);
     return x -> meFirst(x) && !((Predicate) test).test(x);
   }
 
@@ -552,7 +534,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <O, V> ComposablePredicate<V> andNot(Relation<?, O> relation, O object) {
-    checkArg(relation);
     return x -> meFirst(x) && !((Relation) relation).exists(x, object);
   }
 
@@ -574,8 +555,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <O, P extends O, V> ComposablePredicate<V> and(Relation<V, O> relation,
       Quantifier quantifier,
       P... objects) {
-    checkArgs(relation, quantifier, objects);
-    return x -> meFirst(x)
+     return x -> meFirst(x)
         && testAgainstArray(x, relation, quantifier, objects);
   }
 
@@ -597,7 +577,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> andThat(U value, Predicate<U> test) {
-    checkArg(test);
     return x -> meFirst(x) && test.test(value);
   }
 
@@ -619,7 +598,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> andThat(int value, IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) && test.test(value);
   }
 
@@ -641,7 +619,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <S, O, V> ComposablePredicate<V> andThat(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) && relation.exists(subject, object);
   }
 
@@ -662,7 +639,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <V> ComposablePredicate<V> andThat(int subject,
       IntRelation relation,
       int object) {
-    checkArg(relation);
     return x -> meFirst(x) && relation.exists(subject, object);
   }
 
@@ -685,7 +661,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <U, V> ComposablePredicate<V> andNot(U value, Predicate<U> test) {
-    checkArg(test);
     return x -> meFirst(x) && !test.test(value);
   }
 
@@ -708,7 +683,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <S, O, V> ComposablePredicate<V> andNot(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
@@ -732,7 +706,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <S, O, P extends O, V> ComposablePredicate<V> and(S subject,
       Relation<S, O> relation, Quantifier quantifier, P... objects) {
-    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x) &&
         testAgainstArray(subject, relation, quantifier, objects);
   }
@@ -754,7 +727,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    */
   default <V> ComposablePredicate<V> and(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
         && testAgainstArray(subject, relation, quantifier, objects);
   }

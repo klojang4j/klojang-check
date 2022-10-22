@@ -6,8 +6,6 @@ import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
-import static org.klojang.check.relation.Private.checkArg;
-
 /**
  * Utility methods, mostly concerned with starting a composition of tests. Note that
  * while the predicates in the {@link CommonChecks} class are, in fact, already
@@ -19,7 +17,11 @@ import static org.klojang.check.relation.Private.checkArg;
  *
  * @author Ayco Holleman
  */
-public class ComposeMethods {
+public final class ComposeMethods {
+
+  private ComposeMethods() {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Returns a {@code ComposablePredicate} that always evaluates to {@code true}.
@@ -96,7 +98,6 @@ public class ComposeMethods {
    * value to be tested has the specified value.
    *
    * @param value the value to compare the value to be tested with
-   * @param <T> the type of the value being tested
    * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
    *     value to be tested has the specified value
    */
@@ -123,7 +124,6 @@ public class ComposeMethods {
    * value to be tested has the specified value.
    *
    * @param value the value to compare the value to be tested with
-   * @param <T> the type of the value being tested
    * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
    *     value to be tested has the specified value
    */
@@ -152,7 +152,6 @@ public class ComposeMethods {
    * @return the equivalent {@code ComposablePredicate}
    */
   public static <T> ComposablePredicate<T> validIf(Predicate<T> test) {
-    checkArg(test);
     return test::test;
   }
 
@@ -169,7 +168,6 @@ public class ComposeMethods {
    * @return the equivalent {@code ComposableIntPredicate}
    */
   public static ComposableIntPredicate validIntIf(IntPredicate test) {
-    checkArg(test);
     return test::test;
   }
 
@@ -195,7 +193,6 @@ public class ComposeMethods {
    */
   public static <S, O> ComposablePredicate<S> validIf(Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return s -> relation.exists(s, object);
   }
 
@@ -214,7 +211,6 @@ public class ComposeMethods {
    */
   public static <O> ComposableIntPredicate validIntIf(IntObjRelation<O> relation,
       O object) {
-    checkArg(relation);
     return s -> relation.exists(s, object);
   }
 
@@ -231,7 +227,6 @@ public class ComposeMethods {
    *     value being tested has the specified relation to the specified value
    */
   public static ComposableIntPredicate validIntIf(IntRelation relation, int object) {
-    checkArg(relation);
     return s -> relation.exists(s, object);
   }
 

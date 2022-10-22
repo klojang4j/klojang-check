@@ -1,7 +1,6 @@
 package org.klojang.check.x;
 
-import org.klojang.check.InvalidCheckException;
-import org.klojang.check.x.ArrayInfo;
+import org.klojang.check.CorruptCheckException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -24,7 +23,7 @@ public final class Misc {
     try {
       return (int) arrayLength(array.getClass()).invoke(array);
     } catch (Throwable t) {
-      throw new InvalidCheckException(t.toString());
+      throw new CorruptCheckException(t.toString());
     }
   }
 
@@ -178,7 +177,7 @@ public final class Misc {
         sb.append(stringifier.apply(o));
       }
     } catch (Throwable t) {
-      throw new InvalidCheckException(t.toString());
+      throw new CorruptCheckException(t.toString());
     }
     return sb.toString();
   }
@@ -193,13 +192,13 @@ public final class Misc {
     return (int) Math.ceil((double) value / (double) divideBy);
   }
 
-  public static InvalidCheckException typeNotSupported(Class<?> type) {
-    return new InvalidCheckException("type not supported: " + type);
+  public static CorruptCheckException typeNotSupported(Class<?> type) {
+    return new CorruptCheckException("type not supported: " + type);
   }
 
-  public static InvalidCheckException notApplicable(String check, Object arg) {
+  public static CorruptCheckException notApplicable(String check, Object arg) {
     String msg = String.format("\"%s\" not applicable to %s", check, arg.getClass());
-    return new InvalidCheckException(msg);
+    return new CorruptCheckException(msg);
   }
 
 }

@@ -1,12 +1,5 @@
 package org.klojang.check;
 
-import static org.klojang.check.x.msg.MsgUtil.DEF_ARG_NAME;
-import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
-import static org.klojang.check.x.msg.CheckDefs.getRelationFormatter;
-import static org.klojang.check.x.msg.MsgUtil.*;
-
-import java.util.function.*;
-
 import org.klojang.check.fallible.FallibleConsumer;
 import org.klojang.check.fallible.FallibleFunction;
 import org.klojang.check.relation.IntObjRelation;
@@ -14,9 +7,16 @@ import org.klojang.check.relation.IntRelation;
 import org.klojang.check.relation.Relation;
 import org.klojang.check.x.msg.MsgArgs;
 
+import java.util.function.*;
+
+import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
+import static org.klojang.check.x.msg.CheckDefs.getRelationFormatter;
+import static org.klojang.check.x.msg.MsgUtil.*;
+
 /**
  * Facilitates the validation of arbitrarily typed values. See the
- * {@linkplain org.klojang.check package description} for a detailed explanation.
+ * <a href="../../../module-summary.html">module summary</a> for a detailed
+ * explanation.
  *
  * @param <T> The type of the value to be validated
  * @param <X> The type of the exception that is thrown by default if the value
@@ -1609,7 +1609,7 @@ public final class ObjectCheck<T, X extends Exception> {
   }
 
   String FQN(String propName) {
-    if(argName==null) {
+    if (argName == null) {
       return propName;
     }
     return argName + "." + propName;

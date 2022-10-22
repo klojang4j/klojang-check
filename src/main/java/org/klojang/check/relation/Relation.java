@@ -4,7 +4,7 @@ package org.klojang.check.relation;
  * Defines a relationship between two objects. For example, if x is a {@code Map} and
  * y is a {@code String} appearing as a key in that {@code Map}, then the
  * <b>contains-key</b> relation exists between x and y. See the
- * {@linkplain nl.naturalis.base.function package description} for more information.
+ * {@linkplain org.klojang.check.relation package description} for more information.
  *
  * @param <S> the type of the subject of the relation
  * @param <O> the type of the object of the relation

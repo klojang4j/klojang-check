@@ -14,58 +14,6 @@ final class Private {
   private static final String ERR_NO_OBJECT = "at least one object required";
   private static final String ARRAY_MUST_NOT_BE_NULL = "array must not be null";
 
-  static void checkArg(Predicate<?> test) {
-    requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-  }
-
-  static void checkArg(IntPredicate test) {
-    requireNonNull(test, TEST_MUST_NOT_BE_NULL);
-  }
-
-  static void checkArg(Relation<?, ?> relation) {
-    requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-  }
-
-  static void checkArg(IntObjRelation<?> relation) {
-    requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-  }
-
-  static void checkArg(IntRelation relation) {
-    requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-  }
-
-  static void checkArgs(Relation<?, ?> relation,
-      Quantifier quantifier,
-      Object[] objects) {
-    requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    requireNonNull(quantifier, QUANTIFIER_MUST_NOT_BE_NULL);
-    if (requireNonNull(objects, ARRAY_MUST_NOT_BE_NULL).length == 0) {
-      throw new IllegalArgumentException(ERR_NO_OBJECT);
-    }
-  }
-
-  static void checkArgs(IntRelation relation,
-      Quantifier quantifier,
-      int[] objects) {
-    requireNonNull(relation, RELATION_MUST_NOT_BE_NULL);
-    requireNonNull(quantifier, QUANTIFIER_MUST_NOT_BE_NULL);
-    if (requireNonNull(objects, ARRAY_MUST_NOT_BE_NULL).length == 0) {
-      throw new IllegalArgumentException(ERR_NO_OBJECT);
-    }
-  }
-
-  static void checkObjects(int[] values) {
-    if (requireNonNull(values, ARRAY_MUST_NOT_BE_NULL).length == 0) {
-      throw new IllegalArgumentException(ERR_NO_OBJECT);
-    }
-  }
-
-  static void checkObjects(Object[] values) {
-    if (requireNonNull(values, ARRAY_MUST_NOT_BE_NULL).length == 0) {
-      throw new IllegalArgumentException(ERR_NO_OBJECT);
-    }
-  }
-
   static <S, O, P extends O> boolean testAgainstArray(S subject,
       Relation<S, O> relation,
       Quantifier quantifier,

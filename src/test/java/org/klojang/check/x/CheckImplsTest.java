@@ -2,7 +2,7 @@ package org.klojang.check.x;
 
 import org.junit.Test;
 import org.klojang.check.Check;
-import org.klojang.check.InvalidCheckException;
+import org.klojang.check.CorruptCheckException;
 import org.klojang.check.aux.Result;
 
 import static org.klojang.check.CommonChecks.*;
@@ -77,7 +77,7 @@ public class CheckImplsTest {
     Check.that(7).is(indexInclusiveOf(), new int[] {0, 1, 2, 3, 4, 5});
   }
 
-  @Test(expected = InvalidCheckException.class)
+  @Test(expected = CorruptCheckException.class)
   public void indexInclusiveOf00() {
     Check.that(7).is(indexInclusiveOf(), new ByteArrayOutputStream());
   }
@@ -142,7 +142,7 @@ public class CheckImplsTest {
     Check.that(6).is(indexOf(), new int[] {0, 1, 2, 3, 4, 5});
   }
 
-  @Test(expected = InvalidCheckException.class)
+  @Test(expected = CorruptCheckException.class)
   public void indexOf00() {
     Check.that(6).is(indexOf(), new ByteArrayOutputStream());
   }

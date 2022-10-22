@@ -1,10 +1,10 @@
 package org.klojang.check.relation;
 
-import static org.klojang.check.relation.Private.*;
-
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static org.klojang.check.relation.Private.testAgainstArray;
 
 /**
  * An extension of {@link IntPredicate} that acts as a bridge between
@@ -40,7 +40,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orElse(IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) || test.test(x);
   }
 
@@ -59,7 +58,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orElse(IntRelation relation, int object) {
-    checkArg(relation);
     return x -> meFirst(x) || relation.exists(x, object);
   }
 
@@ -72,7 +70,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orNot(IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) || !test.test(x);
   }
 
@@ -87,7 +84,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orNot(IntRelation relation, int object) {
-    checkArg(relation);
     return x -> meFirst(x) || !relation.exists(x, object);
   }
 
@@ -104,7 +100,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate or(IntRelation relation,
       Quantifier quantifier,
       int... objects) {
-    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
         || testAgainstArray(x, relation, quantifier, objects);
   }
@@ -120,7 +115,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default <T> ComposableIntPredicate orThat(T value, Predicate<T> test) {
-    checkArg(test);
     return x -> meFirst(x) || test.test(value);
   }
 
@@ -134,7 +128,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orThat(int value, IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) || test.test(value);
   }
 
@@ -153,7 +146,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate orThat(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) || relation.exists(subject, object);
   }
 
@@ -170,7 +162,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate orThat(int subject,
       IntRelation relation,
       int object) {
-    checkArg(relation);
     return x -> meFirst(x) || relation.exists(subject, object);
   }
 
@@ -186,7 +177,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default <T> ComposableIntPredicate orNot(T value, Predicate<T> test) {
-    checkArg(test);
     return x -> meFirst(x) || !test.test(value);
   }
 
@@ -201,7 +191,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orNot(int value, IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) || !test.test(value);
   }
 
@@ -221,7 +210,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate orNot(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) || !relation.exists(subject, object);
   }
 
@@ -242,8 +230,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default <S, O, P extends O> ComposableIntPredicate or(S subject,
       Relation<S, O> relation, Quantifier quantifier, P... objects) {
-    checkArgs(relation, quantifier, objects);
-    Private.checkObjects(objects);
     return x -> meFirst(x)
         || testAgainstArray(subject, relation, quantifier, objects);
   }
@@ -262,8 +248,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default ComposableIntPredicate or(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-    checkArgs(relation, quantifier, objects);
-    checkObjects(objects);
     return x -> meFirst(x)
         || testAgainstArray(subject, relation, quantifier, objects);
   }
@@ -310,7 +294,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andAlso(IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) && test.test(x);
   }
 
@@ -325,7 +308,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andAlso(IntRelation relation, int object) {
-    checkArg(relation);
     return x -> meFirst(x) && relation.exists(x, object);
   }
 
@@ -366,8 +348,7 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andNot(IntPredicate test) {
-    checkArg(test);
-    return x -> meFirst(x) && !test.test(x);
+   return x -> meFirst(x) && !test.test(x);
   }
 
   /**
@@ -382,7 +363,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default ComposableIntPredicate andNot(IntRelation relation,
       int object) {
-    checkArg(relation);
     return x -> meFirst(x) && !relation.exists(x, object);
   }
 
@@ -399,7 +379,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate and(IntRelation relation,
       Quantifier quantifier,
       int... objects) {
-    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
         && testAgainstArray(x, relation, quantifier, objects);
   }
@@ -415,7 +394,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default <T> ComposableIntPredicate andThat(T value, Predicate<T> test) {
-    checkArg(test);
     return x -> meFirst(x) && test.test(value);
   }
 
@@ -429,7 +407,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andThat(int value, IntPredicate test) {
-    checkArg(test);
     return x -> meFirst(x) && test.test(value);
   }
 
@@ -448,7 +425,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate andThat(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) && relation.exists(subject, object);
   }
 
@@ -465,8 +441,7 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate andThat(int subject,
       IntRelation relation,
       int object) {
-    checkArg(relation);
-    return x -> meFirst(x) && relation.exists(subject, object);
+   return x -> meFirst(x) && relation.exists(subject, object);
   }
 
   /**
@@ -481,7 +456,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default <T> ComposableIntPredicate andNot(T value, Predicate<T> test) {
-    checkArg(test);
     return x -> meFirst(x) && !test.test(value);
   }
 
@@ -496,8 +470,7 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andNot(int value, IntPredicate test) {
-    checkArg(test);
-    return x -> meFirst(x) && !test.test(value);
+   return x -> meFirst(x) && !test.test(value);
   }
 
   /**
@@ -516,7 +489,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default <S, O> ComposableIntPredicate andNot(S subject,
       Relation<S, O> relation,
       O object) {
-    checkArg(relation);
     return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
@@ -534,7 +506,6 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate andNot(int subject,
       IntRelation relation,
       int object) {
-    checkArg(relation);
     return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
@@ -555,7 +526,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default <S, O, P extends O> ComposableIntPredicate and(S subject,
       Relation<S, O> relation, Quantifier quantifier, P... objects) {
-    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
         && testAgainstArray(subject, relation, quantifier, objects);
   }
@@ -574,7 +544,6 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default ComposableIntPredicate and(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-    checkArgs(relation, quantifier, objects);
     return x -> meFirst(x)
         && testAgainstArray(subject, relation, quantifier, objects);
   }

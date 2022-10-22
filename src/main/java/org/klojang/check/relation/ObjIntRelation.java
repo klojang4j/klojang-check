@@ -8,7 +8,7 @@ import org.klojang.check.ObjectCheck;
  * Defines some kind of relationship between an object and an integer. For example,
  * if x is an {@code int[]} array containing 6, and y equals 6, then the
  * <b>contain-elements</b> relation exists between x and y. See the
- * {@linkplain nl.naturalis.common.function package description} for more
+ * {@linkplain org.klojang.check.relation package description} for more
  * information.
  *
  * <p>This interface is included for completeness and because it represents the
