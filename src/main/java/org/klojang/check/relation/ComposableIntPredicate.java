@@ -9,18 +9,16 @@ import static org.klojang.check.relation.Private.testAgainstArray;
 /**
  * An extension of {@link IntPredicate} that acts as a bridge between
  * {@code IntPredicate} and the relational interfaces in this package. It enables the
- * composition of new tests from any number of instances of {@code IntPredicate},
- * {@code IntPredicate}, {@code Relation}, {@code IntRelation} and
- * {@code IntObjRelation}. It does not override any method of {@code IntPredicate}.
+ * composition of new tests from any number of instances of {@link Predicate},
+ * {@link IntPredicate}, {@link Relation}, {@link IntRelation} and
+ * {@link IntObjRelation}. It does not override any method of {@code IntPredicate}.
  * Instead, it extends it with a comprehensive set of {@code default} methods that
  * allow the composition to take place. For more information, see
  * {@link ComposableIntPredicate}.
  *
- * @see Relation
- * @see IntRelation
- * @see IntObjRelation
  */
 @SuppressWarnings({"unchecked"})
+@FunctionalInterface
 public interface ComposableIntPredicate extends IntPredicate {
 
   /**
