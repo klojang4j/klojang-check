@@ -17,20 +17,20 @@ import static org.klojang.check.x.msg.MsgUtil.*;
  * Helper class for ObjectCheck. Helps with has() methods that extract and validate an int
  * property of the argument.
  */
-final class ObjectCheckHelper2<T, E extends Exception> {
+final class ObjectCheckHelper2<T, X extends Exception> {
 
-  static <T0, E0 extends Exception> ObjectCheckHelper2<T0, E0> help(ObjectCheck<T0, E0> check) {
+  static <T, X extends Exception> ObjectCheckHelper2<T, X> help(ObjectCheck<T, X> check) {
     return new ObjectCheckHelper2<>(check);
   }
 
-  private final ObjectCheck<T, E> check;
+  private final ObjectCheck<T, X> check;
 
-  private ObjectCheckHelper2(ObjectCheck<T, E> check) {
+  private ObjectCheckHelper2(ObjectCheck<T, X> check) {
     this.check = check;
   }
 
-  ObjectCheck<T, E> has(ToIntFunction<T> prop, IntPredicate test) throws E {
-    ObjectCheck<T, E> check = this.check;
+  ObjectCheck<T, X> has(ToIntFunction<T> prop, IntPredicate test) throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.test(val)) {
       return check;
@@ -44,8 +44,8 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getPrefabMessage(formatter, test, false, name, val, int.class, null));
   }
 
-  ObjectCheck<T, E> notHas(ToIntFunction<T> prop, IntPredicate test) throws E {
-    ObjectCheck<T, E> check = this.check;
+  ObjectCheck<T, X> notHas(ToIntFunction<T> prop, IntPredicate test) throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.test(val)) {
       return check;
@@ -59,9 +59,9 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getPrefabMessage(formatter, test, true, name, val, int.class, null));
   }
 
-  ObjectCheck<T, E> has(ToIntFunction<T> prop, String name, IntPredicate test)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+  ObjectCheck<T, X> has(ToIntFunction<T> prop, String name, IntPredicate test)
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.test(val)) {
       return check;
@@ -80,9 +80,9 @@ final class ObjectCheckHelper2<T, E extends Exception> {
             null));
   }
 
-  ObjectCheck<T, E> notHas(ToIntFunction<T> prop, String name, IntPredicate test)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+  ObjectCheck<T, X> notHas(ToIntFunction<T> prop, String name, IntPredicate test)
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.test(val)) {
       return check;
@@ -101,12 +101,12 @@ final class ObjectCheckHelper2<T, E extends Exception> {
             null));
   }
 
-  ObjectCheck<T, E> has(ToIntFunction<T> prop,
+  ObjectCheck<T, X> has(ToIntFunction<T> prop,
       IntPredicate test,
       String msg,
       Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.test(val)) {
       return check;
@@ -115,10 +115,10 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getCustomMessage(msg, msgArgs, test, check.argName, val, int.class, null));
   }
 
-  ObjectCheck<T, E> notHas(
+  ObjectCheck<T, X> notHas(
       ToIntFunction<T> prop, IntPredicate test, String msg, Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.test(val)) {
       return check;
@@ -127,19 +127,19 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getCustomMessage(msg, msgArgs, test, check.argName, val, int.class, null));
   }
 
-  <X extends Exception> ObjectCheck<T, E> has(
-      ToIntFunction<T> prop, IntPredicate test, Supplier<X> exception) throws X {
-    ObjectCheck<T, E> check = this.check;
+  <X2 extends Exception> ObjectCheck<T, X> has(
+      ToIntFunction<T> prop, IntPredicate test, Supplier<X2> exception) throws X2 {
+    ObjectCheck<T, X> check = this.check;
     if (test.test(prop.applyAsInt(check.arg))) {
       return check;
     }
     throw exception.get();
   }
 
-  public <O> ObjectCheck<T, E> has(ToIntFunction<T> prop,
+  public <O> ObjectCheck<T, X> has(ToIntFunction<T> prop,
       IntObjRelation<O> test,
-      O obj) throws E {
-    ObjectCheck<T, E> check = this.check;
+      O obj) throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -153,11 +153,11 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getPrefabMessage(formatter, test, false, name, val, int.class, obj));
   }
 
-  public <O> ObjectCheck<T, E> notHas(ToIntFunction<T> prop,
+  public <O> ObjectCheck<T, X> notHas(ToIntFunction<T> prop,
       IntObjRelation<O> test,
       O obj)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -171,12 +171,12 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getPrefabMessage(formatter, test, true, name, val, int.class, obj));
   }
 
-  <O> ObjectCheck<T, E> has(ToIntFunction<T> prop,
+  <O> ObjectCheck<T, X> has(ToIntFunction<T> prop,
       String name,
       IntObjRelation<O> test,
       O obj)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -195,12 +195,12 @@ final class ObjectCheckHelper2<T, E extends Exception> {
             obj));
   }
 
-  <O> ObjectCheck<T, E> notHas(ToIntFunction<T> prop,
+  <O> ObjectCheck<T, X> notHas(ToIntFunction<T> prop,
       String name,
       IntObjRelation<O> test,
       O obj)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -219,13 +219,13 @@ final class ObjectCheckHelper2<T, E extends Exception> {
             obj));
   }
 
-  <O> ObjectCheck<T, E> has(
+  <O> ObjectCheck<T, X> has(
       ToIntFunction<T> prop,
       IntObjRelation<O> test,
       O obj,
       String msg,
-      Object[] msgArgs) throws E {
-    ObjectCheck<T, E> check = this.check;
+      Object[] msgArgs) throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -239,13 +239,13 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         obj));
   }
 
-  <O> ObjectCheck<T, E> notHas(
+  <O> ObjectCheck<T, X> notHas(
       ToIntFunction<T> prop,
       IntObjRelation<O> test,
       O obj,
       String msg,
-      Object[] msgArgs) throws E {
-    ObjectCheck<T, E> check = this.check;
+      Object[] msgArgs) throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -259,19 +259,19 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         obj));
   }
 
-  <O, X extends Exception> ObjectCheck<T, E> has(
-      ToIntFunction<T> prop, IntObjRelation<O> test, O obj, Supplier<X> exception)
-      throws X {
-    ObjectCheck<T, E> check = this.check;
+  <O, X2 extends Exception> ObjectCheck<T, X> has(
+      ToIntFunction<T> prop, IntObjRelation<O> test, O obj, Supplier<X2> exception)
+      throws X2 {
+    ObjectCheck<T, X> check = this.check;
     if (test.exists(prop.applyAsInt(check.arg), obj)) {
       return check;
     }
     throw exception.get();
   }
 
-  public ObjectCheck<T, E> has(ToIntFunction<T> prop, IntRelation test, int obj)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+  public ObjectCheck<T, X> has(ToIntFunction<T> prop, IntRelation test, int obj)
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -285,9 +285,9 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getPrefabMessage(formatter, test, false, name, val, int.class, obj));
   }
 
-  public ObjectCheck<T, E> notHas(ToIntFunction<T> prop, IntRelation test, int obj)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+  public ObjectCheck<T, X> notHas(ToIntFunction<T> prop, IntRelation test, int obj)
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -301,11 +301,11 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         getPrefabMessage(formatter, test, true, name, val, int.class, obj));
   }
 
-  ObjectCheck<T, E> has(ToIntFunction<T> prop,
+  ObjectCheck<T, X> has(ToIntFunction<T> prop,
       String name,
       IntRelation test,
-      int obj) throws E {
-    ObjectCheck<T, E> check = this.check;
+      int obj) throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -324,11 +324,11 @@ final class ObjectCheckHelper2<T, E extends Exception> {
             obj));
   }
 
-  ObjectCheck<T, E> notHas(ToIntFunction<T> prop,
+  ObjectCheck<T, X> notHas(ToIntFunction<T> prop,
       String name,
       IntRelation test,
-      int obj) throws E {
-    ObjectCheck<T, E> check = this.check;
+      int obj) throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -347,10 +347,10 @@ final class ObjectCheckHelper2<T, E extends Exception> {
             obj));
   }
 
-  ObjectCheck<T, E> has(
+  ObjectCheck<T, X> has(
       ToIntFunction<T> prop, IntRelation test, int obj, String msg, Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -364,10 +364,10 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         obj));
   }
 
-  ObjectCheck<T, E> notHas(
+  ObjectCheck<T, X> notHas(
       ToIntFunction<T> prop, IntRelation test, int obj, String msg, Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     int val = prop.applyAsInt(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -381,10 +381,10 @@ final class ObjectCheckHelper2<T, E extends Exception> {
         obj));
   }
 
-  <X extends Exception> ObjectCheck<T, E> has(
-      ToIntFunction<T> prop, IntRelation test, int obj, Supplier<X> exception)
-      throws X {
-    ObjectCheck<T, E> check = this.check;
+  <X2 extends Exception> ObjectCheck<T, X> has(
+      ToIntFunction<T> prop, IntRelation test, int obj, Supplier<X2> exception)
+      throws X2 {
+    ObjectCheck<T, X> check = this.check;
     if (test.exists(prop.applyAsInt(check.arg), obj)) {
       return check;
     }

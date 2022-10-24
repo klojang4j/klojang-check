@@ -16,21 +16,21 @@ import org.klojang.check.x.msg.MsgArgs;
 /**
  * Helper class for ObjectCheck.
  */
-final class ObjectCheckHelper1<T, E extends Exception> {
+final class ObjectCheckHelper1<T, X extends Exception> {
 
-  static <T0, E0 extends Exception> ObjectCheckHelper1<T0, E0> help(ObjectCheck<T0, E0> check) {
+  static <T, X extends Exception> ObjectCheckHelper1<T, X> help(ObjectCheck<T, X> check) {
     return new ObjectCheckHelper1<>(check);
   }
 
-  private final ObjectCheck<T, E> check;
+  private final ObjectCheck<T, X> check;
 
-  private ObjectCheckHelper1(ObjectCheck<T, E> check) {
+  private ObjectCheckHelper1(ObjectCheck<T, X> check) {
     this.check = check;
   }
 
-  <P> ObjectCheck<T, E> has(Function<T, P> prop, String name, Predicate<P> test)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+  <P> ObjectCheck<T, X> has(Function<T, P> prop, String name, Predicate<P> test)
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.test(val)) {
       return check;
@@ -49,9 +49,9 @@ final class ObjectCheckHelper1<T, E extends Exception> {
             null));
   }
 
-  <P> ObjectCheck<T, E> notHas(Function<T, P> prop, String name, Predicate<P> test)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+  <P> ObjectCheck<T, X> notHas(Function<T, P> prop, String name, Predicate<P> test)
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.test(val)) {
       return check;
@@ -70,8 +70,8 @@ final class ObjectCheckHelper1<T, E extends Exception> {
             null));
   }
 
-  <P> ObjectCheck<T, E> has(Function<T, P> prop, Predicate<P> test) throws E {
-    ObjectCheck<T, E> check = this.check;
+  <P> ObjectCheck<T, X> has(Function<T, P> prop, Predicate<P> test) throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.test(val)) {
       return check;
@@ -85,8 +85,8 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         getPrefabMessage(formatter, test, false, name, val, null, null));
   }
 
-  <P> ObjectCheck<T, E> notHas(Function<T, P> prop, Predicate<P> test) throws E {
-    ObjectCheck<T, E> check = this.check;
+  <P> ObjectCheck<T, X> notHas(Function<T, P> prop, Predicate<P> test) throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.test(val)) {
       return check;
@@ -100,12 +100,12 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         getPrefabMessage(formatter, test, true, name, val, null, null));
   }
 
-  <P> ObjectCheck<T, E> has(Function<T, P> prop,
+  <P> ObjectCheck<T, X> has(Function<T, P> prop,
       Predicate<P> test,
       String msg,
       Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.test(val)) {
       return check;
@@ -119,12 +119,12 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         null));
   }
 
-  <P> ObjectCheck<T, E> notHas(Function<T, P> prop,
+  <P> ObjectCheck<T, X> notHas(Function<T, P> prop,
       Predicate<P> test,
       String msg,
       Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.test(val)) {
       return check;
@@ -138,19 +138,19 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         null));
   }
 
-  <P, X extends Exception> ObjectCheck<T, E> has(
-      Function<T, P> prop, Predicate<P> test, Supplier<X> exc) throws X {
-    ObjectCheck<T, E> check = this.check;
+  <P, X2 extends Exception> ObjectCheck<T, X> has(
+      Function<T, P> prop, Predicate<P> test, Supplier<X2> exc) throws X2 {
+    ObjectCheck<T, X> check = this.check;
     if (test.test(prop.apply(check.arg))) {
       return check;
     }
     throw exc.get();
   }
 
-  public <P, O> ObjectCheck<T, E> has(Function<T, P> prop,
+  public <P, O> ObjectCheck<T, X> has(Function<T, P> prop,
       Relation<P, O> test,
-      O obj) throws E {
-    ObjectCheck<T, E> check = this.check;
+      O obj) throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -164,10 +164,10 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         getPrefabMessage(formatter, test, false, name, val, null, obj));
   }
 
-  public <P, O> ObjectCheck<T, E> notHas(Function<T, P> prop,
+  public <P, O> ObjectCheck<T, X> notHas(Function<T, P> prop,
       Relation<P, O> test,
-      O obj) throws E {
-    ObjectCheck<T, E> check = this.check;
+      O obj) throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -181,12 +181,12 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         getPrefabMessage(formatter, test, true, name, val, null, obj));
   }
 
-  <P, O> ObjectCheck<T, E> has(Function<T, P> prop,
+  <P, O> ObjectCheck<T, X> has(Function<T, P> prop,
       String name,
       Relation<P, O> test,
       O obj)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -199,12 +199,12 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         getPrefabMessage(formatter, test, false, check.FQN(name), val, null, obj));
   }
 
-  <P, O> ObjectCheck<T, E> notHas(Function<T, P> prop,
+  <P, O> ObjectCheck<T, X> notHas(Function<T, P> prop,
       String name,
       Relation<P, O> test,
       O obj)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -217,10 +217,10 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         getPrefabMessage(formatter, test, true, check.FQN(name), val, null, obj));
   }
 
-  <P, O> ObjectCheck<T, E> has(
+  <P, O> ObjectCheck<T, X> has(
       Function<T, P> prop, Relation<P, O> test, O obj, String msg, Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.exists(val, obj)) {
       return check;
@@ -234,10 +234,10 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         obj));
   }
 
-  <P, O> ObjectCheck<T, E> notHas(
+  <P, O> ObjectCheck<T, X> notHas(
       Function<T, P> prop, Relation<P, O> test, O obj, String msg, Object[] msgArgs)
-      throws E {
-    ObjectCheck<T, E> check = this.check;
+      throws X {
+    ObjectCheck<T, X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.exists(val, obj)) {
       return check;
@@ -251,9 +251,9 @@ final class ObjectCheckHelper1<T, E extends Exception> {
         obj));
   }
 
-  <P, O, X extends Exception> ObjectCheck<T, E> has(
-      Function<T, P> prop, Relation<P, O> test, O obj, Supplier<X> exc) throws X {
-    ObjectCheck<T, E> check = this.check;
+  <P, O, X2 extends Exception> ObjectCheck<T, X> has(
+      Function<T, P> prop, Relation<P, O> test, O obj, Supplier<X2> exc) throws X2 {
+    ObjectCheck<T, X> check = this.check;
     if (test.exists(prop.apply(check.arg), obj)) {
       return check;
     }

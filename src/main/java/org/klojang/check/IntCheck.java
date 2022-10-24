@@ -2,6 +2,7 @@ package org.klojang.check;
 
 import org.klojang.check.fallible.FallibleIntConsumer;
 import org.klojang.check.fallible.FallibleIntFunction;
+import org.klojang.check.fallible.FallibleIntUnaryOperator;
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
 import org.klojang.check.x.msg.MsgArgs;
@@ -43,9 +44,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Passes the {@code int} value validated by this instance to the specified
-   * {@code Function} and returns the value it computes. To be used as the last call
-   * after a chain of checks. For example:
+   * Passes the validated value to the specified function and returns the value it
+   * computes. To be used as the last call after a chain of checks. For example:
    *
    * <blockquote>
    *
@@ -55,25 +55,39 @@ public final class IntCheck<X extends Exception> {
    *
    * </blockquote>
    *
-   * @param transformer A {@code Function} that transforms the argument into some
-   *     other value
-   * @param <R> the type of the returned value
-   * @param <X2> the type of the exception thrown if the function fails while
-   *     processing the value
-   * @return the value computed by the {@code Function}
-   * @throws X2 if the transformation function fails while processing the
-   *     {@code int} value
+   * @param transformer a function that transforms the {@code int} value
+   *     validated by this instance
+   * @param <X2> the type of the exception thrown if the transformation fails
+   * @return the value computed by the transformation function
+   * @throws X2 if the transformation fails
    */
-  public <R, X2 extends Throwable> R ok(FallibleIntFunction<R, X2> transformer)
+  public <X2 extends Throwable> int ok(FallibleIntUnaryOperator<X2> transformer)
+      throws X2 {
+    return transformer.applyAsInt(arg);
+  }
+
+  /**
+   * Passes the validated value to the specified function and returns the value it
+   * computes. To be used as the last call after a chain of checks.
+   *
+   * @param transformer a function that transforms the {@code int} value
+   *     validated by this instance
+   * @param <R> the type of the returned value
+   * @param <X2> the type of the exception thrown if the transformation fails
+   * @return the value computed by the {@code Function}
+   * @throws X2 if the transformation fails
+   */
+  public <R, X2 extends Throwable> R mapToObj(FallibleIntFunction<R, X2> transformer)
       throws X2 {
     return transformer.apply(arg);
   }
 
   /**
-   * Passes the value validated by this instance to the specified {@code Consumer}.
-   * To be used as the last call after a chain of checks.
+   * Passes the validated value to a consumer for further processing. To be used as
+   * the last call after a chain of checks.
    *
-   * @param consumer The {@code Consumer}
+   * @param consumer a consumer of the {@code int} value validated by this
+   *     instance
    * @param <X2> the type of the exception thrown if the consumer fails while
    *     processing the value
    * @throws X2 if the consumer fails while processing the value

@@ -11,20 +11,20 @@ import static org.klojang.check.CommonProperties.formatProperty;
 import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
 import static org.klojang.check.x.msg.MsgUtil.*;
 
-final class IntCheckHelper1<E extends Exception> {
+final class IntCheckHelper1<X extends Exception> {
 
-  static <E0 extends Exception> IntCheckHelper1<E0> help(IntCheck<E0> check) {
+  static <X extends Exception> IntCheckHelper1<X> help(IntCheck<X> check) {
     return new IntCheckHelper1<>(check);
   }
 
-  private final IntCheck<E> check;
+  private final IntCheck<X> check;
 
-  private IntCheckHelper1(IntCheck<E> check) {
+  private IntCheckHelper1(IntCheck<X> check) {
     this.check = check;
   }
 
-  <P> IntCheck<E> has(IntFunction<P> prop, Predicate<P> test) throws E {
-    IntCheck<E> check = this.check;
+  <P> IntCheck<X> has(IntFunction<P> prop, Predicate<P> test) throws X {
+    IntCheck<X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.test(val)) {
       return check;
@@ -38,8 +38,8 @@ final class IntCheckHelper1<E extends Exception> {
         getPrefabMessage(formatter, test, false, name, val, null, null));
   }
 
-  <P> IntCheck<E> notHas(IntFunction<P> prop, Predicate<P> test) throws E {
-    IntCheck<E> check = this.check;
+  <P> IntCheck<X> notHas(IntFunction<P> prop, Predicate<P> test) throws X {
+    IntCheck<X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.test(val)) {
       return check;
@@ -53,8 +53,8 @@ final class IntCheckHelper1<E extends Exception> {
         getPrefabMessage(formatter, test, true, name, val, null, null));
   }
 
-  <P> IntCheck<E> has(IntFunction<P> prop, String name, Predicate<P> test) throws E {
-    IntCheck<E> check = this.check;
+  <P> IntCheck<X> has(IntFunction<P> prop, String name, Predicate<P> test) throws X {
+    IntCheck<X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.test(val)) {
       return check;
@@ -67,9 +67,9 @@ final class IntCheckHelper1<E extends Exception> {
         getPrefabMessage(formatter, test, false, check.FQN(name), val, null, null));
   }
 
-  <P> IntCheck<E> notHas(IntFunction<P> prop, String name, Predicate<P> test)
-      throws E {
-    IntCheck<E> check = this.check;
+  <P> IntCheck<X> notHas(IntFunction<P> prop, String name, Predicate<P> test)
+      throws X {
+    IntCheck<X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.test(val)) {
       return check;
@@ -82,12 +82,12 @@ final class IntCheckHelper1<E extends Exception> {
         getPrefabMessage(formatter, test, true, check.FQN(name), val, null, null));
   }
 
-  <P> IntCheck<E> has(IntFunction<P> prop,
+  <P> IntCheck<X> has(IntFunction<P> prop,
       Predicate<P> test,
       String msg,
       Object[] msgArgs)
-      throws E {
-    IntCheck<E> check = this.check;
+      throws X {
+    IntCheck<X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.test(val)) {
       return check;
@@ -102,12 +102,12 @@ final class IntCheckHelper1<E extends Exception> {
             null));
   }
 
-  <P> IntCheck<E> notHas(IntFunction<P> prop,
+  <P> IntCheck<X> notHas(IntFunction<P> prop,
       Predicate<P> test,
       String msg,
       Object[] msgArgs)
-      throws E {
-    IntCheck<E> check = this.check;
+      throws X {
+    IntCheck<X> check = this.check;
     P val = prop.apply(check.arg);
     if (!test.test(val)) {
       return check;
@@ -122,9 +122,9 @@ final class IntCheckHelper1<E extends Exception> {
             null));
   }
 
-  <P, X extends Exception> IntCheck<E> has(
-      IntFunction<P> prop, Predicate<P> test, Supplier<X> exception) throws X {
-    IntCheck<E> check = this.check;
+  <P, X2 extends Exception> IntCheck<X> has(
+      IntFunction<P> prop, Predicate<P> test, Supplier<X2> exception) throws X2 {
+    IntCheck<X> check = this.check;
     P val = prop.apply(check.arg);
     if (test.test(val)) {
       return check;
@@ -192,8 +192,8 @@ final class IntCheckHelper1<E extends Exception> {
       throw check.exc.apply(getCustomMessage(msg, msgArgs, test, check.argName, val, null, obj));
     }
 
-    <P, O, X extends Exception> IntCheck<E> has(
-        IntFunction<P> prop, Relation<P, O> test, O obj, Supplier<X> exception) throws X {
+    <P, O, X2 extends Exception> IntCheck<E> has(
+        IntFunction<P> prop, Relation<P, O> test, O obj, Supplier<X2> exception) throws X2 {
       IntCheck<E> check = this.check;
       if (test.exists(prop.apply(check.arg), obj)) {
         return check;

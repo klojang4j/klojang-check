@@ -36,8 +36,8 @@ public final class ObjectCheck<T, X extends Exception> {
   }
 
   /**
-   * Returns the value validated by this instance. To be used as the last call after
-   * a chain of checks.
+   * Returns the validated value. To be used as the last call after a chain of
+   * checks.
    *
    * @return the value validated by this instance
    */
@@ -46,8 +46,8 @@ public final class ObjectCheck<T, X extends Exception> {
   }
 
   /**
-   * Passes the argument to the specified function and returns the value it computes.
-   * To be used as the last call after a chain of checks. For example:
+   * Passes the validated value to the specified function and returns the value it
+   * computes. To be used as the last call after a chain of checks. For example:
    *
    * <blockquote>
    *
@@ -57,13 +57,12 @@ public final class ObjectCheck<T, X extends Exception> {
    *
    * </blockquote>
    *
-   * @param transformer A {@code Function} that transforms the argument into some
-   *     other value
+   * @param transformer a function that transforms the value validated by this
+   *     instance
    * @param <R> the type of the returned value
-   * @param <X2> the type of the exception thrown if the function fails while
-   *     processing the value
-   * @return the value computed by the function
-   * @throws X2 The exception potentially thrown by the {@code Function}
+   * @param <X2> the type of the exception thrown if the transformation fails
+   * @return the value computed by the transformation function
+   * @throws X2 if the transformation fails
    */
   public <R, X2 extends Throwable> R ok(FallibleFunction<T, R, X2> transformer)
       throws X2 {
@@ -71,10 +70,10 @@ public final class ObjectCheck<T, X extends Exception> {
   }
 
   /**
-   * Passes the value validated by this instance to the specified {@code Consumer}.
-   * To be used as the last call after a chain of checks.
+   * Passes the validated value to a consumer for further processing. To be used as
+   * the last call after a chain of checks.
    *
-   * @param consumer the {@code Consumer}
+   * @param consumer a consumer of the value validated by this instance
    * @param <X2> the type of the exception thrown if the consumer fails while
    *     processing the value
    * @throws X2 if the consumer fails while processing the value

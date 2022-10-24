@@ -1,9 +1,6 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.Check;
-import org.klojang.check.IntCheck;
-import org.klojang.check.ObjectCheck;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -41,6 +38,7 @@ public class IntCheckTest {
         eq(),
         6,
         () -> new UnsupportedOperationException());
+
   }
 
   @Test
@@ -344,9 +342,21 @@ public class IntCheckTest {
   }
 
   @Test
-  public void ok01() {
-    int i = Check.that(-9).is(lt(), 10).ok(x -> x + 1);
+  public void ok00() {
+    int i = Check.that(-9).is(lt(), 10).mapToObj(x -> x + 1);
     assertEquals(-8, i);
+  }
+
+  @Test
+  public void ok01() {
+    int i = Check.that(-25).has(abs(), lt(), 30).ok(Math::abs);
+    assertEquals(25, i);
+  }
+
+  @Test
+  public void mapToObj00() {
+    String s = Check.that(25).has(abs(), lt(), 30).mapToObj(i -> "foo: " + i);
+    assertEquals("foo: 25", s);
   }
 
   @Test
