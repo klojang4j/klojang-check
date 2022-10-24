@@ -1,12 +1,12 @@
 /**
- * <p>Klojang Check is a light-weight Java module that provides a concise and convenient
- * way of validating preconditions and postconditions.
+ * <p>Klojang Check is a light-weight Java module that provides a concise and
+ * convenient way of validating preconditions and postconditions.
  *
- * <p>Precondition checks are concerned with validating method arguments, object state,
- * program input and other things that must be right before you will even consider
- * continuing with code implementing the business logic. Postcondition checks
- * validate computational outcomes, possibly stored as intermediate results in local
- * variables. This is what such checks would look like with Klojang Check:
+ * <p>Precondition checks are concerned with validating method arguments, object
+ * state, program input and other things that must be right before you will even
+ * consider continuing with code implementing the business logic. Postcondition
+ * checks validate computational outcomes, possibly stored as intermediate results in
+ * local variables. This is what such checks would look like with Klojang Check:
  *
  * <blockquote><pre>{@code
  * this.numChairs = Check.that(numChairs).is(positive()).is(lte(), 4).is(even()).ok();
@@ -60,16 +60,17 @@
  *
  * <h2>Common Checks</h2>
  *
- * <p>Klojang Check provides a grab bag of common checks on arguments in the form
- * of the {@link org.klojang.check.CommonChecks CommonChecks} class. The
- * {@code lte()}, {@code positive()} and {@code even()} checks shown above are in
- * fact static imports from this class. Here are some more examples:
+ * <p>Klojang Check provides a grab bag of common checks on arguments and other
+ * types of values in the form of the
+ * {@link org.klojang.check.CommonChecks CommonChecks} class. The {@code lte()},
+ * {@code positive()} and {@code even()} checks shown above are in fact static
+ * imports from this class. Here are some more examples:
  *
  * <blockquote> <pre>{@code
  * Check.that(obj, "vehicle").is(instanceOf(), Car.class);
  * Check.that(list).isNot(empty());
  * Check.that(word).is(keyIn(), dictionary); // a Map instance
- * Check.that(dictionary).is(containingKey(), word);
+ * Check.that(dictionary).is(containsKey(), word);
  * Check.that(file).is(writable());
  * }</pre></blockquote>
  * <p>
@@ -87,20 +88,19 @@
  *
  *
  * <h2>Types of Checks</h2>
- * <p>
- * The checks you pass to the {@code is(...)} methods fall apart in two broad
+ *
+ * <p>The checks you pass to the {@code is(...)} methods fall apart in two broad
  * categories: implementations of {@link java.util.function.Predicate Predicate} and
  * {@link java.util.function.IntPredicate IntPredicate} on the one hand, and
- * implementations of
- * {@link org.klojang.check.relation.Relation Relation} and its sister interfaces on
- * the other. The latter are not part of the JDK. They can be thought of as a
- * "BiPredicate" (which neither exists in the JDK): a function that takes <i>two</i>
- * arguments and returns a boolean. If the two arguments have a particular relation,
- * defined by the implementation, to each other, the relation is said to
- * <i>exist</i> and the function returns {@code true}. Within the context of Klojang
- * Check, the first argument is always the value to be validated, while the second
- * argument is the value that it is to be validated against. In the examples above,
- * {@linkplain org.klojang.check.CommonChecks#positive() positive()},
+ * implementations of {@link org.klojang.check.relation.Relation Relation} and its
+ * sister interfaces on the other. The latter are not part of the JDK. They can be
+ * thought of as a "BiPredicate" (which neither exists in the JDK): a function that
+ * takes <i>two</i> arguments and returns a boolean. If the two arguments have a
+ * particular relationship, defined by the implementation, with each other, the
+ * relation is said to <i>exist</i> and the function returns {@code true}. Within the
+ * context of Klojang Check, the first argument is always the value to be validated,
+ * while the second argument is the value that it is to be validated against. In the
+ * examples above, {@linkplain org.klojang.check.CommonChecks#positive() positive()},
  * {@linkplain org.klojang.check.CommonChecks#even() even()},
  * {@linkplain org.klojang.check.CommonChecks#empty() empty()} and
  * {@linkplain org.klojang.check.CommonChecks#writable() writable()} are checks
@@ -108,8 +108,10 @@
  * {@linkplain org.klojang.check.CommonChecks#lte() lte()},
  * {@linkplain org.klojang.check.CommonChecks#instanceOf() instanceOf()},
  * {@linkplain org.klojang.check.CommonChecks#keyIn() keyIn()} and
- * {@linkplain org.klojang.check.CommonChecks#containsKey() containingKey()} are
- * checks implemented as a {@code Relation} or one of its sister interfaces. For more
+ * {@linkplain org.klojang.check.CommonChecks#containsKey() containsKey()} are checks
+ * implemented as a {@link org.klojang.check.relation.Relation Relation},
+ * {@link org.klojang.check.relation.IntRelation IntRelation} or
+ * {@link org.klojang.check.relation.IntObjRelation IntObjRelation}. For more
  * information, see the package description of
  * {@linkplain org.klojang.check.relation}.
  *
@@ -137,9 +139,9 @@
  *
  *
  *
- * <h2>Custom Error Messages</h2>
- * <p>
- * If you prefer to send out a custom error message, you can do so by specifying a
+ * <h2 id="custom-error-messages">Custom Error Messages</h2>
+ *
+ * <p> If you prefer to emit a custom error message, you can do so by specifying a
  * message pattern and zero or more message arguments. The first message argument can
  * be referenced from within the message pattern as {@code ${0}}, the second as
  * {@code ${1}}, etc. For example:
@@ -152,17 +154,16 @@
  * pattern:
  *
  * <ol>
- *   <li><b><code>${test}</code></b> The name of the check that was executed.
- *      E.g. "lt" or "instanceOf" or "notNull".
+ *   <li><b><code>${test}</code></b> The name of the check that was executed, like
+ *      "lt" or "instanceOf" or "notNull".
  *   <li><b><code>${arg}</code></b> The value being validated.
- *   <li><b><code>${type}</code></b> The simple class name of the value's class.
+ *   <li><b><code>${type}</code></b> The simple class name of the value.
  *   <li><b><code>${name}</code></b> The name of the parameter, field or variable
  *      being validated, or, possibly, something more descriptive (like "vehicle" in
  *      one of the above examples). Providing a name can be useful when validating
  *      multiple arguments and/or variables within the same method, as it makes it
- *      immediately clear which one of them was to blame for the {@code Exception}
- *      emanating from that method. If you do not provide a name, <code>${name}</code>
- *      defaults to "argument".
+ *      immediately clear which one of them was to blame for the exception. If you
+ *      do not provide a name, <code>${name}</code> defaults to "argument".
  *   <li><b><code>${obj}</code></b> The object of the relationship, in case the
  *      check took the form of a
  *      {@linkplain org.klojang.check.relation.Relation Relation} or one of its
@@ -179,23 +180,32 @@
  * still have a dynamically generated error message:
  *
  * <blockquote><pre>{@code
- * Check.that(word).is(keyIn(), dictionary, "Missing key \"${arg}\" in map ${obj}");
+ * Check.that(word).is(keyIn(), dictionary, "Missing key \"${arg}\" in ${obj}");
  * }</pre></blockquote>
  *
+ * <h3>Suppressing Message Parsing</h3>
  *
- *
+ * <p>The varargs array used to specify the message arguments (invariably called
+ * {@code msgArgs}) is explicitly allowed to be {@code null}. This is taken as a
+ * signal that the message does not contain any message arguments and should be
+ * passed as-is to the exception's constructor. You can use this if performance is
+ * critical, even in anomalous situations. Note, however, that while this does make
+ * your code look uglier, the performance gain it yields is minimal. It will, in
+ * fact, only become noticeable if the involved test fails almost continuously. That
+ * should probably more cause for concern than the speed with which the exception is
+ * generated.
  *
  *
  * <h2>Chaining Checks</h2>
- * <p>
- * You can apply multiple checks on the same value using a fluent API, as the very
- * first example already illustrated:
+ *
+ * <p> You can apply multiple checks on the same value using a fluent API, as the
+ * very first example already illustrated:
  *
  * <blockquote><pre>{@code
  * Check.that(numChairs).is(positive()).is(lte(), 4).is(even());
  * }</pre></blockquote>
- * <p>
- * In a similar manner, you can also chain checks on <i>different values</i>. This
+ *
+ * <p>In a similar manner, you can also chain checks on <i>different values</i>. This
  * can make for a very concise argument validation section:
  *
  * <blockquote><pre>{@code
@@ -238,12 +248,11 @@
  * "employees.size() must be >= 100 (was 42)"
  * }</pre></blockquote>
  *
- * <p>Note that the term "property" is, in fact, somewhat misleading. This first
- * argument to the <b>{@code has}</b> and <b>{@code notHas}</b> methods simply is a
- * {@code Function} that takes the value being validated and produces some other
- * value, which is then also validated. Thus, the {@code CommonProperties} class also
- * contains, for example, an
- * {@linkplain org.klojang.check.CommonProperties#abs() abs()} function, which
+ * <p>Note that the term "property" is somewhat misleading. This first argument to
+ * the {@code has()} and {@code notHas()} methods simply is a function that takes
+ * the value being validated and produces some other value, which is then also
+ * validated. Thus, the {@code CommonProperties} class also contains, for example,
+ * an {@linkplain org.klojang.check.CommonProperties#abs() abs()} function, which
  * returns the absolute value of an {@code int} value.
  *
  *
@@ -260,8 +269,8 @@
  * double angle = 45.0;
  * Check.that(angle).is(a -> Math.sin(a) > 0, "sine of angle must be positive");
  * }</pre></blockquote>
- * <p>
- * Be careful, however, when passing lambdas to the {@code has} and {@code notHas}
+ *
+ * <p>Be careful, however, when passing lambdas to the {@code has} and {@code notHas}
  * methods. These methods are heavily overloaded. Therefore, "vanilla" lambdas
  * (without any type information) may cause the compiler to complain about an
  * <b>Ambiguous method call</b>:
@@ -294,8 +303,8 @@
  *
  * <p>By default, Klojang Check throws an {@code IllegalArgumentException} if any
  * of the tests following {@code Check.that(...)} fail. To customize this, use the
- * <b>{@code Check.on(...)}</b> static factory methods instead. These allow you to
- * specify an alternative exception. You can also override the default exception
+ * {@code Check.on(...)} static factory methods instead. These allow you to
+ * change the default exception. The default exception can itself be overridden
  * within the checks themselves. The following example changes the default exception
  * to {@code SQLException}, but overrides it for the null check:
  *

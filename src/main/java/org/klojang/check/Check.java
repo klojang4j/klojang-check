@@ -11,15 +11,14 @@ import java.util.function.Supplier;
  * The central class of this Java module. All checks start out here. The
  * {@code Check} class provides static factory methods for {@link IntCheck} and
  * {@link ObjectCheck} instances, which do the actual orchestration of the checks to
- * be executed. The {@code Check} class contains a few validation methods itself,
- * like {@link #fromTo(int, int, int) Check.fromTo} and
- * {@link #offsetLength(int, int, int) Check.offsetLength}. These stand somewhat
- * apart from the rest of the Klojang Check framework test multiple things at once.
- * They are included for convenience and for optimal performance.
+ * be executed. The {@code Check} class does, in fact, contain a few validation
+ * methods itself, like {@link #fromTo(int, int, int) Check.fromTo()} and
+ * {@link #offsetLength(int, int, int) Check.offsetLength()}. These stand somewhat
+ * apart from the rest of the Klojang Check. They are included for convenience and
+ * for optimal performance.
  *
  * <p>See the <a href="../../../module-summary.html">module summary</a> for a
- * detailed description of validating preconditions and postconditions using Klojang
- * Check.
+ * detailed description of Defensive Programming using Klojang Check.
  *
  * @author Ayco Holleman
  */
@@ -48,11 +47,11 @@ public final class Check {
    * to circular method calls (a.k.a. stack overflow errors). Therefore, if an
    * argument should not be null, don't use Check.notNull.
    */
-  private static IllegalArgumentException illegalNullValue() {
+  private static IllegalArgumentException argumentMustNotBeNull() {
     return new IllegalArgumentException("argument must not be null");
   }
 
-  private static IllegalArgumentException illegalNullValue(String argName) {
+  private static IllegalArgumentException argumentMustNotBeNull(String argName) {
     return new IllegalArgumentException(argName + " must not be null");
   }
 
@@ -130,7 +129,7 @@ public final class Check {
     if (arg != null) {
       return new ObjectCheck<>(arg, null, DEF_EXC_FACTORY);
     }
-    throw illegalNullValue();
+    throw argumentMustNotBeNull();
   }
 
   /**
@@ -153,7 +152,7 @@ public final class Check {
     if (arg != null) {
       return new ObjectCheck<>(arg, argName, DEF_EXC_FACTORY);
     }
-    throw illegalNullValue(argName);
+    throw argumentMustNotBeNull(argName);
   }
 
   /**
@@ -262,7 +261,7 @@ public final class Check {
    */
   public static void offsetLength(byte[] array, int offset, int length) {
     if (array == null) {
-      throw new IllegalArgumentException("array must not be null");
+      throw argumentMustNotBeNull("array");
     }
     if ((offset | length) < 0 || offset + length > array.length) {
       throw new IndexOutOfBoundsException();
@@ -318,7 +317,7 @@ public final class Check {
    */
   public static int fromTo(List<?> list, int fromIndex, int toIndex) {
     if (list == null) {
-      throw new IllegalArgumentException("list must not be null");
+      throw argumentMustNotBeNull("list");
     }
     if ((fromIndex | toIndex) < 0 || toIndex < fromIndex || list.size() < toIndex) {
       throw new IndexOutOfBoundsException();
@@ -338,10 +337,6 @@ public final class Check {
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
    * </ol>
    *
-   * <i>NB The {@code fromTo} and {@code offsetLength} checks stand somewhat apart from the
-   * rest of the check framework. They happen through "ordinary" static utility method and they
-   * test multiple things at once. They are included for convenience and speed.</i>
-   *
    * @param array the array
    * @param fromIndex the start index of the array segment
    * @param toIndex the end index of the array segment
@@ -352,7 +347,7 @@ public final class Check {
    */
   public static <T> int fromTo(T[] array, int fromIndex, int toIndex) {
     if (array == null) {
-      throw new IllegalArgumentException("array must not be null");
+      throw argumentMustNotBeNull("array");
     }
     if ((fromIndex | toIndex) < 0 || toIndex < fromIndex || array.length < toIndex) {
       throw new IndexOutOfBoundsException();
@@ -366,17 +361,13 @@ public final class Check {
    * the boundaries of the string. More precisely:
    *
    * <ol>
-   *   <li>Throws an {@code IllegalArgumentException} if the array is {@code null}
+   *   <li>Throws an {@code IllegalArgumentException} if the string is {@code null}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is less than zero
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
    * </ol>
    *
-   * <i>NB The {@code fromTo} and {@code offsetLength} checks stand somewhat apart from the
-   * rest of the check framework. They happen through "ordinary" static utility method and they
-   * test multiple things at once. They are included for convenience and speed.</i>
-   *
-   * @param string The string
+   * @param string the string
    * @param fromIndex the start index of the substring
    * @param toIndex the end index of the substring
    * @return the {@code length} of the substring
@@ -385,7 +376,7 @@ public final class Check {
    */
   public static int fromTo(String string, int fromIndex, int toIndex) {
     if (string == null) {
-      throw new IllegalArgumentException("string must not be null");
+      throw argumentMustNotBeNull("string");
     }
     if ((fromIndex | toIndex) < 0
         || toIndex < fromIndex
@@ -429,12 +420,19 @@ public final class Check {
    * {@code <T>} so it can be used as the expression for a {@code return} statement.
    *
    * @param <T> the desired type of the return value
-   * @param message The message
-   * @param msgArgs The message argument
-   * @return nothing, but allows {@code fail} to be used as the expression in a
+   * @param message the message (pattern)
+   * @param msgArgs the message arguments. Note that these are not
+   *     {@code printf}-like message arguments. The first message argument within the
+   *     message pattern would be {@code ${0}}; the second would be {@code ${1}},
+   *     etc. For more information, see <a
+   *     href="../../../module-summary.html#custom-error-messages">Custom Error
+   *     Messages</a>.
+   * @return nothing, but allows {@code fail()} to be used as the expression in a
    *     {@code return} statement
+   * @throws IllegalArgumentException always
    */
-  public static <T> T fail(String message, Object... msgArgs) {
+  public static <T> T fail(String message, Object... msgArgs)
+      throws IllegalArgumentException {
     return failOn(DEF_EXC_FACTORY, message, msgArgs);
   }
 
@@ -446,7 +444,7 @@ public final class Check {
    * @param excFactory the supplier of the exception
    * @param <T> the desired type of the return value
    * @param <X> the type of the exception
-   * @return nothing, but allows {@code fail} to be used as the expression in a
+   * @return nothing, but allows {@code fail()} to be used as the expression in a
    *     {@code return} statement
    * @throws X always
    */
@@ -463,8 +461,13 @@ public final class Check {
    * @param <X> the type of the exception
    * @param excFactory a function that takes a {@code String} (the exception
    *     message) and produces an {@code Exception}.
-   * @param message The message
-   * @param msgArgs The message argument
+   * @param message the message
+   * @param msgArgs the message arguments. Note that these are not
+   *     {@code printf}-like message arguments. The first message argument within the
+   *     message pattern would be {@code ${0}}; the second would be {@code ${1}},
+   *     etc. For more information, see <a
+   *     href="../../../module-summary.html#custom-error-messages">Custom Error
+   *     Messages</a>.
    * @return nothing, but allows {@code fail} to be used as the expression in a
    *     {@code return} statement
    * @throws X always

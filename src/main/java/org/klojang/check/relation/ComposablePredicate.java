@@ -1,37 +1,40 @@
 package org.klojang.check.relation;
 
-import static org.klojang.check.relation.Private.*;
+import org.klojang.check.CommonChecks;
 
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.klojang.check.CommonChecks;
+import static org.klojang.check.relation.Private.testAgainstArray;
 
 /**
  * An extension of {@link Predicate} that acts as a bridge between {@code Predicate}
  * and the relational interfaces in this package. It enables the composition of new
- * tests from any number of instances of {@code Predicate}, {@code IntPredicate},
- * {@code Relation}, {@code IntRelation} and {@code IntObjRelation}.
+ * tests from any number of instances of {@link Predicate}, {@link IntPredicate},
+ * {@link Relation}, {@link IntRelation} and {@link IntObjRelation}.
  * {@code ComposablePredicate} does not override any method of {@code Predicate}.
- * Instead, it extends it with a comprehensive set of {@code default} methods that
- * allow the composition to take place. These methods can be divided along two axes:
- * <b>{@code and}</b> vs. <b>{@code or}</b> methods on the one hand and, on the
- * other, methods that execute two checks on a single value vs. methods that
- * effectively constitute a single check on two interdependent values.
+ * Instead, it extends it with a set of {@code default} methods that allow the
+ * composition to take place. These methods can be divided along two axes:
+ * <ol>
+ *   <li>{@code and()} versus {@code or()} methods
+ *   <li>methods that execute two checks on a single value versus methods
+ *      that effectively constitute a single check on two interrelated
+ *      values
+ * </ol>
  *
  * <h2>AND vs. OR Compositions</h2>
  *
  * <p>Generally, you will have more use for compositions expressing a logical
  * disjunction (OR), as the chain of checks following
- * {@link org.klojang.check.Check#that(Object) Check.that(...)} already constitutes a
- * logical conjunction (AND). For example, this statement:
+ * {@link org.klojang.check.Check#that(Object) Check.that(...)} already constitutes
+ * a logical conjunction (AND). For example, this statement:
  *
  * <blockquote><pre>{@code
- * Check.that(numChairs).is(positive()).is(lt(), 5).is(even());
+ * Check.that(numChairs).is(positive()).is(lte(), 4).is(even());
  * }</pre></blockquote>
  *
- * <p>requires the number of chairs to be positive <b>and</b> less than 5
+ * <p>requires the number of chairs to be positive <b>and</b> less than, or equal to 4
  * <b>and</b> even. If the number of chairs needs to pass just one of
  * these tests, write:
  *
@@ -46,30 +49,26 @@ import org.klojang.check.CommonChecks;
  * Check.that(string).is(notNull().and(hasSubstring(), allOf(), "to", "be", "or", "not"));
  * }</pre></blockquote>
  *
- * <p>In the above example, the argument is tested against a domain of values.
- * Strictly speaking, the domain should be modeled as a {@link java.util.Set Set},
- * but for convenience it is a varargs array. See {@link Quantifier} for the
- * {@code allOf()} argument.
+ * <p>(See {@link Quantifier} for the {@code allOf()} argument.)
  *
- * <h2>Testing Interdependent Values</h2>
+ * <h2>Validating Interrelated Values</h2>
  *
  * <p>Sometimes, an argument, field or variable cannot be tested in isolation. Its
  * validity depends on the value of another argument, field or variable:
  *
  * <blockquote><pre>{@code
- * Check.that(electionRigged).is(yes().or(winner, EQ(), me);
+ * Check.that(engine.ready()).is(yes().or(buffer.size(), eq(), 0);
  * }</pre></blockquote>
  *
- * <p>In the above example, the election only needs to be rigged if it turns out you
- * lost it. Note, however, that, in principle, the two checks could be completely
- * unrelated. There is no under-the-hood mechanism that enforces the interrelatedness
- * of the values. Thus it is up to the client whether to use this type of composition
- * as intended. Also note that the second check continues nicely in the idiom of
- * Klojang Check. Strictly speaking, however, that is now only syntactic sugar and,
- * depending on your taste, you can also just write:
+ * <p>In the above example, the engine only needs to be ready if there is more data
+ * in the buffer. Note, however, that Klojang Check doesn't care whether the values
+ * are interrelated or not. In the end it is up to the client to decide why two
+ * different values should be validated in a single composition. Also note that the
+ * second check continues nicely in the idiom of Klojang Check, even though it is
+ * now just syntactic sugar. Depending on your taste you can also just write:
  *
  * <blockquote><pre>{@code
- * Check.that(electionRigged).is(yes().or(winner.equals(me)));
+ * Check.that(engine.ready()).is(yes().or(buffer.size() == 0);
  * }</pre></blockquote>
  *
  * <h2>Generics</h2>
@@ -81,12 +80,12 @@ import org.klojang.check.CommonChecks;
  * {@link CommonChecks#notNull() notNull()} and
  * {@link CommonChecks#notEmpty() notEmpty()}, which can be applied to any
  * non-primitive type, to be followed by checks that can only be applied to a
- * specific type of values. For example, the following code would <i>not</i> compile
- * if the type of the first argument to {@code orElse()} were
- * {@code Relation<? super T, O>} instead of simply {@code Relation<?, O>}:
+ * specific type. For example, the following example would <i>not</i> compile if
+ * {@code andAlso()} would take a {@code Predicate<? super T>} rather than
+ * simply {@code Predicate<?>}:
  *
  * <blockquote><pre>{@code
- * Check.that(myArrayList).is(empty().orElse(contains(), "foo"));
+ * Check.that(file).is(empty().andAlso(writable()));
  * }</pre></blockquote>
  *
  * <p>The downside is that it is easier for a composition of tests to harbor a type
@@ -95,8 +94,15 @@ import org.klojang.check.CommonChecks;
  * well:
  *
  * <blockquote><pre>{@code
- * // or else is a readable file
- * Check.that(myArrayList).is(empty().orElse(readable()));
+ * Check.that(list).is(empty().andAlso(writable()));
+ * }</pre></blockquote>
+ *
+ * In addition, when providing a check in the form of a lambda, you will now have to
+ * specify the type of the lambda parameter:
+ *
+ * <blockquote><pre>{@code
+ * Check.that(file).is(empty().andAlso(f -> f.canWrite())); // WON'T COMPILE!!
+ * Check.that(file).is(empty().andAlso((File f) -> f.canWrite())); // OK
  * }</pre></blockquote>
  *
  * <p>If you are not comfortable with this, you can instead use the
@@ -104,15 +110,11 @@ import org.klojang.check.CommonChecks;
  * every call to {@code orThat()}:
  *
  * <blockquote><pre>{@code
- * Check.that(myArrayList).is(empty().orThat(myArrayList, contains(), "foo"));
+ * Check.that(list).is(empty().orThat(list, contains(), "foo"));
  * }</pre></blockquote>
  *
  * <p>Note, however, that the {@code orThat()} method is primarily meant to test
- * interrelated values.
- *
- * <blockquote><pre>{@code
- * Check.that(list1).is(empty().orThat(list2, contains(), "foo"));
- * }</pre></blockquote>
+ * interrelated values (see above).
  *
  * @param <T> the type of the value being tested
  * @see Relation
@@ -121,6 +123,7 @@ import org.klojang.check.CommonChecks;
  * @see ObjIntRelation
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
+@FunctionalInterface
 public interface ComposablePredicate<T> extends Predicate<T> {
 
   /**
@@ -449,7 +452,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    * @return a new test combining this test and the specified test
    */
   default <V> ComposablePredicate<V> andAlso(Predicate<?> test) {
-     return x -> meFirst(x) && ((Predicate) test).test(x);
+    return x -> meFirst(x) && ((Predicate) test).test(x);
   }
 
   /**
@@ -555,7 +558,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <O, P extends O, V> ComposablePredicate<V> and(Relation<V, O> relation,
       Quantifier quantifier,
       P... objects) {
-     return x -> meFirst(x)
+    return x -> meFirst(x)
         && testAgainstArray(x, relation, quantifier, objects);
   }
 
@@ -579,7 +582,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   default <U, V> ComposablePredicate<V> andThat(U value, Predicate<U> test) {
     return x -> meFirst(x) && test.test(value);
   }
-
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
@@ -621,7 +623,6 @@ public interface ComposablePredicate<T> extends Predicate<T> {
       O object) {
     return x -> meFirst(x) && relation.exists(subject, object);
   }
-
 
   /**
    * Returns a new test combining this test and the specified test. It combines two

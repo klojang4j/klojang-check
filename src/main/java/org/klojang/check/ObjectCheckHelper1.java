@@ -18,7 +18,7 @@ import org.klojang.check.x.msg.MsgArgs;
  */
 final class ObjectCheckHelper1<T, E extends Exception> {
 
-  static <T0, E0 extends Exception> ObjectCheckHelper1<T0, E0> get(ObjectCheck<T0, E0> check) {
+  static <T0, E0 extends Exception> ObjectCheckHelper1<T0, E0> help(ObjectCheck<T0, E0> check) {
     return new ObjectCheckHelper1<>(check);
   }
 
@@ -37,7 +37,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -58,7 +58,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -79,7 +79,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, val));
+      throw check.exc.apply(getDefaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, null, null));
@@ -94,7 +94,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, val));
+      throw check.exc.apply(getDefaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, null, null));
@@ -158,7 +158,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-       throw check.exc.apply(defaultRelationMessage(name, val, obj));
+       throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, null, obj));
@@ -175,7 +175,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, null, obj));
@@ -193,7 +193,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, check.FQN(name), val, null, obj));
@@ -211,7 +211,7 @@ final class ObjectCheckHelper1<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, check.FQN(name), val, null, obj));

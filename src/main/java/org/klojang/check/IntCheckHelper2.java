@@ -18,7 +18,7 @@ import static org.klojang.check.x.msg.MsgUtil.*;
  */
 final class IntCheckHelper2<E extends Exception> {
 
-  static <E0 extends Exception> IntCheckHelper2<E0> get(IntCheck<E0> check) {
+  static <E0 extends Exception> IntCheckHelper2<E0> help(IntCheck<E0> check) {
     return new IntCheckHelper2<>(check);
   }
 
@@ -40,7 +40,7 @@ final class IntCheckHelper2<E extends Exception> {
         IntUnaryOperator.class);
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, val));
+      throw check.exc.apply(getDefaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, int.class, null));
@@ -58,7 +58,7 @@ final class IntCheckHelper2<E extends Exception> {
         IntUnaryOperator.class);
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, check.arg));
+      throw check.exc.apply(getDefaultPredicateMessage(name, check.arg));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, null));
@@ -72,7 +72,7 @@ final class IntCheckHelper2<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), check.arg));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), check.arg));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -93,7 +93,7 @@ final class IntCheckHelper2<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), check.arg));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), check.arg));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -167,7 +167,7 @@ final class IntCheckHelper2<E extends Exception> {
         IntUnaryOperator.class);
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, int.class, obj));
@@ -185,7 +185,7 @@ final class IntCheckHelper2<E extends Exception> {
         IntUnaryOperator.class);
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, obj));
@@ -200,7 +200,7 @@ final class IntCheckHelper2<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), check.arg, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), check.arg, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -221,7 +221,7 @@ final class IntCheckHelper2<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,

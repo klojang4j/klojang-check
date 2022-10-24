@@ -74,7 +74,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * Passes the value validated by this instance to the specified {@code Consumer}.
    * To be used as the last call after a chain of checks.
    *
-   * @param consumer The {@code Consumer}
+   * @param consumer the {@code Consumer}
    * @param <X2> the type of the exception thrown if the consumer fails while
    *     processing the value
    * @throws X2 if the consumer fails while processing the value
@@ -92,7 +92,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *
    * @param test the test
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> is(Predicate<T> test) throws X {
     if (test.test(arg)) {
@@ -100,7 +100,7 @@ public final class ObjectCheck<T, X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultPredicateMessage(argName, arg));
+      throw exc.apply(getDefaultPredicateMessage(argName, arg));
     }
     throw exc.apply(
         getPrefabMessage(formatter,
@@ -120,7 +120,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *
    * @param test the test
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> isNot(Predicate<T> test) throws X {
     if (!test.test(arg)) {
@@ -128,7 +128,7 @@ public final class ObjectCheck<T, X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultPredicateMessage(argName, arg));
+      throw exc.apply(getDefaultPredicateMessage(argName, arg));
     }
     throw exc.apply(
         getPrefabMessage(formatter,
@@ -142,17 +142,15 @@ public final class ObjectCheck<T, X extends Exception> {
 
   /**
    * Validates the argument using the specified test. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> is(Predicate<T> test, String message, Object... msgArgs)
       throws X {
@@ -171,17 +169,15 @@ public final class ObjectCheck<T, X extends Exception> {
 
   /**
    * Validates the argument using the specified test. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> isNot(Predicate<T> test,
       String message,
@@ -250,7 +246,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> is(Relation<T, O> test, O object) throws X {
     if (test.exists(arg, object)) {
@@ -258,7 +254,7 @@ public final class ObjectCheck<T, X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultRelationMessage(argName, arg, object));
+      throw exc.apply(getDefaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, false, argName, arg, null, object));
@@ -275,7 +271,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> isNot(Relation<T, O> test, O object) throws X {
     if (!test.exists(arg, object)) {
@@ -283,7 +279,7 @@ public final class ObjectCheck<T, X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getRelationFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultRelationMessage(argName, arg, object));
+      throw exc.apply(getDefaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, true, argName, arg, null, object));
@@ -291,20 +287,18 @@ public final class ObjectCheck<T, X extends Exception> {
 
   /**
    * Validates the argument using the specified test. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> is(Relation<T, O> test,
       O object,
@@ -326,20 +320,18 @@ public final class ObjectCheck<T, X extends Exception> {
 
   /**
    * Validates the argument using the specified test. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> isNot(
       Relation<T, O> test, O object, String message, Object... msgArgs) throws X {
@@ -411,11 +403,11 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P> ObjectCheck<T, X> has(Function<T, P> property, Predicate<P> test)
       throws X {
-    return ObjectCheckHelper1.get(this).has(property, test);
+    return ObjectCheckHelper1.help(this).has(property, test);
   }
 
   /**
@@ -432,11 +424,11 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P> ObjectCheck<T, X> notHas(Function<T, P> property, Predicate<P> test)
       throws X {
-    return ObjectCheckHelper1.get(this).notHas(property, test);
+    return ObjectCheckHelper1.help(this).notHas(property, test);
   }
 
   /**
@@ -450,19 +442,19 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested. In error messages the
+   * @param name the name of the property being tested. In error messages the
    *     fully-qualified name will be used and constructed using
    *     {@code argName + "." + name}.
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P> ObjectCheck<T, X> has(Function<T, P> property,
       String name,
       Predicate<P> test)
       throws X {
-    return ObjectCheckHelper1.get(this).has(property, name, test);
+    return ObjectCheckHelper1.help(this).has(property, name, test);
   }
 
   /**
@@ -476,24 +468,24 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested.
+   * @param name the name of the property being tested
    * @param test the test
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P> ObjectCheck<T, X> notHas(Function<T, P> property,
       String name,
       Predicate<P> test)
       throws X {
-    return ObjectCheckHelper1.get(this).notHas(property, name, test);
+    return ObjectCheckHelper1.help(this).notHas(property, name, test);
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that transforms the value validated by this
    *     {@code ObjectCheck} into another value, which is to be validated using the
@@ -501,25 +493,22 @@ public final class ObjectCheck<T, X extends Exception> {
    *     property from a JavaBean
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P> ObjectCheck<T, X> has(
       Function<T, P> property, Predicate<P> test, String message, Object... msgArgs)
       throws X {
-    return ObjectCheckHelper1.get(this).has(property, test, message, msgArgs);
+    return ObjectCheckHelper1.help(this).has(property, test, message, msgArgs);
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that transforms the value validated by this
    *     {@code ObjectCheck} into another value, which is to be validated using the
@@ -527,18 +516,15 @@ public final class ObjectCheck<T, X extends Exception> {
    *     property from a JavaBean
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P> ObjectCheck<T, X> notHas(
       Function<T, P> property, Predicate<P> test, String message, Object... msgArgs)
       throws X {
-    return ObjectCheckHelper1.get(this).notHas(property, test, message, msgArgs);
+    return ObjectCheckHelper1.help(this).notHas(property, test, message, msgArgs);
   }
 
   /**
@@ -560,7 +546,7 @@ public final class ObjectCheck<T, X extends Exception> {
    */
   public <P, X2 extends Exception> ObjectCheck<T, X> has(
       Function<T, P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
-    return ObjectCheckHelper1.get(this).has(property, test, exception);
+    return ObjectCheckHelper1.help(this).has(property, test, exception);
   }
 
   /**
@@ -582,7 +568,7 @@ public final class ObjectCheck<T, X extends Exception> {
    */
   public <P, X2 extends Exception> ObjectCheck<T, X> notHas(
       Function<T, P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
-    return ObjectCheckHelper1.get(this).has(property, test.negate(), exception);
+    return ObjectCheckHelper1.help(this).has(property, test.negate(), exception);
   }
 
   /**
@@ -602,13 +588,13 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param <P> the type of the extracted value
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P, O> ObjectCheck<T, X> has(Function<T, P> property,
       Relation<P, O> test,
       O object)
       throws X {
-    return ObjectCheckHelper1.get(this).has(property, test, object);
+    return ObjectCheckHelper1.help(this).has(property, test, object);
   }
 
   /**
@@ -628,13 +614,13 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param <P> the type of the extracted value
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P, O> ObjectCheck<T, X> notHas(Function<T, P> property,
       Relation<P, O> test,
       O object)
       throws X {
-    return ObjectCheckHelper1.get(this).notHas(property, test, object);
+    return ObjectCheckHelper1.help(this).notHas(property, test, object);
   }
 
   /**
@@ -648,18 +634,18 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested.
+   * @param name the name of the property being tested.
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param <P> the type of the extracted value
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P, O> ObjectCheck<T, X> has(
       Function<T, P> property, String name, Relation<P, O> test, O object) throws X {
-    return ObjectCheckHelper1.get(this).has(property, name, test, object);
+    return ObjectCheckHelper1.help(this).has(property, name, test, object);
   }
 
   /**
@@ -673,7 +659,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested. In error messages the
+   * @param name the name of the property being tested. In error messages the
    *     fully-qualified name will be used and constructed using
    *     {@code argName + "." + name}.
    * @param test the test
@@ -682,18 +668,18 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param <P> the type of the extracted value
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P, O> ObjectCheck<T, X> notHas(
       Function<T, P> property, String name, Relation<P, O> test, O object) throws X {
-    return ObjectCheckHelper1.get(this).notHas(property, name, test, object);
+    return ObjectCheckHelper1.help(this).notHas(property, name, test, object);
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that transforms the value validated by this
    *     {@code ObjectCheck} into another value, which is to be validated using the
@@ -707,7 +693,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param <P> the type of the extracted value
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P, O> ObjectCheck<T, X> has(
       Function<T, P> property,
@@ -716,7 +702,7 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper1.get(this).has(property,
+    return ObjectCheckHelper1.help(this).has(property,
         test,
         object,
         message,
@@ -724,10 +710,10 @@ public final class ObjectCheck<T, X extends Exception> {
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that transforms the value validated by this
    *     {@code ObjectCheck} into another value, which is to be validated using the
@@ -741,7 +727,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param <P> the type of the extracted value
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <P, O> ObjectCheck<T, X> notHas(
       Function<T, P> property,
@@ -750,7 +736,7 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper1.get(this).notHas(property,
+    return ObjectCheckHelper1.help(this).notHas(property,
         test,
         object,
         message,
@@ -780,7 +766,7 @@ public final class ObjectCheck<T, X extends Exception> {
   public <P, O, X2 extends Exception> ObjectCheck<T, X> has(
       Function<T, P> property, Relation<P, O> test, O object, Supplier<X2> exception)
       throws X2 {
-    return ObjectCheckHelper1.get(this).has(property, test, object, exception);
+    return ObjectCheckHelper1.help(this).has(property, test, object, exception);
   }
 
   /**
@@ -806,7 +792,7 @@ public final class ObjectCheck<T, X extends Exception> {
   public <P, O, X2 extends Exception> ObjectCheck<T, X> notHas(
       Function<T, P> property, Relation<P, O> test, O object, Supplier<X2> exception)
       throws X2 {
-    return ObjectCheckHelper1.get(this).has(property,
+    return ObjectCheckHelper1.help(this).has(property,
         test.negate(),
         object,
         exception);
@@ -825,11 +811,11 @@ public final class ObjectCheck<T, X extends Exception> {
    *     property from a JavaBean
    * @param test the test
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> has(ToIntFunction<T> property, IntPredicate test)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property, test);
+    return ObjectCheckHelper2.help(this).has(property, test);
   }
 
   /**
@@ -845,11 +831,11 @@ public final class ObjectCheck<T, X extends Exception> {
    *     property from a JavaBean
    * @param test the test
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> notHas(ToIntFunction<T> property, IntPredicate test)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, test);
+    return ObjectCheckHelper2.help(this).notHas(property, test);
   }
 
   /**
@@ -863,15 +849,15 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested.
+   * @param name the name of the property being tested.
    * @param test the test
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> has(ToIntFunction<T> property,
       String name,
       IntPredicate test) throws X {
-    return ObjectCheckHelper2.get(this).has(property, name, test);
+    return ObjectCheckHelper2.help(this).has(property, name, test);
   }
 
   /**
@@ -885,23 +871,23 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested.
+   * @param name the name of the property being tested.
    * @param test the test
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> notHas(ToIntFunction<T> property,
       String name,
       IntPredicate test)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, name, test);
+    return ObjectCheckHelper2.help(this).notHas(property, name, test);
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that transforms the value validated by this
    *     {@code ObjectCheck} into another value, which is to be validated using the
@@ -911,21 +897,21 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> has(
       ToIntFunction<T> property,
       IntPredicate test,
       String message,
       Object... msgArgs) throws X {
-    return ObjectCheckHelper2.get(this).has(property, test, message, msgArgs);
+    return ObjectCheckHelper2.help(this).has(property, test, message, msgArgs);
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that transforms the value validated by this
    *     {@code ObjectCheck} into another value, which is to be validated using the
@@ -935,14 +921,14 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> notHas(
       ToIntFunction<T> property,
       IntPredicate test,
       String message,
       Object... msgArgs) throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, test, message, msgArgs);
+    return ObjectCheckHelper2.help(this).notHas(property, test, message, msgArgs);
   }
 
   /**
@@ -964,7 +950,7 @@ public final class ObjectCheck<T, X extends Exception> {
   public <X2 extends Exception> ObjectCheck<T, X> has(
       ToIntFunction<T> property, IntPredicate test, Supplier<X2> exception) throws
       X2 {
-    return ObjectCheckHelper2.get(this).has(property, test, exception);
+    return ObjectCheckHelper2.help(this).has(property, test, exception);
   }
 
   /**
@@ -986,7 +972,7 @@ public final class ObjectCheck<T, X extends Exception> {
   public <X2 extends Exception> ObjectCheck<T, X> notHas(
       ToIntFunction<T> property, IntPredicate test, Supplier<X2> exception) throws
       X2 {
-    return ObjectCheckHelper2.get(this).has(property, test.negate(), exception);
+    return ObjectCheckHelper2.help(this).has(property, test.negate(), exception);
   }
 
   /**
@@ -1013,13 +999,13 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> has(ToIntFunction<T> property,
       IntObjRelation<O> test,
       O object)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property, test, object);
+    return ObjectCheckHelper2.help(this).has(property, test, object);
   }
 
   /**
@@ -1046,13 +1032,13 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> notHas(ToIntFunction<T> property,
       IntObjRelation<O> test,
       O object)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, test, object);
+    return ObjectCheckHelper2.help(this).notHas(property, test, object);
   }
 
   /**
@@ -1074,7 +1060,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested. In error messages the
+   * @param name the name of the property being tested. In error messages the
    *     fully-qualified name will be used and constructed using
    *     {@code argName + "." + name}.
    * @param test the test
@@ -1082,12 +1068,12 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> has(
       ToIntFunction<T> property, String name, IntObjRelation<O> test, O object)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property, name, test, object);
+    return ObjectCheckHelper2.help(this).has(property, name, test, object);
   }
 
   /**
@@ -1109,7 +1095,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested. In error messages the
+   * @param name the name of the property being tested. In error messages the
    *     fully-qualified name will be used and constructed using
    *     {@code argName + "." + name}.
    * @param test the test
@@ -1117,19 +1103,19 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> notHas(
       ToIntFunction<T> property, String name, IntObjRelation<O> test, O object)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, name, test, object);
+    return ObjectCheckHelper2.help(this).notHas(property, name, test, object);
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * <p>Note that this method is heavily overloaded. Therefore you need to pay
    * attention when providing a lambda or method reference for <b>both</b> the
@@ -1150,7 +1136,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param msgArgs the message arguments
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> has(
       ToIntFunction<T> property,
@@ -1159,7 +1145,7 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property,
+    return ObjectCheckHelper2.help(this).has(property,
         test,
         object,
         message,
@@ -1167,10 +1153,10 @@ public final class ObjectCheck<T, X extends Exception> {
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * <p>Note that this method is heavily overloaded. Therefore you need to pay
    * attention when providing a lambda or method reference for <b>both</b> the
@@ -1191,7 +1177,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param msgArgs the message arguments
    * @param <O> The type of the value being tested against
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public <O> ObjectCheck<T, X> notHas(
       ToIntFunction<T> property,
@@ -1200,7 +1186,7 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property,
+    return ObjectCheckHelper2.help(this).notHas(property,
         test,
         object,
         message,
@@ -1231,7 +1217,7 @@ public final class ObjectCheck<T, X extends Exception> {
       IntObjRelation<O> test,
       O object,
       Supplier<X2> exception) throws X2 {
-    return ObjectCheckHelper2.get(this).has(property, test, object, exception);
+    return ObjectCheckHelper2.help(this).has(property, test, object, exception);
   }
 
   /**
@@ -1266,7 +1252,7 @@ public final class ObjectCheck<T, X extends Exception> {
       IntObjRelation<O> test,
       O object,
       Supplier<X2> exception) throws X2 {
-    return ObjectCheckHelper2.get(this).has(property,
+    return ObjectCheckHelper2.help(this).has(property,
         test.negate(),
         object,
         exception);
@@ -1295,12 +1281,12 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> has(ToIntFunction<T> property,
       IntRelation test,
       int object) throws X {
-    return ObjectCheckHelper2.get(this).has(property, test, object);
+    return ObjectCheckHelper2.help(this).has(property, test, object);
   }
 
   /**
@@ -1326,13 +1312,13 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> notHas(ToIntFunction<T> property,
       IntRelation test,
       int object)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, test, object);
+    return ObjectCheckHelper2.help(this).notHas(property, test, object);
   }
 
   /**
@@ -1354,21 +1340,21 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested. In error messages the
+   * @param name the name of the property being tested. In error messages the
    *     fully-qualified name will be used and constructed using
    *     {@code argName + "." + name}.
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> has(ToIntFunction<T> property,
       String name,
       IntRelation test,
       int object)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property, name, test, object);
+    return ObjectCheckHelper2.help(this).has(property, name, test, object);
   }
 
   /**
@@ -1390,19 +1376,19 @@ public final class ObjectCheck<T, X extends Exception> {
    *     {@code ObjectCheck} into another value, which is to be validated using the
    *     specified test. This would typically be a function that extracts a bean
    *     property from a JavaBean
-   * @param name The name of the property being tested. In error messages the
+   * @param name the name of the property being tested. In error messages the
    *     fully-qualified name will be used and constructed using
    *     {@code argName + "." + name}.
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> notHas(
       ToIntFunction<T> property, String name, IntRelation test, int object)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property, name, test, object);
+    return ObjectCheckHelper2.help(this).notHas(property, name, test, object);
   }
 
   /**
@@ -1429,7 +1415,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> has(
       ToIntFunction<T> property,
@@ -1438,7 +1424,7 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).has(property,
+    return ObjectCheckHelper2.help(this).has(property,
         test,
         object,
         message,
@@ -1446,10 +1432,10 @@ public final class ObjectCheck<T, X extends Exception> {
   }
 
   /**
-   * Validates a property of the argument, retrieved through the specified function,
-   * using the specified test. Allows you to provide a custom error message. See the
-   * {@link org.klojang.check package description} for how to specify a custom error
-   * message.
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * <p>Note that this method is heavily overloaded. Therefore you need to pay
    * attention when providing a lambda or method reference for <b>both</b> the
@@ -1469,7 +1455,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @return this instance
-   * @throws X If the argument is invalid
+   * @throws X if the argument is invalid
    */
   public ObjectCheck<T, X> notHas(
       ToIntFunction<T> property,
@@ -1478,7 +1464,7 @@ public final class ObjectCheck<T, X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return ObjectCheckHelper2.get(this).notHas(property,
+    return ObjectCheckHelper2.help(this).notHas(property,
         test,
         object,
         message,
@@ -1517,7 +1503,7 @@ public final class ObjectCheck<T, X extends Exception> {
       int object,
       Supplier<X2> exception)
       throws X2 {
-    return ObjectCheckHelper2.get(this).has(property, test, object, exception);
+    return ObjectCheckHelper2.help(this).has(property, test, object, exception);
   }
 
   /**
@@ -1552,7 +1538,7 @@ public final class ObjectCheck<T, X extends Exception> {
       int object,
       Supplier<X2> exception)
       throws X2 {
-    return ObjectCheckHelper2.get(this).has(property,
+    return ObjectCheckHelper2.help(this).has(property,
         test.negate(),
         object,
         exception);

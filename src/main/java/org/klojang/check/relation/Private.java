@@ -8,12 +8,6 @@ import static java.util.Objects.requireNonNull;
 
 final class Private {
 
-  private static final String TEST_MUST_NOT_BE_NULL = "test must not be null";
-  private static final String RELATION_MUST_NOT_BE_NULL = "relation must not be null";
-  private static final String QUANTIFIER_MUST_NOT_BE_NULL = "quantifier must not be null";
-  private static final String ERR_NO_OBJECT = "at least one object required";
-  private static final String ARRAY_MUST_NOT_BE_NULL = "array must not be null";
-
   static <S, O, P extends O> boolean testAgainstArray(S subject,
       Relation<S, O> relation,
       Quantifier quantifier,

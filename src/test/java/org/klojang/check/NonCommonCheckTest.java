@@ -10,8 +10,8 @@ import java.util.function.ToIntFunction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.relation.ComposeMethods.*;
-import static org.klojang.check.x.msg.MsgUtil.defaultPredicateMessage;
-import static org.klojang.check.x.msg.MsgUtil.defaultRelationMessage;
+import static org.klojang.check.x.msg.MsgUtil.getDefaultPredicateMessage;
+import static org.klojang.check.x.msg.MsgUtil.getDefaultRelationMessage;
 
 /*
  * Covers situations where the client provided a "property" that was not from the
@@ -31,8 +31,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).is(invalid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage(null, 23.5));
-      assertEquals(defaultPredicateMessage(null, 23.5), e.getMessage());
+      System.out.println(getDefaultPredicateMessage(null, 23.5));
+      assertEquals(getDefaultPredicateMessage(null, 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -43,8 +43,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2).is(invalidInt());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage(null, 2));
-      assertEquals(defaultPredicateMessage(null, 2), e.getMessage());
+      System.out.println(getDefaultPredicateMessage(null, 2));
+      assertEquals(getDefaultPredicateMessage(null, 2), e.getMessage());
       throw e;
     }
     fail();
@@ -55,8 +55,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).is(NO_RELATION, 22.7);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage(null, 23.5, 22.7));
-      assertEquals(defaultRelationMessage(null, 23.5, 22.7), e.getMessage());
+      System.out.println(getDefaultRelationMessage(null, 23.5, 22.7));
+      assertEquals(getDefaultRelationMessage(null, 23.5, 22.7), e.getMessage());
       throw e;
     }
     fail();
@@ -67,8 +67,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2).is(NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage(null, 2, 5));
-      assertEquals(defaultRelationMessage(null, 2, 5), e.getMessage());
+      System.out.println(getDefaultRelationMessage(null, 2, 5));
+      assertEquals(getDefaultRelationMessage(null, 2, 5), e.getMessage());
       throw e;
     }
     fail();
@@ -79,8 +79,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2).is(NO_INT_OBJ_RELATION, 23.5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage(null, 2, 23.5));
-      assertEquals(defaultRelationMessage(null, 2, 23.5), e.getMessage());
+      System.out.println(getDefaultRelationMessage(null, 2, 23.5));
+      assertEquals(getDefaultRelationMessage(null, 2, 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -91,8 +91,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").is(invalid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("foo", 23.5));
-      assertEquals(defaultPredicateMessage("foo", 23.5), e.getMessage());
+      System.out.println(getDefaultPredicateMessage("foo", 23.5));
+      assertEquals(getDefaultPredicateMessage("foo", 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -103,8 +103,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").is(invalidInt());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("foo", 2));
-      assertEquals(defaultPredicateMessage("foo", 2), e.getMessage());
+      System.out.println(getDefaultPredicateMessage("foo", 2));
+      assertEquals(getDefaultPredicateMessage("foo", 2), e.getMessage());
       throw e;
     }
     fail();
@@ -115,8 +115,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").is(NO_RELATION, 22.7);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 23.5, 22.7));
-      assertEquals(defaultRelationMessage("foo", 23.5, 22.7), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 23.5, 22.7));
+      assertEquals(getDefaultRelationMessage("foo", 23.5, 22.7), e.getMessage());
       throw e;
     }
     fail();
@@ -127,8 +127,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").is(NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 2, 5));
-      assertEquals(defaultRelationMessage("foo", 2, 5), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 2, 5));
+      assertEquals(getDefaultRelationMessage("foo", 2, 5), e.getMessage());
       throw e;
     }
     fail();
@@ -139,8 +139,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").is(NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 2, 5));
-      assertEquals(defaultRelationMessage("foo", 2, 5), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 2, 5));
+      assertEquals(getDefaultRelationMessage("foo", 2, 5), e.getMessage());
       throw e;
     }
     fail();
@@ -151,8 +151,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").is(NO_INT_OBJ_RELATION, 23.5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 2, 23.5));
-      assertEquals(defaultRelationMessage("foo", 2, 23.5), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 2, 23.5));
+      assertEquals(getDefaultRelationMessage("foo", 2, 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -163,8 +163,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).has(x -> 23.5, invalid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("Function.apply(23.5)", 23.5));
-      assertEquals(defaultPredicateMessage("Function.apply(23.5)", 23.5),
+      System.out.println(getDefaultPredicateMessage("Function.apply(23.5)", 23.5));
+      assertEquals(getDefaultPredicateMessage("Function.apply(23.5)", 23.5),
           e.getMessage());
       throw e;
     }
@@ -176,9 +176,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).has(x -> 23.5, "bar", invalid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("bar", 23.5));
+      System.out.println(getDefaultPredicateMessage("bar", 23.5));
       assertEquals(
-          defaultPredicateMessage("bar", 23.5),
+          getDefaultPredicateMessage("bar", 23.5),
           e.getMessage());
       throw e;
     }
@@ -191,9 +191,9 @@ public class NonCommonCheckTest {
       Check.that(2).has(x -> 2, invalidInt());
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
       assertEquals(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
           e.getMessage());
       throw e;
     }
@@ -206,9 +206,9 @@ public class NonCommonCheckTest {
       Check.that(2).has(x -> 2, "bar", invalidInt());
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultPredicateMessage("bar", 2));
+          getDefaultPredicateMessage("bar", 2));
       assertEquals(
-          defaultPredicateMessage("bar", 2),
+          getDefaultPredicateMessage("bar", 2),
           e.getMessage());
       throw e;
     }
@@ -221,9 +221,9 @@ public class NonCommonCheckTest {
       Check.that(23.5).has(x -> 23.5, NO_RELATION, 22.7);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
+          getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
+          getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -236,9 +236,9 @@ public class NonCommonCheckTest {
       Check.that(55.24).has(x -> 2, NO_INT_OBJ_RELATION, 67.345);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("Function.apply(55.24)", 2, 67.345));
+          getDefaultRelationMessage("Function.apply(55.24)", 2, 67.345));
       assertEquals(
-          defaultRelationMessage("Function.apply(55.24)", 2, 67.345),
+          getDefaultRelationMessage("Function.apply(55.24)", 2, 67.345),
           e.getMessage());
       throw e;
     }
@@ -251,9 +251,9 @@ public class NonCommonCheckTest {
       Check.that(55.24).has(x -> 2, "bar", NO_INT_OBJ_RELATION, 67.345);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("bar", 2, 67.345));
+          getDefaultRelationMessage("bar", 2, 67.345));
       assertEquals(
-          defaultRelationMessage("bar", 2, 67.345),
+          getDefaultRelationMessage("bar", 2, 67.345),
           e.getMessage());
       throw e;
     }
@@ -265,9 +265,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).has(x -> 23.5, "bar", NO_RELATION, 22.7);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("bar", 23.5, 22.7));
+      System.out.println(getDefaultRelationMessage("bar", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("bar", 23.5, 22.7),
+          getDefaultRelationMessage("bar", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -280,9 +280,9 @@ public class NonCommonCheckTest {
       Check.that(2).has(x -> 2, NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
       assertEquals(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -295,9 +295,9 @@ public class NonCommonCheckTest {
       Check.that(2).has(x -> 2, "bar", NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("bar", 2, 5));
+          getDefaultRelationMessage("bar", 2, 5));
       assertEquals(
-          defaultRelationMessage("bar", 2, 5),
+          getDefaultRelationMessage("bar", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -309,9 +309,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").has(x -> 23.5, invalid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("Function.apply(23.5)", 23.5));
+      System.out.println(getDefaultPredicateMessage("Function.apply(23.5)", 23.5));
       assertEquals(
-          defaultPredicateMessage("Function.apply(23.5)", 23.5),
+          getDefaultPredicateMessage("Function.apply(23.5)", 23.5),
           e.getMessage());
       throw e;
     }
@@ -323,9 +323,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").has(x -> 23.5, "bar", invalid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("foo.bar", 23.5));
+      System.out.println(getDefaultPredicateMessage("foo.bar", 23.5));
       assertEquals(
-          defaultPredicateMessage("foo.bar", 23.5),
+          getDefaultPredicateMessage("foo.bar", 23.5),
           e.getMessage());
       throw e;
     }
@@ -338,9 +338,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").has(x -> 2, invalidInt());
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
       assertEquals(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
           e.getMessage());
       throw e;
     }
@@ -352,9 +352,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").has(x -> 2, "bar", invalidInt());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("foo.bar", 2));
+      System.out.println(getDefaultPredicateMessage("foo.bar", 2));
       assertEquals(
-          defaultPredicateMessage("foo.bar", 2),
+          getDefaultPredicateMessage("foo.bar", 2),
           e.getMessage());
       throw e;
     }
@@ -366,9 +366,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").has(x -> 23.5, NO_RELATION, 22.7);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
+      System.out.println(getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
+          getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -380,9 +380,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").has(x -> 23.5, "bar", NO_RELATION, 22.7);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo.bar", 23.5, 22.7));
+      System.out.println(getDefaultRelationMessage("foo.bar", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("foo.bar", 23.5, 22.7),
+          getDefaultRelationMessage("foo.bar", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -395,9 +395,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").has(x -> 2, NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
       assertEquals(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -409,9 +409,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").has(x -> 2, "bar", NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo.bar", 2, 5));
+      System.out.println(getDefaultRelationMessage("foo.bar", 2, 5));
       assertEquals(
-          defaultRelationMessage("foo.bar", 2, 5),
+          getDefaultRelationMessage("foo.bar", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -424,9 +424,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").has(x -> 2, NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
       assertEquals(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -438,9 +438,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").has(x -> 2, "bar", NO_INT_RELATION, 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo.bar", 2, 5));
+      System.out.println(getDefaultRelationMessage("foo.bar", 2, 5));
       assertEquals(
-          defaultRelationMessage("foo.bar", 2, 5),
+          getDefaultRelationMessage("foo.bar", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -452,8 +452,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).isNot(valid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage(null, 23.5));
-      assertEquals(defaultPredicateMessage(null, 23.5), e.getMessage());
+      System.out.println(getDefaultPredicateMessage(null, 23.5));
+      assertEquals(getDefaultPredicateMessage(null, 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -464,8 +464,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2).isNot(validInt());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage(null, 2));
-      assertEquals(defaultPredicateMessage(null, 2), e.getMessage());
+      System.out.println(getDefaultPredicateMessage(null, 2));
+      assertEquals(getDefaultPredicateMessage(null, 2), e.getMessage());
       throw e;
     }
     fail();
@@ -476,8 +476,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).isNot(NO_RELATION.negate(), 22.7);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage(null, 23.5, 22.7));
-      assertEquals(defaultRelationMessage(null, 23.5, 22.7), e.getMessage());
+      System.out.println(getDefaultRelationMessage(null, 23.5, 22.7));
+      assertEquals(getDefaultRelationMessage(null, 23.5, 22.7), e.getMessage());
       throw e;
     }
     fail();
@@ -488,8 +488,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2).isNot(NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage(null, 2, 5));
-      assertEquals(defaultRelationMessage(null, 2, 5), e.getMessage());
+      System.out.println(getDefaultRelationMessage(null, 2, 5));
+      assertEquals(getDefaultRelationMessage(null, 2, 5), e.getMessage());
       throw e;
     }
     fail();
@@ -500,8 +500,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2).isNot(NO_INT_OBJ_RELATION.negate(), 23.5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage(null, 2, 23.5));
-      assertEquals(defaultRelationMessage(null, 2, 23.5), e.getMessage());
+      System.out.println(getDefaultRelationMessage(null, 2, 23.5));
+      assertEquals(getDefaultRelationMessage(null, 2, 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -512,8 +512,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").isNot(valid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("foo", 23.5));
-      assertEquals(defaultPredicateMessage("foo", 23.5), e.getMessage());
+      System.out.println(getDefaultPredicateMessage("foo", 23.5));
+      assertEquals(getDefaultPredicateMessage("foo", 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -524,8 +524,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").isNot(validInt());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("foo", 2));
-      assertEquals(defaultPredicateMessage("foo", 2), e.getMessage());
+      System.out.println(getDefaultPredicateMessage("foo", 2));
+      assertEquals(getDefaultPredicateMessage("foo", 2), e.getMessage());
       throw e;
     }
     fail();
@@ -536,8 +536,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").isNot(NO_RELATION.negate(), 22.7);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 23.5, 22.7));
-      assertEquals(defaultRelationMessage("foo", 23.5, 22.7), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 23.5, 22.7));
+      assertEquals(getDefaultRelationMessage("foo", 23.5, 22.7), e.getMessage());
       throw e;
     }
     fail();
@@ -548,8 +548,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").isNot(NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 2, 5));
-      assertEquals(defaultRelationMessage("foo", 2, 5), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 2, 5));
+      assertEquals(getDefaultRelationMessage("foo", 2, 5), e.getMessage());
       throw e;
     }
     fail();
@@ -560,8 +560,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").isNot(NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 2, 5));
-      assertEquals(defaultRelationMessage("foo", 2, 5), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 2, 5));
+      assertEquals(getDefaultRelationMessage("foo", 2, 5), e.getMessage());
       throw e;
     }
     fail();
@@ -572,8 +572,8 @@ public class NonCommonCheckTest {
     try {
       Check.that(2, "foo").isNot(NO_INT_OBJ_RELATION.negate(), 23.5);
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultRelationMessage("foo", 2, 23.5));
-      assertEquals(defaultRelationMessage("foo", 2, 23.5), e.getMessage());
+      System.out.println(getDefaultRelationMessage("foo", 2, 23.5));
+      assertEquals(getDefaultRelationMessage("foo", 2, 23.5), e.getMessage());
       throw e;
     }
     fail();
@@ -584,9 +584,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).notHas(x -> 23.5, valid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("Function.apply(23.5)", 23.5));
+      System.out.println(getDefaultPredicateMessage("Function.apply(23.5)", 23.5));
       assertEquals(
-          defaultPredicateMessage("Function.apply(23.5)", 23.5),
+          getDefaultPredicateMessage("Function.apply(23.5)", 23.5),
           e.getMessage());
       throw e;
     }
@@ -598,9 +598,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5).notHas(x -> 23.5, "bar", valid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("bar", 23.5));
+      System.out.println(getDefaultPredicateMessage("bar", 23.5));
       assertEquals(
-          defaultPredicateMessage("bar", 23.5),
+          getDefaultPredicateMessage("bar", 23.5),
           e.getMessage());
       throw e;
     }
@@ -613,9 +613,9 @@ public class NonCommonCheckTest {
       Check.that(2).notHas(x -> 2, validInt());
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
       assertEquals(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
           e.getMessage());
       throw e;
     }
@@ -628,9 +628,9 @@ public class NonCommonCheckTest {
       Check.that(2).notHas(x -> 2, "bar", validInt());
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultPredicateMessage("bar", 2));
+          getDefaultPredicateMessage("bar", 2));
       assertEquals(
-          defaultPredicateMessage("bar", 2),
+          getDefaultPredicateMessage("bar", 2),
           e.getMessage());
       throw e;
     }
@@ -643,9 +643,9 @@ public class NonCommonCheckTest {
       Check.that(23.5).notHas(x -> 23.5, NO_RELATION.negate(), 22.7);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
+          getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
+          getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -658,9 +658,9 @@ public class NonCommonCheckTest {
       Check.that(23.5).notHas(x -> 23.5, "bar", NO_RELATION.negate(), 22.7);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("bar", 23.5, 22.7));
+          getDefaultRelationMessage("bar", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("bar", 23.5, 22.7),
+          getDefaultRelationMessage("bar", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -673,9 +673,9 @@ public class NonCommonCheckTest {
       Check.that(2).notHas(x -> 2, NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
       assertEquals(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -688,9 +688,9 @@ public class NonCommonCheckTest {
       Check.that(2).notHas(x -> 2, "bar", NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("bar", 2, 5));
+          getDefaultRelationMessage("bar", 2, 5));
       assertEquals(
-          defaultRelationMessage("bar", 2, 5),
+          getDefaultRelationMessage("bar", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -702,9 +702,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").notHas(x -> 23.5, valid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("Function.apply(23.5)", 23.5));
+      System.out.println(getDefaultPredicateMessage("Function.apply(23.5)", 23.5));
       assertEquals(
-          defaultPredicateMessage("Function.apply(23.5)", 23.5),
+          getDefaultPredicateMessage("Function.apply(23.5)", 23.5),
           e.getMessage());
       throw e;
     }
@@ -716,9 +716,9 @@ public class NonCommonCheckTest {
     try {
       Check.that(23.5, "foo").notHas(x -> 23.5, "bar", valid());
     } catch (IllegalArgumentException e) {
-      System.out.println(defaultPredicateMessage("foo.bar", 23.5));
+      System.out.println(getDefaultPredicateMessage("foo.bar", 23.5));
       assertEquals(
-          defaultPredicateMessage("foo.bar", 23.5),
+          getDefaultPredicateMessage("foo.bar", 23.5),
           e.getMessage());
       throw e;
     }
@@ -731,9 +731,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").notHas(x -> 2, validInt());
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2));
       assertEquals(
-          defaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
+          getDefaultPredicateMessage("IntUnaryOperator.applyAsInt(2)", 2),
           e.getMessage());
       throw e;
     }
@@ -746,9 +746,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").notHas(x -> 2, "bar", validInt());
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultPredicateMessage("foo.bar", 2));
+          getDefaultPredicateMessage("foo.bar", 2));
       assertEquals(
-          defaultPredicateMessage("foo.bar", 2),
+          getDefaultPredicateMessage("foo.bar", 2),
           e.getMessage());
       throw e;
     }
@@ -761,9 +761,9 @@ public class NonCommonCheckTest {
       Check.that(23.5, "foo").notHas(x -> 23.5, NO_RELATION.negate(), 22.7);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
+          getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
+          getDefaultRelationMessage("Function.apply(23.5)", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -776,9 +776,9 @@ public class NonCommonCheckTest {
       Check.that(23.5, "foo").notHas(x -> 23.5, "bar", NO_RELATION.negate(), 22.7);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("foo.bar", 23.5, 22.7));
+          getDefaultRelationMessage("foo.bar", 23.5, 22.7));
       assertEquals(
-          defaultRelationMessage("foo.bar", 23.5, 22.7),
+          getDefaultRelationMessage("foo.bar", 23.5, 22.7),
           e.getMessage());
       throw e;
     }
@@ -791,9 +791,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").notHas(x -> 2, NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
       assertEquals(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -806,9 +806,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").notHas(x -> 2, "bar", NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("foo.bar", 2, 5));
+          getDefaultRelationMessage("foo.bar", 2, 5));
       assertEquals(
-          defaultRelationMessage("foo.bar", 2, 5),
+          getDefaultRelationMessage("foo.bar", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -821,9 +821,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").notHas(x -> 2, NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5));
       assertEquals(
-          defaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
+          getDefaultRelationMessage("IntUnaryOperator.applyAsInt(2)", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -836,9 +836,9 @@ public class NonCommonCheckTest {
       Check.that(2, "foo").notHas(x -> 2, "bar", NO_INT_RELATION.negate(), 5);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("foo.bar", 2, 5));
+          getDefaultRelationMessage("foo.bar", 2, 5));
       assertEquals(
-          defaultRelationMessage("foo.bar", 2, 5),
+          getDefaultRelationMessage("foo.bar", 2, 5),
           e.getMessage());
       throw e;
     }
@@ -851,9 +851,9 @@ public class NonCommonCheckTest {
       Check.that(23.5, "foo").notHas(x -> 2, NO_INT_OBJ_RELATION.negate(), 42.56);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("Function.apply(23.5)", 2, 42.56));
+          getDefaultRelationMessage("Function.apply(23.5)", 2, 42.56));
       assertEquals(
-          defaultRelationMessage("Function.apply(23.5)", 2, 42.56),
+          getDefaultRelationMessage("Function.apply(23.5)", 2, 42.56),
           e.getMessage());
       throw e;
     }
@@ -869,9 +869,9 @@ public class NonCommonCheckTest {
           42.56);
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("foo.bar", 2, 42.56));
+          getDefaultRelationMessage("foo.bar", 2, 42.56));
       assertEquals(
-          defaultRelationMessage("foo.bar", 2, 42.56),
+          getDefaultRelationMessage("foo.bar", 2, 42.56),
           e.getMessage());
       throw e;
     }
@@ -887,9 +887,9 @@ public class NonCommonCheckTest {
           "sparrow");
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("Function.apply(23.5)", 2, "sparrow"));
+          getDefaultRelationMessage("Function.apply(23.5)", 2, "sparrow"));
       assertEquals(
-          defaultRelationMessage("Function.apply(23.5)", 2, "sparrow"),
+          getDefaultRelationMessage("Function.apply(23.5)", 2, "sparrow"),
           e.getMessage());
       throw e;
     }
@@ -906,9 +906,9 @@ public class NonCommonCheckTest {
           "sparrow");
     } catch (IllegalArgumentException e) {
       System.out.println(
-          defaultRelationMessage("bar", 2, "sparrow"));
+          getDefaultRelationMessage("bar", 2, "sparrow"));
       assertEquals(
-          defaultRelationMessage("bar", 2, "sparrow"),
+          getDefaultRelationMessage("bar", 2, "sparrow"),
           e.getMessage());
       throw e;
     }

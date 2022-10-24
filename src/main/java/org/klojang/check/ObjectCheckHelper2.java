@@ -1,25 +1,25 @@
 package org.klojang.check;
 
-import static org.klojang.check.x.msg.CheckDefs.*;
-import static org.klojang.check.CommonProperties.formatProperty;
-import static org.klojang.check.x.msg.MsgUtil.*;
-import static org.klojang.check.x.msg.MsgUtil.getPrefabMessage;
+import org.klojang.check.relation.IntObjRelation;
+import org.klojang.check.relation.IntRelation;
+import org.klojang.check.x.msg.MsgArgs;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
-import org.klojang.check.relation.IntObjRelation;
-import org.klojang.check.relation.IntRelation;
-import org.klojang.check.x.msg.MsgArgs;
+import static org.klojang.check.CommonProperties.formatProperty;
+import static org.klojang.check.x.msg.CheckDefs.*;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
-/**
- * Helper class for ObjectCheck.
+/*
+ * Helper class for ObjectCheck. Helps with has() methods that extract and validate an int
+ * property of the argument.
  */
 final class ObjectCheckHelper2<T, E extends Exception> {
 
-  static <T0, E0 extends Exception> ObjectCheckHelper2<T0, E0> get(ObjectCheck<T0, E0> check) {
+  static <T0, E0 extends Exception> ObjectCheckHelper2<T0, E0> help(ObjectCheck<T0, E0> check) {
     return new ObjectCheckHelper2<>(check);
   }
 
@@ -38,7 +38,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, val));
+      throw check.exc.apply(getDefaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, int.class, null));
@@ -53,7 +53,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, val));
+      throw check.exc.apply(getDefaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, null));
@@ -68,10 +68,16 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
-        getPrefabMessage(formatter, test, false, check.FQN(name), val, int.class, null));
+        getPrefabMessage(formatter,
+            test,
+            false,
+            check.FQN(name),
+            val,
+            int.class,
+            null));
   }
 
   ObjectCheck<T, E> notHas(ToIntFunction<T> prop, String name, IntPredicate test)
@@ -83,10 +89,16 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
-        getPrefabMessage(formatter, test, true, check.FQN(name), val, int.class, null));
+        getPrefabMessage(formatter,
+            test,
+            true,
+            check.FQN(name),
+            val,
+            int.class,
+            null));
   }
 
   ObjectCheck<T, E> has(ToIntFunction<T> prop,
@@ -135,7 +147,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, int.class, obj));
@@ -153,7 +165,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
     if (formatter == null) {
-       throw check.exc.apply(defaultRelationMessage(name, val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, obj));
@@ -171,7 +183,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -195,7 +207,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -267,7 +279,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, int.class, obj));
@@ -283,7 +295,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, Function.class);
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(name, val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, int.class, obj));
@@ -300,7 +312,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,
@@ -323,7 +335,7 @@ final class ObjectCheckHelper2<T, E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultRelationMessage(check.FQN(name), val, obj));
+      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter,

@@ -1,9 +1,6 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.relation.Comparison;
-import org.klojang.check.relation.IntRelation;
-import org.klojang.check.x.msg.MsgUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -12,10 +9,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.*;
-import static org.klojang.check.relation.ComposeMethods.invalid;
-import static org.klojang.check.relation.ComposeMethods.invalidInt;
-import static org.klojang.check.x.msg.MsgUtil.defaultPredicateMessage;
-import static org.klojang.check.x.msg.MsgUtil.defaultRelationMessage;
 
 public class ObjectCheckHelper1Test {
 

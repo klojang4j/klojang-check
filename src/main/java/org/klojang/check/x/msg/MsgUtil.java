@@ -24,21 +24,21 @@ public final class MsgUtil {
 
   public static final String WAS = " (was ";
 
-  public static String defaultPredicateMessage(String argName, Object argVal) {
+  public static String getDefaultPredicateMessage(String argName, Object argVal) {
     if (argName == null) {
       return "invalid value: " + toStr(argVal);
     }
     return "invalid value for " + argName + ": " + toStr(argVal);
   }
 
-  public static String defaultRelationMessage(String argName,
+  public static String getDefaultRelationMessage(String argName,
       Object argVal,
       Object obj) {
     if (argName == null) {
       return "no such relation between " + toStr(argVal) + " and " + toStr(obj);
     }
-    return "argument "
-        + argName
+    return "invalid value for " +
+        argName
         + ": no such relation between "
         + toStr(argVal)
         + " and "

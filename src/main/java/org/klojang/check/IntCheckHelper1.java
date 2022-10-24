@@ -13,7 +13,7 @@ import static org.klojang.check.x.msg.MsgUtil.*;
 
 final class IntCheckHelper1<E extends Exception> {
 
-  static <E0 extends Exception> IntCheckHelper1<E0> get(IntCheck<E0> check) {
+  static <E0 extends Exception> IntCheckHelper1<E0> help(IntCheck<E0> check) {
     return new IntCheckHelper1<>(check);
   }
 
@@ -32,7 +32,7 @@ final class IntCheckHelper1<E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, IntFunction.class);
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, val));
+      throw check.exc.apply(getDefaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, name, val, null, null));
@@ -47,7 +47,7 @@ final class IntCheckHelper1<E extends Exception> {
     String name = formatProperty(check.arg, check.argName, prop, IntFunction.class);
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(name, val));
+      throw check.exc.apply(getDefaultPredicateMessage(name, val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, name, val, null, null));
@@ -61,7 +61,7 @@ final class IntCheckHelper1<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, false, check.FQN(name), val, null, null));
@@ -76,7 +76,7 @@ final class IntCheckHelper1<E extends Exception> {
     }
     Function<MsgArgs, String> formatter = getPredicateFormatter(test);
     if (formatter == null) {
-      throw check.exc.apply(defaultPredicateMessage(check.FQN(name), val));
+      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));
     }
     throw check.exc.apply(
         getPrefabMessage(formatter, test, true, check.FQN(name), val, null, null));

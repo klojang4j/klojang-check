@@ -57,7 +57,7 @@ public final class IntCheck<X extends Exception> {
    *
    * @param transformer A {@code Function} that transforms the argument into some
    *     other value
-   * @param <R> The type of the returned value
+   * @param <R> the type of the returned value
    * @param <X2> the type of the exception thrown if the function fails while
    *     processing the value
    * @return the value computed by the {@code Function}
@@ -84,10 +84,10 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. While not strictly
-   * required, this method is meant to be passed a check from the
-   * {@link CommonChecks} class. When providing your own lambda or method reference,
-   * the error message wil not be very intelligible.
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
    *
    * @param test the test
    * @return this instance
@@ -99,17 +99,17 @@ public final class IntCheck<X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultPredicateMessage(argName, arg));
+      throw exc.apply(getDefaultPredicateMessage(argName, arg));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, false, argName, arg, int.class, null));
   }
 
   /**
-   * Validates the {@code int} value using the specified test. While not strictly
-   * required, this method is meant to be passed a check from the
-   * {@link CommonChecks} class. When providing your own lambda or method reference,
-   * the error message wil not be very intelligible.
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
    *
    * @param test the test
    * @return this instance
@@ -121,23 +121,21 @@ public final class IntCheck<X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntPredicateFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultPredicateMessage(argName, arg));
+      throw exc.apply(getDefaultPredicateMessage(argName, arg));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, true, argName, arg, int.class, null));
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to provide
-   * a custom error message. See the {@link org.klojang.check package description}
-   * for how to specify a custom error message.
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -157,16 +155,14 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to provide
-   * a custom error message. See the {@link org.klojang.check package description}
-   * for how to specify a custom error message.
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -189,8 +185,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to throw a
-   * different type of exception for this particular test.
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
    *
    * @param test the test
    * @param exception the supplier of the exception to be thrown if the argument
@@ -210,8 +206,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to throw a
-   * different type of exception for this particular test.
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
    *
    * @param test the test
    * @param exception the supplier of the exception to be thrown if the argument
@@ -229,10 +225,10 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. While not strictly
-   * required, this method is meant to be passed a check from the
-   * {@link CommonChecks} class. When providing your own lambda or method reference,
-   * the error message wil not be very intelligible.
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
    *
    * @param test the test
    * @param object the object of the {@code Relation}
@@ -245,17 +241,17 @@ public final class IntCheck<X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultRelationMessage(argName, arg, object));
+      throw exc.apply(getDefaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, false, argName, arg, int.class, object));
   }
 
   /**
-   * Validates the {@code int} value using the specified test. While not strictly
-   * required, this method is meant to be passed a check from the
-   * {@link CommonChecks} class. When providing your own lambda or method reference,
-   * the error message wil not be very intelligible.
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
    *
    * @param test the test
    * @param object the object of the {@code Relation}
@@ -268,24 +264,22 @@ public final class IntCheck<X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntRelationFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultRelationMessage(argName, arg, object));
+      throw exc.apply(getDefaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, true, argName, arg, int.class, object));
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to provide
-   * a custom error message. See the {@link org.klojang.check package description}
-   * for how to specify a custom error message.
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -307,17 +301,15 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to provide
-   * a custom error message. See the {@link org.klojang.check package description}
-   * for how to specify a custom error message.
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
    */
@@ -340,8 +332,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to throw a
-   * different type of exception for this particular test.
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
@@ -364,8 +356,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to throw a
-   * different type of exception for this particular test.
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
@@ -384,10 +376,10 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. While not strictly
-   * required, this method is meant to be passed a check from the
-   * {@link CommonChecks} class. When providing your own lambda or method reference,
-   * the error message wil not be very intelligible.
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
@@ -401,17 +393,17 @@ public final class IntCheck<X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultRelationMessage(argName, arg, object));
+      throw exc.apply(getDefaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, false, argName, arg, int.class, object));
   }
 
   /**
-   * Validates the {@code int} value using the specified test. While not strictly
-   * required, this method is meant to be passed a check from the
-   * {@link CommonChecks} class. When providing your own lambda or method reference,
-   * the error message wil not be very intelligible.
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
@@ -425,24 +417,22 @@ public final class IntCheck<X extends Exception> {
     }
     Function<MsgArgs, String> formatter = getIntObjRelationFormatter(test);
     if (formatter == null) {
-      throw exc.apply(defaultRelationMessage(argName, arg, object));
+      throw exc.apply(getDefaultRelationMessage(argName, arg, object));
     }
     throw exc.apply(
         getPrefabMessage(formatter, test, true, argName, arg, int.class, object));
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to provide
-   * a custom error message. See the {@link org.klojang.check package description}
-   * for how to specify a custom error message.
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <O> the type of the object of the {@code IntObjRelation}
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
@@ -466,17 +456,15 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to provide
-   * a custom error message. See the {@link org.klojang.check package description}
-   * for how to specify a custom error message.
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <O> the type of the object of the {@code IntObjRelation}
    * @return this instance
    * @throws X if the {@code int} value does not pass the test
@@ -500,8 +488,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to throw a
-   * different type of exception for this particular test.
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
@@ -523,8 +511,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates the {@code int} value using the specified test. Allows you to throw a
-   * different type of exception for this particular test.
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
    *
    * @param test the test
    * @param object the object of the {@code IntObjRelation}
@@ -543,8 +531,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -558,12 +546,12 @@ public final class IntCheck<X extends Exception> {
    * @throws X if the property does not pass the test
    */
   public <P> IntCheck<X> has(IntFunction<P> property, Predicate<P> test) throws X {
-    return IntCheckHelper1.get(this).has(property, test);
+    return IntCheckHelper1.help(this).has(property, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -578,12 +566,12 @@ public final class IntCheck<X extends Exception> {
    */
   public <P> IntCheck<X> notHas(IntFunction<P> property, Predicate<P> test)
       throws X {
-    return IntCheckHelper1.get(this).notHas(property, test);
+    return IntCheckHelper1.help(this).notHas(property, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -599,12 +587,12 @@ public final class IntCheck<X extends Exception> {
    */
   public <P> IntCheck<X> has(IntFunction<P> property, String name, Predicate<P> test)
       throws X {
-    return IntCheckHelper1.get(this).has(property, name, test);
+    return IntCheckHelper1.help(this).has(property, name, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -621,23 +609,21 @@ public final class IntCheck<X extends Exception> {
   public <P> IntCheck<X> notHas(IntFunction<P> property,
       String name,
       Predicate<P> test) throws X {
-    return IntCheckHelper1.get(this).notHas(property, name, test);
+    return IntCheckHelper1.help(this).notHas(property, name, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
    *     validated using the specified test
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
    * @return this instance
    * @throws X if the property does not pass the test
@@ -645,23 +631,21 @@ public final class IntCheck<X extends Exception> {
   public <P> IntCheck<X> has(
       IntFunction<P> property, Predicate<P> test, String message, Object... msgArgs)
       throws X {
-    return IntCheckHelper1.get(this).has(property, test, message, msgArgs);
+    return IntCheckHelper1.help(this).has(property, test, message, msgArgs);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
    *     validated using the specified test
    * @param test the test
    * @param message the message pattern
-   * @param msgArgs the message arguments. If you expect the test to fail very
-   *     often, and performance is paramount, even in anomalous situations, specify
-   *     {@code null}. This will cause the message to remain unparsed. It will be
-   *     passed on as-is to the exception.
+   * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
    * @return this instance
    * @throws X if the argument is invalid
@@ -669,12 +653,12 @@ public final class IntCheck<X extends Exception> {
   public <P> IntCheck<X> notHas(
       IntFunction<P> property, Predicate<P> test, String message, Object... msgArgs)
       throws X {
-    return IntCheckHelper1.get(this).notHas(property, test, message, msgArgs);
+    return IntCheckHelper1.help(this).notHas(property, test, message, msgArgs);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to throw a different
-   * type of exception for this particular test.
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -689,12 +673,12 @@ public final class IntCheck<X extends Exception> {
    */
   public <P, X2 extends Exception> IntCheck<X> has(
       IntFunction<P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
-    return IntCheckHelper1.get(this).has(property, test, exception);
+    return IntCheckHelper1.help(this).has(property, test, exception);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to throw a different
-   * type of exception for this particular test.
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -709,12 +693,12 @@ public final class IntCheck<X extends Exception> {
    */
   public <P, X2 extends Exception> IntCheck<X> notHas(
       IntFunction<P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
-    return IntCheckHelper1.get(this).has(property, test.negate(), exception);
+    return IntCheckHelper1.help(this).has(property, test.negate(), exception);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -727,12 +711,12 @@ public final class IntCheck<X extends Exception> {
    * @throws X if the property does not pass the test
    */
   public IntCheck<X> has(IntUnaryOperator property, IntPredicate test) throws X {
-    return IntCheckHelper2.get(this).has(property, test);
+    return IntCheckHelper2.help(this).has(property, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -745,12 +729,12 @@ public final class IntCheck<X extends Exception> {
    * @throws X if the property does not pass the test
    */
   public IntCheck<X> notHas(IntUnaryOperator property, IntPredicate test) throws X {
-    return IntCheckHelper2.get(this).notHas(property, test);
+    return IntCheckHelper2.help(this).notHas(property, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -767,12 +751,12 @@ public final class IntCheck<X extends Exception> {
    */
   public IntCheck<X> has(IntUnaryOperator property, String name, IntPredicate test)
       throws X {
-    return IntCheckHelper2.get(this).has(property, name, test);
+    return IntCheckHelper2.help(this).has(property, name, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -790,13 +774,14 @@ public final class IntCheck<X extends Exception> {
   public IntCheck<X> notHas(IntUnaryOperator property,
       String name,
       IntPredicate test) throws X {
-    return IntCheckHelper2.get(this).notHas(property, name, test);
+    return IntCheckHelper2.help(this).notHas(property, name, test);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -812,13 +797,14 @@ public final class IntCheck<X extends Exception> {
       IntPredicate test,
       String message,
       Object... msgArgs) throws X {
-    return IntCheckHelper2.get(this).has(property, test, message, msgArgs);
+    return IntCheckHelper2.help(this).has(property, test, message, msgArgs);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -834,12 +820,12 @@ public final class IntCheck<X extends Exception> {
       IntPredicate test,
       String message,
       Object... msgArgs) throws X {
-    return IntCheckHelper2.get(this).notHas(property, test, message, msgArgs);
+    return IntCheckHelper2.help(this).notHas(property, test, message, msgArgs);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to throw a different
-   * type of exception for this particular test.
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -854,12 +840,12 @@ public final class IntCheck<X extends Exception> {
   public <X2 extends Exception> IntCheck<X> has(
       IntUnaryOperator property, IntPredicate test, Supplier<X2> exception) throws
       X2 {
-    return IntCheckHelper2.get(this).has(property, test, exception);
+    return IntCheckHelper2.help(this).has(property, test, exception);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to throw a different
-   * type of exception for this particular test.
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -874,12 +860,12 @@ public final class IntCheck<X extends Exception> {
   public <X2 extends Exception> IntCheck<X> notHas(IntUnaryOperator property,
       IntPredicate test,
       Supplier<X2> exception) throws X2 {
-    return IntCheckHelper2.get(this).has(property, test.negate(), exception);
+    return IntCheckHelper2.help(this).has(property, test.negate(), exception);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -894,12 +880,12 @@ public final class IntCheck<X extends Exception> {
    */
   public IntCheck<X> has(IntUnaryOperator property, IntRelation test, int object)
       throws X {
-    return IntCheckHelper2.get(this).has(property, test, object);
+    return IntCheckHelper2.help(this).has(property, test, object);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -914,12 +900,12 @@ public final class IntCheck<X extends Exception> {
    */
   public IntCheck<X> notHas(IntUnaryOperator property, IntRelation test, int object)
       throws X {
-    return IntCheckHelper2.get(this).notHas(property, test, object);
+    return IntCheckHelper2.help(this).notHas(property, test, object);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -938,12 +924,12 @@ public final class IntCheck<X extends Exception> {
       IntRelation test,
       int object)
       throws X {
-    return IntCheckHelper2.get(this).has(property, name, test, object);
+    return IntCheckHelper2.help(this).has(property, name, test, object);
   }
 
   /**
-   * Validates a property of the {@code int} value. While not strictly required, this
-   * method is meant to be passed a check from the {@link CommonChecks} class
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
    * <i>and</i> a property extractor function from the {@link CommonProperties}
    * class. When providing your own lambdas and/or method references, the error
    * message wil not be very intelligible
@@ -962,13 +948,14 @@ public final class IntCheck<X extends Exception> {
       IntRelation test,
       int object)
       throws X {
-    return IntCheckHelper2.get(this).notHas(property, name, test, object);
+    return IntCheckHelper2.help(this).notHas(property, name, test, object);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -987,13 +974,14 @@ public final class IntCheck<X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return IntCheckHelper2.get(this).has(property, test, object, message, msgArgs);
+    return IntCheckHelper2.help(this).has(property, test, object, message, msgArgs);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to provide a custom
-   * error message. See the {@link org.klojang.check package description} for how to
-   * specify a custom error message.
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -1012,7 +1000,7 @@ public final class IntCheck<X extends Exception> {
       String message,
       Object... msgArgs)
       throws X {
-    return IntCheckHelper2.get(this).notHas(property,
+    return IntCheckHelper2.help(this).notHas(property,
         test,
         object,
         message,
@@ -1020,8 +1008,8 @@ public final class IntCheck<X extends Exception> {
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to throw a different
-   * type of exception for this particular test.
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then
@@ -1041,12 +1029,12 @@ public final class IntCheck<X extends Exception> {
       int object,
       Supplier<X2> exception)
       throws X2 {
-    return IntCheckHelper2.get(this).has(property, test, object, exception);
+    return IntCheckHelper2.help(this).has(property, test, object, exception);
   }
 
   /**
-   * Validates a property of the {@code int} value. Allows you to throw a different
-   * type of exception for this particular test.
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
    *
    * @param property a function that exposes some property of the {@code int}
    *     value (for example its absolute value or its square root), which is then

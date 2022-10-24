@@ -19,23 +19,24 @@ import static org.klojang.check.x.StringCheckImpls.PARSABLES;
 /**
  * Defines various common checks on arguments, variables, object state, program
  * input, etc. The checks have short, informative error messages associated with
- * them, so you don't have to invent them yourself. It is important to realize that
- * these checks only test what they are documented to be testing. Many of them do
- * nothing but return a method reference. <b>They will not do a preliminary null
- * check</b>. If the argument might be {@code null}, always start with the
- * {@link #notNull()} check. Otherwise, a raw, unprocessed
- * {@link NullPointerException} will be thrown from the check <i>itself</i>, rather
- * than the application code.
+ * them, so you don't have to invent them yourself. Unless specified otherwise they
+ * <i>only</i> test what they are documented to be testing. Many of them do nothing
+ * but return a method reference (e.g.
+ * {@link Collection#contains(Object) Collection::contains}). More specifically:
+ * <b>the checks will not execute a preliminary null check</b> on the argument
+ * before proceeding with the actual check. If the argument might be {@code null},
+ * always start with the {@link #notNull()} check. Otherwise, a raw, unprocessed
+ * {@link NullPointerException} <i>will</i> be thrown from the check itself, rather
+ * than from the code it is meant to protect.
  *
- * <blockquote>
- * <pre>{@code
+ * <blockquote><pre>{@code
  * Check.notNull(file).is(readable());
- * }</pre>
- * </blockquote>
- * <p>
- * For ease of reading, the documentation for the checks will often use the term
- * "argument" for the value being tested, but it might just as well be a local
- * variable, a field, a program argument, a system property, etc.
+ * }</pre></blockquote>
+ *
+ * <p>For ease of reading, the documentation for the checks will mostly use the term
+ * "argument" for the value being tested. Constantly repeating "argument, field,
+ * variable, program argument, system property, environment variable, etc." would not
+ * improve the quality and clarity of the documentation.
  *
  * @author Ayco Holleman
  */
@@ -689,8 +690,8 @@ public final class CommonChecks {
    * {@link Collection#containsAll(Collection) Collection::containsAll}.
    *
    * <blockquote><pre>{@code
-   * Check.that(List.of(1,2,3)).is(enclosing(), Set.of(1,2); // true
-   * Check.that(List.of(1,2)).is(enclosing(), Set.of(1,2,3); // false
+   * Check.that(List.of(1, 2, 3)).is(enclosing(), Set.of(1, 2)); // true
+   * Check.that(List.of(1, 2)).is(enclosing(), Set.of(1, 2, 3)); // false
    * }</pre></blockquote>
    *
    * @param <E> The type of the elements in the {@code Collection}
@@ -707,14 +708,10 @@ public final class CommonChecks {
    * Verifies that a {@code Collection} argument is a subset or sublist of another
    * {@code Collection}.
    *
-   * <blockquote>
-   *
-   * <pre>{@code
-   * Check.that(List.of(1,2,3)).is(enclosedBy(), Set.of(1,2); // false
-   * Check.that(List.of(1,2)).is(enclosedBy(), Set.of(1,2,3); // true
-   * }</pre>
-   *
-   * </blockquote>
+   * <blockquote><pre>{@code
+   * Check.that(List.of(1, 2, 3)).is(enclosedBy(), Set.of(1, 2)); // false
+   * Check.that(List.of(1, 2)).is(enclosedBy(), Set.of(1, 2, 3)); // true
+   * }</pre></blockquote>
    *
    * @param <E> The type of the elements in the {@code Collection}
    * @param <C0> The type of the argument (the subject of the {@code Relation})
@@ -779,7 +776,7 @@ public final class CommonChecks {
    * fully describes the string).
    *
    * @return a function implementing the test described above
-   * @see #describedBy()
+   * @see #matching()
    */
   public static Relation<String, Pattern> hasPattern() {
     return (string, pattern) -> pattern.matcher(string).matches();
@@ -790,7 +787,7 @@ public final class CommonChecks {
    * can be found somewhere in the string).
    *
    * @return a function implementing the test described above
-   * @see #matching()
+   * @see #matchFor()
    */
   public static Relation<String, Pattern> containsPattern() {
     return (string, pattern) -> pattern.matcher(string).find();
@@ -798,38 +795,37 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument matches the specified pattern (that is, the pattern
-   * fully describes the string). The subject (or "left hand side") of this
-   * {@code Relation} is the string to match; the object (or "right hand side") of
-   * the {@code Relation} is the regular expression to be compiled into a
+   * fully describes the string). The subject ("left hand side") of this
+   * {@code Relation} is the string to match; the object ("right hand side") of the
+   * {@code Relation} is the regular expression to be compiled into a
    * {@link Pattern}.
    *
    * <blockquote><pre>{@code
-   * Check.that("abcd123").is(matching(), "\\d{3}"); // yes
-   * Check.that("abcd123").is(matching(), "\\d{4}"); // no
+   * Check.that("abcd123").is(matching(), "^\\w{4}\\d{3}$"); // yes
+   * Check.that("abcd123").is(matching(), "\\d{3}"); // no
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> describedBy() {
+  public static Comparison<String> matching() {
     return (string, pattern) ->
         hasPattern().exists(string, Pattern.compile(pattern));
   }
 
   /**
    * Verifies that the argument contains the specified pattern (that is, the pattern
-   * can be found somewhere in the string). The subject (or "left hand side") of this
-   * {@code Relation} is the string to match; the object (or "right hand side") of
-   * the {@code Relation} is the regular expression to be compiled into a
-   * {@link Pattern}.
+   * can be found somewhere in the string). The subject of this {@code Relation} is
+   * the string to match; the object of the {@code Relation} is the regular
+   * expression to be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
-   * Check.that("abcd123").is(describedBy(), "\\d{3}"); // yes
-   * Check.that("abcd123").is(describedBy(), "\\d{4}"); // no
+   * Check.that("abcd123").is(matchFor(), "\\d{3}"); // yes
+   * Check.that("abcd123").is(matchFor(), "\\d{4}"); // no
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> matching() {
+  public static Comparison<String> matchFor() {
     return (string, pattern) ->
         containsPattern().exists(string, Pattern.compile(pattern));
   }
