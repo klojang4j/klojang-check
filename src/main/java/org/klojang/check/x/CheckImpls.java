@@ -1,14 +1,15 @@
 package org.klojang.check.x;
 
-import static org.klojang.check.x.Misc.getArrayLength;
+import org.klojang.check.CorruptCheckException;
+import org.klojang.check.aux.Emptyable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 
-import org.klojang.check.CorruptCheckException;
-import org.klojang.check.aux.Emptyable;
+import static org.klojang.check.x.Misc.getArrayLength;
+import static org.klojang.check.x.Misc.notApplicable;
 
 /*
  * Implementations of checks in the CommonChecks class that require more than 1 or 2
@@ -122,8 +123,7 @@ public final class CheckImpls {
         throw new CorruptCheckException(t.toString());
       }
     }
-    throw new CorruptCheckException(
-        "indexOf() not applicable to " + obj.getClass());
+    throw notApplicable("indexOf", obj.getClass());
   }
 
   public static <T> boolean isIndexInclusiveOf(int idx, T obj) {
@@ -140,8 +140,7 @@ public final class CheckImpls {
         throw new CorruptCheckException(t.toString());
       }
     }
-    throw new CorruptCheckException(
-        "indexInclusiveOf() not applicable to " + obj.getClass());
+    throw notApplicable("indexInclusiveOf", obj.getClass());
   }
 
   private static boolean dne(Collection<?> coll) {

@@ -11,8 +11,8 @@ import java.util.function.Supplier;
  * The central class of this Java module. All checks start out here. The
  * {@code Check} class provides static factory methods for {@link IntCheck} and
  * {@link ObjectCheck} instances, which do the actual orchestration of the checks to
- * be executed. The {@code Check} class does, in fact, contain a few validation
- * methods itself, like {@link #fromTo(int, int, int) Check.fromTo()} and
+ * be executed. The {@code Check} class contains a few validation methods itself,
+ * like {@link #fromTo(int, int, int) Check.fromTo()} and
  * {@link #offsetLength(int, int, int) Check.offsetLength()}. These stand somewhat
  * apart from the rest of the Klojang Check. They are included for convenience and
  * for optimal performance.
@@ -24,29 +24,10 @@ import java.util.function.Supplier;
  */
 public final class Check {
 
-  /**
-   * A special value that you can use for checks that allow you to provide a custom
-   * error message. If this value is the one and only message argument following the
-   * message itself, the message will, in fact, not be scanned for message arguments
-   * at all. It will be passed, as-is, to the exception's constructor. This will
-   * slightly speed up the generation of an exception and restore performance parity
-   * with hand-coded checks. Note, however, that the effect is really only measurable
-   * if a check almost continuously rejects any value thrown at, which would be
-   * rather odd (if not suspicious) for a precondition check.
-   */
-  @SuppressWarnings({"unused"})
-  // Remove when above description incorporated somewhere else
-  private static final Object EOM = new Object();
-
   private Check() {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * For internal use only. We don't want to get high on our own stuff as it may lead
-   * to circular method calls (a.k.a. stack overflow errors). Therefore, if an
-   * argument should not be null, don't use Check.notNull.
-   */
   private static IllegalArgumentException argumentMustNotBeNull() {
     return new IllegalArgumentException("argument must not be null");
   }
@@ -474,9 +455,7 @@ public final class Check {
    */
   public static <T, X extends Throwable> T failOn(
       Function<String, X> excFactory, String message, Object... msgArgs) throws X {
-    if (msgArgs == null
-        || (msgArgs.length == 1 && msgArgs[0] == EOM)
-        || message == null) {
+    if (msgArgs == null || message == null) {
       throw excFactory.apply(message);
     }
     throw excFactory.apply(CustomMsgFormatter.formatSimple(message, msgArgs));
