@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.*;
 import static org.klojang.check.x.Misc.typeNotSupported;
 import static org.klojang.check.x.StringCheckImpls.NUMERICALS;
 import static org.klojang.check.x.StringCheckImpls.PARSABLES;
@@ -743,15 +744,6 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a value equals ignoring case the specified string.
-   *
-   * @return a function implementing the test described above
-   */
-  public static Relation<String, String> equalsIgnoreCase() {
-    return String::equalsIgnoreCase;
-  }
-
-  /**
    * Verifies that the argument starts with the specified substring. Equivalent to
    * {@link String#startsWith(String) String::startsWith}.
    *
@@ -809,7 +801,7 @@ public final class CommonChecks {
    */
   public static Comparison<String> matching() {
     return (string, pattern) ->
-        hasPattern().exists(string, Pattern.compile(pattern));
+        hasPattern().exists(string, compile(pattern));
   }
 
   /**
@@ -827,7 +819,7 @@ public final class CommonChecks {
    */
   public static Comparison<String> matchFor() {
     return (string, pattern) ->
-        containsPattern().exists(string, Pattern.compile(pattern));
+        containsPattern().exists(string, compile(pattern));
   }
 
   /**
@@ -881,6 +873,58 @@ public final class CommonChecks {
     };
   }
 
+  /**
+   * Verifies that a string value equals, ignoring case, the specified string.
+   * Equivalent to {@link String#equalsIgnoreCase(String) String::equalsIgnoreCase}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Comparison<String> equalsIC() {
+    return String::equalsIgnoreCase;
+  }
+
+  /**
+   * Verifies that a string value starts with, ignoring case, the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Comparison<String> startsWithIC() {
+    return (s, o) -> {
+      if (o.length() > 0) {
+        return s.regionMatches(true, 0, o, 0, o.length());
+      }
+      throw new CorruptCheckException("empty starts-with string not allowed");
+    };
+  }
+
+  /**
+   * Verifies that a string value starts with, ignoring case, the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Comparison<String> endsWithIC() {
+    return (s, o) -> {
+      if (o.length() > 0) {
+        return s.regionMatches(true, s.length() - o.length(), o, 0, o.length());
+      }
+      throw new CorruptCheckException("empty ends-with string not allowed");
+    };
+  }
+
+  /**
+   * Verifies that a string value contains, ignoring case, the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Comparison<String> hasSubstringIC() {
+    return (s, o) -> {
+      if (o.length() > 0) {
+        return containsPattern().exists(s, compile(o, CASE_INSENSITIVE | LITERAL));
+      }
+      throw new CorruptCheckException("empty substring not allowed");
+    };
+  }
+
   //////////////////////////////////////////////////////////////////////////////////
   // IntObjRelation
   //////////////////////////////////////////////////////////////////////////////////
@@ -888,7 +932,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is a valid index into the specified array,
    * {@code List} or {@code String}. No preliminary check is done to ensure the
-   * provided object actually is an array, {@code List} or {@code String}. An
+   * provided object actually is an array, {@code List} or {@code String}. A
    * {@link CorruptCheckException} is thrown if it is not. Execute the
    * {@link #instanceOf()} or {@link #array()} check first, if necessary.
    *
@@ -902,13 +946,12 @@ public final class CommonChecks {
 
   /**
    * Verifies that a value can be used as a "from" or "to" index in operations like
-   * (but not limited to)
-   * {@link Arrays#copyOfRange(int[], int, int) Arrays.copyOfRange},
-   * {@link String#substring(int, int) String.substring} and
-   * {@link List#subList(int, int) List.subList}. These operations allow both the
+   * {@link Arrays#copyOfRange(int[], int, int) Arrays.copyOfRange()},
+   * {@link String#substring(int, int) String.substring()} and
+   * {@link List#subList(int, int) List.subList()}. These operations allow both the
    * "from" index and the "to" index to be equal to the length of the array, string
    * or list. No preliminary check is done to ensure the provided object actually is
-   * an array, {@code List} or {@code String}. An {@link CorruptCheckException} is
+   * an array, {@code List} or {@code String}. A {@link CorruptCheckException} is
    * thrown if it is not. Execute the {@link #instanceOf()} or {@link #array()} check
    * first, if necessary.
    *

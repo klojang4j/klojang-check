@@ -88,10 +88,13 @@ public final class CheckDefs {
     setMetadata(enclosing(), msgEnclosing(), "enclosing");
     setMetadata(enclosedBy(), msgEnclosedBy(), "enclosedBy");
     setMetadata(hasSubstring(), msgHasSubstring(), "hasSubstring");
+    setMetadata(hasSubstringIC(), msgHasSubstringIC(), "hasSubstringIC");
     setMetadata(substringOf(), msgSubstringOf(), "substringOf");
-    setMetadata(equalsIgnoreCase(), msgEqualsIgnoreCase(), "equalsIgnoreCase");
+    setMetadata(equalsIC(), msgEqualsIC(), "equalsIC");
     setMetadata(startsWith(), msgStartsWith(), "startsWith");
+    setMetadata(startsWithIC(), msgStartsWithIC(), "startsWithIC");
     setMetadata(endsWith(), msgEndsWith(), "endsWith");
+    setMetadata(endsWithIC(), msgEndsWithIC(), "endsWithIC");
     setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
     setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
     setMetadata(matching(), msgHasPattern(), "matching"); // recycle message

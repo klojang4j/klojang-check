@@ -73,7 +73,7 @@ public class MsgRelationTest {
     Check.that((Integer) 7).is(inArray(), pack(1, 7, 10));
     Check.that("Hello").is(EQ(), new String("Hello"));
     Check.that("Hello").isNot(sameAs(), new String("Hello"));
-    Check.that("Hello").is(equalsIgnoreCase(), "HELLO");
+    Check.that("Hello").is(equalsIC(), "HELLO");
     Check.that(null).is(nullOr(), Boolean.TRUE);
     Check.that(true).is(nullOr(), Boolean.TRUE);
     Check.that(7.23F).is(GT(), 2F);
@@ -755,7 +755,7 @@ public class MsgRelationTest {
   @Test
   public void equalsIgnoreCase00() {
     try {
-      Check.that("abc", "mordor").is(equalsIgnoreCase(), "XYZ");
+      Check.that("abc", "mordor").is(equalsIC(), "XYZ");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("mordor must be equal (ignoring case) to XYZ (was abc)",
@@ -768,7 +768,7 @@ public class MsgRelationTest {
   @Test
   public void equalsIgnoreCase01() {
     try {
-      Check.that("123", "mordor").isNot(equalsIgnoreCase(), "123");
+      Check.that("123", "mordor").isNot(equalsIC(), "123");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("mordor must not be equal (ignoring case) to 123 (was 123)",

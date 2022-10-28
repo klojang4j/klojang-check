@@ -1,19 +1,62 @@
 # Defensive Programming with Klojang Check
 
-Klojang Check is a light-weight Java module dedicated to defensive programming.
+## Introduction
 
-```xml
-<dependency>
-    <groupId>org.klojang.check</groupId>
-    <artifactId>klojang-check</artifactId>
-    <version>3.0.2</version>
-</dependency>
+Strutting your code with unit tests has long since become established 
+practice. Build tools, IDEs and frameworks like JUnit and Mockito all intimately 
+understand that part of your code base. The same cannot be said of verifying the 
+sanity of what enters and comes out of your code once it actually run. Probably no 
+one will deny its importance, but it is not the fully ritualized practice that unit 
+testing has become.
+
+Why this should be so ... Performance consideration may play a role here, as may 
+aesthetics: exhaustive validation of preconditions and postconditions could 
+substantially increase the size of your otherwise mean and lean method. Not to 
+mention that each ```if``` check you introduce, will have to be supplemented with 
+a unit test in order to keep your test coverage acceptable.
+
+Klojang Check aims to take away these concerns.  It provides a set
+of syntactical constructs that makes it easy to define and express checks on program
+input, object state, method arguments, variables, computational outcomes and program
+output. In addition, it comes with some fifty predefined,
+[common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
+on these program elements. These checks are associated with short, informative error
+messages, so you don't have to invent them yourselves. In short, Klojang Check
+significantly lowers the bar for acquiring a habit of validating preconditions and
+postconditions.
+
+With a surface area of barely 15 types and no dependencies outside
+```java.base```, Klojang Check is light-weight. It is also fast, as it doesn't do
+anything that you yourself _wouldn't_ do if you were hand-coding the same check.
+Being all about defensive programming, the Klojang Check code base itself is
+regularly tested for vulnerabilities. Every release build gets pulled through
+the [OWASP vulnerability scanner](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
+for Maven.
+
+Here is an example of what validating pre- and postconditions using Klojang Check
+looks like:
+
+```java
+public class InteriorDesigner {
+
+  private final int numChairs;
+
+  public InteriorDesigner(int numChairs) {
+    this.numChairs = Check.that(numChairs).is(gte(), 0).is(lte(), 4).is(even()).ok();
+  }
+
+  public void applyColors(List<Color> colors) {
+    Check.that(colors).is(notEmpty()
+        .and(contains(), noneOf(), PINK, YELLOW, PURPLE));
+    // apply the colors
+  }
+
+}
 ```
 
-## Performance
 
-### We don't check your checks ...
 
-While Klojang Check is motivated by the conviction that 
-validating pre- and postcondition should at as ingrained a habit as unit testing 
-your code, Klojang Check
+
+
+
+

@@ -121,13 +121,41 @@ public final class MsgRelation {
     //@formatter:off
   }
 
-  public static PrefabMsgFormatter msgEqualsIgnoreCase() {
+  public static PrefabMsgFormatter msgEqualsIC() {
     //@formatter:off
     return x -> x.negated()
-        ? x.name() + " must not be equal (ignoring case) to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
-        : x.name() + " must be equal (ignoring case) to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+        ? x.name() + " must not be equal, ignoring case, to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must be equal, ignoring case, to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
     //@formatter:off
   }
+
+
+  public static PrefabMsgFormatter msgStartsWithIC() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not start with, ignoring case, to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must start with, ignoring case, to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+    //@formatter:off
+  }
+
+
+  public static PrefabMsgFormatter msgEndsWithIC() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not end with, ignoring case, to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must end with, ignoring case, to " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+    //@formatter:off
+  }
+
+  public static PrefabMsgFormatter msgHasSubstringIC() {
+    //@formatter:off
+    return x -> x.negated()
+        ? x.name() + " must not contain, ignoring case, " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must contain, ignoring case, " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+    //@formatter:off
+  }
+
+
 
   public static PrefabMsgFormatter msgStartsWith() {
     //@formatter:off

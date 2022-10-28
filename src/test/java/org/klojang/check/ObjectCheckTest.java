@@ -59,7 +59,7 @@ public class ObjectCheckTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void is_Predicate00() {
-      Check.that(new int[2][2], "lolita").is(NULL());
+    Check.that(new int[2][2], "lolita").is(NULL());
   }
 
   @Test
@@ -202,7 +202,9 @@ public class ObjectCheckTest {
   @Test
   public void then00() {
     AtomicInteger ai = new AtomicInteger();
-    Check.that("-9").is(numerical(), byte.class).then(s -> ai.set(Integer.valueOf(s)));
+    Check.that("-9")
+        .is(numerical(), byte.class)
+        .then(s -> ai.set(Integer.valueOf(s)));
     assertEquals(-9, ai.get());
   }
 
@@ -232,6 +234,106 @@ public class ObjectCheckTest {
     assertTrue(
         Check.that("1").is(EQ(), "1").and(2, "foo").is(eq(), 2).getClass()
             == IntCheck.class);
+  }
+
+  @Test
+  public void hasSubstringIC00() {
+    Check.that("Hello, World").is(hasSubstringIC(), "world");
+  }
+
+  @Test
+  public void hasSubstringIC01() {
+    Check.that("Hello, World 123").is(hasSubstringIC(), "WORLD");
+  }
+
+  @Test
+  public void hasSubstringIC02() {
+    Check.that("Hello, [World] 123").is(hasSubstringIC(), "[WORLD]");
+  }
+
+  @Test
+  public void hasSubstringIC03() {
+    Check.that("Hello, [~a-z] 123").is(hasSubstringIC(), "[~A-Z]");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void hasSubstringIC04() {
+    try {
+      Check.that("Hello, World").is(hasSubstringIC(), "foo");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+      throw e;
+    }
+    fail();
+  }
+
+  @Test(expected = CorruptCheckException.class)
+  public void hasSubstringIC05() {
+    Check.that("Hello, World").is(hasSubstringIC(), "");
+  }
+
+  @Test
+  public void startsWithIgnoreCase00() {
+    Check.that("Hello, World").is(startsWithIC(), "HEL");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void startsWithIgnoreCase01() {
+    try {
+      Check.that("Hello, World").is(startsWithIC(), "HELLO, WORLD, HERE AM I");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+      throw e;
+    }
+    fail();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void startsWithIgnoreCase02() {
+    try {
+      Check.that("Hello, World").is(startsWithIC(), "foo");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+      throw e;
+    }
+    fail();
+  }
+
+  @Test(expected = CorruptCheckException.class)
+  public void startsWithIgnoreCase03() {
+    Check.that("Hello, World").is(startsWithIC(), "");
+  }
+
+  @Test
+  public void endsWithIgnoreCase00() {
+    Check.that("Hello, World").is(endsWithIC(), ", WORLD");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void endsWithIgnoreCase01() {
+    try {
+      Check.that("Hello, World").is(endsWithIC(), "Foo says: Hello, World");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+      throw e;
+    }
+    fail();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void endsWithIgnoreCase02() {
+    try {
+      Check.that("Hello, World").is(endsWithIC(), "foo");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+      throw e;
+    }
+    fail();
+  }
+
+  @Test(expected = CorruptCheckException.class)
+  public void endsWithIgnoreCase03() {
+    Check.that("Hello, World").is(endsWithIC(), "");
   }
 
 }

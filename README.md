@@ -3,7 +3,7 @@
 Klojang Check is a Java module dedicated to defensive programming. It provides a set
 of syntactical constructs that makes it easy to define and express checks on program
 input, object state, method arguments, variables, computational outcomes and program
-output. In addition, it comes with around fifty predefined,
+output. In addition, it comes with some fifty predefined,
 [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 on these program elements. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves. In short, Klojang Check
