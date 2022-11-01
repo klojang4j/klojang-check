@@ -75,7 +75,7 @@ of lambdas and method references, that neither is an impediment to a speedy
 performance. The time that lambdas were more sluggish than statically invoked code
 (if there ever was such a time) has long gone.
 
-### We Don't Check Your Checks ...
+#### We Don't Check Your Checks ...
 
 Perhaps paradoxically, while Klojang Check is all about ensuring your method's
 preconditions are met before doing anything else, Klojang Check itself does no such
