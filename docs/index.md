@@ -75,7 +75,7 @@ of lambdas and method references, that neither is an impediment to a speedy
 performance. The time that lambdas were more sluggish than statically invoked code
 (if there ever was such a time) has long gone.
 
-#### We Don't Check Your Checks ...
+**We Don't Check Your Checks ...**
 
 Perhaps paradoxically, while Klojang Check is all about ensuring your method's
 preconditions are met before doing anything else, Klojang Check itself does no such
@@ -107,6 +107,14 @@ In other words, if ```fullName``` might be null, the check should be done like t
 ```java
 Check.notNull(fullName).is(hasSubstring(), lastName);
 ```
+
+Yet, ultimately, the justification is that, if every check provided by the user is
+automatically supplemented with three or four more checks to make sure the check is
+correctly specified, that would mostly likely be a show stopper for many developers.
+We don't want a check executed via Klojang Check to be more expensive than a
+hand-coded check.
+
+
 
 
 
