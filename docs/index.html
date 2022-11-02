@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <style>
+        body {
+            background-color: #000;
+            font-family: "Noto Sans CJK TC";
+            color: #fff;
+        }
+
+        div.side-bar {
+            border-right: 3px #aaa groove;
+        }
+
+        div.main-column {
+        }
+
+        h1 {
+            font-size: 200%;
+            font-width: bold;
+        }
+
+        a {
+            color: #5bf;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .code {
+            font-family: "Noto Sans Mono";
+        }
+
+        i.xml-elem {
+            font-style: normal;
+            font-weight: bold;
+            color: #CC7832;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">.col-md-3</div>
+        <div class="col-md-9 main-column">
+            <h1>Defensive Programming with Klojang Check</h1>
+            <p>
+                Klojang Check is a Java module dedicated to defensive programming. It provides a set
+                of syntactical constructs that make it easy to express checks on program input,
+                object state, method arguments, variables, computational outcomes and program output.
+                In addition, it comes with some fifty predefined
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">common
+                    checks</a>
+                on these program elements. These checks are associated with short, informative error
+                messages, so you don't have to invent them yourselves.
+            </p>
+            <p>
+                To use Klojang Check, add the following dependency to your POM file:
+            </p>
+            <p class="xml code">
+                <i class="xml-elem">&lt;dependency&gt;</i><br>
+                &nbsp;&nbsp;<i class="xml-elem">&lt;groupId&gt;</i>org.klojang.check<i
+                    class="xml-elem">&lt;/groupId&gt;</i><br>
+                &nbsp;&nbsp;<i class="xml-elem">&lt;artifactId&gt;</i>klojang-check<i class="xml-elem">&lt;/artifactId&gt;</i><br>
+                &nbsp;&nbsp;<i class="xml-elem">&lt;version&gt;</i>3.0.2<i class="xml-elem">&lt;/version&gt;</i><br>
+                <i class="xml-elem">&lt;/dependency&gt;</i>
+            </p>
+            <p>
+                The <b>Javadocs</b> for Klojang Check can be found <a
+                    href="https://klojang4j.github.io/klojang-check/api">here</a>.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

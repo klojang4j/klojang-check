@@ -8,11 +8,6 @@ In addition, it comes with some fifty predefined,
 on these program elements. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves.
 
-With a surface area of just over 10 types and zero dependencies outside
-```java.base```, Klojang Check is definitely light-weight. It is also fast, as it
-doesn't do anything that you yourself _wouldn't_ do if you were hand-coding the same
-check.
-
 To use Klojang Check, add the following dependency to your POM file:
 
 ```xml
@@ -31,7 +26,7 @@ Klojang Check's take on validating pre- and postconditions is different from Gua
 [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
 and
 Apache [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html).
-Here is an example of Klojang Check in action:
+Here is an example of validation using Klojang Check:
 
 ```java
 public class InteriorDesigner {
@@ -54,6 +49,8 @@ public class InteriorDesigner {
 
 }
 ```
+
+
 
 ## Performance
 
