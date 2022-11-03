@@ -1,0 +1,84 @@
+body {
+    background-color: #000;
+    font-family: Arial;
+    color: #fff;
+}
+div.side-bar {
+    border-right: 3px #aaa groove;
+}
+
+div.main-column {
+}
+h1 {
+    color: #bbb;
+    font-size: 150%;
+    font-weight: bold;
+    font-width: bold;
+    text-align: center;
+    font-family: arial;
+    margin-top: .15em;
+}
+h2 {
+    font-size: 140%;
+    font-weight: bold;
+    margin-top: .8em;
+}
+h3 {
+    font-size: 112%;
+    font-weight: bold;
+    margin-top: .5em;
+}
+p {
+    font-size: 110%;
+}
+a {
+    color: #6ad;
+    text-decoration: none;
+}
+a:hover {
+    color: #5be;
+    text-decoration: underline;
+}
+p.code {
+    font-size: 100%;
+    font-family: "Noto Sans Mono", monospace;
+    background-color: #333;
+    border: 1px solid #777  ;
+    margin: 1.2em 0 1.2em 0;
+    padding: .8em .5em .8em .5em;
+}
+.xml {
+}
+.java {
+}
+.inline-code {
+    font-family: "Noto Sans Mono", monospace;
+    font-size: 92%;
+    color: #eee;
+}
+p.code i {
+    font-style: normal;
+}
+i.xml-elem {
+    font-weight: bold;
+    color: #CC7832;
+}
+i.kw {
+    font-weight: bold;
+    color: #CC7832;
+}
+i.method {
+    color: #FFC66D;
+}
+i.const {
+    color: #9876AA;
+}
+i.str {
+    color: #C0B88F;
+}
+i.nr {
+    color: #00F5FF;
+}
+i.cmt {
+    color: #4B728C;
+}
