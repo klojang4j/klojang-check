@@ -1,5 +1,5 @@
 body {
-    background-color: #000;
+    background-color: #131313;
     font-family: Arial;
     color: #fff;
 }
@@ -10,7 +10,7 @@ div.side-bar {
 div.main-column {
 }
 h1 {
-    color: #bbb;
+    color: #339955;
     font-size: 150%;
     font-weight: bold;
     font-width: bold;
@@ -24,7 +24,7 @@ h2 {
     margin-top: .8em;
 }
 h3 {
-    font-size: 112%;
+    font-size: 115%;
     font-weight: bold;
     margin-top: .5em;
 }
@@ -32,8 +32,11 @@ p {
     font-size: 110%;
 }
 a {
-    color: #6ad;
+    color: #7be;
     text-decoration: none;
+}
+a.code {
+    font-family: "Courier New", "Noto Sans Mono", monospace;
 }
 a:hover {
     color: #5be;
@@ -52,7 +55,7 @@ p.code {
 .java {
 }
 .inline-code {
-    font-family: "Noto Sans Mono", monospace;
+    font-family: "Courier New",  "Noto Sans Mono", monospace;
     font-size: 92%;
     color: #eee;
 }
@@ -74,7 +77,7 @@ i.const {
     color: #9876AA;
 }
 i.str {
-    color: #C0B88F;
+    color: #dfdf21;
 }
 i.nr {
     color: #00F5FF;

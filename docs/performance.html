@@ -42,21 +42,21 @@ Check.that(lastName).is(substringOf(), fullName);
                 simply wraps <span class="inline-code">String::contains</span>, this statement will fly 
                 off the rails with a <span class="inline-code">NullPointerException</span> if any of the 
                 provided arguments is null. Yet, Klojang Check will not perform a null check on any
-                of them. We think this is justifiable. In the (rather) odd case that the check to be executed
-                is not known beforehand and is dynamically inserted into the
-                <span class="inline-code">is(...)</span> method, the check itself becomes program input and,
-                hence, needs to be tested just like anything else entering your program. As for the
-                <span class="inline-code">lastName</span> argument, which is the value we are testing, if
-                it can possibly be null, the check simply should have been:
+                of them. In the (rather) odd case that the check to be executed is not known beforehand
+                and is dynamically inserted into the <span class="inline-code">is(...)</span> method, the
+                check itself becomes program input and, hence, needs to be tested just like anything else
+                entering your program. As for the <span class="inline-code">lastName</span> argument,
+                which is the value we are testing, if it can possibly be null, the check simply should
+                have been:
             </p>
             <p class="java code">
 Check.notNull(lastName).is(substringOf(), fullName);
             </p>
             <p>
-                Yet, the ultimate reason for not strutting your check with three or four additional checks
-                is simply that it would be a show stopper for many developers. If you feel you should
-                check the value of some variable in a tight loop, Klojang Check should not be the reason
-                <i>not</i> to do it.
+                Yet, the ultimate reason for not supplemeanting each and every check with three or four
+                additional checks is that it would be a show stopper for many developers. If you feel you
+                should check the value of some variable in a tight loop, Klojang Check should not be the 
+                reason <i>not</i> to do it.
             </p>
         </div>
     </div>
