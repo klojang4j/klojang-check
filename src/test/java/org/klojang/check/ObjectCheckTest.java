@@ -2,6 +2,8 @@ package org.klojang.check;
 
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
@@ -334,6 +336,16 @@ public class ObjectCheckTest {
   @Test(expected = CorruptCheckException.class)
   public void endsWithIgnoreCase03() {
     Check.that("Hello, World").is(endsWithIC(), "");
+  }
+
+  @Test
+  public void docsExample00() {
+    Check.that("John Smith", "full name"). is(hasSubstring(), "Peter");
+  }
+
+  @Test
+  public void docsExample01() {
+    Check.that("John Smith", "full name"). is(String::contains, "Peter");
   }
 
 }

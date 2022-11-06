@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="klojang-docs.css">
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+             </div>
+        </div>
+        <div class="col-md-9 main-column">
+            <h1>KLOJANG CHECK</h1>
+            <h2>Tagging Values</h2>
+            <p>
+                You can optionally tag &#8212; or name &#8212; the value you are testing. If, for example, the value 
+                is a method argument, you might want to specify the corresponding parameter name. It could, however,
+                just as well be something more descriptive. Value tagging is useful when validating multiple
+                values within the same method as it makes it easier to trace an exception back to the value that
+                caused it.
+            </p>
+            <p class="java code">
+&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(messages, <i class="str">"messages"</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(from, <i class="str">"from-index"</i>).is(gte(), 0);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(to, <i class="str">"to-index"</i>).is(gte(), from).is(lte(), messages.size());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// do stuff ...</i><br>
+&nbsp;&nbsp;}
+            </p>
+            <p class="info-box">As an aside &#8212; this particular sequence of checks is so common, it has been given 
+                its own method, which you can use as well:
+            </p>
+            <p class="java code">
+&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.fromTo(messages, from, to);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// do stuff ...</i><br>
+&nbsp;&nbsp;}<br>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

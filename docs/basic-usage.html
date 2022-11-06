@@ -10,7 +10,16 @@
 <body>
 <div class="container">
     <div class="row mb-3 min-vh-100">
-        <div class="col-md-2 side-bar">.col-md-3</div>
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+            </div>
+        </div>
         <div class="col-md-9 main-column">
             <h1>KLOJANG CHECK</h1>
             <h2>Basic Usage</h2>
@@ -21,8 +30,10 @@
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>,
                 for validating <span class="inline-code">int</span> values, and 
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck&lt;T&gt;</a>,
-                for validating instances of type <span class="inline-code">T</span>. Taking the code example from the
-                <a href="index.html">Introduction</a> again:
+                for validating instances of type <span class="inline-code">T</span>.
+            </p>
+            <p>
+                Taking the code example from the <a href="index.html">Introduction</a> again:
             </p>
             <p class="java code">
 <i class="kw">public class</i> InteriorDesigner {<br>
@@ -50,7 +61,7 @@
                 <span class="inline-code">Check.that()</span> produces an <span class="inline-code">IntCheck</span>,
                 which lets you access to the <span class="inline-code">int</span>-specific checks from the
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
-                class; in this case
+                class &#8211; in this case the
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte()">gte()</a>,
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#lte()">lte()</a> and
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#even()">even()</a>
@@ -62,20 +73,14 @@
                 checks like the <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#contains()">contains()</a>
                 check. <span class="inline-code">couch</span> is, well, a <span class="inline-code">Couch</span>. There
                 are no <span class="inline-code">Couch</span>-specific checks in the <span class="inline-code">CommonChecks</span>
-                class, but you can still provide your own lambdas testing the <span class="inline-code">Couch</span>
+                class, but you can still provide your own lambdas and method references that test the <span class="inline-code">Couch</span>
                 instance.
            </p>
            <p>
                 By default, if a value fails to pass <i>any</i> of the tests following
                 <span class="inline-code">Check.that()</span>, an <span class="inline-code">IllegalArgumentException</span>
-                is thrown, but you can override this. See ******[ TO DO ]******
+                is thrown, but this can be customized. See ******[ TO DO ]******
            </p>
-           <p>
-                You can optionally provide a name for the value you are testing. If, for example, the value is a method
-                argument, you might want to specify the parameter name, but it could be something more descriptive if you
-                like. Specifying a name is useful if you check multiple values within the same method as it allows you to
-                easily trace the value that caused the exception.
-            </p>
         </div>
     </div>
 </div>

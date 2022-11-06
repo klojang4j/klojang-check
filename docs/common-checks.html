@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="klojang-docs.css">
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+             </div>
+        </div>
+        <div class="col-md-9 main-column">
+            <h1>KLOJANG CHECK</h1>
+            <h2>Common Checks</h2>
+            <p>
+                While <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>
+                and <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck</a>
+                provide a mould for you to "pour" your checks into, the actual validation is done by those checks. You provide the checks,
+                either in the form of lambdas and method references or, if you wish, chosen from the
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
+                class. The <span class="inline-code">CommonChecks</span> class is a grab bag of common checks
+                on values of various types. Checks like <span class="inline-code">lte()</span> (less-than-or-equal-to)
+                and <span class="inline-code">even()</span> are static imports from this class.
+
+            </p>
+            <p>
+                The advantage of using the checks from the <span class="inline-code">CommonChecks</span> class, if
+                you can, is that they have been hooked up to ready-made error messages, so you don't have to invent
+                them yourself. For example, the following two checks do exactly the same thing:
+            </p>
+            <p class="java code">
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that("John Smith", "full name"). is(hasSubstring(), "Peter");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that("John Smith", "full name"). is(String::contains, "Peter");<br>
+            </p>
+            <p>
+                In fact, <span class="inline-code">hasSubstring()</span> does nothing but return the method
+                reference <span class="inline-code">String::contains</span>. However, these are the error messages
+                you get, respectively:
+            </p>
+            <p style="text-align: center;">
+                <span class="inline-code">full name must contain Peter (was John Smith)</span><br>
+                <span class="inline-code">invalid value for full name: no such relation between John Smith and Peter</span>
+            </p>
+            <p class="info-box">
+                What it says on the tin ...<br>
+                It is important to realize that the checks from the
+                <span class="inline-code">CommonChecks</span> class <b>only</b> test what they are documented to be testing.
+                <b>None of them do a preliminary null check</b> &#8211; or any other preliminary sanity check for that matter.
+                Thus, if the value to be tested could be null, you should always start with the 
+                <span class="inline-code">notNull()</span> check. Otherwise a raw
+                <span class="inline-code">NullPointerException</span> can and will come your way. This is really bad,
+                because it doesn't mean that the code implementing the business logic is invalid, but rather the
+                check that was meant to protect it.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

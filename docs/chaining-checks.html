@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="klojang-docs.css">
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+            </div>
+        </div>
+        <div class="col-md-9 main-column">
+            <h1>KLOJANG CHECK</h1>
+            <h2>Chaining Checks</h2>
+            <p>
+                As mentioned and illustrated, Klojang Check lets you chain muiltiple checks on a
+                single value. The <span class="inline-code">is()</span> and 
+                <span class="inline-code">isNot()</span> methods together constitute a fluent API.
+            </p>
+            <p>
+                You can also chain checks on <i>different</i> values. This can make for very concise
+                argument validation:
+            </p>
+            <p class="java code">
+&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(messages).and(from).is(gte(), 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.and(to).is(gte(), from).is(lte(), messages.size());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// do stuff ...</i><br>
+&nbsp;&nbsp;}
+            </p>
+            <p>
+                Note that with the <span class="inline-code">and()</span> method you are in fact
+                breaking out of the fluent API as it returns a <b>new</b> <span class="inline-code">IntCheck</span>
+                or <span class="inline-code">ObjectCheck</span> instance. The example hopped from an
+                <span class="inline-code">ObjectCheck</span> to an <span class="inline-code">IntCheck</span>
+                to another <span class="inline-code">IntCheck</span>.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -48,9 +48,11 @@ public final class MsgRelation {
   }
 
   public static PrefabMsgFormatter msgContains() {
+    //@formatter:off
     return x -> x.negated()
-        ? x.name() + " must not contain " + toStr(x.obj())
-        : x.name() + " must contain " + toStr(x.obj());
+        ? x.name() + " must not contain " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must contain " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+    //@formatter:on
   }
 
   public static PrefabMsgFormatter msgContainsKey() {
