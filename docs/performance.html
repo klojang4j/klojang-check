@@ -16,8 +16,9 @@
                 <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
-                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+                <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -25,47 +26,46 @@
             <h2>Performance</h2>
             <p>
                 As you can tell from the code example in the <a href="index.html">Introduction</a>,
-                Klojang Check exposes a fluent API, allowing you to execute multiple checks on the
-                same value. That implies that there must be some object creation going on. So, just
-                to address that worry right away, benchmarking Klojang Check using
-                <a href="https://github.com/openjdk/jmh">JMH</a> yields no difference with hand-coded
-                checks. You can view the results of the benchmarks <a href="https://github.com/openjdk/jmh">here</a>.
+                Klojang Check exposes a fluent API that allows you to execute multiple checks on the
+                same value. That implies that there must be some object creation going on. Nevertheless,
+                benchmarking Klojang Check using <a href="https://github.com/openjdk/jmh">JMH</a>
+                yields no difference with hand-coded checks. You can view the results of the benchmarks
+                <a href="https://github.com/openjdk/jmh">here</a>.
             </p>
-            <p>Looking at the code example, that should not be surprising. The object creation is
-                completely localized and, in fact, completely redundant &#8211; the check object 
-                created by <span class="inline-code">Check.that(...)</span> (more about which later)
-                never gets assigned. Consequently, the JVM clearly has no trouble compiling it away
-                altogether.
-            </p>
-            <h3>We Don't Check Your Checks</h3>
             <p>
+                Looking at the code example, that should not be surprising. The object creation is
+                completely localized and, in fact, redundant &#8211; the object created by 
+                <span class="inline-code">Check.that(...)</span> never gets assigned. Consequently,
+                the JVM clearly has no trouble compiling it away altogether.
+            </p>
+            <p class="info-box">
+                <b>We Don't Check Your Check</b><br><br>
                 Perhaps paradoxically, while Klojang Check is all about ensuring your method's preconditions
                 are met before doing anything else, Klojang Check itself does no such thing. Take, for
-                instance, this statement:
-            </p>
-            <p class="java code">
-Check.that(lastName).is(substringOf(), fullName);
-            </p>
-            <p>
-                Since the <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#substringOf()">substringOf()</a> check
-                simply wraps <span class="inline-code">String::contains</span>, this statement will fly 
+                instance, this statement:<br><br>
+
+                <span class="inline-code" style="font-size: 100%;">Check.that(fullName).is(hasSubstring(), lastName);</span><br><br>
+
+                The <span class="inline-code">hasSubstring()</span> check simply wraps 
+                <span class="inline-code">String::contains</span>, so this statement will fly 
                 off the rails with a <span class="inline-code">NullPointerException</span> if any of the 
                 provided arguments is null. Yet, Klojang Check will not perform a null check on any
-                of them. In the (rather) odd case that the check to be executed is not known beforehand
+                of them. That sounds like a bad case of "Do As I Say, Not As I Do", but we think
+                it is justified. In the (pretty) odd case that the check to be executed is not known beforehand,
                 and is dynamically inserted into the <span class="inline-code">is(...)</span> method, the
                 check itself becomes program input and, hence, needs to be tested just like anything else
-                entering your program. As for the <span class="inline-code">lastName</span> argument,
-                which is the value we are testing, if it can possibly be null, the check simply should
-                have been:
-            </p>
-            <p class="java code">
-Check.notNull(lastName).is(substringOf(), fullName);
-            </p>
-            <p>
-                Yet, the ultimate reason for not supplemeanting each and every check with three or four
-                additional checks is that it would be a show stopper for many developers. If you feel you
-                should check the value of some variable in a tight loop, Klojang Check should not be the 
-                reason <i>not</i> to do it.
+                entering your program. As for the <span class="inline-code">fullName</span> argument,
+                which is the value we are testing: if it can possibly be null, you should always first
+                perform a null check:<br><br>
+                <span class="inline-code" style="font-size: 100%;">Check.notNull(fullName).is(hasSubstring(), lastName);</span><br><br>
+
+                Klojang Check provides a syntactical mould for you to stick your tests into, but in the
+                end it is still you who decides which tests to execute and in which order. If each and
+                every check would automatically be supplemented with three or four more checks, just to
+                verify that the original check was specified correctly, that would raise the cost of
+                doing a check to a level that is most likely unacceptable for many developers.
+                If you feel you should check the value of some variable in a tight loop, Klojang Check should
+                not be the reason <i>not</i> to do it.
             </p>
         </div>
     </div>

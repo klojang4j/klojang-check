@@ -74,9 +74,10 @@ a:hover {
 .java {
     /* ... */
 }
-.inline-code {
+span.inline-code {
     font-family: "Courier New", "Noto Sans Mono", monospace;
-    font-size: 92%;
+    font-size: 96%;
+    font-style: normal;
     color: #eee;
 }
 p.code i {

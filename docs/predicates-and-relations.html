@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="klojang-docs.css">
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+                <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
+            </div>
+        </div>
+        <div class="col-md-9 main-column">
+            <h1>KLOJANG CHECK</h1>
+            <h2>Predicates and Relations</h2>
+            <p>
+                You may have noticed that some of the checks from the
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
+                class don't really look like a
+                <a href="https://download.java.net/java/early_access/loom/docs/api/java.base/java/util/function/Predicate.html">Predicate</a>
+                or
+                <a href="https://download.java.net/java/early_access/loom/docs/api/java.base/java/util/function/IntPredicate.html">IntPredicate</a>,
+                the two functional interfaces most commonly used to test a value. Indeed, the checks you can 
+                pass to the
+                <span class="inline-code">is(...)</span> and <span class="inline-code">isNot(...)</span> methods
+                broadly fall
+                apart in two categories: <span class="inline-code">Predicate</span> and <span class="inline-code">IntPredicate</span>
+                on the one hand, and, on the other,
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html">Relation</a>,
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntRelation.html">IntRelation</a> and
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntObjRelation.html">IntObjRelation</a>.
+                The latter are not part of the JDK. They reside inside the Klojang Check module itself. They can be 
+                thought of as a "BiPredicate" (which neither exists in the JDK for that matter): a function that takes 
+                two arguments and returns a boolean. If the two arguments have a certain relationship with each other,
+                the relation is said to <b>exist</b> and the function returns true. Within the context of Klojang Check, 
+                the first argument is always the value to be validated. The second argument is the value that it is to 
+                be validated against.
+            </p>
+            <p>
+                Here are some examples for each of the five functional interfaces mentioned above:
+            </p>
+             <p class="java code">
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// Predicate:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(file). is(writable());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntPredicate:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(numChairs). is(even());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// Relation:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(firstName).is(substringOf(), fullName);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntRelation:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(toIndex).is(gte(), fromIndex);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntObjRelation:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(i).is(indexOf(), list);
+            </p>
+       </div>
+    </div>
+</div>
+</body>
+</html>
