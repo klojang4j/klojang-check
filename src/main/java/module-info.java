@@ -1,38 +1,39 @@
 /**
- * <p>Klojang Check is a light-weight Java module that provides a concise and
- * convenient way of validating preconditions and postconditions.
- *
- * <p>Precondition checks are concerned with validating method arguments, object
- * state, program input and other things that must be right before you will even
- * consider continuing with code implementing the business logic. Postcondition
- * checks validate computational outcomes, possibly stored as intermediate results in
- * local variables. This is what such checks would look like with Klojang Check:
+ * <p>
+ * Klojang Check is a light-weight Java module that provides a concise and convenient
+ * way of validating preconditions and postconditions. Here is what that looks like
+ * with Klojang Check:
  *
  * <blockquote><pre>{@code
  * this.numChairs = Check.that(numChairs).is(positive()).is(lte(), 4).is(even()).ok();
  * }</pre></blockquote>
  *
- * <p>By default, an {@code IllegalArgumentException} is thrown if the
- * {@code numChairs} argument fails any of the three tests in the above statement,
- * but this can be customized in various ways (see below).
- *
- * <p>Klojang Check's take on pre- and postcondition validation is different from,
- * for example, Guava's <a
+ * <p>
+ * Klojang Check's take on pre- and postcondition validation is different from, for
+ * example, Guava's <a
  * href="https://guava.dev/releases/21.0/api/docs/com/google/common/base/Preconditions.html">Preconditions</a>
  * class and Apache's <a
  * href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html">Validate</a>
  * class. These classes provide static utility methods to validate values. With
  * Klojang Check validation happens through <i>instances</i> of check objects. These
  * check objects provide access to various predefined, common checks; they let you
- * specify your own checks in the form of lambdas; and they let you chain multiple
- * checks on the same value, as the above example illustrates.
+ * specify your own checks in the form of lambdas or method references; and they let
+ * you chain multiple checks on the same value, as the above example illustrates.
  *
- * <p>There are two types of check objects:
- * {@linkplain org.klojang.check.IntCheck IntCheck}, for validating {@code int}
- * values, and {@link org.klojang.check.ObjectCheck ObjectCheck&lt;T&gt;}, for
- * validating values of type {@code <T>}. You cannot directly instantiate these
- * classes. You obtain an instance of them through the static factory methods on the
- * {@linkplain org.klojang.check.Check Check} class. In the example above, the
+ * <h2>Documentation</h2>
+ *
+ * <p>
+ * More extensive documentation on Klojang Check can be found
+ * <a href="https://klojang4j.github.io/klojang-check/">here</a>/
+ *
+ * <h2>{@code IntCheck} and {@code ObjectCheck}</h2>
+ * <p>
+ * There are two types of check objects: {@link org.klojang.check.IntCheck IntCheck},
+ * for validating {@code int} values, and
+ * {@link org.klojang.check.ObjectCheck ObjectCheck&lt;T&gt;}, for validating values
+ * of type {@code T}. You cannot directly instantiate these classes. You obtain an
+ * instance of them through the static factory methods on the
+ * {@link org.klojang.check.Check Check} class. In the example above, the
  * {@link org.klojang.check.Check#that(int) that()} static factory method returns an
  * {@code IntCheck} object.
  *
@@ -43,15 +44,11 @@
  *
  * <h2>Performance</h2>
  *
- * <p>Despite the checks being carried out on an actual instance of {@code IntCheck}
- * or {@code ObjectCheck}, benchmarking their performance yields no difference with
- * the equivalent hand-coded checks. You can view the results of the JMH benchmarks
+ * <p>
+ * Despite the checks being carried out on an actual instance of {@code IntCheck} or
+ * {@code ObjectCheck}, benchmarking their performance yields no difference with the
+ * equivalent hand-coded checks. You can view the results of the JMH benchmarks
  * <a href="https://github.com/klojang4j/naturalis-common-jmh/README.md">here</a>.
- * Clearly, the JVM has no trouble compiling away the object creation and inlining
- * what little remains. Also, the fact that Klojang Check is heavily based on lambdas
- * appears to be no impediment either to a speedy performance. The time that lambdas
- * were more sluggish than statically invoked code, if there ever was such a time,
- * has long gone.
  *
  *
  *
@@ -60,11 +57,11 @@
  *
  * <h2>Common Checks</h2>
  *
- * <p>Klojang Check provides a grab bag of common checks on arguments and other
- * types of values in the form of the
- * {@link org.klojang.check.CommonChecks CommonChecks} class. The {@code lte()},
- * {@code positive()} and {@code even()} checks shown above are in fact static
- * imports from this class. Here are some more examples:
+ * <p>
+ * Klojang Check provides a grab bag of common checks on arguments and other types of
+ * values in the form of the {@link org.klojang.check.CommonChecks CommonChecks}
+ * class. The {@code lte()}, {@code positive()} and {@code even()} checks shown above
+ * are in fact static imports from this class. Here are some more examples:
  *
  * <blockquote> <pre>{@code
  * Check.that(obj, "vehicle").is(instanceOf(), Car.class);
@@ -87,7 +84,7 @@
  *
  *
  *
- * <h2>Types of Checks</h2>
+ * <h2>Predicates and Relation</h2>
  *
  * <p>The checks you pass to the {@code is(...)} methods fall apart in two broad
  * categories: implementations of {@link java.util.function.Predicate Predicate} and
@@ -100,20 +97,20 @@
  * relation is said to <i>exist</i> and the function returns {@code true}. Within the
  * context of Klojang Check, the first argument is always the value to be validated,
  * while the second argument is the value that it is to be validated against. In the
- * examples above, {@linkplain org.klojang.check.CommonChecks#positive() positive()},
- * {@linkplain org.klojang.check.CommonChecks#even() even()},
- * {@linkplain org.klojang.check.CommonChecks#empty() empty()} and
- * {@linkplain org.klojang.check.CommonChecks#writable() writable()} are checks
+ * examples above, {@link org.klojang.check.CommonChecks#positive() positive()},
+ * {@link org.klojang.check.CommonChecks#even() even()},
+ * {@link org.klojang.check.CommonChecks#empty() empty()} and
+ * {@link org.klojang.check.CommonChecks#writable() writable()} are checks
  * implemented as a {@code Predicate} or {@code IntPredicate};
- * {@linkplain org.klojang.check.CommonChecks#lte() lte()},
- * {@linkplain org.klojang.check.CommonChecks#instanceOf() instanceOf()},
- * {@linkplain org.klojang.check.CommonChecks#keyIn() keyIn()} and
- * {@linkplain org.klojang.check.CommonChecks#containsKey() containsKey()} are checks
+ * {@link org.klojang.check.CommonChecks#lte() lte()},
+ * {@link org.klojang.check.CommonChecks#instanceOf() instanceOf()},
+ * {@link org.klojang.check.CommonChecks#keyIn() keyIn()} and
+ * {@link org.klojang.check.CommonChecks#containsKey() containsKey()} are checks
  * implemented as a {@link org.klojang.check.relation.Relation Relation},
  * {@link org.klojang.check.relation.IntRelation IntRelation} or
  * {@link org.klojang.check.relation.IntObjRelation IntObjRelation}. For more
  * information, see the package description of
- * {@linkplain org.klojang.check.relation}.
+ * {@link org.klojang.check.relation}.
  *
  *
  *
@@ -122,11 +119,14 @@
  *
  * <h2>Dealing with Validation Errors</h2>
  * <p>
- * These two types of checks can again be executed in three different ways: one where
- * Klojang Check generates both the exception and the exception message; one where
- * Klojang Check generates the exception and you provide the exception message; and
- * one where you do both. The following code snippet provides an example of each of
- * the three variants:
+ * When a value fails a test, an error message needs to be generated and an exception
+ * needs to be thrown. You have three options here:
+ * <ul>
+ *   <li>Klojang Check generates both the exception and the exception message
+ *   <li>Klojang Check generates the exception and you provide the exception message
+ *   <li>You do both
+ * </ul>
+ * The following code snippet provides an example of each of the three variants:
  *
  * <blockquote><pre>{@code
  * Check.that(obj, "vehicle").is(instanceOf(), Car.class);
@@ -166,13 +166,13 @@
  *      do not provide a name, <code>${name}</code> defaults to "argument".
  *   <li><b><code>${obj}</code></b> The object of the relationship, in case the
  *      check took the form of a
- *      {@linkplain org.klojang.check.relation.Relation Relation} or one of its
+ *      {@link org.klojang.check.relation.Relation Relation} or one of its
  *      sister interfaces. For example, for the
- *      {@linkplain org.klojang.check.CommonChecks#instanceOf() instanceOf()} check,
+ *      {@link org.klojang.check.CommonChecks#instanceOf() instanceOf()} check,
  *      <code>${obj}</code> would be the class that the argument must be an instance
  *      of (<code>Car.class</code> in the example above). For checks expressed
- *      through a {@linkplain java.util.function.Predicate Predicate} or
- *      {@linkplain java.util.function.IntPredicate IntPredicate}, ${obj} will be
+ *      through a {@link java.util.function.Predicate Predicate} or
+ *      {@link java.util.function.IntPredicate IntPredicate}, ${obj} will be
  *      {@code null}.
  * </ol>
  * <p>
@@ -181,35 +181,6 @@
  *
  * <blockquote><pre>{@code
  * Check.that(word).is(keyIn(), dictionary, "Missing key \"${arg}\" in ${obj}");
- * }</pre></blockquote>
- *
- * <h3>Suppressing Message Parsing</h3>
- *
- * <p>The varargs array used to specify the message arguments (invariably called
- * {@code msgArgs}) is explicitly allowed to be {@code null}. This is taken as a
- * signal that the message does not contain any message arguments and should be
- * passed as-is to the exception's constructor. You can use this if performance is
- * critical, even in anomalous situations. Note, however, that while this does make
- * your code look uglier, the performance gain it yields is minimal. It will, in
- * fact, only become noticeable if the involved test fails almost continuously. That
- * should probably more cause for concern than the speed with which the exception is
- * generated.
- *
- *
- * <h2>Chaining Checks</h2>
- *
- * <p> You can apply multiple checks on the same value using a fluent API, as the
- * very first example already illustrated:
- *
- * <blockquote><pre>{@code
- * Check.that(numChairs).is(positive()).is(lte(), 4).is(even());
- * }</pre></blockquote>
- *
- * <p>In a similar manner, you can also chain checks on <i>different values</i>. This
- * can make for a very concise argument validation section:
- *
- * <blockquote><pre>{@code
- * Check.that(from).is(gte(), 0).and(to).is(gte(), from).and(list.size()).is(gte(), to);
  * }</pre></blockquote>
  *
  *
@@ -230,7 +201,7 @@
  *  .ok();
  * }</pre></blockquote>
  *
- * <p>The {@linkplain org.klojang.check.CommonProperties CommonProperties} class
+ * <p>The {@link org.klojang.check.CommonProperties CommonProperties} class
  * provides some commonly used properties of well-known classes and interfaces, like
  * the {@code size} property of a {@code Collection}. As with the
  * {@code CommonChecks} class, these properties are already associated with a
@@ -252,7 +223,7 @@
  * the {@code has()} and {@code notHas()} methods simply is a function that takes
  * the value being validated and produces some other value, which is then also
  * validated. Thus, the {@code CommonProperties} class also contains, for example,
- * an {@linkplain org.klojang.check.CommonProperties#abs() abs()} function, which
+ * an {@link org.klojang.check.CommonProperties#abs() abs()} function, which
  * returns the absolute value of an {@code int} value.
  *
  *
@@ -318,7 +289,7 @@
  * }</pre></blockquote>
  *
  * <p>Here, too, Klojang Check provides some useful shortcuts through the
- * {@linkplain org.klojang.check.CommonExceptions CommonExceptions} class:
+ * {@link org.klojang.check.CommonExceptions CommonExceptions} class:
  *
  * <blockquote><pre>{@code
  * Check.that(word)
@@ -337,7 +308,7 @@
  *
  * <h2>Returning the Validated Value</h2>
  *
- * <p>You can call {@linkplain org.klojang.check.ObjectCheck#ok() ok()} on
+ * <p>You can call {@link org.klojang.check.ObjectCheck#ok() ok()} on
  * {@code IntCheck} and {@code ObjectCheck} if you want to immediately assign the
  * validated value to an instance field or local variable. You can optionally pass a
  * function to the {@code ok()} method that applies some sort of transformation to
