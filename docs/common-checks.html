@@ -19,6 +19,7 @@
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
+                <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -45,9 +46,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;Check.that("John Smith", "full name"). is(String::contains, "Peter");<br>
             </p>
             <p>
-                In fact, <span class="inline-code">hasSubstring()</span> does nothing but return the method
-                reference <span class="inline-code">String::contains</span>. However, these are the error messages
-                you get, respectively:
+                However, these are the error messages you get, respectively:
             </p>
             <p style="text-align: center;">
                 <span class="inline-code">full name must contain Peter (was John Smith)</span><br>

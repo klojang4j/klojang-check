@@ -19,6 +19,7 @@
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
+                <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -40,23 +41,25 @@
                 <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html">Relation</a>,
                 <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntRelation.html">IntRelation</a> and
                 <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntObjRelation.html">IntObjRelation</a>.
-                The latter are not part of the JDK. They reside inside the Klojang Check module itself. They can be 
-                thought of as a "BiPredicate" (which neither exists in the JDK for that matter): a function that takes 
-                two arguments and returns a boolean. If the two arguments have a certain relationship with each other,
-                the relation is said to <b>exist</b> and the function returns true. Within the context of Klojang Check, 
-                the first argument is always the value to be validated. The second argument is the value that it is to 
-                be validated against.
+                The latter are not part of the JDK. They reside inside the Klojang Check module itself.
+            </p>
+            <p>
+                A <span class="inline-code">Relation</span> can be thought of as a "BiPredicate" (which neither 
+                exists in the JDK for that matter). It takes two arguments and returns a boolean. If
+                the two arguments have a certain relationship with each other, the relation is said to <b>exist</b> and
+                the function returns true. Within the context of Klojang Check, the first argument is always the value
+                to be validated. The second argument is the value that it is to be validated against.
             </p>
             <p>
                 Here are some examples for each of the five functional interfaces mentioned above:
             </p>
              <p class="java code">
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// Predicate:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(file). is(writable());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(file).is(writable());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntPredicate:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(numChairs). is(even());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(numChairs).is(even());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// Relation:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(firstName).is(substringOf(), fullName);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(vehicle).is(instanceOf(), Car.class);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntRelation:</i><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.that(toIndex).is(gte(), fromIndex);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntObjRelation:</i><br>
