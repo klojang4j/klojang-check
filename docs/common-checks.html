@@ -55,15 +55,15 @@
                 <span class="inline-code">invalid value for full name: no such relation between John Smith and Peter</span>
             </p>
             <p class="info-box">
-                What it says on the tin ...<br>
+                <b>What It Says On The Tin ...</b><br><br>
                 It is important to realize that the checks from the
-                <span class="inline-code">CommonChecks</span> class <b>only</b> test what they are documented to be testing.
-                <b>None of them do a preliminary null check</b> &#8211; or any other preliminary sanity check for that matter.
-                Thus, if the value to be tested could be null, you should always start with the 
-                <span class="inline-code">notNull()</span> check. Otherwise a raw
-                <span class="inline-code">NullPointerException</span> can and will come your way. This is bad,
-                because it doesn't mean that the code implementing the business logic is invalid, but the
-                check that was meant to protect it.
+                <span class="inline-code">CommonChecks</span> class <b>only</b> test what they are documented to be
+                testing. None of them do a preliminary null check &#8211; or any other preliminary sanity check for that
+                matter. Thus, if the value to be tested could possibly be null, you should always start with the 
+                <span class="inline-code">notNull()</span> check. Otherwise an unprocessed
+                <span class="inline-code">NullPointerException</span> from a deeper level can and will come your
+                way. This is bad, because it doesn't mean that the code implementing the business logic is invalid, but 
+                the check that was meant to protect it.
             </p>
         </div>
     </div>
