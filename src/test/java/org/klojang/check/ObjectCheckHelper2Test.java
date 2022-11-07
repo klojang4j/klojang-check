@@ -12,7 +12,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.*;
-import static org.klojang.check.TestUtil.*;
+import static org.klojang.check.Range.open;
+import static org.klojang.check.TestUtil.floats;
 
 public class ObjectCheckHelper2Test {
 
@@ -229,7 +230,7 @@ public class ObjectCheckHelper2Test {
   public void has_IntObjRelation00() {
     List<String> c = List.of("a", "b", "c", "d", "e", "f");
     try {
-      Check.that(c, "buffy").has(listSize(), inRange(), ints(100, 200));
+      Check.that(c, "buffy").has(listSize(), inRange(), open(100, 200));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("buffy.size() must be >= 100 and < 200 (was 6)", e.getMessage());
@@ -242,7 +243,7 @@ public class ObjectCheckHelper2Test {
   public void notHas_IntObjRelation00() {
     List<String> c = List.of("a", "b", "c", "d", "e", "f");
     try {
-      Check.that(c, "buffy").notHas(listSize(), inRange(), ints(0, 10));
+      Check.that(c, "buffy").notHas(listSize(), inRange(), open(0, 10));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("buffy.size() must be < 0 or >= 10 (was 6)", e.getMessage());
@@ -258,7 +259,7 @@ public class ObjectCheckHelper2Test {
       Check.that(c, "buffy").has(listSize(),
           "stuffy",
           inRange(),
-          ints(100, 200));
+          open(100, 200));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("buffy.stuffy must be >= 100 and < 200 (was 6)", e.getMessage());
@@ -274,7 +275,7 @@ public class ObjectCheckHelper2Test {
       Check.that(c, "buffy").notHas(listSize(),
           "stuffy",
           inRange(),
-          ints(0, 10));
+          open(0, 10));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("buffy.stuffy must be < 0 or >= 10 (was 6)", e.getMessage());
@@ -289,7 +290,7 @@ public class ObjectCheckHelper2Test {
     try {
       Check.that(c).has(listSize(),
           inRange(),
-          ints(100, 200),
+          open(100, 200),
           "Not in range ${obj}");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
@@ -305,7 +306,7 @@ public class ObjectCheckHelper2Test {
     try {
       Check.that(c).notHas(listSize(),
           inRange(),
-          ints(0, 10),
+          open(0, 10),
           "Bad argument: ${arg}");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
@@ -322,7 +323,7 @@ public class ObjectCheckHelper2Test {
         .has(
             listSize(),
             inRange(),
-            ints(100, 200),
+            open(100, 200),
             () -> new UnsupportedOperationException());
   }
 
@@ -333,7 +334,7 @@ public class ObjectCheckHelper2Test {
         .notHas(
             listSize(),
             inRange(),
-            ints(0, 10),
+            open(0, 10),
             () -> new UnsupportedOperationException());
   }
 

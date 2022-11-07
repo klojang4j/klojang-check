@@ -1,6 +1,10 @@
 package org.klojang.check.x.msg;
 
+import org.klojang.check.x.RangeExclusive;
+import org.klojang.check.x.RangeInclusive;
+
 import static org.klojang.check.x.Misc.*;
+import static org.klojang.check.x.msg.MsgUtil.WAS;
 
 import java.util.List;
 
@@ -21,8 +25,8 @@ final class MsgIntObjRelation {
         max = getArrayLength(x.obj());
       }
       return x.negated()
-          ? x.name() + " must be < 0 or >= " + max + MsgUtil.WAS + x.arg() + ')'
-          : x.name() + " must be >= 0 and < " + max + MsgUtil.WAS + x.arg() + ')';
+          ? x.name() + " must be < 0 or >= " + max + WAS + x.arg() + ')'
+          : x.name() + " must be >= 0 and < " + max + WAS + x.arg() + ')';
     };
   }
 
@@ -37,8 +41,8 @@ final class MsgIntObjRelation {
         max = getArrayLength(x.obj());
       }
       return x.negated()
-          ? x.name() + " must be < 0 or > " + max + MsgUtil.WAS + x.arg() + ')'
-          : x.name() + " must be >= 0 and <= " + max + MsgUtil.WAS + x.arg() + ')';
+          ? x.name() + " must be < 0 or > " + max + WAS + x.arg() + ')'
+          : x.name() + " must be >= 0 and <= " + max + WAS + x.arg() + ')';
     };
   }
 
@@ -49,22 +53,29 @@ final class MsgIntObjRelation {
       int max = ints[1];
       //@formatter:off
       return x.negated()
-          ? x.name() + " must be < " + min + " or >= " + max + MsgUtil.WAS + (x.arg()) +')'
-          : x.name() + " must be >= " + min + " and < " + max + MsgUtil.WAS + (x.arg()) +')';
+          ? x.name() + " must be < " + min + " or >= " + max + WAS + (x.arg()) +')'
+          : x.name() + " must be >= " + min + " and < " + max + WAS + (x.arg()) +')';
       //@formatter:on
     };
   }
 
   static PrefabMsgFormatter msgBetween() {
     return x -> {
-      int[] ints = (int[]) x.obj();
-      int min = ints[0];
-      int max = ints[1];
-      //@formatter:off
-      return x.negated()
-          ? x.name() + " must be < " + min + " or > " + max + MsgUtil.WAS + (x.arg()) +')'
-          : x.name() + " must be >= " + min + " and <= " + max + MsgUtil.WAS + (x.arg()) +')';
-      //@formatter:on
+      if (x.obj() instanceof RangeExclusive re) {
+        //@formatter:off
+        return x.negated()
+            ? x.name() + " must be < " + re.lower() + " or >= " + re.upper() + WAS + (x.arg()) +')'
+            : x.name() + " must be >= " + re.lower() + " and < " + re.upper() + WAS + (x.arg()) +')';
+        //@formatter:on
+      } else if (x.obj() instanceof RangeInclusive ri) {
+        //@formatter:off
+        return x.negated()
+            ? x.name() + " must be < " + ri.lower() + " or > " + ri.upper() + WAS + (x.arg()) +')'
+            : x.name() + " must be >= " + ri.lower() + " and <= " + ri.upper() + WAS + (x.arg()) +')';
+        //@formatter:on
+      }
+      // will never get here
+      return null;
     };
   }
 

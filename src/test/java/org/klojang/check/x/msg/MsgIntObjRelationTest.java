@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.TestUtil.*;
+import static org.klojang.check.Range.*;
 
 public class MsgIntObjRelationTest {
 
@@ -25,10 +26,10 @@ public class MsgIntObjRelationTest {
         IntStream.range(0, 10).mapToObj(String::valueOf).collect(toList()));
     Check.that(7).is(indexOf(), "Hello, Sam");
     Check.that(7).is(inIntArray(), ints(3, 5, 7, 9));
-    Check.that(7).is(inRange(), ints(7, 8));
-    Check.that(7).isNot(inRange(), ints(6, 7));
-    Check.that(7).is(between(), ints(7, 7));
-    Check.that(7).isNot(inRange(), ints(8, 10));
+    Check.that(7).is(inRange(), open(7, 8));
+    Check.that(7).isNot(inRange(), open(6, 7));
+    Check.that(7).is(inRange(), closed(7, 7));
+    Check.that(7).isNot(inRange(), open(8, 10));
   }
 
   @Test
@@ -138,7 +139,7 @@ public class MsgIntObjRelationTest {
   @Test
   public void inRange00() {
     try {
-      Check.that(7, "tapestry").is(inRange(), ints(100, 200));
+      Check.that(7, "tapestry").is(inRange(), open(100, 200));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("tapestry must be >= 100 and < 200 (was 7)", e.getMessage());
@@ -150,7 +151,7 @@ public class MsgIntObjRelationTest {
   @Test
   public void inRange01() {
     try {
-      Check.that(7, "tapestry").isNot(inRange(), ints(6, 8));
+      Check.that(7, "tapestry").isNot(inRange(), open(6, 8));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("tapestry must be < 6 or >= 8 (was 7)", e.getMessage());
@@ -162,7 +163,7 @@ public class MsgIntObjRelationTest {
   @Test
   public void inRangeClosed00() {
     try {
-      Check.that(7, "sunshine").is(between(), ints(100, 200));
+      Check.that(7, "sunshine").is(inRange(), closed(100, 200));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("sunshine must be >= 100 and <= 200 (was 7)", e.getMessage());
@@ -174,7 +175,7 @@ public class MsgIntObjRelationTest {
   @Test
   public void inRangeClosed01() {
     try {
-      Check.that(7, "sunshine").isNot(between(), ints(-7, 7));
+      Check.that(7, "sunshine").isNot(inRange(), closed(-7, 7));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("sunshine must be < -7 or > 7 (was 7)", e.getMessage());
