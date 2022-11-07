@@ -4,8 +4,6 @@ import org.klojang.check.aux.Emptyable;
 import org.klojang.check.aux.Result;
 import org.klojang.check.relation.*;
 import org.klojang.check.x.CheckImpls;
-import org.klojang.check.x.RangeExclusive;
-import org.klojang.check.x.RangeInclusive;
 import org.klojang.check.x.StringCheckImpls;
 
 import java.io.File;
@@ -964,29 +962,6 @@ public final class CommonChecks {
    */
   public static <T> IntObjRelation<T> indexInclusiveOf() {
     return CheckImpls::isIndexInclusiveOf;
-  }
-
-  /**
-   * Verifies that the argument is within a certain range.
-   *
-   * <blockquote><pre>{@code
-   * // import static org.klojang.check.Range.open;
-   * // import static org.klojang.check.Range.closed;
-   *
-   *
-   * // index must be >= 0 and < 100:
-   * Check.that(index).is(inRange(), open(0, 100);
-   *
-   * // index must be >= 0 and <= 100:
-   * Check.that(index).is(inRange(), closed(0, 100);
-   * }</pre></blockquote>
-   *
-   * @return a function implementing the test described above
-   */
-  public static IntObjRelation<Range> inRange() {
-    return (x, y) -> y instanceof RangeExclusive re
-        ? x >= re.lower() && x < re.upper()
-        : y instanceof RangeInclusive ri && x >= ri.lower() && x <= ri.upper();
   }
 
   /**

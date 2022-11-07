@@ -103,7 +103,6 @@ public final class CheckDefs {
     setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
     setMetadata(indexOf(), msgIndexOf(), "indexOf");
     setMetadata(indexInclusiveOf(), msgIndexInclusiveInto(), "indexInclusiveInto");
-    setMetadata(inRange(), msgBetween(), "between");
     setMetadata(inIntArray(), msgIn(), "inIntArray"); // Recycle message
 
     predicateFormatters = Map.copyOf(predicateFormattersTemp);

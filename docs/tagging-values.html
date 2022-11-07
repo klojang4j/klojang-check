@@ -35,11 +35,20 @@
                 caused it.
             </p>
             <p class="java code">
+            <i class="kw">import static</i> org.klojang.check.CommonChecks.gte;<br>
+            <i class="kw">import static</i> org.klojang.check.CommonChecks.inRange;<br>
+            <i class="kw">import static</i> org.klojang.check.Range.closed;<br>
+            <br>
+            <br>
+            <i class="cmt">// stuff ...</i>
+            <br>
+            <br> 
+            <br>   
 &nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(messages, <i class="str">"messages"</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.that(from, <i class="str">"from-index"</i>).is(gte(), 0);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(to, <i class="str">"to-index"</i>).is(gte(), from).is(lte(), messages.size());<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// do stuff ...</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(to, <i class="str">"to-index"</i>).is(inRange(), closed(from, messages.size()));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// stuff ...</i><br>
 &nbsp;&nbsp;}
             </p>
             <p class="info-box">As an aside &#8212; this particular sequence of checks is so common, it has been given 
@@ -48,7 +57,7 @@
             <p class="java code">
 &nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.fromTo(messages, from, to);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// do stuff ...</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// stuff ...</i><br>
 &nbsp;&nbsp;}<br>
             </p>
         </div>

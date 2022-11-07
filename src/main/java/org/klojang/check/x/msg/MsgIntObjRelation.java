@@ -1,12 +1,9 @@
 package org.klojang.check.x.msg;
 
-import org.klojang.check.x.RangeExclusive;
-import org.klojang.check.x.RangeInclusive;
-
-import static org.klojang.check.x.Misc.*;
-import static org.klojang.check.x.msg.MsgUtil.WAS;
-
 import java.util.List;
+
+import static org.klojang.check.x.Misc.getArrayLength;
+import static org.klojang.check.x.msg.MsgUtil.WAS;
 
 final class MsgIntObjRelation {
 
@@ -56,26 +53,6 @@ final class MsgIntObjRelation {
           ? x.name() + " must be < " + min + " or >= " + max + WAS + (x.arg()) +')'
           : x.name() + " must be >= " + min + " and < " + max + WAS + (x.arg()) +')';
       //@formatter:on
-    };
-  }
-
-  static PrefabMsgFormatter msgBetween() {
-    return x -> {
-      if (x.obj() instanceof RangeExclusive re) {
-        //@formatter:off
-        return x.negated()
-            ? x.name() + " must be < " + re.lower() + " or >= " + re.upper() + WAS + (x.arg()) +')'
-            : x.name() + " must be >= " + re.lower() + " and < " + re.upper() + WAS + (x.arg()) +')';
-        //@formatter:on
-      } else if (x.obj() instanceof RangeInclusive ri) {
-        //@formatter:off
-        return x.negated()
-            ? x.name() + " must be < " + ri.lower() + " or > " + ri.upper() + WAS + (x.arg()) +')'
-            : x.name() + " must be >= " + ri.lower() + " and <= " + ri.upper() + WAS + (x.arg()) +')';
-        //@formatter:on
-      }
-      // will never get here
-      return null;
     };
   }
 

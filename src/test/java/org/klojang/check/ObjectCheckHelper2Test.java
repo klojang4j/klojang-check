@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonProperties.*;
-import static org.klojang.check.Range.open;
 import static org.klojang.check.TestUtil.floats;
 
 public class ObjectCheckHelper2Test {
@@ -227,118 +226,6 @@ public class ObjectCheckHelper2Test {
   }
 
   @Test
-  public void has_IntObjRelation00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    try {
-      Check.that(c, "buffy").has(listSize(), inRange(), open(100, 200));
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("buffy.size() must be >= 100 and < 200 (was 6)", e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test
-  public void notHas_IntObjRelation00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    try {
-      Check.that(c, "buffy").notHas(listSize(), inRange(), open(0, 10));
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("buffy.size() must be < 0 or >= 10 (was 6)", e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test
-  public void has_Name_IntObjRelation00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    try {
-      Check.that(c, "buffy").has(listSize(),
-          "stuffy",
-          inRange(),
-          open(100, 200));
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("buffy.stuffy must be >= 100 and < 200 (was 6)", e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test
-  public void notHas_Name_IntObjRelation00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    try {
-      Check.that(c, "buffy").notHas(listSize(),
-          "stuffy",
-          inRange(),
-          open(0, 10));
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("buffy.stuffy must be < 0 or >= 10 (was 6)", e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test
-  public void has_IntObjRelation_CustomMsg00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    try {
-      Check.that(c).has(listSize(),
-          inRange(),
-          open(100, 200),
-          "Not in range ${obj}");
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("Not in range [100, 200]", e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test
-  public void notHas_IntObjRelation_CustomMsg00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    try {
-      Check.that(c).notHas(listSize(),
-          inRange(),
-          open(0, 10),
-          "Bad argument: ${arg}");
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("Bad argument: 6", e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test(expected = UnsupportedOperationException.class)
-  public void has_IntObjRelation_CustomExc00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    Check.that(c)
-        .has(
-            listSize(),
-            inRange(),
-            open(100, 200),
-            () -> new UnsupportedOperationException());
-  }
-
-  @Test(expected = UnsupportedOperationException.class)
-  public void notHas_IntObjRelation_CustomExc00() {
-    List<String> c = List.of("a", "b", "c", "d", "e", "f");
-    Check.that(c)
-        .notHas(
-            listSize(),
-            inRange(),
-            open(0, 10),
-            () -> new UnsupportedOperationException());
-  }
-
-  @Test
   public void lambdasTest() {
     Collection<String> c = List.of("a", "b", "c", "d", "e", "f");
     Check.that(c).has((ToIntFunction<Collection<String>>) (Collection::size),
@@ -347,11 +234,6 @@ public class ObjectCheckHelper2Test {
     Check.that(c).has(Collection::size, (int x, int y) -> x < y, 10);
     Check.that(c).has(x -> x.size(), (int x, int y) -> x < y, 10);
     Check.that(c).has((Collection<String> x) -> x.size(), (int x) -> x < 10);
-  }
-
-  @Test
-  public void test00() {
-
   }
 
 }

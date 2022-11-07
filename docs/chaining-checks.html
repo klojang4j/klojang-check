@@ -34,18 +34,16 @@
                 argument validation:
             </p>
             <p class="java code">
-&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(messages).and(from).is(gte(), 0)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.and(to).is(gte(), from).is(lte(), messages.size());<br>
+&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessage</i>(List&lt;String&gt; messages, <i class="kw">int</i> index) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(messages).and(from).is(gte(), 0).is(lte(), messages.size());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// do stuff ...</i><br>
 &nbsp;&nbsp;}
             </p>
             <p>
                 Note that with the <span class="inline-code">and()</span> method you are in fact
                 breaking out of the fluent API as it returns a <b>new</b> <span class="inline-code">IntCheck</span>
-                or <span class="inline-code">ObjectCheck</span> instance. The example hopped from an
-                <span class="inline-code">ObjectCheck</span> to an <span class="inline-code">IntCheck</span>
-                to another <span class="inline-code">IntCheck</span>.
+                or <span class="inline-code">ObjectCheck</span> instance. The example above hopped from an
+                <span class="inline-code">ObjectCheck</span> to an <span class="inline-code">IntCheck</span>.
             </p>
         </div>
     </div>
