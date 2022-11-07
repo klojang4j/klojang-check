@@ -43,17 +43,4 @@ final class MsgIntObjRelation {
     };
   }
 
-  static PrefabMsgFormatter msgInRange() {
-    return x -> {
-      int[] ints = (int[]) x.obj();
-      int min = ints[0];
-      int max = ints[1];
-      //@formatter:off
-      return x.negated()
-          ? x.name() + " must be < " + min + " or >= " + max + WAS + (x.arg()) +')'
-          : x.name() + " must be >= " + min + " and < " + max + WAS + (x.arg()) +')';
-      //@formatter:on
-    };
-  }
-
 }
