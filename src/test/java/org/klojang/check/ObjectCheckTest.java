@@ -338,14 +338,5 @@ public class ObjectCheckTest {
     Check.that("Hello, World").is(endsWithIC(), "");
   }
 
-  @Test
-  public void docsExample00() {
-    Check.that("John Smith", "full name"). is(hasSubstring(), "Peter");
-  }
-
-  @Test
-  public void docsExample01() {
-    Check.that("John Smith", "full name"). is(String::contains, "Peter");
-  }
 
 }

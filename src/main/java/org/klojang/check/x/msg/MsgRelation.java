@@ -94,8 +94,8 @@ public final class MsgRelation {
   public static PrefabMsgFormatter msgEnclosing() {
     //@formatter:off
     return x -> x.negated()
-        ? x.name() + " must not be superset of " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
-        : x.name() + " must be superset of " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
+        ? x.name() + " must not enclose " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
+        : x.name() + " must enclose " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')';
     //@formatter:off
   }
 

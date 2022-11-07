@@ -386,7 +386,7 @@ public class MsgRelationTest {
       Check.on(IO, names, "poseidon").is(contains(), "ringo");
     } catch (IOException e) {
       System.out.println(e.getMessage());
-      assertEquals("poseidon must contain ringo", e.getMessage());
+      assertEquals("poseidon must contain ringo (was ListN[4] of [john, paul, george, guess who])", e.getMessage());
       return;
     }
     fail();
@@ -399,7 +399,7 @@ public class MsgRelationTest {
       Check.on(IO, names, "poseidon").isNot(contains(), "paul");
     } catch (IOException e) {
       System.out.println(e.getMessage());
-      assertEquals("poseidon must not contain paul", e.getMessage());
+      assertEquals("poseidon must not contain paul (was ListN[4] of [john, paul, george, guess who])", e.getMessage());
       return;
     }
     fail();
@@ -617,7 +617,7 @@ public class MsgRelationTest {
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "frodo must be superset of ListN[3] of [mccartney, harrisson, star] "
+          "frodo must enclose ListN[3] of [mccartney, harrisson, star] "
               + "(was ListN[3] of [mccartney, harrisson, lennon])",
           e.getMessage());
       return;
@@ -633,7 +633,7 @@ public class MsgRelationTest {
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
-          "frodo must not be superset of ListN[3] of [mccartney, harrisson, star] "
+          "frodo must not enclose ListN[3] of [mccartney, harrisson, star] "
               + "(was ListN[4] of [lennon, mccartney, harrisson, star])",
           e.getMessage());
       return;
@@ -753,12 +753,12 @@ public class MsgRelationTest {
   }
 
   @Test
-  public void equalsIgnoreCase00() {
+  public void equalsIC00() {
     try {
       Check.that("abc", "mordor").is(equalsIC(), "XYZ");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("mordor must be equal (ignoring case) to XYZ (was abc)",
+      assertEquals("mordor must be equal, ignoring case, to XYZ (was abc)",
           e.getMessage());
       return;
     }
@@ -766,12 +766,12 @@ public class MsgRelationTest {
   }
 
   @Test
-  public void equalsIgnoreCase01() {
+  public void equalsIC01() {
     try {
       Check.that("123", "mordor").isNot(equalsIC(), "123");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals("mordor must not be equal (ignoring case) to 123 (was 123)",
+      assertEquals("mordor must not be equal, ignoring case, to 123 (was 123)",
           e.getMessage());
       return;
     }

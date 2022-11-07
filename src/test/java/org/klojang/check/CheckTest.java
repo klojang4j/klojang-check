@@ -13,7 +13,7 @@ import static org.klojang.check.TestUtil.*;
 @SuppressWarnings({"rawtypes"})
 public class CheckTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void notNull00() {
     Check.notNull(null);
   }
@@ -37,7 +37,7 @@ public class CheckTest {
     Assert.fail();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void notNull02() {
     Check.notNull(null, "foo");
   }
@@ -200,7 +200,7 @@ public class CheckTest {
     Check.offsetLength(10, 1, 10);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void offsetLength09() {
     Check.offsetLength(null, 1, 10);
   }
@@ -243,12 +243,12 @@ public class CheckTest {
     Check.fromTo("123", 3, 4);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void fromTo02() {
     Check.fromTo((String) null, 3, 4);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void fromTo03() {
     Check.fromTo((List) null, 3, 4);
   }
@@ -288,7 +288,7 @@ public class CheckTest {
     Check.fromTo(List.of(0, 1, 2, 3, 4), 4, 2);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void fromTo11List() {
     Check.fromTo((List) null, 4, 2);
   }
@@ -313,7 +313,7 @@ public class CheckTest {
     Check.fromTo(pack(0, 1, 2, 3, 4), 4, 2);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void fromTo11Array() {
     Check.fromTo((Object[]) null, 4, 2);
   }
@@ -338,7 +338,7 @@ public class CheckTest {
     Check.fromTo("01234", 4, 2);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void fromTo11String() {
     Check.fromTo((String) null, 4, 2);
   }

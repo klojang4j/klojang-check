@@ -28,12 +28,12 @@ public final class Check {
     throw new UnsupportedOperationException();
   }
 
-  private static IllegalArgumentException argumentMustNotBeNull() {
-    return new IllegalArgumentException("argument must not be null");
+  private static NullPointerException argumentMustNotBeNull() {
+    return new NullPointerException("argument must not be null");
   }
 
-  private static IllegalArgumentException argumentMustNotBeNull(String argName) {
-    return new IllegalArgumentException(argName + " must not be null");
+  private static NullPointerException argumentMustNotBeNull(String argName) {
+    return new NullPointerException(argName + " must not be null");
   }
 
   private static final Function<String, IllegalArgumentException> DEF_EXC_FACTORY =
@@ -77,7 +77,7 @@ public final class Check {
   }
 
   /**
-   * Static factory method. Returns an {@code ObjectCheck} instance suitable for
+   * Static factory method. Returns an {@link ObjectCheck} instance suitable for
    * validating values of type {@code <T>}.
    *
    * @param <T> the type of the value to be validated
@@ -93,20 +93,21 @@ public final class Check {
   }
 
   /**
-   * Static factory method. Returns an {@code ObjectCheck} instance suitable for
+   * Static factory method. Returns an {@link ObjectCheck} instance suitable for
    * validating values of type {@code <T>}. The argument will have already passed the
-   * {@linkplain CommonChecks#notNull() null test}, or an
-   * {@code IllegalArgumentException} will have been thrown.
+   * {@linkplain CommonChecks#notNull() null test}. Note that an
+   * {@code IllegalArgumentException} thrown the specified value fails any of the
+   * subsequently specified checks, but if the argument was {@code null}, a
+   * {@code NullPointerException} will be thrown.
    *
    * @param <T> the type of the value to be validated
    * @param arg the value to be validated
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
-   * @throws IllegalArgumentException if the argument is {@code null} or fail any
-   *     of the subsequent tests
+   * @throws NullPointerException if the argument is {@code null}
    */
   public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T arg)
-      throws IllegalArgumentException {
+      throws NullPointerException {
     if (arg != null) {
       return new ObjectCheck<>(arg, null, DEF_EXC_FACTORY);
     }
@@ -114,9 +115,12 @@ public final class Check {
   }
 
   /**
-   * Static factory method. Returns a new {@code Check} instance suitable for testing
-   * the provided argument. The argument will have already passed the
-   * {@link CommonChecks#notNull() notNull} test.
+   * Static factory method. Returns an {@link ObjectCheck} instance suitable for
+   * validating values of type {@code <T>}. The argument will have already passed the
+   * {@linkplain CommonChecks#notNull() null test}. Note that an
+   * {@code IllegalArgumentException} thrown the specified value fails any of the
+   * subsequently specified checks, but if the argument was {@code null}, a
+   * {@code NullPointerException} will be thrown.
    *
    * @param <T> the type of the value to be validated
    * @param arg the value to be validated
@@ -124,8 +128,7 @@ public final class Check {
    *     method argument probably something close to the parameter name)
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
-   * @throws IllegalArgumentException if the argument is {@code null} or fail any
-   *     of the subsequent tests
+   * @throws NullPointerException if the argument is {@code null}
    */
   public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T arg,
       String argName)
@@ -275,19 +278,19 @@ public final class Check {
 
   /**
    * An all-in-one check for the provided list, from-index and to-index. Verifies
-   * that the sublist specified through the from-index and to-index stays within the
-   * boundaries of the list. More precisely:
+   * that the from-index and to-index valid list indices. More precisely:
    *
    * <ol>
-   *   <li>Throws an {@code IllegalArgumentException} if the list is {@code null}
+   *   <li>Throws a {@code NullPointerException} if the list is {@code null}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is less than zero
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
    * </ol>
    *
-   * <i>NB The {@code fromTo} and {@code offsetLength} checks stand somewhat apart from the
-   * rest of the check framework. They happen through "ordinary" static utility method and they
-   * test multiple things at once. They are included for convenience and speed.</i>
+   * <i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
+   * apart from the rest of the check framework. They happen through "ordinary"
+   * static utility method and they test multiple things at once. They are included
+   * for convenience and speed.</i>
    *
    * @param list the list
    * @param fromIndex the start index of the sublist
@@ -308,11 +311,10 @@ public final class Check {
 
   /**
    * An all-in-one check for the provided array, from-index and to-index. Verifies
-   * that the segment specified through the from-index and to-index stays within the
-   * boundaries of the array. More precisely:
+   * that the from-index and to-index valid array indices. More precisely:
    *
    * <ol>
-   *   <li>Throws an {@code IllegalArgumentException} if the array is {@code null}
+   *   <li>Throws a {@code NullPointerException} if the array is {@code null}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is less than zero
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
@@ -338,11 +340,10 @@ public final class Check {
 
   /**
    * An all-in-one check for the provided string, from-index and to-index. Verifies
-   * that the substring specified through the from-index and to-index stays within
-   * the boundaries of the string. More precisely:
+   * that the from-index and to-index valid string indices. More precisely:
    *
    * <ol>
-   *   <li>Throws an {@code IllegalArgumentException} if the string is {@code null}
+   *   <li>Throws a {@code NullPointerException} if the string is {@code null}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is less than zero
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
@@ -368,10 +369,9 @@ public final class Check {
   }
 
   /**
-   * An all-in-one check for the provided size, from-index and to-index. Verifies
-   * that the segment defined by the specified from-index and to-index stays within
-   * the boundaries of an array or array-like object with the specified size. More
-   * precisely:
+   * An all-in-one check for the provided size/length (supposedly of an array or
+   * array-like object), from-index and to-index. Verifies that the from-index and
+   * to-index valid string indices, given the specified size/length. More precisely:
    *
    * <ol>
    *   <li>Throws an {@code IndexOutOfBoundsException} if {@code size} or {@code fromIndex} or {@code toIndex} is less than zero
