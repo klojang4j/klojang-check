@@ -69,7 +69,7 @@
 &nbsp;&nbsp;<i class="kw">private final int</i> numChairs;<br>
 <br>
 &nbsp;&nbsp;<i class="kw">public</i> <i class="method">InteriorDesigner</i>(<i class="kw">int</i> numChairs) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;this.numChairs = Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">gte()</i>, <i class="nr">0</i>).<i class="call">is</i>(<i class="call-static">lte()</i>, <i class="nr">4</i>).<i class="call">is</i>(<i class="call-static">even()</i>).<i class="call">ok</i>();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">this</i>.numChairs = Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">gte()</i>, <i class="nr">0</i>).<i class="call">is</i>(<i class="call-static">lte()</i>, <i class="nr">4</i>).<i class="call">is</i>(<i class="call-static">even()</i>).<i class="call">ok</i>();<br>
 &nbsp;&nbsp;}<br>
 <br>
 &nbsp;&nbsp;<i class="kw">public void</i> <i class="method">applyColors</i>(List&lt;Color&gt; colors) {<br>

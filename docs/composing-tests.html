@@ -32,62 +32,44 @@
         </div>
         <div class="col-md-9 main-column">
             <h1>KLOJANG CHECK</h1>
-            <h2>Throwing a Different Type of Exception</h2>
+            <h2>Composing Tests</h2>
             <p>
-                By default, Klojang Check throws an <span class="inline-code">IllegalArgumentException</span> if any of the 
-                tests following <span class="inline-code">Check.that(...)</span> fail. To customize this, use the 
-                <span class="inline-code">Check.on(...)</span> static factory methods instead. These allow you to change the
-                default exception. The default exception can itself be overridden within the checks themselves. The following 
-                example changes the default exception to <span class="inline-code">SQLException</span>, but overrides it for
-                the null check:
+                Klojang Check allows you to combine two or more checks into a single new check that expresses the
+                logical conjunction (AND) or disjunction (OR) of the individual checks. Generally that latter will
+                be of more use since the chain of checks following <span class="inline-code">Check.that(...)</span>
+                already constitutes a logical conjunction. For example, this statement: 
             </p>
-            <p class="java code">
-<i class="kw">public class</i> QueryExecutor {<br>
-<br>
-&nbsp;&nbsp;<i class="kw">private final Query</i> query;<br>
-<br>
-&nbsp;&nbsp;<i class="kw">public</i> <i class="method">QueryExecutor</i>(Query query) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;this.query = Check.on(SQLException::<i class="kw">new</i>, query, <i class="str">"query"</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.is(notNull(), () -> <i class="kw">new</i> NullPointerException(<i class="str">"query must not be null"</i>))<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::where, <i class="str">"where"</i>, notEmpty())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.notHas(Query::offset, <i class="str">"offset"</i>, negative())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, gte(), <i class="nr">10</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, lte(), <i class="nr">10000</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.ok();<br>
-&nbsp;&nbsp;}<br>
-<br>
-}
+            <p class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">this</i>.numChairs = Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">positive()</i>).<i class="call">is</i>(<i class="call-static">lte()</i>, <i class="nr">4</i>).<i class="call">is</i>(<i class="call-static">even()</i>).<i class="call">ok</i>();<br>
             </p>
-            <h3>Common Exceptions</h3>
             <p>
-                Here, too, Klojang Check provides some useful shortcuts via the
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonExceptions.html">CommonExceptions</a>
-                class. Suppose that for some reason any error in the above <span class="inline-code">query</span> object
-                should have resulted in an <span class="inline-code">IllegalStateException</span>, then we could have
-                written:
+                requires the number of chairs to be positive <b>and</b> less than, or equal to 4 <b>and</b> even.
+                If the number of chairs needs to pass just one of these tests, write: 
             </p>
-            <p class="java code">
-<i class="kw">public class</i> QueryExecutor {<br>
-<br>
-&nbsp;&nbsp;<i class="kw">private final Query</i> query;<br>
-<br>
-&nbsp;&nbsp;<i class="kw">public</i> <i class="method">QueryExecutor</i>(Query query) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;this.query = Check.on(<i class="const">STATE</i>, query, <i class="str">"query"</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.is(notNull(), npe(<i class="str">"query must not be null"</i>))<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::where, <i class="str">"where"</i>, notEmpty())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.notHas(Query::offset, <i class="str">"offset"</i>, negative())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, gte(), <i class="nr">10</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, lte(), <i class="nr">10000</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.ok();<br>
-&nbsp;&nbsp;}<br>
-<br>
-}
+            <p class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">this</i>.numChairs = Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">positive()</i>.<i class="call">orElse</i>(<i class="call-static">lte()</i>, <i class="nr">4</i>).<i class="call">orElse</i>(<i class="call-static">even()</i>);<br>
+            </p>
+            <p>
+                Nevertheless, you might still want to use the <span class="inline-code">and()</span> methods for conciseness: 
+            </p>
+            <p class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(text).<i class="call">is</i>(<i class="call-static">notNull()</i>.<i class="call">and</i>(<i class="call-static">hasSubstring()</i>, <i class="call-static">allOf()</i>, <i class="str">"to"</i>, <i class="str">"be"</i>, <i class="str">"or"</i>, <i class="str">"not"</i>);
+            </p>
+            <p>
+                which is equivalent to, but quite a bit more economical than:
+            </p>
+            <p class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(text).<i class="call">is</i>(<i class="call-static">notNull())</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"to"</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"be"</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"or"</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"not"</i>);
             </p>
             <div class="container nav-links">
                 <div class="row">
-                    <div class="col-md-3 prev-chapter"><a href="custom-checks.html">&#8810;&nbsp;&nbsp;&nbsp;Custom Checks</a></div>
+                    <div class="col-md-3 prev-chapter"><a href="exceptions.html">&#8810;&nbsp;&nbsp;&nbsp;Exceptions</a></div>
                     <div class="col-md-6"></div>
-                    <div class="col-md-3 next-chapter"><a href="exceptions.html">Exceptions&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                    <div class="col-md-3 next-chapter"></div>
                 </div>
             </div>
       </div>

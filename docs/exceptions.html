@@ -47,13 +47,13 @@
 &nbsp;&nbsp;<i class="kw">private final Query</i> query;<br>
 <br>
 &nbsp;&nbsp;<i class="kw">public</i> <i class="method">QueryExecutor</i>(Query query) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;this.query = Check.on(SQLException::<i class="kw">new</i>, query, <i class="str">"query"</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.is(notNull(), () -> <i class="kw">new</i> NullPointerException(<i class="str">"query must not be null"</i>))<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::where, <i class="str">"where"</i>, notEmpty())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.notHas(Query::offset, <i class="str">"offset"</i>, negative())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, gte(), <i class="nr">10</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, lte(), <i class="nr">10000</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.ok();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">this</i>.query = Check.<i class="call-static">on</i>(SQLException::<i class="kw">new</i>, query, <i class="str">"query"</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">notNull()</i>, () -> <i class="kw">new</i> NullPointerException(<i class="str">"query must not be null"</i>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">has</i>(Query::where, <i class="str">"where"</i>, <i class="call-static">notEmpty()</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">notHas</i>(Query::offset, <i class="str">"offset"</i>, <i class="call-static">negative()</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">has</i>(Query::limit, <i class="str">"limit"</i>, <i class="call-static">gte()</i>, <i class="nr">10</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">has</i>(Query::limit, <i class="str">"limit"</i>, <i class="call-static">lte()</i>, <i class="nr">10000</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">ok</i>();<br>
 &nbsp;&nbsp;}<br>
 <br>
 }
@@ -67,18 +67,19 @@
                 written:
             </p>
             <p class="java code">
-<i class="kw">public class</i> QueryExecutor {<br>
-<br>
+<i class="kw">import static</i> org.klojang.check.CommonExceptions.npe;<br>
+<i class="kw">import static</i> org.klojang.check.CommonExceptions.STATE;<br><br>
+
 &nbsp;&nbsp;<i class="kw">private final Query</i> query;<br>
 <br>
 &nbsp;&nbsp;<i class="kw">public</i> <i class="method">QueryExecutor</i>(Query query) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;this.query = Check.on(<i class="const">STATE</i>, query, <i class="str">"query"</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.is(notNull(), npe(<i class="str">"query must not be null"</i>))<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::where, <i class="str">"where"</i>, notEmpty())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.notHas(Query::offset, <i class="str">"offset"</i>, negative())<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, gte(), <i class="nr">10</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, lte(), <i class="nr">10000</i>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.ok();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">this</i>.query = Check.on(<i class="const">STATE</i>, query, <i class="str">"query"</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">notNull()</i>, <i class="call-static">npe</i>(<i class="str">"query must not be null"</i>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">has</i>(Query::where, <i class="str">"where"</i>, <i class="call-static">notEmpty()</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">notHas</i>(Query::offset, <i class="str">"offset"</i>, <i class="call-static">negative()</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">has</i>(Query::limit, <i class="str">"limit"</i>, <i class="call-static">gte()</i>, <i class="nr">10</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">has</i>(Query::limit, <i class="str">"limit"</i>, <i class="call-static">lte()</i>, <i class="nr">10000</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">ok</i>();<br>
 &nbsp;&nbsp;}<br>
 <br>
 }

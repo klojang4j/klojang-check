@@ -32,9 +32,26 @@
         </div>
         <div class="col-md-9 main-column">
             <h1>KLOJANG CHECK</h1>
-            <h2>Testing Against a Set of Values</h2>
+            <h2>Validating Interrelated Values</h2>
             <p>
-                                
+                 Sometimes, an argument, field or variable cannot be tested in isolation. Its validity depends on the value 
+                 of another argument, field or variable.             
+            </p>
+            <p class="java code">
+&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">getPresident</i>(Election election) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(election.<i class="call">isRigged</i>()).<i class="call">is</i>(<i class="call-static">yes()</i>.<i class="call">or</i>(election.<i class="call">getWinner</i>(), <i class="call-static">EQ()</i>, me));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// get the president ...</i><br>
+&nbsp;&nbsp;}
+            </p>
+            <p>
+                In this example the election only needs to be rigged if it turns out you lost it &#8212; and this is how you
+                would express that interdependency with Klojang Check.
+            </p>
+            <p>
+                Again, as with the chapter on <a href="value-domain-tests.html">Value Domain Tests</a>, note the
+                <span class="inline-code">or()</span> method called on a test &#8212; the
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#yes()">yes()</a>
+                test this time. This will be further explained in the chapter on <a href="composing-tests.html">Composing Tests</a>. 
             </p>
             <div class="container nav-links">
                 <div class="row">
