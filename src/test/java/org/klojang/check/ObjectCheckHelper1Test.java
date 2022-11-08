@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.function.IntPredicate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -272,9 +273,16 @@ public class ObjectCheckHelper1Test {
   }
 
   @Test
-  public void testLambdas() {
+  public void testLambdas00() {
     Person p = new Person("john", LocalDate.of(1966, 04, 22));
     Check.that(p).has(Person::firstName, (x, y) -> x.equals(y), "john");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void docExamples01() {
+    int temperature = 30;
+    Check.that(temperature).has(i -> Math.abs(i), (int i) -> i < 30);
+    Check.that(temperature).has(i -> Math.abs(i), (IntPredicate) i -> i < 30);
   }
 
 }

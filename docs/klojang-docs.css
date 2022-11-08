@@ -1,6 +1,6 @@
 body {
     background-color: #171717;
-    font-family: "Noto Sans CJK HK", Arial, SansSerif;
+    font-family: "Noto Sans CJK HK", Arial, sans-serif;
     color: #fff;
 }
 div.side-bar {
@@ -9,22 +9,34 @@ div.side-bar {
 div.menu {
     position: -webkit-sticky; /* Safari */
     position: sticky;
-    top: 6em;
+    top: 8em;
+}
+div.menu-item {
+    margin: .6em 0 .6em 0;
 }
 div.main-column {
     padding-left: 2em;
 }
+div.nav-links {
+    margin: 0;
+    padding: 0;
+}
+div.prev-chapter {
+    text-align: left;
+}
+div.next-chapter {
+    text-align: right;
+}
 h1 {
     color: #669e75;
-    font-family: Arial, SansSerif;
+    font-family: Arial, sans-serif;
     font-size: 150%;
     font-weight: bold;
-    font-width: bold;
     text-align: center;
     margin-top: .15em;
 }
 h2 {
-    font-family: Arial, SansSerif;
+    font-family: Arial, sans-serif;
     font-size: 140%;
     font-weight: bold;
     margin-top: .8em;
@@ -43,13 +55,13 @@ p.code {
     font-size: 100%;
     font-family: "Noto Sans Mono", monospace;
     background-color: #2a2a2a;
-    border: 1px solid #797979;
+    border: 1px solid #535353;
     margin: 1.2em 0 1.2em 0;
     padding: .7em .5em .7em .5em;
 }
 p.info-box {
     font-size: 96%;
-    font-family: "Noto Sans CJK HK", Arial, SansSerif;
+    font-family: "Noto Sans CJK HK", Arial, cursive;
     font-style: italic;
     color: #deefef;
     background-color: #7e3131;
@@ -80,6 +92,11 @@ span.inline-code {
     font-style: normal;
     color: #eee;
 }
+span.cursive-code {
+    font-family: "Courier New", "Noto Sans Mono", monospace;
+    font-size: 96%;
+    color: #eee;
+}
 p.code i {
     font-style: normal;
 }
@@ -94,15 +111,29 @@ i.kw {
 i.method {
     color: #FFC66D;
 }
+i.call {
+    color: #e57e99;
+}
+i.call-static {
+    font-style: italic !important;
+}
 i.const {
     color: #9876AA;
+    font-style: italic !important;
 }
 i.str {
-    color: #dede66;
+    color: #ffffc7;
 }
 i.nr {
     color: #00F5FF;
 }
 i.cmt {
     color: #4B728C;
+}
+.message-arguments td {
+    vertical-align: top;
+}
+.message-arguments td:first-of-type {
+    text-align: right;
+    padding-right: 1em;
 }

@@ -21,7 +21,9 @@
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
                 <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
                 <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
-                <div class="menu-item"><a href="property-validation.html">Property Validation</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -31,18 +33,18 @@
                 You may have noticed that some of the checks from the
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
                 class don't really look like a
-                <a href="https://download.java.net/java/early_access/loom/docs/api/java.base/java/util/function/Predicate.html">Predicate</a>
+                <a class="code" href="https://download.java.net/java/early_access/loom/docs/api/java.base/java/util/function/Predicate.html">Predicate</a>
                 or
-                <a href="https://download.java.net/java/early_access/loom/docs/api/java.base/java/util/function/IntPredicate.html">IntPredicate</a>,
+                <a class="code" href="https://download.java.net/java/early_access/loom/docs/api/java.base/java/util/function/IntPredicate.html">IntPredicate</a>,
                 the two functional interfaces most commonly used to test a value. Indeed, the checks you can 
                 pass to the
                 <span class="inline-code">is(...)</span> and <span class="inline-code">isNot(...)</span> methods
                 broadly fall
                 apart in two categories: <span class="inline-code">Predicate</span> and <span class="inline-code">IntPredicate</span>
                 on the one hand, and, on the other,
-                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html">Relation</a>,
-                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntRelation.html">IntRelation</a> and
-                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntObjRelation.html">IntObjRelation</a>.
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html">Relation</a>,
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntRelation.html">IntRelation</a> and
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntObjRelation.html">IntObjRelation</a>.
                 The latter are not part of the JDK. They reside inside the Klojang Check module itself.
             </p>
             <p>
@@ -57,16 +59,23 @@
             </p>
              <p class="java code">
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// Predicate:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(file).is(writable());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(file).<i class="call">is</i>(<i class="call-static">writable()</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntPredicate:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(numChairs).is(even());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">even()</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// Relation:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(vehicle).is(instanceOf(), Car.class);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntRelation:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(toIndex).is(gte(), fromIndex);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(toIndex).<i class="call">is</i>(<i class="call-static">gte()</i>, fromIndex);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// IntObjRelation:</i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(i).is(indexOf(), list);
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(i).<i class="call">is</i>(<i class="call-static">indexOf()</i>, list);
             </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="chaining-checks.html">&#8810;&nbsp;&nbsp;&nbsp;Chaining Checks</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="error-handling.html">Error Handling&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
        </div>
     </div>
 </div>

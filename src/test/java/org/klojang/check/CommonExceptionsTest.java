@@ -83,12 +83,12 @@ public class CommonExceptionsTest {
 
   @Test(expected = NullPointerException.class)
   public void npe01() throws IOException {
-    Check.that(null).is(notNull(), NPE("whoops"));
+    Check.that(null).is(notNull(), npe("whoops"));
   }
 
   @Test(expected = NullPointerException.class)
   public void npe02() throws IOException {
-    Check.that(null).is(notNull(), CommonExceptions.NPE());
+    Check.that(null).is(notNull(), CommonExceptions.npe());
   }
 
   @Test(expected = NoSuchElementException.class)

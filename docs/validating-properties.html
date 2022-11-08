@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="klojang-docs.css">
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+                <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
+                <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
+                <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
+            </div>
+        </div>
+        <div class="col-md-9 main-column">
+            <h1>KLOJANG CHECK</h1>
+            <h2>Validating Argument Properties</h2>
+            <p>
+                If the value to be validated is an object, its validity may to a large extent depend on
+                the validity of its properties. Therefore, Klojang Check enables you to check argument
+                properties as part of validating the argument. This is done via the 
+                <span class="inline-code">has()</span> and <span class="inline-code">notHas()</span>
+                methods on <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>
+                and <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck</a>.
+                (<span class="inline-code">IntCheck</span>? Yes, see below.) Here is an example:
+            </p>
+            <p class="java code">
+<i class="kw">public class</i> QueryExecutor {<br>
+<br>
+&nbsp;&nbsp;<i class="kw">private final Query</i> query;<br>
+<br>
+&nbsp;&nbsp;<i class="kw">public</i> <i class="method">QueryExecutor</i>(Query query) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.query = Check.that(query, <i class="str">"query"</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::where, <i class="str">"where"</i>, notEmpty())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.notHas(Query::offset, <i class="str">"offset"</i>, negative())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, gte(), <i class="nr">10</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.has(Query::limit, <i class="str">"limit"</i>, lte(), <i class="nr">10000</i>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.ok();<br>
+&nbsp;&nbsp;}<br>
+<br>
+}
+            </p>
+            <p>
+                If, in this example, a query would be passed with a limit of 5000000, this would result in
+                an <span class="inline-code">IllegalArgumentException</span> with the message:
+            </p>
+            <p style="text-align: center;">
+                <span class="inline-code">query.limit must be <= 10000 (was 5000000)
+            </p>
+            <h3>Common Properties</h3>
+            <p>
+                The 
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonProperties.html">CommonProperties</a> 
+                class provides some commonly used properties of well-known classes and interfaces &#8212; for 
+                example the <span class="inline-code">size</span> property of a <span class="inline-code">Collection</span>.
+                As with the 
+               <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a> 
+                class, these properties are already associated with a descriptive name of the property they expose. Thus, very little input
+                from you is required to generate a full-blown, informative error message:
+            </p>
+            <p class="java code">
+                <i class="kw">import static</i> org.klojang.check.CommonChecks.gte;<br>
+                <i class="kw">import static</i> org.klojang.check.CommonProperties.size<br>
+                <br>
+                <br>
+                <i class="cmt">// stuff ...</i>
+                <br>
+                <br> 
+                <br>   
+&nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(emps, <i class="str">"employees"</i>).has(size(), gte(), <i class="nr">100</i>);
+            </p>
+            <p>
+                This would cause the following error message to be generated if the size of the emps collection was, say, 42:
+            </p>
+            <p style="text-align:center;">
+                <span class="inline-code">employees.size() must be >= 100 (was 42)</span>
+            </p>
+            <p>
+                Note that the term "property" is somewhat misleading. This first argument to the <span class="inline-code">has()</span> 
+                and <span class="inline-code">notHas()</span> methods simply is a function that takes the value being validated and produces
+                some other value, which is then also validated. Thus, the CommonProperties class also contains, for example, an abs() 
+                function, which returns the absolute value of an int value. In other words, int values can also have "properties"
+                &#8212; like "its" absolute value, or "its" cosine. And hence, the
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>
+                class has <span class="inline-code">has()</span> and <span class="inline-code">notHas()</span> methods just like the
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck</a>
+                class.
+            </p>
+      </div>
+    </div>
+</div>
+</body>
+</html>

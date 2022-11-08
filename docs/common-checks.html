@@ -21,7 +21,9 @@
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
                 <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
                 <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
-                <div class="menu-item"><a href="property-validation.html">Property Validation</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -44,8 +46,8 @@
                 them yourself. For example, the following two checks do exactly the same thing:
             </p>
             <p class="java code">
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that("John Smith", "full name"). is(hasSubstring(), "Peter");<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that("John Smith", "full name"). is(String::contains, "Peter");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"John Smith"</i>, <i class="str">"full name"</i>).<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"Peter"</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"John Smith"</i>, <i class="str">"full name"</i>).<i class="call">is</i>(String::contains, <i class="str">"Peter"</i>);<br>
             </p>
             <p>
                 However, these are the error messages you get, respectively:
@@ -55,16 +57,24 @@
                 <span class="inline-code">invalid value for full name: no such relation between John Smith and Peter</span>
             </p>
             <p class="info-box">
-                <b>What It Says On The Tin ...</b><br><br>
-                It is important to realize that the checks from the
-                <span class="inline-code">CommonChecks</span> class <b>only</b> test what they are documented to be
-                testing. None of them do a preliminary null check &#8211; or any other preliminary sanity check for that
-                matter. Thus, if the value to be tested could possibly be null, you should always start with the 
-                <span class="inline-code">notNull()</span> check. Otherwise an unprocessed
-                <span class="inline-code">NullPointerException</span> from a deeper level can and will come your
+                <b>What It Says On The Tin</b><br><br>
+                Note that the checks from the
+                <span class="cursive-code">CommonChecks</span> class <b>only</b> test what they are documented to be
+                testing. None of them do a preliminary null check &#8212; or any other preliminary sanity check for that
+                matter. If the value to be tested could possibly be null, you should always start with the 
+                <span class="cursive-code">notNull()</span> check. Otherwise an unprocessed
+                <span class="cursive-code">NullPointerException</span> can and will come your
                 way. This is bad, because it doesn't mean that the code implementing the business logic is invalid, but 
-                the check that was meant to protect it.
+                rather the check that was meant to protect it.
             </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="tagging-values.html">&#8810;&nbsp;&nbsp;&nbsp;Tagging Values</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="chaining-checks.html">Chaining Checks&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
+           </p>
         </div>
     </div>
 </div>

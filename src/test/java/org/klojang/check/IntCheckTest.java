@@ -394,8 +394,4 @@ public class IntCheckTest {
             == ObjectCheck.class);
   }
 
-  // Check.that(from).is(between(), bounds(0, 100);
-  // Check.that(from).is(between(), inclusive(0, 100);
-
-
 }

@@ -21,7 +21,9 @@
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
                 <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
                 <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
-                <div class="menu-item"><a href="property-validation.html">Property Validation</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -49,27 +51,31 @@
 
                 <span class="inline-code" style="font-size: 100%;">Check.that(fullName).is(hasSubstring(), lastName);</span><br><br>
 
-                The <span class="inline-code">hasSubstring()</span> check simply wraps 
-                <span class="inline-code">String::contains</span>, so this statement will fly 
-                off the rails with a <span class="inline-code">NullPointerException</span> if any of the 
-                provided arguments is null. Yet, Klojang Check will not perform a null check on any
-                of them. That sounds like a bad case of "Do As I Say, Not As I Do", but we think
-                it is justified. In the (pretty) odd case that the check to be executed is not known beforehand,
-                and is dynamically inserted into the <span class="inline-code">is(...)</span> method, the
-                check itself becomes program input and, hence, needs to be tested just like anything else
-                entering your program. As for the <span class="inline-code">fullName</span> argument,
-                which is the value we are testing: if it can possibly be null, you should always first
-                perform a null check:<br><br>
+                The&nbsp;&nbsp;<span class="cursive-code">hasSubstring()</span> check simply
+                wraps&nbsp;&nbsp;<span class="cursive-code">String::contains</span>, so this statement will fly off 
+                the rails with a <span class="cursive-code">NullPointerException</span> if any of the provided arguments
+                is null. Yet, Klojang Check will not perform a null check on any of them. That sounds like a bad case of
+                Do As I Say, Not As I Do. The incongruence is smaller than meets the eye, however. In the (pretty) odd case
+                that the check to be executed is not known beforehand, and is dynamically inserted into the
+                <span class="cursive-code">is(...)</span> method, the check itself becomes program input! Hence, the check
+                needs to be tested just like anything else entering your program. As for the
+                <span class="cursive-code">fullName</span> argument, which is the value we are testing: if it could possibly
+                be null, you should always first perform a null check:<br><br>
                 <span class="inline-code" style="font-size: 100%;">Check.notNull(fullName).is(hasSubstring(), lastName);</span><br><br>
 
                 Klojang Check provides a syntactical mould for you to stick your tests into, but in the
                 end it is still you who decides which tests to execute and in which order. If each and
                 every check would automatically be supplemented with three or four more checks, just to
                 verify that the original check was specified correctly, that would raise the cost of
-                doing a check to a level that is most likely unacceptable for many developers.
-                If you feel you should check the value of some variable in a tight loop, Klojang Check should
-                not be the reason <i>not</i> to do it.
+                doing a check to a level that is likely unacceptable for many developers.
             </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="index.html">&#8810;&nbsp;&nbsp;&nbsp;Introduction</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="basic-usage.html">Basic Usage&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -21,7 +21,9 @@
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
                 <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
                 <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
-                <div class="menu-item"><a href="property-validation.html">Property Validation</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -31,10 +33,9 @@
                 The <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Check.html">Check</a> 
                 class is the central class of the Klojang Check module. All checks start out from there. It is a factory
                 class for two types of check objects:
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>,
-                for validating <span class="inline-code">int</span> values, and 
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck&lt;T&gt;</a>,
-                for validating instances of type <span class="inline-code">T</span>.
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>
+                and 
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck&lt;T&gt;</a>.
             </p>
             <p>
                 Taking the code example from the <a href="index.html">Introduction</a> again:
@@ -45,21 +46,21 @@
 &nbsp;&nbsp;<i class="kw">private final int</i> numChairs;<br>
 <br>
 &nbsp;&nbsp;<i class="kw">public</i> <i class="method">InteriorDesigner</i>(<i class="kw">int</i> numChairs) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;this.numChairs = Check.that(numChairs).is(gte(), <i class="nr">0</i>).is(lte(), <i class="nr">4</i>).is(even()).ok();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.numChairs = Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">gte()</i>, <i class="nr">0</i>).<i class="call">is</i>(<i class="call-static">lte()</i>, <i class="nr">4</i>).<i class="call">is</i>(<i class="call-static">even()</i>).<i class="call">ok</i>();<br>
 &nbsp;&nbsp;}<br>
 <br>
 &nbsp;&nbsp;<i class="kw">public void</i> <i class="method">applyColors</i>(List&lt;Color&gt; colors) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(colors).is(notEmpty().and(contains(), noneOf(), <i class="const">RED</i>, <i class="const">BLUE</i>, <i class="const">PINK</i>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(colors).<i class="call">is</i>(<i class="call-static">notEmpty()</i>.<i class="call">and</i>(<i class="call-static">contains()</i>, <i class="call-static">noneOf()</i>, <i class="const">RED</i>, <i class="const">BLUE</i>, <i class="const">PINK</i>));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// apply the colors</i><br>
 &nbsp;&nbsp;}<br>
 <br>
 &nbsp;&nbsp;<i class="kw">public void</i> <i class="method">addCouch</i>(Couch couch) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(couch).isNot(c -> c.isExpensive(), <i class="str">"couch too expensive"</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">notNull</i>(couch).<i class="call">isNot</i>(c -> c.isExpensive(), <i class="str">"couch too expensive"</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// add the couch</i><br>
 &nbsp;&nbsp;}<br>
 <br>
 }
-           </p>
+            </p>
            <p>
                 <span class="inline-code">numChairs</span> is an <span class="inline-code">int</span> value and hence
                 <span class="inline-code">Check.that()</span> produces an <span class="inline-code">IntCheck</span>,
@@ -83,8 +84,15 @@
            <p>
                 By default, if a value fails to pass <i>any</i> of the tests following
                 <span class="inline-code">Check.that()</span>, an <span class="inline-code">IllegalArgumentException</span>
-                is thrown, but this can be customized. See ******[ TO DO ]******
+                is thrown, but this can be customized. See the chapter on <a href="exceptions.html">Exceptions</a>.
            </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="performance.html">&#8810;&nbsp;&nbsp;&nbsp;Performance</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="tagging-values.html">Tagging Values&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

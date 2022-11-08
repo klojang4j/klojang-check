@@ -41,7 +41,6 @@ final class MsgIntObjRelation {
           ? x.name() + " must be < 0 or > " + max + WAS + x.arg() + ')'
           : x.name() + " must be >= 0 and <= " + max + WAS + x.arg() + ')';
     };
-    //
   }
 
 }

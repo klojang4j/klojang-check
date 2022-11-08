@@ -218,7 +218,7 @@ public final class CommonExceptions {
    * @param message the exception message
    * @return a {@code Supplier} of an {@code NullPointerException}
    */
-  public static Supplier<NullPointerException> NPE(String message) {
+  public static Supplier<NullPointerException> npe(String message) {
     return () -> new NullPointerException(message);
   }
 
@@ -228,7 +228,7 @@ public final class CommonExceptions {
    *
    * @return a {@code Supplier} of an {@code NullPointerException}
    */
-  public static Supplier<NullPointerException> NPE() {
+  public static Supplier<NullPointerException> npe() {
     return NullPointerException::new;
   }
 

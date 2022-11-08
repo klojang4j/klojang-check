@@ -21,7 +21,9 @@
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
                 <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
                 <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
-                <div class="menu-item"><a href="property-validation.html">Property Validation</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -36,30 +38,33 @@
             </p>
             <p class="java code">
             <i class="kw">import static</i> org.klojang.check.CommonChecks.gte;<br>
-            <i class="kw">import static</i> org.klojang.check.CommonChecks.inRange;<br>
-            <i class="kw">import static</i> org.klojang.check.Range.closed;<br>
-            <br>
+            <i class="kw">import static</i> org.klojang.check.CommonChecks.lte;<br>
             <br>
             <i class="cmt">// stuff ...</i>
-            <br>
             <br> 
             <br>   
 &nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.notNull(messages, <i class="str">"messages"</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(from, <i class="str">"from-index"</i>).is(gte(), 0);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(to, <i class="str">"to-index"</i>).is(inRange(), closed(from, messages.size()));<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// stuff ...</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">notNull</i>(messages, <i class="str">"messages"</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(from, <i class="str">"from-index"</i>).<i class="call">is</i>(<i class="call-static">gte()</i>, <i class="nr">0</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(to, <i class="str">"to-index"</i>).<i class="call">is</i>(<i class="call-static">gte()</i>, from).<i class="call">is</i>(<i class="call-static">lte()</i>, messages.<i class="call">size</i>());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// process the messages ...</i><br>
 &nbsp;&nbsp;}
             </p>
-            <p class="info-box">As an aside &#8212; this particular sequence of checks is so common, it has been given 
-                its own method, which you can use as well:
+            <p class="info-box">
+                As an aside &#8212; this particular sequence of checks is so common, it has been given 
+                its own method, which you could have used just as well:<br><br>
+
+                <span class="inline-code">public void processMessages(List&lt;String&gt; messages, int from, int to) {<br>
+                <span class="inline-code">&nbsp;&nbsp;Check.fromTo(messages, from, to);<br>
+                <span class="inline-code">}</span>
             </p>
-            <p class="java code">
-&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.fromTo(messages, from, to);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// stuff ...</i><br>
-&nbsp;&nbsp;}<br>
-            </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="basic-usage.html">&#8810;&nbsp;&nbsp;&nbsp;Basic Usage</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="common-checks.html">Common Checks&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

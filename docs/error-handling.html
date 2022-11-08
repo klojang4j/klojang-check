@@ -21,7 +21,9 @@
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
                 <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
                 <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
-                <div class="menu-item"><a href="property-validation.html">Property Validation</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -30,34 +32,41 @@
             <p>
                 When a value fails to pass a test, an error message needs to be generated and an
                 exception needs to be thrown. You have three options here:
-                <ul>
-                    <li>
-                        Klojang Check generates both the exception and the exception message
-                    </li>
-                    <li>
-                        Klojang Check generates the exception and you provide the exception message
-                    </li>
-                    <li>
-                        You do both
-                    </li>
-                </ul>
             </p>
+            <ul>
+                <li>
+                    Klojang Check generates both the exception and the exception message
+                </li>
+                <li>
+                    Klojang Check generates the exception and you provide the exception message
+                </li>
+                <li>
+                    You do both
+                </li>
+            </ul>
             <p>
                 Here is an example of each of the three variants:
             </p>
              <p class="java code">
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(vehicle, <i class="str">"vehicle"</i>).is(instanceOf(), Car.class);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(vehicle).is(instanceOf(), Car.class, <i class="str">"bikes are not for rent here"</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.that(vehicle).is(instanceOf(), Car.class,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;() -> new RentalException(<i class="str">"bikes are not for rent here"</i>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle, <i class="str">"vehicle"</i>).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>, <i class="str">"bikes are not for rent here"</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;() -> <i class="kw">new</i> RentalException(<i class="str">"bikes are not for rent here"</i>));
             </p>
             <p>
                 The first variant really is meant to be used <i>only</i> in combination with a check from
                 the <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
                 class. As illustrated in the <a href="common-checks.html">chapter</a> on this class, if
                 you provide your own lambda or method reference, but you don't provide your own error message,
-                Klojang Check will generate a error message for you, but it will not be very helpful.
+                Klojang Check will generate an error message for you, but it will not be very helpful.
             </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="predicates-and-relations.html">&#8810;&nbsp;&nbsp;&nbsp;Predicates &amp; Relations</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="custom-messages.html">Custom Messages&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
        </div>
     </div>
 </div>
