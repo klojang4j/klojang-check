@@ -243,7 +243,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -268,7 +268,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -295,7 +295,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param message the message pattern
    * @param msgArgs the message arguments
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -328,7 +328,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param message the message pattern
    * @param msgArgs the message arguments
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -356,7 +356,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
    * @throws X2 if the argument is invalid
@@ -378,7 +378,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
    * @throws X2 if the argument is invalid
@@ -585,7 +585,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -611,7 +611,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -638,7 +638,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -665,7 +665,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -690,7 +690,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -724,7 +724,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param message the message pattern
    * @param msgArgs the message arguments
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -757,7 +757,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
    * @throws X2 if the argument is invalid
@@ -783,7 +783,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
    * @param <P> the type of the extracted value
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
    * @throws X2 if the argument is invalid
@@ -996,7 +996,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -1029,7 +1029,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -1065,7 +1065,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -1100,7 +1100,7 @@ public final class ObjectCheck<T, X extends Exception> {
    * @param test the test
    * @param object the value that the argument is tested against (called "the
    *     object" of a relation)
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -1133,7 +1133,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param message the message pattern
    * @param msgArgs the message arguments
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -1174,7 +1174,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param message the message pattern
    * @param msgArgs the message arguments
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @return this instance
    * @throws X if the argument is invalid
    */
@@ -1206,7 +1206,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
    * @throws X2 if the argument is invalid
@@ -1241,7 +1241,7 @@ public final class ObjectCheck<T, X extends Exception> {
    *     object" of a relation)
    * @param exception the supplier of the exception to be thrown if the argument
    *     is invalid
-   * @param <O> The type of the value being tested against
+   * @param <O> the type of the value being tested against
    * @param <X2> the type of the exception thrown if the argument is invalid
    * @return this instance
    * @throws X2 if the argument is invalid

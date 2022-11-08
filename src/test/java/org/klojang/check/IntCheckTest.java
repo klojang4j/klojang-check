@@ -3,6 +3,7 @@ package org.klojang.check;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.IntUnaryOperator;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
@@ -368,30 +369,33 @@ public class IntCheckTest {
 
   @Test
   public void and00() {
-    assertTrue(
-        Check.that(1).is(eq(), 1).and(2).is(eq(), 2).getClass()
-            == IntCheck.class);
+    assertTrue(Check.that(1).is(eq(), 1)
+        .and(2).is(eq(), 2).getClass() == IntCheck.class);
   }
 
   @Test
   public void and01() {
-    assertTrue(
-        Check.that(1).is(eq(), 1).and(2, "foo").is(eq(), 2).getClass()
-            == IntCheck.class);
+    assertTrue(Check.that(1).is(eq(), 1)
+        .and(2, "foo").is(eq(), 2).getClass() == IntCheck.class);
   }
 
   @Test
   public void and02() {
-    assertTrue(
-        Check.that(1).is(eq(), 1).and("bar").is(EQ(), "bar").getClass()
-            == ObjectCheck.class);
+    assertTrue(Check.that(1).is(eq(), 1)
+        .and("bar").is(EQ(), "bar").getClass() == ObjectCheck.class);
   }
 
   @Test
   public void and03() {
-    assertTrue(
-        Check.that(1).is(eq(), 1).and("bar", "foo").is(EQ(), "bar").getClass()
-            == ObjectCheck.class);
+    assertTrue(Check.that(1).is(eq(), 1)
+        .and("bar", "foo").is(EQ(), "bar").getClass() == ObjectCheck.class);
+  }
+
+  @Test
+  public void docExample01() {
+    Check.that(30).has(Math::cos, "cosine", LTE(), .5);
+    Check.that(-7).has(Math::abs, "absolute value", eq(), 7);
+    Check.that(7).has((IntUnaryOperator) Math::abs, i -> i < 10);
   }
 
 }

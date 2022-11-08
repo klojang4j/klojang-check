@@ -112,7 +112,7 @@ i.method {
     color: #FFC66D;
 }
 i.call {
-    color: #e57e99;
+    color: #f59bff;
 }
 i.call-static {
     font-style: italic !important;
@@ -128,7 +128,7 @@ i.nr {
     color: #00F5FF;
 }
 i.cmt {
-    color: #4B728C;
+    color: #5b816e;
 }
 .message-arguments td {
     vertical-align: top;

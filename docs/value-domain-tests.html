@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="klojang-docs.css">
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+                <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
+                <div class="menu-item"><a href="value-domain-tests.html">Value Domain Tests</a></div>
+                <div class="menu-item"><a href="interrelated-values.html">Interrelated Values</a></div>
+                <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
+                <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="common-properties.html">Common Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
+                <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
+            </div>
+        </div>
+        <div class="col-md-9 main-column">
+            <h1>KLOJANG CHECK</h1>
+            <h2>Testing Against a Set of Values</h2>
+            <p>
+               Klojang Check lets you specify that the value you are validating must have a certain relationship
+               to not just one other value, but to a <i>set</i> of other values &#8212; a.k.a. a value domain in
+               the vocabulary of predicate logic: 
+            </p>
+            <p class="java code">
+&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">applyColors</i>(List&lt;Color&gt; colors) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(colors).<i class="call">is</i>(<i class="call-static">notEmpty()</i>.<i class="call">and</i>(<i class="call-static">contains()</i>, <i class="call-static">noneOf()</i>, <i class="const">RED</i>, <i class="const">BLUE</i>, <i class="const">PINK</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// apply the colors</i><br>
+&nbsp;&nbsp;}
+            </p>
+            <p>
+                The <span class="inline-code">noneOf()</span> methods returns an instance of the
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Quantifier.html">Quantifier</a>
+                enum, which represent a logical quantifier. This is what the <span class="inline-code">Quantifier</span> enum looks like:
+            </p>
+            <p class="java code">
+<i class="kw">public enum</i> Quantifier {<br>
+<br>
+&nbsp;&nbsp;<i class="const">ALL</i>, <i class="const">ANY</i>, <i class="const">NONE</i>;<br><br>
+&nbsp;&nbsp;<i class="kw">public static</i> Quantifier <i class="method">allOf()</i> { <i class="kw">return</i> <i class="const">ALL</i>; }<br><br>
+&nbsp;&nbsp;<i class="kw">public static</i> Quantifier <i class="method">anyOf()</i> { <i class="kw">return</i> <i class="const">ANY</i>; }<br><br>
+&nbsp;&nbsp;<i class="kw">public static</i> Quantifier <i class="method">noneOf()</i> { <i class="kw">return</i> <i class="const">NONE</i>; }
+<br>
+}
+            </p>
+            <p>
+                Note that this time the <span class="inline-code">and()</span> method is not called on the <span class="inline-code">ObjectCheck</span>
+                instance, but on a test &#8212; the <span class="inline-code">notEmpty()</span> test. So there is a bit more going on here.
+                See the chapter on <a href="composing-tests">Composing Tests</a>.
+            </p>
+            <p class="info-box">
+                Strictly speaking it would have been more correct to model the value domain (in this 
+                case&nbsp;&nbsp;<span class="cursive-code">RED</span>,&nbsp;&nbsp;<span class="cursive-code">BLUE</span>&nbsp;&nbsp;and&nbsp;&nbsp;<span class="cursive-code">PINK</span>)
+                as a <span class="cursive-code">Set</span>.
+                For convenience sake, however, it has been modeled as a varargs array.
+            </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="predicates-and-relations.html">&#8810;&nbsp;&nbsp;&nbsp;Predicates &amp; Relations</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="interrelated-values.html">Interrelated Values&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

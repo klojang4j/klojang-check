@@ -537,7 +537,7 @@ public final class CommonChecks {
    * @see CommonProperties#unbox()
    * @see #lte()
    */
-  public static <T extends Comparable<T>> Comparison<T> LTE() {
+  public static <T extends Comparable<T>> Relation<T, T> LTE() {
     return (x, y) -> x.compareTo(y) <= 0;
   }
 

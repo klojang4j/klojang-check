@@ -5,6 +5,7 @@ import org.klojang.check.fallible.FallibleIntFunction;
 import org.klojang.check.fallible.FallibleIntUnaryOperator;
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
+import org.klojang.check.relation.Relation;
 import org.klojang.check.x.msg.MsgArgs;
 
 import java.util.function.*;
@@ -501,6 +502,10 @@ public final class IntCheck<X extends Exception> {
             object));
   }
 
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+
   /**
    * Validates the argument using the specified test. Allows you to throw a different
    * type of exception for this particular test.
@@ -543,6 +548,10 @@ public final class IntCheck<X extends Exception> {
       IntObjRelation<O> test, O object, Supplier<X2> exception) throws X2 {
     return is(test.negate(), object, exception);
   }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Validates a property of the argument. While not strictly required, this method
@@ -709,6 +718,229 @@ public final class IntCheck<X extends Exception> {
       IntFunction<P> property, Predicate<P> test, Supplier<X2> exception) throws X2 {
     return IntCheckHelper1.help(this).has(property, test.negate(), exception);
   }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * <i>and</i> a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public <P, O> IntCheck<X> has(IntFunction<P> property,
+      Relation<P, O> test,
+      O object) throws X {
+    return IntCheckHelper1.help(this).has(property, test, object);
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * <i>and</i> a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public <P, O> IntCheck<X> notHas(IntFunction<P> property,
+      Relation<P, O> test,
+      O object)
+      throws X {
+    return IntCheckHelper1.help(this).notHas(property, test, object);
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * <i>and</i> a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested.
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public <P, O> IntCheck<X> has(IntFunction<P> property,
+      String name,
+      Relation<P, O> test,
+      O object)
+      throws X {
+    return IntCheckHelper1.help(this).has(property, name, test, object);
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * <i>and</i> a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested.
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public <P, O> IntCheck<X> notHas(IntFunction<P> property,
+      String name,
+      Relation<P, O> test,
+      O object) throws X {
+    return IntCheckHelper1.help(this).notHas(property, name, test, object);
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public <P, O> IntCheck<X> has(
+      IntFunction<P> property,
+      Relation<P, O> test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+    return IntCheckHelper1.help(this).has(property, test, object, message, msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on <a
+   * href="../../../module-summary.html#custom-error-messages">Custom Error
+   * Messages</a> in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public <P, O> IntCheck<X> notHas(
+      IntFunction<P> property,
+      Relation<P, O> test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+    return IntCheckHelper1.help(this).notHas(property,
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @param <X2> the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public <P, O, X2 extends Exception> IntCheck<X> has(
+      IntFunction<P> property, Relation<P, O> test, O object, Supplier<X2> exception)
+      throws X2 {
+    return IntCheckHelper1.help(this).has(property, test, object, exception);
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called "the
+   *     object" of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param <P> the type of the extracted value
+   * @param <O> the type of the value being tested against
+   * @param <X2> the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public <P, O, X2 extends Exception> IntCheck<X> notHas(
+      IntFunction<P> property, Relation<P, O> test, O object, Supplier<X2> exception)
+      throws X2 {
+    return IntCheckHelper1.help(this).has(property,
+        test.negate(),
+        object,
+        exception);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Validates a property of the argument. While not strictly required, this method

@@ -19,11 +19,15 @@
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
                 <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
+                <div class="menu-item"><a href="value-domain-tests.html">Value Domain Tests</a></div>
+                <div class="menu-item"><a href="interrelated-values.html">Interrelated Values</a></div>
                 <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
                 <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
                 <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="common-properties.html">Common Properties</a></div>
                 <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
                 <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
+                <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -48,8 +52,8 @@
                 Here is an example of each of the three variants:
             </p>
              <p class="java code">
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle, <i class="str">"vehicle"</i>).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>, <i class="str">"bikes are not for rent here"</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle, <i class="str">"vehicle"</i>).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>);<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>, <i class="str">"bikes are not for rent here"</i>);<br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">is</i>(<i class="call-static">instanceOf()</i>, Car.<i class="const">class</i>,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;() -> <i class="kw">new</i> RentalException(<i class="str">"bikes are not for rent here"</i>));
             </p>

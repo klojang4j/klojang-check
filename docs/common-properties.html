@@ -32,44 +32,40 @@
         </div>
         <div class="col-md-9 main-column">
             <h1>KLOJANG CHECK</h1>
-            <h2>Tagging Values</h2>
+            <h2>Common Properties</h2>
             <p>
-                You can optionally tag &#8212; or name &#8212; the value you are testing. If, for example, the value 
-                is a method argument, you might want to specify the corresponding parameter name. It could, however,
-                just as well be something more descriptive. Value tagging is useful when validating multiple
-                values within the same method as it makes it easier to trace an exception back to the value that
-                caused it.
+                The 
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonProperties.html">CommonProperties</a> 
+                class provides some commonly used properties of well-known classes and interfaces &#8212; for 
+                example the <span class="inline-code">size</span> property of a <span class="inline-code">Collection</span>.
+                As with the 
+               <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a> 
+                class, these properties have been hooked up to a descriptive name of what they expose. Thus, very little input
+                from you is required to generate a full-blown, informative error message:
             </p>
             <p class="java code">
-            <i class="kw">import static</i> org.klojang.check.CommonChecks.gte;<br>
-            <i class="kw">import static</i> org.klojang.check.CommonChecks.lte;<br>
-            <br>
-            <i class="cmt">// stuff ...</i>
-            <br> 
-            <br>   
-&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessages</i>(List&lt;String&gt; messages, <i class="kw">int</i> from, <i class="kw">int</i> to) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">notNull</i>(messages, <i class="str">"messages"</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(from, <i class="str">"from-index"</i>).<i class="call">is</i>(<i class="call-static">gte()</i>, <i class="nr">0</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(to, <i class="str">"to-index"</i>).<i class="call">is</i>(<i class="call-static">gte()</i>, from).<i class="call">is</i>(<i class="call-static">lte()</i>, messages.<i class="call">size</i>());<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// process the messages ...</i><br>
-&nbsp;&nbsp;}
+                <i class="kw">import static</i> org.klojang.check.CommonChecks.gte;<br>
+                <i class="kw">import static</i> org.klojang.check.CommonProperties.size<br>
+                <br>
+                <i class="cmt">// stuff ...</i>
+                <br> 
+                <br>   
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">notNull</i>(emps, <i class="str">"employees"</i>).<i class="call">has</i>(<i class="call-static">size()</i>, <i class="call-static">gte()</i>, <i class="nr">100</i>);
             </p>
-            <p class="info-box">
-                As an aside &#8212; this particular sequence of checks is so common, it has been given 
-                its own method, which you could have used just as well:<br><br>
-
-                <span class="inline-code">public void processMessages(List&lt;String&gt; messages, int from, int to) {<br>
-                <span class="inline-code">&nbsp;&nbsp;Check.fromTo(messages, from, to);<br>
-                <span class="inline-code">}</span>
+            <p>
+                This would cause the following error message to be generated if the size of the emps collection was, say, 42:
+            </p>
+            <p style="text-align:center;">
+                <span class="inline-code">employees.size() must be >= 100 (was 42)</span>
             </p>
             <div class="container nav-links">
                 <div class="row">
-                    <div class="col-md-3 prev-chapter"><a href="basic-usage.html">&#8810;&nbsp;&nbsp;&nbsp;Basic Usage</a></div>
+                    <div class="col-md-3 prev-chapter"><a href="validating-properties.html">&#8810;&nbsp;&nbsp;&nbsp;Validating Properties</a></div>
                     <div class="col-md-6"></div>
-                    <div class="col-md-3 next-chapter"><a href="common-checks.html">Common Checks&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                    <div class="col-md-3 next-chapter"><a href="custom-checks.html">Custom Checks&nbsp;&nbsp;&nbsp;&#8811;</a></div>
                 </div>
             </div>
-        </div>
+      </div>
     </div>
 </div>
 </body>

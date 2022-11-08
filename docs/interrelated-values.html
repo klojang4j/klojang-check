@@ -32,34 +32,15 @@
         </div>
         <div class="col-md-9 main-column">
             <h1>KLOJANG CHECK</h1>
-            <h2>Chaining Checks</h2>
+            <h2>Testing Against a Set of Values</h2>
             <p>
-                As mentioned before, Klojang Check lets you chain multiple checks on a
-                single value. The <span class="inline-code">is()</span> and 
-                <span class="inline-code">isNot()</span> methods together constitute a fluent API.
-            </p>
-            <p>
-                You can also chain checks on <i>different</i> values, namely using the
-                <span class="inline-code">and()</span> method. This can make for very concise
-                argument validation:
-            </p>
-            <p class="java code">
-&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessage</i>(List&lt;String&gt; messages, <i class="kw">int</i> index) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">notNull</i>(messages).<i class="call">and</i>(from).<i class="call">is</i>(<i class="call-static">gte()</i>, 0).<i class="call">is</i>(<i class="call-static">lte()</i>, messages.<i class="call">size</i>());<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// do stuff ...</i><br>
-&nbsp;&nbsp;}
-            </p>
-            <p>
-                Note that with the <span class="inline-code">and()</span> method you are in fact
-                breaking out of the fluent API as it returns a <b>new</b> <span class="inline-code">IntCheck</span>
-                or <span class="inline-code">ObjectCheck</span> instance. The example above hopped from an
-                <span class="inline-code">ObjectCheck</span> to an <span class="inline-code">IntCheck</span>.
+                                
             </p>
             <div class="container nav-links">
                 <div class="row">
-                    <div class="col-md-3 prev-chapter"><a href="common-checks.html">&#8810;&nbsp;&nbsp;&nbsp;Common Checks</a></div>
+                    <div class="col-md-3 prev-chapter"><a href="value-domain-tests.html">&#8810;&nbsp;&nbsp;&nbsp;Value Domain Tests</a></div>
                     <div class="col-md-6"></div>
-                    <div class="col-md-3 next-chapter"><a href="predicates-and-relations.html">Predicates &amp; Relations&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                    <div class="col-md-3 next-chapter"><a href="error-handling.html">Error Handling&nbsp;&nbsp;&nbsp;&#8811;</a></div>
                 </div>
             </div>
         </div>
