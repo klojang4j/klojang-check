@@ -145,7 +145,7 @@ public class MsgIntPredicateTest {
   public void intPredicateCustomMsg00() {
     try {
       Check.that(1, "foo").is(negative(),
-          "${name} failed ${test}() test. It was ${arg}");
+          "${tag} failed ${test}() test. It was ${arg}");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("foo failed negative() test. It was 1", e.getMessage());

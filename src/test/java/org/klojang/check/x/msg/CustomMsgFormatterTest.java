@@ -20,7 +20,7 @@ public class CustomMsgFormatterTest {
 
   @Test
   public void test00() {
-    String in = "Check \"${test}\" did not go wel for argument ${name}";
+    String in = "Check \"${test}\" did not go wel for argument ${tag}";
     String out = format(in, args);
     assertEquals("Check \"instanceOf\" did not go wel for argument ARG_NAME", out);
   }

@@ -30,7 +30,7 @@ public final class CustomMsgFormatter {
    * checks costing them anything but a few CPU cycles, let's go for it.
    * Nevertheless, keep the regex around.
    */
-  private static final String REGEX = "\\$\\{(test|arg|type|name|obj|\\d+)}";
+  private static final String REGEX = "\\$\\{(tag|arg|obj|type|test|\\d+)}";
 
   @SuppressWarnings("unused")
   private static final Pattern PATTERN = Pattern.compile(REGEX);
@@ -99,10 +99,10 @@ public final class CustomMsgFormatter {
   //@formatter:off
   private static final Map<String, Function<Object[], String>> ARG_LOOKUPS =
       Map.of(
-          "test", CustomMsgFormatter::getCheckName,
+          "test", CustomMsgFormatter::getCheck,
           "arg",  args -> toShortString(args[1], MAX_STRING_WIDTH),
-          "type", args -> getArgumentType(args),
-          "name", CustomMsgFormatter::getArgumentName,
+          "type", args -> getType(args),
+          "tag", CustomMsgFormatter::getTag,
           "obj",  args -> toShortString(args[4], MAX_STRING_WIDTH));
   //@formatter:on
 
@@ -150,7 +150,7 @@ public final class CustomMsgFormatter {
     }
   }
 
-  private static String getCheckName(Object[] args) {
+  private static String getCheck(Object[] args) {
     String name;
     if ((name = CheckDefs.nameOf(args[0])) != null) {
       return name;
@@ -158,14 +158,14 @@ public final class CustomMsgFormatter {
     return args[0].getClass().getSimpleName();
   }
 
-  private static String getArgumentName(Object[] args) {
+  private static String getTag(Object[] args) {
     if (args[3] == null) {
       return DEF_ARG_NAME;
     }
     return args[3].toString();
   }
 
-  private static String getArgumentType(Object[] args) {
+  private static String getType(Object[] args) {
     if (args[2] == null) {
       if (args[1] != null) {
         return Misc.describe(args[1]);

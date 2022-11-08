@@ -111,7 +111,7 @@ public class ObjectCheckHelper2Test {
   public void has_IntPredicate_CustomMsg00() {
     String s = "0123456789";
     try {
-      Check.that(s, "foo").has(strlen(), zero(), "My name is ${name}");
+      Check.that(s, "foo").has(strlen(), zero(), "My name is ${tag}");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("My name is foo", e.getMessage());

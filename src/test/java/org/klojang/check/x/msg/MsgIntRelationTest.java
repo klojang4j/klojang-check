@@ -62,7 +62,7 @@ public class MsgIntRelationTest {
     try {
       Check.on(IOException::new, 8, "foo").is(gte(),
           9,
-          "${name} incorrect: ${arg}. Required: ${obj}");
+          "${tag} incorrect: ${arg}. Required: ${obj}");
     } catch (IOException e) {
       System.out.println(e.getMessage());
       assertEquals("foo incorrect: 8. Required: 9", e.getMessage());
