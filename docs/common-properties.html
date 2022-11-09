@@ -47,7 +47,7 @@
                 <i class="kw">import static</i> org.klojang.check.CommonChecks.gte;<br>
                 <i class="kw">import static</i> org.klojang.check.CommonProperties.size<br>
                 <br>
-                <i class="cmt">// stuff ...</i>
+                <i class="cmt">// ...</i>
                 <br> 
                 <br>   
 &nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">notNull</i>(emps, <i class="str">"employees"</i>).<i class="call">has</i>(<i class="call-static">size()</i>, <i class="call-static">gte()</i>, <i class="nr">100</i>);
@@ -57,6 +57,24 @@
             </p>
             <p style="text-align:center;">
                 <span class="inline-code">employees.size() must be >= 100 (was 42)</span>
+            </p>
+            <p>
+                Here are some more examples:
+            </p>
+            <p class="java code">
+                <i class="kw">import static</i> org.klojang.check.CommonChecks.lt;<br>
+                <i class="kw">import static</i> org.klojang.check.CommonChecks.EQ;<br>
+                <i class="kw">import static</i> org.klojang.check.CommonChecks.subtypeOf;<br>
+                <i class="kw">import static</i> org.klojang.check.CommonProperties.strlen<br>
+                <i class="kw">import static</i> org.klojang.check.CommonProperties.toUpperCase<br>
+                <i class="kw">import static</i> org.klojang.check.CommonProperties.type<br>
+                <br>
+                <i class="cmt">// ...</i>
+                <br> 
+                <br>   
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"Hello, World!"</i>).<i class="call">has</i>(<i class="call-static">strlen()</i>, <i class="call-static">lt()</i>, <i class="nr">100</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"foo"</i>).<i class="call">has</i>(<i class="call-static">toUpperCase()</i>, <i class="call-static">EQ()</i>, <i class="str">"FOO"</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">has</i>(<i class="call-static">type()</i>, <i class="call-static">subtypeOf()</i>, Car.<i class="const">class</i>);
             </p>
             <div class="container nav-links">
                 <div class="row">

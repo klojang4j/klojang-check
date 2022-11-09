@@ -43,7 +43,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">this</i>.numChairs = Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">positive()</i>).<i class="call">is</i>(<i class="call-static">lte()</i>, <i class="nr">4</i>).<i class="call">is</i>(<i class="call-static">even()</i>).<i class="call">ok</i>();<br>
             </p>
             <p>
-                requires the number of chairs to be positive <b>and</b> less than, or equal to 4 <b>and</b> even.
+                requires the number of chairs to be positive <b>and</b> less than five <b>and</b> even.
                 If the number of chairs needs to pass just one of these tests, write: 
             </p>
             <p class="code">
@@ -64,6 +64,33 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"be"</i>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"or"</i>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<i class="call">is</i>(<i class="call-static">hasSubstring()</i>, <i class="str">"not"</i>);
+            </p>
+            <p>
+                On the downside: even though both <span class="inline-code">notNull()</span> and <span class="inline-code">hasSubstring()</span>
+                have an error message associated with them, their combination
+                &#8212; <span class="inline-code"><b>notNull().and(hasSubstring())</b></span> &#8212; does not.
+                It is a completely new predicate, unknown to Klojang Check. So you would probably want to provide our own
+                error message when opting for the first variant.
+            </p>
+            <p class="info-box">
+                <b>orElse what?</b><br><br>
+
+                You may not recall&nbsp;&nbsp;<span class="cursive-code">orElse()</span> being a method of <span class="cursive-code">Predicate</span>
+                or <span class="cursive-code">IntPredicate</span>, and it isn't. While the <span class="cursive-code">is()</span>,
+                <span class="cursive-code">isNot()</span>, <span class="cursive-code">has()</span> and <span class="cursive-code">notHas()</span>
+                methods accept ordinary <span class="cursive-code">Predicate</span> and <span class="cursive-code">IntPredicate</span> arguments,
+                the type of the predicates in the
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html"><b>CommonChecks</b></a>
+                class is either
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposablePredicate.html"><b>ComposablePredicate</b></a>
+                or  
+               <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposableIntPredicate.html"><b>ComposableIntPredicate</b></a>.
+               These are extensions of <span class="cursive-code">Predicate</span> and <span class="cursive-code">IntPredicate</span>, respectively.
+               It is through these interfaces that you can freely combine predicates and relations. Every composition must start either with
+               a <span class="cursive-code">ComposablePredicate</span> or <span class="cursive-code">ComposableIntPredicate</span>. Also, validating
+               a value against a <b>set</b> of other values, and validating two interrelated values always happens through either a 
+               <span class="cursive-code">ComposablePredicate</span> or a <span class="cursive-code">ComposableIntPredicate</span>. (See
+               <a href="value-domain-tests.html"><b>Value Domain Tests</b></a> and <a href="interrelated-values.html"><b>Interrelated Values</b></a>.)
             </p>
             <div class="container nav-links">
                 <div class="row">

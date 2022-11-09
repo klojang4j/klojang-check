@@ -59,15 +59,15 @@
 }
             </p>
             <p>
-                If, in this example, a query would be passed with a limit of 500, this would result in
-                an <span class="inline-code">IllegalArgumentException</span> with the message:
+                If, in this example, a query would be passed with a <span class="inline-code">limit</span> of 500,
+                an <span class="inline-code">IllegalArgumentException</span> would be thrown with the message:
             </p>
             <p style="text-align: center;">
                 <span class="inline-code">query.limit must be <= 100 (was 500)
             </p>
             <p class="info-box">
-                Note that the term "property" is somewhat misleading. This first argument to the
-                <span class="cursive-code">has()</span> and <span class="cursive-code">notHas()</span> methods simply is a function
+                Note that the term "property" is somewhat misleading. This first argument to
+                <span class="cursive-code">has()</span> and <span class="cursive-code">notHas()</span> simply is a function
                 that takes the value being validated and produces some other value, which is then also validated. In that sense an
                 <span class="cursive-code">int</span> value also has properties &#8212; for example "its" absolute value or "its"
                 cosine:<br><br>

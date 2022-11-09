@@ -328,8 +328,7 @@ public class CommonProperties {
   }
 
   static {
-    tmp.put(values(),
-        (arg, argName) -> base(argName, arg) + ".values()");
+    tmp.put(values(), (arg, argName) -> base(argName, arg) + ".values()");
   }
 
   /**

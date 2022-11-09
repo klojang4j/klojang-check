@@ -34,18 +34,25 @@
             <h1>KLOJANG CHECK</h1>
             <h2>Testing Against a Set of Values</h2>
             <p>
-               Klojang Check lets you specify that the value you are validating must have a certain relationship
-               to not just one other value, but to a <i>set</i> of other values &#8212; a.k.a. a value domain in
-               the vocabulary of predicate logic: 
+               Klojang Check lets you specify that a value must have a certain relation to not just <b>one</b>
+               other value, but to a <b>set</b> of other values &#8212; a <i>value domain</i> in the vocabulary
+               of predicate logic: 
             </p>
             <p class="java code">
+<i class="kw">import static</i> org.klojang.check.CommonChecks.notEmpty;<br>
+<i class="kw">import static</i> org.klojang.check.CommonChecks.contains;<br>
+<i class="kw">import static</i> org.klojang.check.relation.Quantifier.noneOf;<br>
+<br>
+<i class="cmt">// ...</i>
+<br> 
+<br>   
 &nbsp;&nbsp;<i class="kw">public void</i> <i class="method">applyColors</i>(List&lt;Color&gt; colors) {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(colors).<i class="call">is</i>(<i class="call-static">notEmpty()</i>.<i class="call">and</i>(<i class="call-static">contains()</i>, <i class="call-static">noneOf()</i>, <i class="const">RED</i>, <i class="const">BLUE</i>, <i class="const">PINK</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// apply the colors</i><br>
 &nbsp;&nbsp;}
             </p>
             <p>
-                The <span class="inline-code">noneOf()</span> methods returns an instance of the
+                The <span class="inline-code">noneOf()</span> method returns an instance of the
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Quantifier.html">Quantifier</a>
                 enum, which represent a logical quantifier. This is what the <span class="inline-code">Quantifier</span> enum looks like:
             </p>

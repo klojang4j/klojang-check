@@ -166,7 +166,7 @@ final class IntCheckHelper1<X extends Exception> {
       throw check.exc.apply(getDefaultRelationMessage(name, val, obj));
     }
     throw check.exc.apply(
-        getPrefabMessage(formatter, test, false, name, val, null, obj));
+        getPrefabMessage(formatter, test, true, name, val, null, obj));
   }
 
   <P, O> IntCheck<X> has(IntFunction<P> prop,
