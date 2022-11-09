@@ -1,9 +1,9 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.relation.Comparison;
 import org.klojang.check.relation.IntObjRelation;
 import org.klojang.check.relation.IntRelation;
+import org.klojang.check.relation.Relation;
 
 import java.util.function.ToIntFunction;
 
@@ -21,7 +21,7 @@ import static org.klojang.check.x.msg.MsgUtil.getDefaultRelationMessage;
  */
 public class NonCommonCheckTest {
 
-  private static Comparison<Double> NO_RELATION = (s, o) -> false;
+  private static Relation<Double,Double> NO_RELATION = (s, o) -> false;
   private static IntRelation NO_INT_RELATION = (s, o) -> false;
 
   private static IntObjRelation<Double> NO_INT_OBJ_RELATION = (s, o) -> false;

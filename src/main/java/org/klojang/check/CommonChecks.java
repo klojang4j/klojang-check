@@ -489,7 +489,7 @@ public final class CommonChecks {
    * @param <T> the type of the objects being compared
    * @return a function implementing the test described above
    */
-  public static <T> Comparison<T> equalTo() {
+  public static <T> Relation<T, T> equalTo() {
     return Object::equals;
   }
 
@@ -501,7 +501,7 @@ public final class CommonChecks {
    * @see CommonProperties#unbox()
    * @see #gt()
    */
-  public static <T extends Comparable<T>> Comparison<T> GT() {
+  public static <T extends Comparable<T>> Relation<T, T> GT() {
     return (x, y) -> x.compareTo(y) > 0;
   }
 
@@ -513,7 +513,7 @@ public final class CommonChecks {
    * @see CommonProperties#unbox()
    * @see #lt()
    */
-  public static <T extends Comparable<T>> Comparison<T> LT() {
+  public static <T extends Comparable<T>> Relation<T, T> LT() {
     return (x, y) -> x.compareTo(y) < 0;
   }
 
@@ -525,7 +525,7 @@ public final class CommonChecks {
    * @see CommonProperties#unbox()
    * @see #gte()
    */
-  public static <T extends Comparable<T>> Comparison<T> GTE() {
+  public static <T extends Comparable<T>> Relation<T, T> GTE() {
     return (x, y) -> x.compareTo(y) >= 0;
   }
 
@@ -564,7 +564,7 @@ public final class CommonChecks {
    *     being tested)
    * @return a function implementing the test described above
    */
-  public static <T> Comparison<T> nullOr() {
+  public static <T> Relation<T, T> nullOr() {
     return (x, y) -> x == null || x.equals(y);
   }
 
@@ -799,7 +799,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> matching() {
+  public static Relation<String, String> matching() {
     return (string, pattern) ->
         hasPattern().exists(string, compile(pattern));
   }
@@ -817,7 +817,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> matchFor() {
+  public static Relation<String, String> matchFor() {
     return (string, pattern) ->
         containsPattern().exists(string, compile(pattern));
   }
@@ -879,7 +879,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> equalsIC() {
+  public static Relation<String, String> equalsIC() {
     return String::equalsIgnoreCase;
   }
 
@@ -888,7 +888,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> startsWithIC() {
+  public static Relation<String, String> startsWithIC() {
     return (s, o) -> {
       if (o.length() > 0) {
         return s.regionMatches(true, 0, o, 0, o.length());
@@ -902,7 +902,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> endsWithIC() {
+  public static Relation<String, String> endsWithIC() {
     return (s, o) -> {
       if (o.length() > 0) {
         return s.regionMatches(true, s.length() - o.length(), o, 0, o.length());
@@ -916,7 +916,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Comparison<String> hasSubstringIC() {
+  public static Relation<String, String> hasSubstringIC() {
     return (s, o) -> {
       if (o.length() > 0) {
         return containsPattern().exists(s, compile(o, CASE_INSENSITIVE | LITERAL));
