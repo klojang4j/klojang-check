@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static org.klojang.check.x.msg.CustomMsgFormatter.formatSimple;
+
 /**
  * The central class of this Java module. All checks start out here. The
  * {@code Check} class provides static factory methods for {@link IntCheck} and
@@ -32,8 +34,8 @@ public final class Check {
     return new NullPointerException("argument must not be null");
   }
 
-  private static NullPointerException argumentMustNotBeNull(String argName) {
-    return new NullPointerException(argName + " must not be null");
+  private static NullPointerException argumentMustNotBeNull(String tag) {
+    return new NullPointerException(tag + " must not be null");
   }
 
   private static final Function<String, IllegalArgumentException> DEF_EXC_FACTORY =
@@ -43,11 +45,11 @@ public final class Check {
    * Static factory method. Returns an {@link IntCheck} instance suitable for testing
    * {@code int} values.
    *
-   * @param arg the value to be validated
+   * @param value the value to be validated
    * @return an {@code IntCheck} instance suitable for testing {@code int} values
    */
-  public static IntCheck<IllegalArgumentException> that(int arg) {
-    return new IntCheck<>(arg, null, DEF_EXC_FACTORY);
+  public static IntCheck<IllegalArgumentException> that(int value) {
+    return new IntCheck<>(value, null, DEF_EXC_FACTORY);
   }
 
   /**
@@ -55,25 +57,25 @@ public final class Check {
    * validating values of type {@code <T>}.
    *
    * @param <T> the type of the value to be validated
-   * @param arg the value to be validated
+   * @param value the value to be validated
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
    */
-  public static <T> ObjectCheck<T, IllegalArgumentException> that(T arg) {
-    return new ObjectCheck<>(arg, null, DEF_EXC_FACTORY);
+  public static <T> ObjectCheck<T, IllegalArgumentException> that(T value) {
+    return new ObjectCheck<>(value, null, DEF_EXC_FACTORY);
   }
 
   /**
    * Static factory method. Returns an {@link IntCheck} instance suitable for
    * validating {@code int} values.
    *
-   * @param arg the value to be validated
-   * @param argName a descriptive name for the value (in case the value is a
-   *     method argument probably something close to the parameter name)
+   * @param value the value to be validated
+   * @param tag a descriptive name for the value (in case the value is a method
+   *     argument probably something close to the parameter name)
    * @return an {@code IntCheck} instance suitable for testing {@code int} values
    */
-  public static IntCheck<IllegalArgumentException> that(int arg, String argName) {
-    return new IntCheck<>(arg, argName, DEF_EXC_FACTORY);
+  public static IntCheck<IllegalArgumentException> that(int value, String tag) {
+    return new IntCheck<>(value, tag, DEF_EXC_FACTORY);
   }
 
   /**
@@ -81,15 +83,15 @@ public final class Check {
    * validating values of type {@code <T>}.
    *
    * @param <T> the type of the value to be validated
-   * @param arg the value to be validated
-   * @param argName a descriptive name for the value (in case the value is a
-   *     method argument probably something close to the parameter name)
+   * @param value the value to be validated
+   * @param tag a descriptive name for the value (in case the value is a method
+   *     argument probably something close to the parameter name)
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
    */
-  public static <T> ObjectCheck<T, IllegalArgumentException> that(T arg,
-      String argName) {
-    return new ObjectCheck<>(arg, argName, DEF_EXC_FACTORY);
+  public static <T> ObjectCheck<T, IllegalArgumentException> that(T value,
+      String tag) {
+    return new ObjectCheck<>(value, tag, DEF_EXC_FACTORY);
   }
 
   /**
@@ -101,15 +103,15 @@ public final class Check {
    * {@code NullPointerException} will be thrown.
    *
    * @param <T> the type of the value to be validated
-   * @param arg the value to be validated
+   * @param value the value to be validated
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
    * @throws NullPointerException if the argument is {@code null}
    */
-  public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T arg)
+  public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T value)
       throws NullPointerException {
-    if (arg != null) {
-      return new ObjectCheck<>(arg, null, DEF_EXC_FACTORY);
+    if (value != null) {
+      return new ObjectCheck<>(value, null, DEF_EXC_FACTORY);
     }
     throw argumentMustNotBeNull();
   }
@@ -123,20 +125,20 @@ public final class Check {
    * {@code NullPointerException} will be thrown.
    *
    * @param <T> the type of the value to be validated
-   * @param arg the value to be validated
-   * @param argName a descriptive name for the value (in case the value is a
-   *     method argument probably something close to the parameter name)
+   * @param value the value to be validated
+   * @param tag a descriptive name for the value (in case the value is a method
+   *     argument probably something close to the parameter name)
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
    * @throws NullPointerException if the argument is {@code null}
    */
-  public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T arg,
-      String argName)
+  public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T value,
+      String tag)
       throws IllegalArgumentException {
-    if (arg != null) {
-      return new ObjectCheck<>(arg, argName, DEF_EXC_FACTORY);
+    if (value != null) {
+      return new ObjectCheck<>(value, tag, DEF_EXC_FACTORY);
     }
-    throw argumentMustNotBeNull(argName);
+    throw argumentMustNotBeNull(tag);
   }
 
   /**
@@ -148,14 +150,14 @@ public final class Check {
    * @param excFactory a function that will produce the exception if the value
    *     fails to pass a test. The function will be pass the exception message and
    *     must return the exception to be thrown
-   * @param arg the value to be validated
+   * @param value the value to be validated
    * @param <X> the type of {@code Exception} thrown if the value fails to pass a
    *     test
    * @return an {@code IntCheck} instance suitable for testing {@code int} values
    */
   public static <X extends Exception> IntCheck<X> on(Function<String, X> excFactory,
-      int arg) {
-    return new IntCheck<>(arg, null, excFactory);
+      int value) {
+    return new IntCheck<>(value, null, excFactory);
   }
 
   /**
@@ -170,13 +172,13 @@ public final class Check {
    * @param excFactory a function that will produce the exception if the value
    *     fails to pass a test. The function will be pass the exception message and
    *     must return the exception to be thrown
-   * @param arg the value to be validated
+   * @param value the value to be validated
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
    */
   public static <T, X extends Exception> ObjectCheck<T, X> on(
-      Function<String, X> excFactory, T arg) {
-    return new ObjectCheck<>(arg, null, excFactory);
+      Function<String, X> excFactory, T value) {
+    return new ObjectCheck<>(value, null, excFactory);
   }
 
   /**
@@ -188,16 +190,16 @@ public final class Check {
    * @param excFactory a function that will produce the exception if the value
    *     fails to pass a test. The function will be pass the exception message and
    *     must return the exception to be thrown
-   * @param arg the value to be validated
-   * @param argName a descriptive name for the value (in case the value is a
-   *     method argument probably something close to the parameter name)
+   * @param value the value to be validated
+   * @param tag a descriptive name for the value (in case the value is a method
+   *     argument probably something close to the parameter name)
    * @param <X> the type of {@code Exception} thrown if the value fails to pass a
    *     test
    * @return an {@code IntCheck} instance suitable for testing {@code int} values
    */
   public static <X extends Exception> IntCheck<X> on(
-      Function<String, X> excFactory, int arg, String argName) {
-    return new IntCheck<>(arg, argName, excFactory);
+      Function<String, X> excFactory, int value, String tag) {
+    return new IntCheck<>(value, tag, excFactory);
   }
 
   /**
@@ -210,15 +212,15 @@ public final class Check {
    * @param excFactory a function that will produce the exception if the value
    *     fails to pass a test. The function will be pass the exception message and
    *     must return the exception to be thrown
-   * @param arg the value to be validated
-   * @param argName a descriptive name for the value (in case the value is a
-   *     method argument probably something close to the parameter name)
+   * @param value the value to be validated
+   * @param tag a descriptive name for the value (in case the value is a method
+   *     argument probably something close to the parameter name)
    * @return an {@code ObjectCheck} instance suitable for validating values of type
    *     {@code <T>}.
    */
   public static <T, X extends Exception> ObjectCheck<T, X> on(
-      Function<String, X> excFactory, T arg, String argName) {
-    return new ObjectCheck<>(arg, argName, excFactory);
+      Function<String, X> excFactory, T value, String tag) {
+    return new ObjectCheck<>(value, tag, excFactory);
   }
 
   /**
@@ -458,7 +460,7 @@ public final class Check {
     if (msgArgs == null || message == null) {
       throw excFactory.apply(message);
     }
-    throw excFactory.apply(CustomMsgFormatter.formatSimple(message, msgArgs));
+    throw excFactory.apply(formatSimple(message, msgArgs));
   }
 
 }
