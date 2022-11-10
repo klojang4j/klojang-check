@@ -13,6 +13,7 @@
         <div class="col-md-2 side-bar">
             <div class="menu">
                 <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
                 <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
@@ -31,27 +32,28 @@
             </div>
         </div>
         <div class="col-md-9 main-column">
-            <h1>KLOJANG CHECK</h1>
+            <h1>DEFENSIVE PROGRAMMING WITH KLOJANG CHECK</h1>
             <h2>Performance</h2>
             <p>
-                As you can tell from the code example in the <a href="index.html">Introduction</a>,
-                Klojang Check exposes a fluent API that allows you to execute multiple checks on the
-                same value. That implies that there must be some object creation going on. Nevertheless,
+                You probably noticed the fluent API in the <a href="index.html">introductory</a> code example.
+                That implies that there must be some object creation going on. Nevertheless,
                 benchmarking Klojang Check using <a href="https://github.com/openjdk/jmh">JMH</a>
                 yields no difference with hand-coded checks. You can view the results of the benchmarks
                 <a href="https://github.com/klojang4j/klojang-check-jmh">here</a>.
             </p>
             <p>
-                Looking at the code example, that should not be surprising. The object creation is
-                completely localized and, in fact, redundant &#8211; the object created by 
-                <span class="inline-code">Check.that(...)</span> never gets assigned. Consequently,
-                the JVM clearly has no trouble compiling it away altogether.
+                Looking at the code example, that's not very surprising. The object creation is
+                completely localized and, in fact, redundant &#8212; the object created by 
+                <span class="inline-code">Check.that(...)</span> never gets assigned. It is gone by
+                the time the next statement executes. Consequently, the JVM has no trouble compiling it
+                away altogether.
             </p>
             <p class="info-box">
                 <b>We Don't Check Your Check</b><br><br>
                 Perhaps paradoxically, while Klojang Check is all about ensuring your method's preconditions
                 are met before doing anything else, Klojang Check itself does no such thing. Take, for
-                instance, this statement:<br><br>
+                instance, this statement (we'll explain everything in great detail later on, but
+                it is probably pretty obvious what it does):<br><br>
 
                 <span class="inline-code" style="font-size: 100%;">Check.that(fullName).is(hasSubstring(), lastName);</span><br><br>
 
@@ -59,23 +61,24 @@
                 wraps&nbsp;&nbsp;<span class="cursive-code">String::contains</span>, so this statement will fly off 
                 the rails with a <span class="cursive-code">NullPointerException</span> if any of the provided arguments
                 is null. Yet, Klojang Check will not perform a null check on any of them. That sounds like a bad case of
-                Do As I Say, Not As I Do. The incongruence is smaller than meets the eye, however. In the (rather) odd case
+                Do As I Say, Not As I Do. Yet, we think it is justified, and even self-consistent. In the (rather) odd case
                 that the check to be executed is not known beforehand, and is dynamically inserted into the
-                <span class="cursive-code">is(...)</span> method, the check itself becomes program input! Hence, the check
-                needs to be tested just like anything else entering your program. As for the
-                <span class="cursive-code">fullName</span> argument, which is the value we are testing: if it could possibly
-                be null, you should always first perform a null check:<br><br>
+                <span class="cursive-code">is(...)</span> method, the check itself becomes program input! Hence, the
+                check needs to be tested just like anything else entering your program &#8212; and we can warmly recommend
+                a library to help you with that. As for the <span class="cursive-code">fullName</span> argument, which is
+                the value we are testing: if it could possibly be null, you should always first perform a null check:<br><br>
+
                 <span class="inline-code" style="font-size: 100%;">Check.notNull(fullName).is(hasSubstring(), lastName);</span><br><br>
 
                 Klojang Check provides a syntactical mould for you to stick your tests into, but in the
                 end it is still you who decides which tests to execute and in which order. If each and
                 every check would automatically be supplemented with three or four more checks, just to
                 verify that the original check was specified correctly, that would raise the cost of
-                doing a check to a level that is likely unacceptable for many developers.
+                doing a check to a level that would likely be unacceptable for many developers.
             </p>
             <div class="container nav-links">
                 <div class="row">
-                    <div class="col-md-3 prev-chapter"><a href="index.html">&#8810;&nbsp;&nbsp;&nbsp;Introduction</a></div>
+                    <div class="col-md-3 prev-chapter"><a href="getting-started.html">&#8810;&nbsp;&nbsp;&nbsp;Getting Started</a></div>
                     <div class="col-md-6"></div>
                     <div class="col-md-3 next-chapter"><a href="basic-usage.html">Basic Usage&nbsp;&nbsp;&nbsp;&#8811;</a></div>
                 </div>

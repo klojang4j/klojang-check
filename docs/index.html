@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="klojang-docs.css">
-
 </head>
 <body>
 <div class="container">
@@ -14,6 +13,7 @@
         <div class="col-md-2 side-bar">
             <div class="menu">
                 <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
                 <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
@@ -32,36 +32,30 @@
             </div>
         </div>
         <div class="col-md-9 main-column">
-            <h1>KLOJANG CHECK</h1>
+            <h1>DEFENSIVE PROGRAMMING WITH KLOJANG CHECK</h1>
             <h2>Introduction</h2>
             <p>
-                Klojang Check is a Java module dedicated to defensive programming. It provides a set
-                of syntactical constructs that let you define checks on preconditions and postconditions
-                in a concise and elegant manner. In addition, it comes with a well-curated set of
-                predefined
-                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">common checks</a>.
-                These checks are associated with short, informative error messages, so you don't have to
-                invent them yourselves.
+                Welcome to Klojang Check.
             </p>
             <p>
-                To use Klojang Check, add the following dependency to your POM file:
-            </p>
-            <p class="xml code">
-<i class="xml-elem">&lt;dependency&gt;</i><br>
-&nbsp;&nbsp;<i class="xml-elem">&lt;groupId&gt;</i>org.klojang.check<i class="xml-elem">&lt;/groupId&gt;</i><br>
-&nbsp;&nbsp;<i class="xml-elem">&lt;artifactId&gt;</i>klojang-check<i class="xml-elem">&lt;/artifactId&gt;</i><br>
-&nbsp;&nbsp;<i class="xml-elem">&lt;version&gt;</i>1.0.2<i class="xml-elem">&lt;/version&gt;</i><br>
-<i class="xml-elem">&lt;/dependency&gt;</i>
+                Klojang Check is a Java module dedicated to defensive programming. It lets you specify checks
+                on program input, object state and method arguments in a concise and elegant manner. Its
+                conciseness might even seduce you to use it for sanity checks on program elements not
+                usually associated with precondition validation &#8212; local variables, for example.
             </p>
             <p>
-                The <b>Javadocs</b> for Klojang Check can be found <a href="https://klojang4j.github.io/klojang-check/api">here</a>.
+                In addition, Klojang Check comes with a well-curated set of
+                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">common checks</a>
+                on values of various types. These checks are associated with short, informative error messages,
+                so you don't have to invent them yourselves.
             </p>
             <p>
-                Klojang Check takes a different approach to pre- and postcondition verification than, for
+                Klojang Check's take on pre- and postcondition validation is different from, for
                 example, Guava's <a href="https://guava.dev/releases/21.0/api/docs/com/google/common/base/Preconditions.html">Preconditions</a>
                 class and Apache's
                 <a href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html">Validate</a>
-                class. Here is an example of Klojang Check in action:
+                class. Below is an example of what precondition validation looks like with Klojang Check. The following
+                chapters will explain what exactly is going on, but you will likely get the gist of it.
             </p>
             <p class="java code">
 <i class="kw">public class</i> InteriorDesigner {<br>
@@ -88,7 +82,7 @@
                 <div class="row">
                     <div class="col-md-3 prev-chapter"></div>
                     <div class="col-md-6"></div>
-                    <div class="col-md-3 next-chapter"><a href="performance.html">Performance&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                    <div class="col-md-3 next-chapter"><a href="getting-started.html">Getting Started&nbsp;&nbsp;&nbsp;&#8811;</a></div>
                 </div>
             </div>
         </div>

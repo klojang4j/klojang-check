@@ -33,39 +33,34 @@
         </div>
         <div class="col-md-9 main-column">
             <h1>DEFENSIVE PROGRAMMING WITH KLOJANG CHECK</h1>
-            <h2>Chaining Checks</h2>
+            <h2>Getting Started</h2>
             <p>
-                As mentioned before, Klojang Check lets you chain multiple checks on a
-                single value. The <span class="inline-code">is()</span> and 
-                <span class="inline-code">isNot()</span> methods together constitute a fluent API.
+                To use Klojang Check, add the following dependency to your POM file:
             </p>
+            <p class="xml code">
+<i class="xml-elem">&lt;dependency&gt;</i><br>
+&nbsp;&nbsp;<i class="xml-elem">&lt;groupId&gt;</i>org.klojang.check<i class="xml-elem">&lt;/groupId&gt;</i><br>
+&nbsp;&nbsp;<i class="xml-elem">&lt;artifactId&gt;</i>klojang-check<i class="xml-elem">&lt;/artifactId&gt;</i><br>
+&nbsp;&nbsp;<i class="xml-elem">&lt;version&gt;</i>1.0.2<i class="xml-elem">&lt;/version&gt;</i><br>
+<i class="xml-elem">&lt;/dependency&gt;</i>
+            </p>
+            <p>&nbsp;</p>
             <p>
-                You can also chain checks on <i>different</i> values, namely using the
-                <span class="inline-code">and()</span> method. This can make for very concise
-                argument validation:
+                The <b>Javadocs</b> for Klojang Check can be found <a href="https://klojang4j.github.io/klojang-check/api">here</a>.
             </p>
-            <p class="java code">
-&nbsp;&nbsp;<i class="kw">public void</i> <i class="method">processMessage</i>(List&lt;String&gt; messages, <i class="kw">int</i> index) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">notNull</i>(messages).<i class="call">and</i>(from).<i class="call">is</i>(<i class="call-static">gte()</i>, 0).<i class="call">is</i>(<i class="call-static">lte()</i>, messages.<i class="call">size</i>());<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// process the message ...</i><br>
-&nbsp;&nbsp;}
-            </p>
-            <p>
-                Note that with the <span class="inline-code">and()</span> method you are in fact
-                breaking out of the fluent API as it returns a <b>new</b> <span class="inline-code">IntCheck</span>
-                or <span class="inline-code">ObjectCheck</span> instance. The example above you hopped from an
-                <span class="inline-code">ObjectCheck</span> (for <span class="inline-code">messages</span>) to 
-                an <span class="inline-code">IntCheck</span> (for <span class="inline-code">from</span>).
-            </p>
+            <p>&nbsp;</p>
             <div class="container nav-links">
                 <div class="row">
-                    <div class="col-md-3 prev-chapter"><a href="common-checks.html">&#8810;&nbsp;&nbsp;&nbsp;Common Checks</a></div>
+                    <div class="col-md-3 prev-chapter"><a href="index.html">&#8810;&nbsp;&nbsp;&nbsp;Introduction</a></div>
                     <div class="col-md-6"></div>
-                    <div class="col-md-3 next-chapter"><a href="predicates-and-relations.html">Predicates &amp; Relations&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                    <div class="col-md-3 next-chapter"><a href="performance.html">Performance&nbsp;&nbsp;&nbsp;&#8811;</a></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
 </body>
 </html>

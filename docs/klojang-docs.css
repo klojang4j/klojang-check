@@ -12,7 +12,7 @@ div.menu {
     top: 8em;
 }
 div.menu-item {
-    margin: .6em 0 .6em 0;
+    margin: .4em 0 .4em 0;
 }
 div.main-column {
     padding-left: 2em;
@@ -28,16 +28,16 @@ div.next-chapter {
     text-align: right;
 }
 h1 {
-    color: #669e75;
-    font-family: Arial, sans-serif;
-    font-size: 150%;
+    color: #2c4b33;
+    font-family: "Noto Sans Mono", monospace;
+    font-size: 130%;
     font-weight: bold;
     text-align: center;
     margin-top: .15em;
 }
 h2 {
     font-family: Arial, sans-serif;
-    font-size: 140%;
+    font-size: 135%;
     font-weight: bold;
     margin-top: .8em;
 }
@@ -88,9 +88,8 @@ a:hover {
 }
 span.inline-code {
     font-family: "Courier New", "Noto Sans Mono", monospace;
-    font-size: 96%;
+    font-size: 97%;
     font-style: normal;
-    color: #eee;
 }
 span.cursive-code {
     font-family: "Courier New", "Noto Sans Mono", monospace;

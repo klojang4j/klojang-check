@@ -61,7 +61,7 @@
  * Klojang Check provides a grab bag of common checks on arguments and other types of
  * values in the form of the {@link org.klojang.check.CommonChecks CommonChecks}
  * class. The {@code lte()}, {@code positive()} and {@code even()} checks shown above
- * are in fact static imports from this class. Here are some more examples:
+ * are static imports from this class. Here are some more examples:
  *
  * <blockquote> <pre>{@code
  * Check.that(obj, "vehicle").is(instanceOf(), Car.class);
@@ -158,12 +158,12 @@
  *      "lt" or "instanceOf" or "notNull".
  *   <li><b><code>${arg}</code></b> The value being validated.
  *   <li><b><code>${type}</code></b> The simple class name of the value.
- *   <li><b><code>${name}</code></b> The name of the parameter, field or variable
+ *   <li><b><code>${tag}</code></b> The name of the parameter, field or variable
  *      being validated, or, possibly, something more descriptive (like "vehicle" in
  *      one of the above examples). Providing a name can be useful when validating
  *      multiple arguments and/or variables within the same method, as it makes it
  *      immediately clear which one of them was to blame for the exception. If you
- *      do not provide a name, <code>${name}</code> defaults to "argument".
+ *      do not provide a name, <code>${tag}</code> defaults to "argument".
  *   <li><b><code>${obj}</code></b> The object of the relationship, in case the
  *      check took the form of a
  *      {@link org.klojang.check.relation.Relation Relation} or one of its
@@ -293,7 +293,7 @@
  *
  * <blockquote><pre>{@code
  * Check.that(word)
- *  .is(notNull(), NPE())
+ *  .is(notNull(), npe()) // throw a NullPointerException
  *  .is(keyIn(), dictionary, illegalState("no such word: \"" + word + "\"");
  * }</pre></blockquote>
  *
