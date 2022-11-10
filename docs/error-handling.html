@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Klojang Check</title>
+    <title>Klojang Check | Error Handling</title>
     <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="klojang-docs.css">
@@ -14,8 +14,8 @@
             <div class="menu">
                 <div class="menu-item"><a href="index.html">Introduction</a></div>
                 <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
-                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
@@ -61,9 +61,9 @@
             <p>
                 The first variant really is meant to be used <i>only</i> in combination with a check from
                 the <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
-                class. As illustrated in the <a href="common-checks.html">chapter</a> on this class, if
-                you provide your own lambda or method reference, but you don't provide your own error message,
-                Klojang Check will generate an error message for you, but it will not be very helpful.
+                class. As explained in the chapter on this class, if you provide your own lambda or method reference,
+                but you don't provide your own error message, Klojang Check will generate an error message for you,
+                but it will not be very helpful.
             </p>
             <div class="container nav-links">
                 <div class="row">

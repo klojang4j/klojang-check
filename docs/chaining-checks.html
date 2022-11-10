@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Klojang Check</title>
+    <title>Klojang Check | Chaining Checks</title>
     <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="klojang-docs.css">
@@ -14,8 +14,8 @@
             <div class="menu">
                 <div class="menu-item"><a href="index.html">Introduction</a></div>
                 <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
-                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
@@ -53,9 +53,9 @@
             <p>
                 Note that with the <span class="inline-code">and()</span> method you are in fact
                 breaking out of the fluent API as it returns a <b>new</b> <span class="inline-code">IntCheck</span>
-                or <span class="inline-code">ObjectCheck</span> instance. The example above you hopped from an
-                <span class="inline-code">ObjectCheck</span> (for <span class="inline-code">messages</span>) to 
-                an <span class="inline-code">IntCheck</span> (for <span class="inline-code">from</span>).
+                or <span class="inline-code">ObjectCheck</span> instance. The code above hopped from an
+                <span class="inline-code">ObjectCheck</span> (for the <span class="inline-code">messages</span> argument) to 
+                an <span class="inline-code">IntCheck</span> (for the <span class="inline-code">from</span> argument).
             </p>
             <div class="container nav-links">
                 <div class="row">

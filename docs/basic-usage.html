@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Klojang Check</title>
+    <title>Klojang Check | Basic Usage</title>
     <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="klojang-docs.css">
@@ -14,8 +14,8 @@
             <div class="menu">
                 <div class="menu-item"><a href="index.html">Introduction</a></div>
                 <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
-                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
@@ -37,11 +37,22 @@
             <p>
                 The <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Check.html">Check</a> 
                 class is the central class of the Klojang Check module. All checks start out from there. It is a factory
-                class for two types of check objects:
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>
-                and 
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck&lt;T&gt;</a>.
+                class for two types of check objects: <!--
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>,
+                which lets you validate <span class="inline-code">int</span> values, and 
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck&lt;T&gt;</a>,
+                which lets you validate values of type <span class="inline-code">T</span>. -->
             </p>
+            <ol>
+                <li>
+                    <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>
+                    &#8212; for validating <span class="inline-code">int</span> values 
+                </li>
+                <li>
+                    <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck&lt;T&gt;</a>
+                    &#8212; for validating values of type <span class="inline-code">T</span>
+                </li>
+            </ol>
             <p>
                 Taking the code example from the <a href="index.html">Introduction</a> again:
             </p>
@@ -66,26 +77,33 @@
 <br>
 }
             </p>
-           <p>
-                <span class="inline-code">numChairs</span> is an <span class="inline-code">int</span> value and hence
-                <span class="inline-code">Check.that()</span> produces an <span class="inline-code">IntCheck</span>,
-                which lets you access to the <span class="inline-code">int</span>-specific checks from the
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
-                class &#8211; in this case the
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte()">gte()</a>,
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#lte()">lte()</a> and
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#even()">even()</a>
-                checks. The code example doesn't show it, but these are static imports from the 
-                <span class="inline-code">CommonChecks</span> class.
-                <span class="inline-code">colors</span> is a <span class="inline-code">List</span> and hence
-                <span class="inline-code">Check.that()</span> produces an <span class="inline-code">ObjectCheck</span>
-                that lets you access <span class="inline-code">Collection</span>- and <span class="inline-code">List</span>-specific
-                checks like the <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#contains()">contains()</a>
-                check. <span class="inline-code">couch</span> is, well, a <span class="inline-code">Couch</span>. There
-                are no <span class="inline-code">Couch</span>-specific checks in the <span class="inline-code">CommonChecks</span>
-                class, but you can still provide your own lambdas and method references that test the <span class="inline-code">Couch</span>
-                instance.
-           </p>
+           <ul>
+                <li>
+                    <span class="inline-code">numChairs</span> is an <span class="inline-code">int</span> value, so
+                    <span class="inline-code">Check.that()</span> produces an <span class="inline-code">IntCheck</span>.
+                    This gives you access to the <span class="inline-code">int</span>-specific checks from the
+                    <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
+                    class &#8211; in this case the
+                    <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte()">gte()</a>,
+                    <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#lte()">lte()</a> and
+                    <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#even()">even()</a>
+                    checks. The code example doesn't show it, but these are static imports from the 
+                    <span class="inline-code">CommonChecks</span> class.
+                </li>
+                <li>
+                    <span class="inline-code">colors</span> is a <span class="inline-code">List</span>, so
+                    <span class="inline-code">Check.that()</span> produces an <span class="inline-code">ObjectCheck</span>
+                    that lets you access the <span class="inline-code">Collection</span>- and <span class="inline-code">List</span>-specific
+                    checks, like the <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#contains()">contains()</a>
+                    check. 
+                </li>
+                <li>
+                    <span class="inline-code">couch</span> is, well, a <span class="inline-code">Couch</span>. There
+                    are no <span class="inline-code">Couch</span>-specific checks in the <span class="inline-code">CommonChecks</span>
+                    class, but you can still provide your own lambdas and method references that test the <span class="inline-code">Couch</span>
+                    instance.
+                </li>
+           </ul>
            <p>
                 By default, if a value fails to pass <i>any</i> of the tests following
                 <span class="inline-code">Check.that()</span>, an <span class="inline-code">IllegalArgumentException</span>
@@ -93,9 +111,9 @@
            </p>
             <div class="container nav-links">
                 <div class="row">
-                    <div class="col-md-3 prev-chapter"><a href="performance.html">&#8810;&nbsp;&nbsp;&nbsp;Performance</a></div>
+                    <div class="col-md-3 prev-chapter"><a href="getting-started.html">&#8810;&nbsp;&nbsp;&nbsp;Getting Started</a></div>
                     <div class="col-md-6"></div>
-                    <div class="col-md-3 next-chapter"><a href="tagging-values.html">Tagging Values&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                    <div class="col-md-3 next-chapter"><a href="performance.html">Performance&nbsp;&nbsp;&nbsp;&#8811;</a></div>
                 </div>
             </div>
         </div>

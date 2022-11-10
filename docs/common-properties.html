@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Klojang Check</title>
+    <title>Klojang Check | Common Properties</title>
     <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="klojang-docs.css">
@@ -14,8 +14,8 @@
             <div class="menu">
                 <div class="menu-item"><a href="index.html">Introduction</a></div>
                 <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
-                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
@@ -37,7 +37,7 @@
             <p>
                 The 
                 <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonProperties.html">CommonProperties</a> 
-                class provides some commonly used properties of well-known classes and interfaces &#8212; for 
+                class provides property extraction functions for some commonly used properties of well-known classes and interfaces &#8212; for 
                 example the <span class="inline-code">size</span> property of a <span class="inline-code">Collection</span>.
                 As with the 
                <a href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a> 
@@ -63,19 +63,21 @@
                 Here are some more examples:
             </p>
             <p class="java code">
-                <i class="kw">import static</i> org.klojang.check.CommonChecks.lt;<br>
-                <i class="kw">import static</i> org.klojang.check.CommonChecks.EQ;<br>
-                <i class="kw">import static</i> org.klojang.check.CommonChecks.subtypeOf;<br>
-                <i class="kw">import static</i> org.klojang.check.CommonProperties.strlen<br>
-                <i class="kw">import static</i> org.klojang.check.CommonProperties.toUpperCase<br>
-                <i class="kw">import static</i> org.klojang.check.CommonProperties.type<br>
-                <br>
-                <i class="cmt">// ...</i>
-                <br> 
-                <br>   
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"Hello, World!"</i>).<i class="call">has</i>(<i class="call-static">strlen()</i>, <i class="call-static">lt()</i>, <i class="nr">100</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"Hello, World!"</i>).<i class="call">has</i>(<i class="call-static">strlen()</i>, <i class="call-static">eq()</i>, <i class="nr">13</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"foo"</i>).<i class="call">has</i>(<i class="call-static">toUpperCase()</i>, <i class="call-static">EQ()</i>, <i class="str">"FOO"</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">has</i>(<i class="call-static">type()</i>, <i class="call-static">subtypeOf()</i>, Car.<i class="const">class</i>);
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">has</i>(<i class="call-static">type()</i>, <i class="call-static">subtypeOf()</i>, Car.<i class="const">class</i>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(-7).<i class="call">has</i>(<i class="call-static">abs()</i>, <i class="call-static">eq()</i>, <i class="nr">7</i>);
+            </p>
+            <p class="info-box">
+                <b>eq() vs. EQ()</b><br><br>
+                Klojang Check uses bash-style names for the comparison operators: <span class="cursive-code">eq()</span>, <span class="cursive-code">ne()</span>, <span class="cursive-code">lt()</span>,  
+                <span class="cursive-code">lte()</span>, <span class="cursive-code">gt()</span> and <span class="cursive-code">gte()</span>. The lowercase variants return an
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntRelation.html"><b>IntRelation</b></a>.
+                Inother words, they are for comparing <span class="cursive-code">int</span> values. The uppercase variants return an instance of
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html"><b>&lt;T extends Comparable&lt;T&gt;&gt; Relation&lt;T, T&gt;</b></a>.
+                In other words, they will let you compare any two <span class="cursive-code">Comparable</span> instances of the same type. Use them to compare
+                types like <span class="cursive-code">Double</span>, <span class="cursive-code">double</span> (autoboxed to <span class="cursive-code">Double</span>),
+                <span class="cursive-code">LocalDate</span> and <span class="cursive-code">String</span>.
             </p>
             <div class="container nav-links">
                 <div class="row">

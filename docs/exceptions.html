@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Klojang Check</title>
+    <title>Klojang Check | Exceptions</title>
     <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="klojang-docs.css">
@@ -14,8 +14,8 @@
             <div class="menu">
                 <div class="menu-item"><a href="index.html">Introduction</a></div>
                 <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
-                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
                 <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
                 <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
                 <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
@@ -63,8 +63,8 @@
             <p>
                 Here, too, Klojang Check provides some useful shortcuts via the
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonExceptions.html">CommonExceptions</a>
-                class. In the following example, the default exception is set to <span class="inline-code">IllegalStateException</span>,
-                but this is overriden for the null check on the <span class="inline-code">query</span> object:
+                class. In the following example, the default exception is now set to <span class="inline-code">IllegalStateException</span>,
+                but overrides it again for the null check:
             </p>
             <p class="java code">
 <i class="kw">import static</i> org.klojang.check.CommonExceptions.npe;<br>
