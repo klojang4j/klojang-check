@@ -87,8 +87,9 @@ a:hover {
     /* ... */
 }
 span.inline-code {
+    color: #fff;
     font-family: "Courier New", "Noto Sans Mono", monospace;
-    font-size: 97%;
+    font-size: 96%;
     font-style: normal;
 }
 span.cursive-code {

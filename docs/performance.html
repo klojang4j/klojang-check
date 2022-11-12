@@ -29,6 +29,7 @@
                 <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
                 <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
                 <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
+                <div class="menu-item"><a href="ok.html">ok!</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -60,10 +61,11 @@
                 wraps&nbsp;&nbsp;<span class="cursive-code">String::contains</span>, so this statement will fly off 
                 the rails with a <span class="cursive-code">NullPointerException</span> if any of the provided arguments
                 is null. Yet, Klojang Check will not perform a null check on any of them. That sounds like a bad case of
-                Do As I Say, Not As I Do. We think it is justified, however, and even self-consistent. In the (rather) 
-                odd case that the check to be executed is is dynamically inserted into the
+                Do As I Say, Not As I Do. We think it is justified, however. In the (rather) 
+                odd case that the check to be executed is dynamically inserted into the
                 <span class="cursive-code">is(...)</span> method, the check itself becomes program input! Hence, it needs
-                to be validated just like anything else entering your program. As for the <span class="cursive-code">fullName</span> 
+                to be validated just like anything else entering your program &#8212; and we can warmly recommend a library
+                to help you with that. As for the <span class="cursive-code">fullName</span> 
                 argument, which is the value we are testing: if it could possibly be null, you should always first perform 
                 a null check:<br><br>
 

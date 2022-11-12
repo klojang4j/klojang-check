@@ -29,6 +29,7 @@
                 <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
                 <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
                 <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
+                <div class="menu-item"><a href="ok.html">ok!</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -64,7 +65,7 @@
                 Here, too, Klojang Check provides some useful shortcuts via the
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonExceptions.html">CommonExceptions</a>
                 class. In the following example, the default exception is now set to <span class="inline-code">IllegalStateException</span>,
-                but overrides it again for the null check:
+                but the null check still throws a <span class="inline-code">NullPointerException</span> (NPE):
             </p>
             <p class="java code">
 <i class="kw">import static</i> org.klojang.check.CommonExceptions.npe;<br>

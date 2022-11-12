@@ -37,7 +37,7 @@ public final class CustomMsgFormatter {
 
   // Will be called if the user provided at least one message argument, implying the
   // message pattern will contain ${0}, ${1} etc. and possibly also predefined
-  // message arguments like ${arg}, ${name}, ...
+  // message arguments like ${arg}, ${tag}, ...
   static String format(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {

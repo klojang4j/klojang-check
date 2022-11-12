@@ -29,6 +29,7 @@
                 <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
                 <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
                 <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
+                <div class="menu-item"><a href="ok.html">ok!</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -52,6 +53,20 @@
                 <span class="inline-code">or()</span> method is called on a the
                 <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#yes()">yes()</a>
                 check. This will be further explained in the chapter on <a href="composing-tests.html">Composing Tests</a>. 
+            </p>
+            <p class="info-box">
+                <b>eq() or EQ()?</b><br><br>
+                Klojang Check uses bash-style names for the comparison operators: <span class="cursive-code">eq()</span>, <span class="cursive-code">ne()</span>, <span class="cursive-code">lt()</span>,  
+                <span class="cursive-code">lte()</span>, <span class="cursive-code">gt()</span> and <span class="cursive-code">gte()</span>. The lowercase variants return an
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntRelation.html"><b>IntRelation</b></a>.
+                In other words, they are for comparing <span class="cursive-code">int</span> values. The uppercase variants return an instance of
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html"><b>&lt;T extends Comparable&lt;T&gt;&gt; Relation&lt;T, T&gt;</b></a>.
+                In other words, they will let you compare any two <span class="cursive-code">Comparable</span> instances of the same type. Use them to compare
+                types like <span class="cursive-code">Double</span>, <span class="cursive-code">double</span> (autoboxed to <span class="cursive-code">Double</span>),
+                <span class="cursive-code">LocalDate</span> and <span class="cursive-code">String</span>. Actually,
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#EQ()"><b>EQ()</b></a>
+                is the one exception here: it just returns <span  class="cursive-code">Object::equals</span>.
+
             </p>
             <div class="container nav-links">
                 <div class="row">

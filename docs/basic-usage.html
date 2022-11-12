@@ -29,6 +29,7 @@
                 <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
                 <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
                 <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
+                <div class="menu-item"><a href="ok.html">ok!</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -37,11 +38,7 @@
             <p>
                 The <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Check.html">Check</a> 
                 class is the central class of the Klojang Check module. All checks start out from there. It is a factory
-                class for two types of check objects: <!--
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html">IntCheck</a>,
-                which lets you validate <span class="inline-code">int</span> values, and 
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html">ObjectCheck&lt;T&gt;</a>,
-                which lets you validate values of type <span class="inline-code">T</span>. -->
+                class containing various static factory methods for for two types of check objects:
             </p>
             <ol>
                 <li>
@@ -77,8 +74,7 @@
 <br>
 }
             </p>
-           <ul>
-                <li>
+            <p>
                     <span class="inline-code">numChairs</span> is an <span class="inline-code">int</span> value, so
                     <span class="inline-code">Check.that()</span> produces an <span class="inline-code">IntCheck</span>.
                     This gives you access to the <span class="inline-code">int</span>-specific checks from the
@@ -89,26 +85,24 @@
                     <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#even()">even()</a>
                     checks. The code example doesn't show it, but these are static imports from the 
                     <span class="inline-code">CommonChecks</span> class.
-                </li>
-                <li>
+
                     <span class="inline-code">colors</span> is a <span class="inline-code">List</span>, so
                     <span class="inline-code">Check.that()</span> produces an <span class="inline-code">ObjectCheck</span>
                     that lets you access the <span class="inline-code">Collection</span>- and <span class="inline-code">List</span>-specific
                     checks, like the <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#contains()">contains()</a>
                     check. 
-                </li>
-                <li>
+
                     <span class="inline-code">couch</span> is, well, a <span class="inline-code">Couch</span>. There
                     are no <span class="inline-code">Couch</span>-specific checks in the <span class="inline-code">CommonChecks</span>
                     class, but you can still provide your own lambdas and method references that test the <span class="inline-code">Couch</span>
                     instance.
-                </li>
-           </ul>
-           <p>
+
+            </p>
+            <p>
                 By default, if a value fails to pass <i>any</i> of the tests following
                 <span class="inline-code">Check.that()</span>, an <span class="inline-code">IllegalArgumentException</span>
                 is thrown, but this can be customized. See the chapter on <a href="exceptions.html">Exceptions</a>.
-           </p>
+            </p>
             <div class="container nav-links">
                 <div class="row">
                     <div class="col-md-3 prev-chapter"><a href="getting-started.html">&#8810;&nbsp;&nbsp;&nbsp;Getting Started</a></div>

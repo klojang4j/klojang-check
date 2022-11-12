@@ -18,6 +18,19 @@ public class CustomMsgFormatterTest {
       "extra2",
       "extra3");
 
+  /*
+   * Just to make sure we have no hash collisions in the lookup table in
+   * CustomMsgFormatter
+   */
+  @Test
+  public void hashes() {
+    System.out.println("test : " + "test".hashCode());
+    System.out.println("arg  : " + "arg".hashCode());
+    System.out.println("tag  : " + "tag".hashCode());
+    System.out.println("type : " + "type".hashCode());
+    System.out.println("obj  : " + "obj".hashCode());
+  }
+
   @Test
   public void test00() {
     String in = "Check \"${test}\" did not go wel for argument ${tag}";

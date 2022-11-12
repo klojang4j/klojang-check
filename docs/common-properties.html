@@ -29,6 +29,7 @@
                 <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
                 <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
                 <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
+                <div class="menu-item"><a href="ok.html">ok!</a></div>
             </div>
         </div>
         <div class="col-md-9 main-column">
@@ -63,21 +64,10 @@
                 Here are some more examples:
             </p>
             <p class="java code">
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(-7).<i class="call">has</i>(<i class="call-static">abs()</i>, <i class="call-static">eq()</i>, <i class="nr">7</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"Hello, World!"</i>).<i class="call">has</i>(<i class="call-static">strlen()</i>, <i class="call-static">eq()</i>, <i class="nr">13</i>);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="str">"foo"</i>).<i class="call">has</i>(<i class="call-static">toUpperCase()</i>, <i class="call-static">EQ()</i>, <i class="str">"FOO"</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">has</i>(<i class="call-static">type()</i>, <i class="call-static">subtypeOf()</i>, Car.<i class="const">class</i>);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(-7).<i class="call">has</i>(<i class="call-static">abs()</i>, <i class="call-static">eq()</i>, <i class="nr">7</i>);
-            </p>
-            <p class="info-box">
-                <b>eq() vs. EQ()</b><br><br>
-                Klojang Check uses bash-style names for the comparison operators: <span class="cursive-code">eq()</span>, <span class="cursive-code">ne()</span>, <span class="cursive-code">lt()</span>,  
-                <span class="cursive-code">lte()</span>, <span class="cursive-code">gt()</span> and <span class="cursive-code">gte()</span>. The lowercase variants return an
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/IntRelation.html"><b>IntRelation</b></a>.
-                Inother words, they are for comparing <span class="cursive-code">int</span> values. The uppercase variants return an instance of
-                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html"><b>&lt;T extends Comparable&lt;T&gt;&gt; Relation&lt;T, T&gt;</b></a>.
-                In other words, they will let you compare any two <span class="cursive-code">Comparable</span> instances of the same type. Use them to compare
-                types like <span class="cursive-code">Double</span>, <span class="cursive-code">double</span> (autoboxed to <span class="cursive-code">Double</span>),
-                <span class="cursive-code">LocalDate</span> and <span class="cursive-code">String</span>.
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(vehicle).<i class="call">has</i>(<i class="call-static">type()</i>, <i class="call-static">subtypeOf()</i>, Car.<i class="const">class</i>);
             </p>
             <div class="container nav-links">
                 <div class="row">

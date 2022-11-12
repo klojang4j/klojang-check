@@ -483,8 +483,8 @@ public final class CommonChecks {
   /**
    * Verifies that the argument equals some value. Equivalent to
    * {@link Object#equals(Object) Object::equals}. Use this check instead of
-   * {@link #EQ()} if you need to be sure you are comparing objects of the same
-   * type.
+   * {@link #EQ()} if you want the compiler to enforce subject and object to have the
+   * same type.
    *
    * @param <T> the type of the objects being compared
    * @return a function implementing the test described above
