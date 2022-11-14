@@ -30,8 +30,8 @@ public final class Misc {
   public static String describe(Object obj) {
     if (obj == null) {
       return "null";
-    } else if (obj instanceof Class<?> clazz) {
-      return simpleClassName(clazz) + ".class";
+    } else if (obj.getClass() == Class.class) {
+      return simpleClassName((Class<?>) obj) + ".class";
     } else if (obj instanceof Collection<?> c) {
       return c.getClass().getSimpleName() + '[' + c.size() + ']';
     } else if (obj instanceof Map<?, ?> m) {
@@ -48,16 +48,19 @@ public final class Misc {
     return toShortString(obj, maxWidth, maxElements, maxEntries);
   }
 
-  public static String toShortString(Object obj,
+  static String toShortString(Object obj,
       int maxLen,
       int maxElems,
       int maxEntries) {
     if (obj == null) {
       return "null";
+    } else if (obj.getClass() == String.class || obj.getClass() == Integer.class) {
+      // serve String & int as quickly as possible
+      return ellipsis(obj.toString(), maxLen);
     }
     String s;
-    if (obj instanceof Class<?> c) {
-      s = simpleClassName(c);
+    if (obj.getClass() == Class.class) {
+      s = simpleClassName((Class<?>) obj);
     } else if (obj instanceof Collection<?> c) {
       Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);
       s = delimit0(implodeCollection(c, stringifier, maxElems), c.size(), maxElems);
@@ -68,7 +71,8 @@ public final class Misc {
           maxElems);
     } else if (obj instanceof Map.Entry<?, ?> e) {
       s = entryToString(e, maxLen, maxElems, maxEntries);
-    } else if (obj instanceof int[] ints) {
+    } else if (obj.getClass() == int[].class) {
+      int[] ints = (int[]) obj;
       s = delimit0(implodeInts(ints, maxElems), ints.length, maxElems);
     } else if (obj instanceof Object[] objs) {
       Stringifier stringifier = o -> toShortString(o, maxLen, maxElems, maxEntries);

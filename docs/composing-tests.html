@@ -52,7 +52,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">this</i>.numChairs = Check.<i class="call-static">that</i>(numChairs).<i class="call">is</i>(<i class="call-static">positive()</i>.<i class="call">orElse</i>(<i class="call-static">lt()</i>, <i class="nr">5</i>).<i class="call">orElse</i>(<i class="call-static">even()</i>);<br>
             </p>
             <p>
-                Note that the entire check now takes place within a single call to the <span class="inline-code">is()</span> method. 
+                Notice that the entire check now takes place within a single call to the <span class="inline-code">is()</span> method. 
             </p>
             <p>
                 Nevertheless, you might still want to use the <span class="inline-code">and()</span> method for conciseness: 
@@ -73,8 +73,9 @@
             <p>
                 On the downside: even though both <span class="inline-code">notNull()</span> and <span class="inline-code">hasSubstring()</span>
                 have an error message associated with them, their combination
-                (not-null-and-has-substring) does not. It is a completely new predicate with no special meaning for Klojang Check.
-                So you would probably want to provide our own error message when opting for the first variant.
+                (not-null-and-has-substring) does not. It is a completely new predicate that has no special 
+                meaning for Klojang Check. So you would probably want to provide our own error message when 
+                opting for the first variant.
             </p>
             <p class="info-box">
                 <b>orElse what?</b><br><br>

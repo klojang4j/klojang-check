@@ -101,7 +101,7 @@ public final class CustomMsgFormatter {
       Map.of(
           "test", CustomMsgFormatter::getCheck,
           "arg",  args -> toShortString(args[1], MAX_STRING_WIDTH),
-          "type", args -> getType(args),
+          "type", CustomMsgFormatter::getType,
           "tag", CustomMsgFormatter::getTag,
           "obj",  args -> toShortString(args[4], MAX_STRING_WIDTH));
   //@formatter:on
@@ -166,13 +166,13 @@ public final class CustomMsgFormatter {
   }
 
   private static String getType(Object[] args) {
-    if (args[2] == null) {
-      if (args[1] != null) {
+    if (args[2] == null) { // the type of the validated value
+      if (args[1] != null) { // the validated value
         return Misc.describe(args[1]);
       }
       return null;
     }
-    return simpleClassName((Class<?>) args[2]);
+    return simpleClassName(args[2]);
   }
 
 }
