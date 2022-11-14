@@ -8,9 +8,45 @@
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
     <version>1.0.2</version>
+    <packaging>jar</packaging>
 
-    <name>Klojang Check!</name>
-    <description>Light-weight Java module dedicated to Defensive Programming</description>
+    <name>Klojang Check</name>
+    <description>
+        Light-weight Java module dedicated to Defensive Programming &amp; Precondition Validation
+    </description>
+    <url>https://klojang4j.github.io/klojang-check/</url>
+
+    <licenses>
+        <license>
+            <name>GPL-3.0 license</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Ayco Holleman</name>
+            <email>ayco.holleman@naturalis.nl</email>
+            <organization>Naturalis Biodiversity Centre</organization>
+            <organizationUrl>https://www.naturalis.nl/</organizationUrl>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Naturalis Biodiversity Center</name>
+        <url>http://www.naturalis.nl</url>
+    </organization>
+
+    <scm>
+        <connection>scm:git:https://github.com/klojang4j/klojang-check.git</connection>
+        <developerConnection>scm:git:https://github.com/klojang4j/klojang-check.git</developerConnection>
+        <url>https://github.com/klojang4j/klojang-check</url>
+    </scm>
+
+
+    <distributionManagement>
+    </distributionManagement>
+
 
     <properties>
 
@@ -49,15 +85,6 @@
 
     </properties>
 
-
-    <organization>
-        <name>Naturalis Biodiversity Center</name>
-        <url>http://www.naturalis.nl</url>
-    </organization>
-
-
-    <distributionManagement>
-     </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -233,7 +260,7 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>${owasp-dependency-check.version}</version>
                 <configuration>
-                    <failBuildOnCVSS>5</failBuildOnCVSS>
+                    <failBuildOnCVSS>3</failBuildOnCVSS>
                 </configuration>
                 <executions>
                     <execution>
@@ -288,12 +315,16 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
+                        <configuration>
+                            <windowtitle>Klojang Check</windowtitle>
+                            <excludePackageNames>org.klojang.check.x</excludePackageNames>
+                        </configuration>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-         </plugins>
+        </plugins>
     </build>
 </project>

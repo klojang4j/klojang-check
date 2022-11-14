@@ -3,5 +3,3 @@ org.klojang.check
 org.klojang.check.aux
 org.klojang.check.fallible
 org.klojang.check.relation
-org.klojang.check.x
-org.klojang.check.x.msg

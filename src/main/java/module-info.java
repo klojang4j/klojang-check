@@ -1,30 +1,18 @@
 /**
  * <p>
- * Klojang Check is a light-weight Java module that provides a concise and convenient
- * way of validating preconditions and postconditions. Here is what that looks like
- * with Klojang Check:
+ * Klojang Check is a Java module dedicated to defensive programming. It lets you
+ * specify checks on program input, object state and method arguments in a concise
+ * and elegant manner. Here is an example:
  *
  * <blockquote><pre>{@code
  * this.numChairs = Check.that(numChairs).is(positive()).is(lte(), 4).is(even()).ok();
  * }</pre></blockquote>
  *
- * <p>
- * Klojang Check's take on pre- and postcondition validation is different from, for
- * example, Guava's <a
- * href="https://guava.dev/releases/21.0/api/docs/com/google/common/base/Preconditions.html">Preconditions</a>
- * class and Apache's <a
- * href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html">Validate</a>
- * class. These classes provide static utility methods to validate values. With
- * Klojang Check validation happens through <i>instances</i> of check objects. These
- * check objects provide access to various predefined, common checks; they let you
- * specify your own checks in the form of lambdas or method references; and they let
- * you chain multiple checks on the same value, as the above example illustrates.
- *
  * <h2>Documentation</h2>
  *
  * <p>
  * More extensive documentation on Klojang Check can be found
- * <a href="https://klojang4j.github.io/klojang-check/">here</a>/
+ * <a href="https://klojang4j.github.io/klojang-check/">here</a>.
  *
  * <h2>{@code IntCheck} and {@code ObjectCheck}</h2>
  * <p>
@@ -109,8 +97,7 @@
  * implemented as a {@link org.klojang.check.relation.Relation Relation},
  * {@link org.klojang.check.relation.IntRelation IntRelation} or
  * {@link org.klojang.check.relation.IntObjRelation IntObjRelation}. For more
- * information, see the package description of
- * {@link org.klojang.check.relation}.
+ * information, see the package description of {@link org.klojang.check.relation}.
  *
  *
  *
@@ -195,9 +182,9 @@
  *
  * <blockquote><pre>{@code
  * this.query = Check.that(query, "query")
- *  .notHas(Query::getOffset, "offset", negative())
- *  .has(Query::getLimit, "limit", gte(), 10)
- *  .has(Query::getLimit, "limit", lt(), 10000)
+ *  .notHas(Query::offset, "offset", negative())
+ *  .has(Query::limit, "limit", gte(), 10)
+ *  .has(Query::limit, "limit", lt(), 10000)
  *  .ok();
  * }</pre></blockquote>
  *
@@ -213,18 +200,11 @@
  * }</pre></blockquote>
  *
  * <p>This will cause the following error message to be generated if the size of the
- * {@code emps} collection is less than 100:
+ * {@code emps} collection is, say, 42:
  *
  * <blockquote><pre>{@code
  * "employees.size() must be >= 100 (was 42)"
  * }</pre></blockquote>
- *
- * <p>Note that the term "property" is somewhat misleading. This first argument to
- * the {@code has()} and {@code notHas()} methods simply is a function that takes
- * the value being validated and produces some other value, which is then also
- * validated. Thus, the {@code CommonProperties} class also contains, for example,
- * an {@link org.klojang.check.CommonProperties#abs() abs()} function, which
- * returns the absolute value of an {@code int} value.
  *
  *
  *
@@ -252,17 +232,15 @@
  * }</pre></blockquote>
  *
  * <p>You can disambiguate this for the compiler by specifying the type of the
- * lambda parameter, or by casting the entire lambda or method reference. Any of the
- * following statements will do:
+ * lambda parameter, or by casting the entire lambda or method reference:
  *
  * <blockquote><pre>{@code
+ * // specify type of lambda parameter
  * Check.that(temperature).has(i -> Math.abs(i), (int i) -> i < 30);
+ * // cast lambda for property extraction function
  * Check.that(temperature).has((IntUnaryOperator) i -> Math.abs(i), i -> i < 30);
- * Check.that(temperature).has(i -> Math.abs(i), (Integer i) -> i % 2 == 1);
- * Check.that(temperature).has((IntFunction<Integer>) i -> Math.abs(i), i -> i < 30);
- * Check.that(temperature).has(abs(), i -> i < 30);
- * Check.that(temperature).has(i -> Math.abs(i), lt(), 30);
- * Check.that(temperature).has(abs(), lt(), 30);
+ * // cast lambda for test
+ * Check.that(temperature).has(i -> Math.abs(i), (IntPredicate) i -> i < 30);
  * }</pre></blockquote>
  *
  *
@@ -282,9 +260,9 @@
  * <blockquote><pre>{@code
  * this.query = Check.on(SQLException::new, query, "query")
  *  .is(notNull(), () -> new NullPointerException())
- *  .notHas(Query::getOffset, "offset", negative())
- *  .has(Query::getLimit, "limit", gte(), 10)
- *  .has(Query::getLimit, "limit", lte(), 10000)
+ *  .notHas(Query::offset, "offset", negative())
+ *  .has(Query::limit, "limit", gte(), 10)
+ *  .has(Query::limit, "limit", lte(), 10000)
  *  .ok();
  * }</pre></blockquote>
  *
@@ -300,23 +278,6 @@
  * <p>Note that when you supply your own exception, you cannot use the
  * {@code ${...}} message arguments. You will have to construct the message
  * yourself.
- *
- *
- *
- *
- *
- *
- * <h2>Returning the Validated Value</h2>
- *
- * <p>You can call {@link org.klojang.check.ObjectCheck#ok() ok()} on
- * {@code IntCheck} and {@code ObjectCheck} if you want to immediately assign the
- * validated value to an instance field or local variable. You can optionally pass a
- * function to the {@code ok()} method that applies some sort of transformation to
- * the validated value:
- *
- * <blockquote><pre>{@code
- * Car car = Check.that(obj).is(instanceOf(), Car.class).ok(Class::cast);
- * }</pre></blockquote>
  */
 module org.klojang.check {
   exports org.klojang.check;
