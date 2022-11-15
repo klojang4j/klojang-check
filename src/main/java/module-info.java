@@ -12,7 +12,7 @@
  *
  * <p>
  * More extensive documentation on Klojang Check can be found
- * <a href="https://klojang4j.github.io/klojang-check/">here</a>.
+ * <a href="https://klojang4j.github.io/klojang-check/"><b>here</b></a>.
  *
  * <h2>{@code IntCheck} and {@code ObjectCheck}</h2>
  * <p>
@@ -23,20 +23,7 @@
  * instance of them through the static factory methods on the
  * {@link org.klojang.check.Check Check} class. In the example above, the
  * {@link org.klojang.check.Check#that(int) that()} static factory method returns an
- * {@code IntCheck} object.
- *
- *
- *
- *
- *
- *
- * <h2>Performance</h2>
- *
- * <p>
- * Despite the checks being carried out on an actual instance of {@code IntCheck} or
- * {@code ObjectCheck}, benchmarking their performance yields no difference with the
- * equivalent hand-coded checks. You can view the results of the JMH benchmarks
- * <a href="https://github.com/klojang4j/naturalis-common-jmh/README.md">here</a>.
+ * {@code IntCheck} instance.
  *
  *
  *
@@ -72,7 +59,7 @@
  *
  *
  *
- * <h2>Predicates and Relation</h2>
+ * <h2>Predicates and Relations</h2>
  *
  * <p>The checks you pass to the {@code is(...)} methods fall apart in two broad
  * categories: implementations of {@link java.util.function.Predicate Predicate} and
@@ -104,7 +91,7 @@
  *
  *
  *
- * <h2>Dealing with Validation Errors</h2>
+ * <h2>Handling Validation Errors</h2>
  * <p>
  * When a value fails a test, an error message needs to be generated and an exception
  * needs to be thrown. You have three options here:
