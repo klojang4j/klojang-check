@@ -6,22 +6,52 @@ object state, method arguments, variables, etc. In addition, it comes with a
 well-curated assortment
 of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 on values of various types. These checks are associated with short, informative error
-messages, so you don't have to invent them yourselves. In short, Klojang Check
-significantly lowers the bar for acquiring a habit of validating preconditions and
-postconditions.
+messages, so you don't have to invent them yourselves.
 
-With a surface area of barely 15 types and no dependencies outside
-```java.base```, Klojang Check is light-weight. It is also fast, as it doesn't do
-anything that you yourself _wouldn't_ do if you were hand-coding the same check.
-Being all about defensive programming, the Klojang Check code base itself is
-regularly tested for vulnerabilities. Every release build gets pulled through
+With a surface area of barely 15 types and zero dependencies outside
+```java.base```, Klojang Check is genuinely light-weight. Yet, being all about secure
+programming, the Klojang Check code base is itself regularly tested for
+vulnerabilities. Every build gets pulled through
 the [OWASP vulnerability scanner](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
 for Maven.
 
-Here is an example of what validating pre- and postconditions using Klojang Check
-looks like:
+## Getting Started
+
+To use Klojang Check, add the following dependency to your Maven POM file:
+
+```xml
+
+<dependency>
+    <groupId>org.klojang</groupId>
+    <artifactId>klojang-check</artifactId>
+    <version>1.0.2</version>
+</dependency>
+```
+
+## Documentation
+
+The **Javadocs** for Klojang Check can be
+found **[here](https://klojang4j.github.io/klojang-check/api)**.
+
+The **User Guide** for Klojang Check can be
+found **[here](https://klojang4j.github.io/klojang-check/index.html)**.
+
+Klojang Check is also fast. If you are interested in the **JMH test results**, they
+can be found **[here](https://github.com/klojang4j/klojang-check-jmh)**.
+
+The latest **test coverage reports**
+are **[here](https://klojang4j.github.io/klojang-check/jacoco/index.html)**.
+
+## Example
+
+Here is an example of Klojang Check in action:
 
 ```java
+import org.klojang.check.Check;
+
+import static org.klojang.check.CommonChecks.*;
+import static org.klojang.check.relation.Quantifier.noneOf;
+
 public class InteriorDesigner {
 
   private final int numChairs;
@@ -36,21 +66,12 @@ public class InteriorDesigner {
     // apply the colors
   }
 
+  public void addCouch(Couch couch) {
+    Check.that(couch).isNot(Couch::isExpensive, ExpensiveCouchException::new);
+    // add the couch
+  }
+
 }
-```
-
-The **Javadocs** for Klojang Check can be
-found [here](https://klojang4j.github.io/klojang-check/api).
-
-To use Klojang Check, include the following in your Maven POM file:
-
-```xml
-
-<dependency>
-    <groupId>org.klojang.check</groupId>
-    <artifactId>klojang-check</artifactId>
-    <version>3.0.2</version>
-</dependency>
 ```
 
 
