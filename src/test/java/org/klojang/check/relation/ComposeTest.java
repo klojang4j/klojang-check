@@ -7,9 +7,9 @@ import java.time.Year;
 import java.util.List;
 
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.ComposeMethods.*;
+import static org.klojang.check.relation.Compose.*;
 
-public class ComposeMethodsTest {
+public class ComposeTest {
 
   @Test
   public void validIf00() {

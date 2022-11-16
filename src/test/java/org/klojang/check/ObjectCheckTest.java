@@ -269,9 +269,8 @@ public class ObjectCheckTest {
     fail();
   }
 
-  @Test(expected = CorruptCheckException.class)
   public void hasSubstringIC05() {
-    Check.that("Hello, World").is(hasSubstringIC(), "");
+    Check.that("Hello, World").isNot(hasSubstringIC(), "world!");
   }
 
   @Test
@@ -301,9 +300,8 @@ public class ObjectCheckTest {
     fail();
   }
 
-  @Test(expected = CorruptCheckException.class)
   public void startsWithIgnoreCase03() {
-    Check.that("Hello, World").is(startsWithIC(), "");
+    Check.that("Hello, World").isNot(startsWithIC(), "Help");
   }
 
   @Test
@@ -333,9 +331,8 @@ public class ObjectCheckTest {
     fail();
   }
 
-  @Test(expected = CorruptCheckException.class)
   public void endsWithIgnoreCase03() {
-    Check.that("Hello, World").is(endsWithIC(), "");
+    Check.that("Hello, World").isNot(endsWithIC(), "world ");
   }
 
 

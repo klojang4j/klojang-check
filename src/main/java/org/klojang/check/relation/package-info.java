@@ -20,8 +20,5 @@
  * it, then the <b>contains</b> relation ({@code Collection::contains}) exists
  * between x and y.
  *
- * <p>(NB following the JDK's nomenclature the {@code Relation} interface might also
- * have been termed a {@code BiPredicate}, because that is basically what it is. No
- * such interface exists, by the way, in the JDK.)
  */
 package org.klojang.check.relation;

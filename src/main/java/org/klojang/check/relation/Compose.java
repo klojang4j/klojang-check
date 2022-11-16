@@ -7,27 +7,25 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
- * Utility methods, mostly concerned with starting a composition of tests. Note that
- * while the predicates in the {@link CommonChecks} class are, in fact, already
- * either a {@link ComposablePredicate} or a {@link ComposableIntPredicate}, the
- * relational interfaces in this package obviously are not, and neither are
- * handwritten lambdas and method references. The utility methods defined in this
- * class make sure you can still start your composition with a {@link Relation},
- * lambda or method reference.
+ * Utility methods that help you begin a new composition. Note that while the
+ * predicates in the {@link CommonChecks} class are, in fact, already either a
+ * {@link ComposablePredicate} or a {@link ComposableIntPredicate}, the relational
+ * interfaces in this package obviously are not, and neither are handwritten lambdas
+ * and method references. The utility methods defined in this class make sure you can
+ * still start your composition with a {@link Relation}, lambda or method reference.
  *
  * @author Ayco Holleman
  */
-public final class ComposeMethods {
+public final class Compose {
 
-  private ComposeMethods() {
+  private Compose() {
     throw new UnsupportedOperationException();
   }
 
   /**
-   * Returns a {@code ComposablePredicate} that always evaluates to {@code true}.
-   * This method can be used as the first of a series of AND-joined checks if there
-   * is no need for an initial
-   * {@linkplain CommonChecks#notNull() notNull() null check}.
+   * Returns a {@code ComposablePredicate} that always evaluates to {@code true}. Can
+   * be used as the first of a series of AND-joined checks if there is no need for an
+   * initial {@linkplain CommonChecks#notNull() notNull() null check}.
    *
    * <blockquote><pre>{@code
    * Check.that(color).is(valid().and(equalTo(), noneOf(), GREEN, BLUE, YELLOW));
@@ -43,7 +41,7 @@ public final class ComposeMethods {
 
   /**
    * Returns a {@code ComposableIntPredicate} that always evaluates to {@code true}.
-   * This method can be used as the first of a series of AND-joined checks.
+   * Can be used as the first of a series of AND-joined checks.
    *
    * @return a {@code ComposableIntPredicate} that always evaluates to {@code true}
    */
@@ -53,9 +51,8 @@ public final class ComposeMethods {
 
   /**
    * Returns a {@code ComposablePredicate} that always evaluates to {@code false}.
-   * This method can be used as the first of a series of OR-joined checks if there is
-   * no need for an initial
-   * {@linkplain CommonChecks#notNull() notNull() null check}.
+   * Can be used as the first of a series of OR-joined checks if there is no need for
+   * an initial {@linkplain CommonChecks#notNull() notNull() null check}.
    *
    * <blockquote><pre>{@code
    * Check.that(color).is(invalid().or(equalTo(), anyOf(), GREEN, BLUE, YELLOW));
@@ -71,7 +68,7 @@ public final class ComposeMethods {
 
   /**
    * Returns a {@code ComposableIntPredicate} that always evaluates to {@code false}.
-   * This method can be used as the first of a series of OR-joined checks.
+   * Can be used as the first of a series of OR-joined checks.
    *
    * @return a {@code ComposableIntPredicate} that always evaluates to {@code false}
    */
@@ -132,11 +129,10 @@ public final class ComposeMethods {
   }
 
   /**
-   * Converts a {@code Predicate} to the equivalent {@code ComposablePredicate} so it
-   * can take part in a composition. This method can be used to convert a predefined
-   * {@code Predicate} constant from outside Klojang Check to a
-   * {@code ComposablePredicate}, or to hard-cast a lambda or method reference to a
-   * {@code ComposablePredicate}. This method is only needed if the
+   * Converts a {@code Predicate} to a {@code ComposablePredicate}. This method can
+   * be used to convert a predefined {@code Predicate} constant from outside Klojang
+   * Check to a {@code ComposablePredicate}, or to hard-cast a lambda or method
+   * reference to a {@code ComposablePredicate}. This method is only needed if the
    * {@code Predicate}, lambda or method reference must be the first test of the
    * composition.
    *
@@ -156,8 +152,7 @@ public final class ComposeMethods {
   }
 
   /**
-   * Converts an {@code IntPredicate} to the equivalent
-   * {@code ComposableIntPredicate}, so it can take part in a composition. This
+   * Converts an {@code IntPredicate} to a {@code ComposableIntPredicate}. This
    * method can be used to convert a predefined {@code IntPredicate} constant from
    * outside Klojang Check to a {@code ComposableIntPredicate}, or to hard-cast a
    * lambda or method reference. This method is only needed if the
@@ -180,8 +175,7 @@ public final class ComposeMethods {
    *
    * <blockquote><pre>{@code
    * Check.that(Year.now()).is(validIf(GT(), Year.of(2000))
-   *    .andAlso(LT(), Year.of(3000))
-   *    .andAlso((Year y) -> y.isLeap());
+   *    .andAlso(LT(), Year.of(3000));
    * }</pre></blockquote>
    *
    * @param relation the relationship test to execute

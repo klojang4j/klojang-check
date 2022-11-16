@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.ComposeMethods.*;
+import static org.klojang.check.relation.Compose.*;
 import static org.klojang.check.relation.Quantifier.*;
 
 public class ComposablePredicateTest {

@@ -18,7 +18,7 @@ import static org.klojang.check.x.Misc.notApplicable;
 public final class CheckImpls {
 
   private static final Set<Class<?>> NULL_REPELLERS =
-      // Actually, List.of(1) and List.of(1, 2) currently have the same type, but
+      // Actually, List.of(1) and List.of(1, 2) currently return the same type, but
       // better safe than sorry. They will anyhow be de-duplicated when entering
       // the HashSet
       Set.copyOf(new HashSet<>(
@@ -33,6 +33,15 @@ public final class CheckImpls {
               Set.of(1).getClass(),
               Set.of(1, 2).getClass(),
               Set.of(1, 2, 3).getClass())));
+
+  private static final Set<Class<?>> NULL_REPELLENT_MAPS =
+      Set.copyOf(new HashSet<>(Arrays.asList(
+          Collections.emptyMap().getClass(),
+          Map.of().getClass(),
+          Map.of(1, 'a').getClass(),
+          Map.of(1, 'a', 2, 'b').getClass(),
+          Map.of(1, 'a', 2, 'b', 3, 'c').getClass()
+      )));
 
   public static <T> boolean isEmpty(T arg) {
     return arg == null
@@ -80,12 +89,9 @@ public final class CheckImpls {
     } else if (arg instanceof Object[] o) {
       return Arrays.stream(o).allMatch(Objects::nonNull);
     } else if (arg instanceof Collection<?> c) {
-      if (isNullRepellent(c)) {
-        return true;
-      }
-      return c.stream().allMatch(Objects::nonNull);
+      return isNullRepellent(c) || c.stream().allMatch(Objects::nonNull);
     } else if (arg instanceof Map<?, ?> m) {
-      return m.entrySet().stream()
+      return isNullRepellent(m) || m.entrySet().stream()
           .allMatch(e -> e.getKey() != null && e.getValue() != null);
     }
     return true;
@@ -98,15 +104,14 @@ public final class CheckImpls {
           return true;
         }
       }
-      return false;
     } else {
       for (T e : array) {
         if (elem.equals(e)) {
           return true;
         }
       }
-      return false;
     }
+    return false;
   }
 
   public static <T> boolean isIndexOf(int idx, T obj) {
@@ -175,6 +180,10 @@ public final class CheckImpls {
 
   private static boolean isNullRepellent(Collection<?> c) {
     return NULL_REPELLERS.contains(c.getClass());
+  }
+
+  private static boolean isNullRepellent(Map<?, ?> m) {
+    return NULL_REPELLENT_MAPS.contains(m.getClass());
   }
 
   private static boolean isArray(Object obj) {

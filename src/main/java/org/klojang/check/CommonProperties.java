@@ -101,9 +101,8 @@ public class CommonProperties {
   }
 
   static {
-    tmp.put(unbox(),
-        (arg, argName) ->
-            "Integer.intValue(" + ifNull(argName, DEF_ARG_NAME) + ")");
+    tmp.put(unbox(), (arg, argName) ->
+        "Integer.intValue(" + ifNull(argName, DEF_ARG_NAME) + ")");
   }
 
   /**

@@ -9,7 +9,7 @@ import java.util.function.ToIntFunction;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.klojang.check.relation.ComposeMethods.*;
+import static org.klojang.check.relation.Compose.*;
 import static org.klojang.check.x.msg.MsgUtil.getDefaultPredicateMessage;
 import static org.klojang.check.x.msg.MsgUtil.getDefaultRelationMessage;
 
