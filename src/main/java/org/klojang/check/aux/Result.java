@@ -1,13 +1,13 @@
 package org.klojang.check.aux;
 
+import org.klojang.check.Check;
 import org.klojang.check.CommonChecks;
 import org.klojang.check.fallible.FallibleConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static org.klojang.check.CommonChecks.deepNotEmpty;
-import static org.klojang.check.CommonChecks.empty;
+import static org.klojang.check.CommonChecks.*;
 
 /**
  * A value container that explicitly allows the value to be {@code null}. This class
@@ -39,22 +39,22 @@ public final class Result<T> implements Emptyable {
    * {@code null}).
    *
    * @param value The value
-   * @param <U> The type of the value
+   * @param <T> The type of the result value
    * @return a {@code Result} containing the specified value
    */
-  public static <U> Result<U> of(U value) {
+  public static <T> Result<T> of(T value) {
     return new Result<>(value);
   }
 
   /**
    * Returns a special {@code Result} instance signifying the absence of a result.
    *
-   * @param <U> the type of the result value
+   * @param <T> the type of the result value
    * @return a special {@code Result} object signifying the absence of a result
    */
   @SuppressWarnings("unchecked")
-  public static <U> Result<U> notAvailable() {
-    return (Result<U>) NONE;
+  public static <T> Result<T> notAvailable() {
+    return (Result<T>) NONE;
   }
 
   private final T val;
@@ -108,7 +108,7 @@ public final class Result<T> implements Emptyable {
    */
   public <X extends Throwable> void ifAvailable(FallibleConsumer<T, X> consumer)
       throws X {
-    Objects.requireNonNull(consumer);
+    Check.notNull(consumer);
     if (isAvailable()) {
       consumer.accept(val);
     }
@@ -136,11 +136,7 @@ public final class Result<T> implements Emptyable {
    *     {@code Result.notAvailable()}
    */
   public Result<T> or(Result<T> alternative) throws IllegalArgumentException {
-    Objects.requireNonNull(alternative);
-    if (alternative == NONE) {
-      throw new IllegalArgumentException(
-          "alternative must not beResult.notAvailable()");
-    }
+    Check.notNull(alternative).isNot(sameAs(), NONE);
     return isAvailable() ? this : alternative;
   }
 
@@ -175,8 +171,13 @@ public final class Result<T> implements Emptyable {
    */
   @Override
   public boolean equals(Object obj) {
-    return this == obj
-        || (obj instanceof Result<?> o && Objects.equals(val, o.val));
+    if (this == obj) {
+      return true;
+    } else if (obj == null || obj.getClass() != Result.class) {
+      return false;
+    }
+    Result<?> other = (Result<?>) obj;
+    return Objects.equals(val, other.val);
   }
 
   /**

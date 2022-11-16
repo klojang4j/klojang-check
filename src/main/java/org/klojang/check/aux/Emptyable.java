@@ -8,7 +8,12 @@ import org.klojang.check.CommonChecks;
  * interface get a free ride on the {@link CommonChecks#empty() empty()},
  * {@link CommonChecks#notEmpty() notEmpty()} and
  * {@link CommonChecks#deepNotEmpty() deepNotEmpty()} checks from the
- * {@code CommonChecks} class.
+ * {@code CommonChecks} class. That is, instances of {@code Emptyable} can be tested
+ * using:
+ *
+ * <blockquote><pre>{@code
+ * Check.that(myEmptyablePojo).isNot(empty());
+ * }</pre></blockquote>
  */
 @FunctionalInterface
 public interface Emptyable {

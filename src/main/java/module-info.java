@@ -262,8 +262,8 @@
  *  .is(keyIn(), dictionary, illegalState("no such word: \"" + word + "\"");
  * }</pre></blockquote>
  *
- * <p>Note that when you supply your own exception, you cannot use the
- * {@code ${...}} message arguments. You will have to construct the message
+ * <p><b>NB when you supply your own exception, you cannot use the {@code ${...}}
+ * message arguments.</b> You will have to construct the message
  * yourself.
  */
 module org.klojang.check {

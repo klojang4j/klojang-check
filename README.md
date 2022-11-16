@@ -1,11 +1,11 @@
 # Klojang Check
 
 Klojang Check is a Java module dedicated to defensive programming. It provides a set
-of syntactical constructs that makes it easy to define and express checks on program
-input, object state, method arguments, variables, computational outcomes and program
-output. In addition, it comes with some fifty predefined,
-[common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
-on these program elements. These checks are associated with short, informative error
+of syntactical constructs that make it easy to specify checks on program input,
+object state, method arguments, variables, etc. In addition, it comes with a
+well-curated assortment
+of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
+on values of various types. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves. In short, Klojang Check
 significantly lowers the bar for acquiring a habit of validating preconditions and
 postconditions.
@@ -13,7 +13,7 @@ postconditions.
 With a surface area of barely 15 types and no dependencies outside
 ```java.base```, Klojang Check is light-weight. It is also fast, as it doesn't do
 anything that you yourself _wouldn't_ do if you were hand-coding the same check.
-Being all about defensive programming, the Klojang Check code base itself is 
+Being all about defensive programming, the Klojang Check code base itself is
 regularly tested for vulnerabilities. Every release build gets pulled through
 the [OWASP vulnerability scanner](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
 for Maven.

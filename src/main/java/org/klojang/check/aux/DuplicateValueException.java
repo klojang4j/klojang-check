@@ -15,6 +15,12 @@ import static org.klojang.check.aux.DuplicateValueException.Usage.VALUE;
  * Check does not itself ever throw a {@code DuplicateValueException}, but the error
  * condition it represents is general and important enough to merit inclusion as a
  * common exception in the {@link CommonExceptions} class.
+ *
+ * <blockquote><pre>{@code
+ * Check.that(arg).isNot(keyIn(), map, duplicateKey(arg));
+ * }</pre></blockquote>
+ *
+ * @see CommonExceptions#duplicateKey(Object)
  */
 public class DuplicateValueException extends RuntimeException {
 
