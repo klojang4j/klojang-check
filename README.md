@@ -20,7 +20,6 @@ for Maven.
 To use Klojang Check, add the following dependency to your Maven POM file:
 
 ```xml
-
 <dependency>
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
@@ -40,7 +39,7 @@ Klojang Check is also fast. If you are interested in the **JMH test results**, t
 can be found **[here](https://github.com/klojang4j/klojang-check-jmh)**.
 
 The latest **test coverage reports**
-are **[here](https://klojang4j.github.io/klojang-check/jacoco/index.html)**.
+are **[here](https://klojang4j.github.io/klojang-check/jacoco)**.
 
 ## Example
 

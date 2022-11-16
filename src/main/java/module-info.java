@@ -14,7 +14,7 @@
  * More extensive documentation on Klojang Check can be found
  * <a href="https://klojang4j.github.io/klojang-check/"><b>here</b></a>.
  *
- * <h2>{@code IntCheck} and {@code ObjectCheck}</h2>
+ * <h2>IntCheck and ObjectCheck</h2>
  * <p>
  * There are two types of check objects: {@link org.klojang.check.IntCheck IntCheck},
  * for validating {@code int} values, and
@@ -48,7 +48,7 @@
  * <p>
  * These checks are associated with predefined error messages, so you don't need to
  * invent them yourself. The first of the above statements, for example, would cause
- * the following error message to be generated if the argument were an instance of
+ * the following error message to be generated if the argument was an instance of
  * {@code Bike}:
  *
  * <blockquote> <pre>{@code
@@ -164,8 +164,8 @@
  *
  * <h2>Validating Argument Properties</h2>
  *
- * <p>Klojang Check lets you validate not just arguments, but also argument
- * <i>properties</i>:
+ * <p>Klojang Check lets you validate argument <i>properties</i> as part of
+ * validating the argument.
  *
  * <blockquote><pre>{@code
  * this.query = Check.that(query, "query")
