@@ -62,29 +62,28 @@
  * <h2>Predicates and Relations</h2>
  *
  * <p>The checks you pass to the {@code is(...)} methods fall apart in two broad
- * categories: implementations of {@link java.util.function.Predicate Predicate} and
+ * categories: {@link java.util.function.Predicate Predicate} and
  * {@link java.util.function.IntPredicate IntPredicate} on the one hand, and
- * implementations of {@link org.klojang.check.relation.Relation Relation} and its
- * sister interfaces on the other. The latter are not part of the JDK. They can be
- * thought of as a "BiPredicate" (which neither exists in the JDK): a function that
- * takes <i>two</i> arguments and returns a boolean. If the two arguments have a
- * particular relationship, defined by the implementation, with each other, the
- * relation is said to <i>exist</i> and the function returns {@code true}. Within the
- * context of Klojang Check, the first argument is always the value to be validated,
- * while the second argument is the value that it is to be validated against. In the
- * examples above, {@link org.klojang.check.CommonChecks#positive() positive()},
+ * {@link org.klojang.check.relation.Relation Relation},
+ * {@link org.klojang.check.relation.IntRelation IntRelation} and
+ * {@link org.klojang.check.relation.IntRelation IntObjRelation} on the other. The
+ * latter are not part of the JDK. They can be thought of as a "BiPredicate" (which
+ * neither exists in the JDK): a function that takes <i>two</i> arguments and
+ * returns a boolean. If the two arguments have a certain relationship with each
+ * other, the relation is said to <i>exist</i> and the function returns {@code true}.
+ * Within the context of Klojang Check, the first argument is always the value to be
+ * validated while the second argument is the value that it is to be validated
+ * <i>against</i>. In the examples above,
+ * {@link org.klojang.check.CommonChecks#positive() positive()},
  * {@link org.klojang.check.CommonChecks#even() even()},
  * {@link org.klojang.check.CommonChecks#empty() empty()} and
- * {@link org.klojang.check.CommonChecks#writable() writable()} are checks
- * implemented as a {@code Predicate} or {@code IntPredicate};
+ * {@link org.klojang.check.CommonChecks#writable() writable()} are predicates;
  * {@link org.klojang.check.CommonChecks#lte() lte()},
  * {@link org.klojang.check.CommonChecks#instanceOf() instanceOf()},
  * {@link org.klojang.check.CommonChecks#keyIn() keyIn()} and
- * {@link org.klojang.check.CommonChecks#containsKey() containsKey()} are checks
- * implemented as a {@link org.klojang.check.relation.Relation Relation},
- * {@link org.klojang.check.relation.IntRelation IntRelation} or
- * {@link org.klojang.check.relation.IntObjRelation IntObjRelation}. For more
- * information, see the package description of {@link org.klojang.check.relation}.
+ * {@link org.klojang.check.CommonChecks#containsKey() containsKey()} are relations.
+ * For more information, see the package description of
+ * {@link org.klojang.check.relation}.
  *
  *
  *
@@ -133,11 +132,8 @@
  *   <li><b><code>${arg}</code></b> The value being validated.
  *   <li><b><code>${type}</code></b> The simple class name of the value.
  *   <li><b><code>${tag}</code></b> The name of the parameter, field or variable
- *      being validated, or, possibly, something more descriptive (like "vehicle" in
- *      one of the above examples). Providing a name can be useful when validating
- *      multiple arguments and/or variables within the same method, as it makes it
- *      immediately clear which one of them was to blame for the exception. If you
- *      do not provide a name, <code>${tag}</code> defaults to "argument".
+ *      being validated, or, possibly, something more descriptive. If you
+ *      did not provide a name, <code>${tag}</code> defaults to "argument".
  *   <li><b><code>${obj}</code></b> The object of the relationship, in case the
  *      check took the form of a
  *      {@link org.klojang.check.relation.Relation Relation} or one of its
@@ -171,8 +167,15 @@
  * this.query = Check.that(query, "query")
  *  .notHas(Query::offset, "offset", negative())
  *  .has(Query::limit, "limit", gte(), 10)
- *  .has(Query::limit, "limit", lt(), 10000)
+ *  .has(Query::limit, "limit", lt(), 100)
  *  .ok();
+ * }</pre></blockquote>
+ *
+ * <p>This would cause the following error message to be generated if the user
+ * specified a limit of 125:
+ *
+ * <blockquote><pre>{@code
+ * query.limit must be < 100 (was 125)
  * }</pre></blockquote>
  *
  * <p>The {@link org.klojang.check.CommonProperties CommonProperties} class
@@ -190,7 +193,7 @@
  * {@code emps} collection is, say, 42:
  *
  * <blockquote><pre>{@code
- * "employees.size() must be >= 100 (was 42)"
+ * employees.size() must be >= 100 (was 42)
  * }</pre></blockquote>
  *
  *
