@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klojang Check | Custom Checks</title>
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap5/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="klojang-docs.css">
+</head>
+<body>
+<div class="container">
+    <div class="row mb-3 min-vh-100">
+        <div class="col-md-2 side-bar">
+            <div class="menu">
+                <div class="menu-item"><a href="index.html">Introduction</a></div>
+                <div class="menu-item"><a href="getting-started.html">Getting Started</a></div>
+                <div class="menu-item"><a href="basic-usage.html">Basic Usage</a></div>
+                <div class="menu-item"><a href="performance.html">Performance</a></div>
+                <div class="menu-item"><a href="tagging-values.html">Tagging Values</a></div>
+                <div class="menu-item"><a href="common-checks.html">Common Checks</a></div>
+                <div class="menu-item"><a href="chaining-checks.html">Chaining Checks</a></div>
+                <div class="menu-item"><a href="predicates-and-relations.html">Predicates &amp; Relations</a></div>
+                <div class="menu-item"><a href="value-domain-tests.html">Value Domain Tests</a></div>
+                <div class="menu-item"><a href="interrelated-values.html">Interrelated Values</a></div>
+                <div class="menu-item"><a href="error-handling.html">Error Handling</a></div>
+                <div class="menu-item"><a href="custom-messages.html">Custom Messages</a></div>
+                <div class="menu-item"><a href="validating-properties.html">Validating Properties</a></div>
+                <div class="menu-item"><a href="common-properties.html">Common Properties</a></div>
+                <div class="menu-item"><a href="custom-checks.html">Custom Checks</a></div>
+                <div class="menu-item"><a href="exceptions.html">Exceptions</a></div>
+                <div class="menu-item"><a href="composing-tests.html">Composing Tests</a></div>
+                <div class="menu-item"><a href="ok.html">ok!</a></div>
+            </div>
+        </div>
+        <div class="col-md-9 main-column">
+            <h1>DEFENSIVE PROGRAMMING WITH KLOJANG CHECK</h1>
+            <h2>Custom Checks</h2>
+            <p>
+                You are, of course, not limited to using the checks from the
+                <a class="code" href="https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html">CommonChecks</a>
+                class. You can provide your own checks in the form of lambdas and method references:
+            </p>
+            <p class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(angle).<i class="call">is</i>(a -> Math.<i class="call">sin</i>(a) &gt; <i class="nr">0</i>, <i class="str">"sine of angle must be positive"</i>);<br>
+            </p>
+            <p>
+                Be careful, however, when passing lambdas and method references to the <span class="inline-code">has()</span> 
+                and <span class="inline-code">notHas()</span> methods. These methods are heavily overloaded. Therefore, "vanilla"
+                lambdas (as you would habitually write them) and method references may cause the compiler to complain about an
+                <b>Ambiguous method call</b>:
+            </p>
+            <p class="code" style="color:#ef5f5f;">
+&nbsp;&nbsp;&nbsp;&nbsp;// WON'T COMPILE! Ambiguous method call<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.that(-7).has(i -> Math.abs(i), i -> i == 7);<br>
+            </p>
+            <p>
+                The solution is to specify the type of the lambda parameter, or to cast the entire lambda or method reference.
+                This will give the compiler enough context to decide which of the overloaded <span class="inline-code">has()</span> 
+                and <span class="inline-code">notHas()</span> methods to choose.
+            </p>
+            <p class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// specify the type of the lambda parameter:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="nr">-7</i>).<i class="call">has</i>(i -> Math.<i class="call-static">abs</i>(i), (<i class="kw">int</i> i) -> i == <i class="nr">7</i>);<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// cast the lambda that extracts the property from the argument:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="nr">-7</i>).<i class="call">has</i>((IntUnaryOperator) i -> Math.<i class="call-static">abs</i>(i), i -> i == <i class="nr">7</i>);<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// cast the method reference that extracts the property from the argument:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="nr">-7</i>).<i class="call">has</i>((IntUnaryOperator) Math::abs, i -> i == <i class="nr">7</i>);<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="cmt">// cast the lambda that tests the property:</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="nr">-7</i>).<i class="call">has</i>(i -> Math.abs(i), (IntPredicate) i -> i == <i class="nr">7</i>);<br>
+            </p>
+            <p>
+                If you don't like the verbosity that now suddenly creeps into your checks, you could write your own CommonChecks-like class:
+            </p>
+             <p class="java code">
+<i class="kw">public class</i> MyCommonChecks {<br>
+<br>
+&nbsp;&nbsp;<i class="kw">public static </i> ComposableIntPredicate <i class="method">equalToSeven</i>() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i class="kw">return</i> i -> i == <i class="nr">7</i>;<br>
+&nbsp;&nbsp;}<br>
+<br>
+}
+            </p>           
+            <p class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;Check.<i class="call-static">that</i>(<i class="nr">-7</i>).<i class="call">has</i>(i -> Math.<i class="call-static">abs</i>(i), equalToSeven());
+            </p>
+            <div class="container nav-links">
+                <div class="row">
+                    <div class="col-md-3 prev-chapter"><a href="common-properties.html">&#8810;&nbsp;&nbsp;&nbsp;Common Properties</a></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3 next-chapter"><a href="exceptions.html">Exceptions&nbsp;&nbsp;&nbsp;&#8811;</a></div>
+                </div>
+            </div>
+       </div>
+    </div>
+</div>
+</body>
+</html>
