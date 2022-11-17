@@ -10,9 +10,9 @@
  *
  * <h2>Documentation</h2>
  *
- * <p>
- * More extensive documentation on Klojang Check can be found
- * <a href="https://klojang4j.github.io/klojang-check/"><b>here</b></a>.
+ * <p>See the <b><a href="https://klojang4j.github.io/klojang-check/index.html">User
+ * Guide</a></b> for a detailed description of Defensive Programming using Klojang
+ * Check.
  *
  * <h2>IntCheck and ObjectCheck</h2>
  * <p>
@@ -41,7 +41,7 @@
  * <blockquote> <pre>{@code
  * Check.that(obj, "vehicle").is(instanceOf(), Car.class);
  * Check.that(list).isNot(empty());
- * Check.that(word).is(keyIn(), dictionary); // a Map instance
+ * Check.that(word).is(keyIn(), dictionary);
  * Check.that(dictionary).is(containsKey(), word);
  * Check.that(file).is(writable());
  * }</pre></blockquote>
@@ -52,7 +52,7 @@
  * {@code Bike}:
  *
  * <blockquote> <pre>{@code
- * "vehicle must be instance of Car (was Bike)"
+ * vehicle must be instance of Car (was Bike)
  * }</pre></blockquote>
  *
  *
@@ -67,13 +67,14 @@
  * {@link org.klojang.check.relation.Relation Relation},
  * {@link org.klojang.check.relation.IntRelation IntRelation} and
  * {@link org.klojang.check.relation.IntRelation IntObjRelation} on the other. The
- * latter are not part of the JDK. They can be thought of as a "BiPredicate" (which
- * neither exists in the JDK): a function that takes <i>two</i> arguments and
- * returns a boolean. If the two arguments have a certain relationship with each
- * other, the relation is said to <i>exist</i> and the function returns {@code true}.
- * Within the context of Klojang Check, the first argument is always the value to be
- * validated while the second argument is the value that it is to be validated
- * <i>against</i>. In the examples above,
+ * latter are not part of the JDK. They reside inside the Klojang Check module
+ * itself. They can be thought of as a "BiPredicate" (which neither exists in the
+ * JDK): a function that takes <i>two</i> arguments and returns a boolean. If the
+ * two arguments have a certain relationship with each other, the relation is said
+ * to <i>exist</i> and the function returns {@code true}. Within the context of
+ * Klojang Check, the first argument is always the value currently being validated
+ * while the second argument is the value that it is to be validated <i>against</i>.
+ * In the examples above
  * {@link org.klojang.check.CommonChecks#positive() positive()},
  * {@link org.klojang.check.CommonChecks#even() even()},
  * {@link org.klojang.check.CommonChecks#empty() empty()} and
@@ -178,7 +179,7 @@
  * query.limit must be < 100 (was 125)
  * }</pre></blockquote>
  *
- * <p>The {@link org.klojang.check.CommonProperties CommonProperties} class
+ * <p>The <b>{@link org.klojang.check.CommonProperties CommonProperties}</b> class
  * provides some commonly used properties of well-known classes and interfaces, like
  * the {@code size} property of a {@code Collection}. As with the
  * {@code CommonChecks} class, these properties are already associated with a
@@ -225,11 +226,11 @@
  * lambda parameter, or by casting the entire lambda or method reference:
  *
  * <blockquote><pre>{@code
- * // specify type of lambda parameter
+ * // specify the type of lambda parameter:
  * Check.that(temperature).has(i -> Math.abs(i), (int i) -> i < 30);
- * // cast lambda for property extraction function
+ * // cast the lambda that extracts the property from the argument:
  * Check.that(temperature).has((IntUnaryOperator) i -> Math.abs(i), i -> i < 30);
- * // cast lambda for test
+ * // cast the lambda that tests the property:
  * Check.that(temperature).has(i -> Math.abs(i), (IntPredicate) i -> i < 30);
  * }</pre></blockquote>
  *
@@ -257,7 +258,7 @@
  * }</pre></blockquote>
  *
  * <p>Here, too, Klojang Check provides some useful shortcuts through the
- * {@link org.klojang.check.CommonExceptions CommonExceptions} class:
+ * <b>{@link org.klojang.check.CommonExceptions CommonExceptions}</b> class:
  *
  * <blockquote><pre>{@code
  * Check.that(word)
@@ -265,9 +266,8 @@
  *  .is(keyIn(), dictionary, illegalState("no such word: \"" + word + "\"");
  * }</pre></blockquote>
  *
- * <p><b>NB when you supply your own exception, you cannot use the {@code ${...}}
- * message arguments.</b> You will have to construct the message
- * yourself.
+ * <p><i>NB when you supply your own exception, you cannot use the {@code ${...}}
+ * message arguments.</i> You will have to construct the message yourself.
  */
 module org.klojang.check {
   exports org.klojang.check;

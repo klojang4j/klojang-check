@@ -1,26 +1,24 @@
 package org.klojang.check;
 
-import org.klojang.check.x.msg.CustomMsgFormatter;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.klojang.check.x.msg.CustomMsgFormatter.formatSimple;
+import static org.klojang.check.x.msg.CustomMsgFormatter.formatWithUserArgs;
 
 /**
  * The central class of this Java module. All checks start out here. The
  * {@code Check} class provides static factory methods for {@link IntCheck} and
  * {@link ObjectCheck} instances, which do the actual orchestration of the checks to
- * be executed. The {@code Check} class contains a few validation methods itself,
+ * be executed. The {@code Check} class does contain a few validation methods itself,
  * like {@link #fromTo(int, int, int) Check.fromTo()} and
  * {@link #offsetLength(int, int, int) Check.offsetLength()}. These stand somewhat
- * apart from the rest of the Klojang Check. They are included for convenience and
- * for optimal performance.
+ * apart from the rest of the Klojang Check. They are included for convenience.
  *
- * <p>See the <a href="../../../module-summary.html">module summary</a> for a
- * detailed description of Defensive Programming using Klojang Check.
+ * <p>See the <b><a href="https://klojang4j.github.io/klojang-check/index.html">User
+ * Guide</a></b> for a detailed description of Defensive Programming using Klojang
+ * Check.
  *
  * @author Ayco Holleman
  */
@@ -98,7 +96,7 @@ public final class Check {
    * Static factory method. Returns an {@link ObjectCheck} instance suitable for
    * validating values of type {@code <T>}. The argument will have already passed the
    * {@linkplain CommonChecks#notNull() null test}. Note that an
-   * {@code IllegalArgumentException} thrown the specified value fails any of the
+   * {@code IllegalArgumentException} thrown if the specified value fails any of the
    * subsequently specified checks, but if the argument was {@code null}, a
    * {@code NullPointerException} will be thrown.
    *
@@ -120,7 +118,7 @@ public final class Check {
    * Static factory method. Returns an {@link ObjectCheck} instance suitable for
    * validating values of type {@code <T>}. The argument will have already passed the
    * {@linkplain CommonChecks#notNull() null test}. Note that an
-   * {@code IllegalArgumentException} thrown the specified value fails any of the
+   * {@code IllegalArgumentException} thrown if the specified value fails any of the
    * subsequently specified checks, but if the argument was {@code null}, a
    * {@code NullPointerException} will be thrown.
    *
@@ -134,7 +132,7 @@ public final class Check {
    */
   public static <T> ObjectCheck<T, IllegalArgumentException> notNull(T value,
       String tag)
-      throws IllegalArgumentException {
+      throws NullPointerException {
     if (value != null) {
       return new ObjectCheck<>(value, tag, DEF_EXC_FACTORY);
     }
@@ -224,19 +222,18 @@ public final class Check {
   }
 
   /**
-   * All-in-one check for the specified array, offset and length. Verifies that
-   * {@code offset} and {@code length} are valid, given the length of the specified
-   * array. More precisely:
+   * <p>All-in-one check for the specified array, offset and length.
    *
    * <ol>
-   *   <li>throws an {@code IllegalArgumentException} if the array is {@code null}.
-   *   <li>throws an {@code IndexOutOfBoundsException} if {@code offset} or {@code length} is less than zero
-   *   <li>throws an {@code IndexOutOfBoundsException} if {@code offset+length} is greater than the length of the array
+   *   <li>throws an {@code NullPointerException} if {@code array} is {@code null}.
+   *   <li>throws an {@code IndexOutOfBoundsException} if {@code offset} or {@code length} is negative
+   *   <li>throws an {@code IndexOutOfBoundsException} if {@code offset+length > array.length}
    * </ol>
    *
-   * <i>NB The {@code fromTo} and {@code offsetLength} checks stand somewhat apart from the
-   * rest of the check framework. They happen through "ordinary" static utility method and they
-   * test multiple things at once. They are included for convenience and speed.</i>
+   * <p><i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
+   * apart from the rest of the check framework. They happen through "ordinary"
+   * static utility methods and they test multiple things at once. They are included
+   * for convenience.</i>
    *
    * @param array the array
    * @param offset the offset within the array
@@ -255,18 +252,18 @@ public final class Check {
   }
 
   /**
-   * All-in-one check for the provided size, offset and length. Verifies that
-   * {@code offset} and {@code length} are valid, given tan array or array-like
-   * object with the specified size.
+   * <p>All-in-one check for the provided size, offset and length. The {@code size}
+   * argument supposedly is the size or length of an array or array-like object.
    *
    * <ol>
-   *   <li>throws an {@code IndexOutOfBoundsException} if {@code size} or {@code offset} or {@code length} is less than zero
-   *   <li>throws an {@code IndexOutOfBoundsException} if {@code offset+length} is greater than the length of the array
+   *   <li>throws an {@code IndexOutOfBoundsException} if {@code size}, {@code offset} or {@code length} is negative
+   *   <li>throws an {@code IndexOutOfBoundsException} if {@code offset+length} > {@code size}
    * </ol>
    *
-   * <i>NB The {@code fromTo} and {@code offsetLength} checks stand somewhat apart from the
-   * rest of the check framework. They happen through "ordinary" static utility method and they
-   * test multiple things at once. They are included for convenience and speed.</i>
+   * <p><i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
+   * apart from the rest of the check framework. They happen through "ordinary"
+   * static utility methods and they test multiple things at once. They are included
+   * for convenience.</i>
    *
    * @param size the length/size of the array or array-like object
    * @param offset the offset
@@ -279,20 +276,19 @@ public final class Check {
   }
 
   /**
-   * An all-in-one check for the provided list, from-index and to-index. Verifies
-   * that the from-index and to-index valid list indices. More precisely:
+   * <p>All-in-one check for the provided list, from-index and to-index.
    *
    * <ol>
-   *   <li>Throws a {@code NullPointerException} if the list is {@code null}
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is less than zero
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
+   *   <li>Throws a {@code NullPointerException} if {@code list} is {@code null}
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex < 0}
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} &lt; {@code fromIndex}
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} &gt; {@code list.size()}
    * </ol>
    *
-   * <i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
+   * <p><i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
    * apart from the rest of the check framework. They happen through "ordinary"
-   * static utility method and they test multiple things at once. They are included
-   * for convenience and speed.</i>
+   * static utility methods and they test multiple things at once. They are included
+   * for convenience.</i>
    *
    * @param list the list
    * @param fromIndex the start index of the sublist
@@ -305,22 +301,26 @@ public final class Check {
     if (list == null) {
       throw argumentMustNotBeNull("list");
     }
-    if ((fromIndex | toIndex) < 0 || toIndex < fromIndex || list.size() < toIndex) {
+    if (fromIndex < 0 || toIndex < fromIndex || list.size() < toIndex) {
       throw new IndexOutOfBoundsException();
     }
     return toIndex - fromIndex;
   }
 
   /**
-   * An all-in-one check for the provided array, from-index and to-index. Verifies
-   * that the from-index and to-index valid array indices. More precisely:
+   * <p>All-in-one check for the provided array, from-index and to-index.
    *
    * <ol>
    *   <li>Throws a {@code NullPointerException} if the array is {@code null}
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is less than zero
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is negative
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex < fromIndex}
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex > array.length}
    * </ol>
+   *
+   * <p><i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
+   * apart from the rest of the check framework. They happen through "ordinary"
+   * static utility methods and they test multiple things at once. They are included
+   * for convenience.</i>
    *
    * @param array the array
    * @param fromIndex the start index of the array segment
@@ -341,15 +341,19 @@ public final class Check {
   }
 
   /**
-   * An all-in-one check for the provided string, from-index and to-index. Verifies
-   * that the from-index and to-index valid string indices. More precisely:
+   * <p>All-in-one check for the provided string, from-index and to-index.
    *
    * <ol>
-   *   <li>Throws a {@code NullPointerException} if the string is {@code null}
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is less than zero
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
+   *   <li>Throws a {@code NullPointerException} if {@code string} is {@code null}
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code fromIndex} or {@code toIndex} is negative
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex < fromIndex}
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex > string.length()}
    * </ol>
+   *
+   * <p><i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
+   * apart from the rest of the check framework. They happen through "ordinary"
+   * static utility methods and they test multiple things at once. They are included
+   * for convenience.</i>
    *
    * @param string the string
    * @param fromIndex the start index of the substring
@@ -371,19 +375,20 @@ public final class Check {
   }
 
   /**
-   * An all-in-one check for the provided size/length (supposedly of an array or
-   * array-like object), from-index and to-index. Verifies that the from-index and
-   * to-index valid string indices, given the specified size/length. More precisely:
+   * <p>All-in-one check for the provided size, from-index and to-index. The
+   * {@code size} argument supposedly is the size or length of an array or array-like
+   * object.
    *
    * <ol>
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code size} or {@code fromIndex} or {@code toIndex} is less than zero
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is less than {@code fromIndex}
-   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex} is greater than the size of the list
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code size} or {@code fromIndex} or {@code toIndex} is negative
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex < fromIndex}
+   *   <li>Throws an {@code IndexOutOfBoundsException} if {@code toIndex > size}
    * </ol>
    *
-   * <i>NB The {@code fromTo} and {@code offsetLength} checks stand somewhat apart from the
-   * rest of the check framework. They happen through "ordinary" static utility method and they
-   * test multiple things at once. They are included for convenience and speed.</i>
+   * <p><i>NB The {@code fromTo()} and {@code offsetLength()} checks stand somewhat
+   * apart from the rest of the check framework. They happen through "ordinary"
+   * static utility methods and they test multiple things at once. They are included
+   * for convenience.</i>
    *
    * @param size the size (or length) of the array, string, list, etc.
    * @param fromIndex the start index of the segment
@@ -398,7 +403,7 @@ public final class Check {
   }
 
   /**
-   * Throws an {@code IllegalArgumentException} with the specified message and
+   * Always throws an {@code IllegalArgumentException} with the specified message and
    * message arguments. The method is still declared to return a value of type
    * {@code <T>} so it can be used as the expression for a {@code return} statement.
    *
@@ -420,9 +425,9 @@ public final class Check {
   }
 
   /**
-   * Throw the exception supplied by the specified {@code Supplier}. The method is
-   * still declared to return a value of type {@code <T>} so it can be used as the
-   * expression for a {@code return} statement.
+   * Always throws the exception supplied by the specified {@code Supplier}. The
+   * method is still declared to return a value of type {@code <T>} so it can be used
+   * as the expression for a {@code return} statement.
    *
    * @param excFactory the supplier of the exception
    * @param <T> the desired type of the return value
@@ -436,8 +441,10 @@ public final class Check {
   }
 
   /**
-   * Throws an exception produced by the specified exception factory with the
-   * specified message and message arguments.
+   * Always throws an exception produced by the specified exception factory with the
+   * specified message and message arguments. The method is still declared to return
+   * a value of type {@code <T>} so it can be used as the expression for a
+   * {@code return} statement.
    *
    * @param <T> the type of the object that would have been returned if it had
    *     passed the checks
@@ -460,7 +467,7 @@ public final class Check {
     if (msgArgs == null || message == null) {
       throw excFactory.apply(message);
     }
-    throw excFactory.apply(formatSimple(message, msgArgs));
+    throw excFactory.apply(formatWithUserArgs(message, msgArgs));
   }
 
 }

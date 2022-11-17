@@ -2,17 +2,14 @@ package org.klojang.check.x.msg;
 
 import org.klojang.check.x.Misc;
 
-import static org.klojang.check.x.msg.MsgUtil.DEF_ARG_NAME;
-import static org.klojang.check.x.Misc.toShortString;
-import static org.klojang.check.x.msg.MsgUtil.MAX_STRING_WIDTH;
-import static org.klojang.check.x.msg.MsgUtil.simpleClassName;
-
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.Objects;
-import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+
+import static org.klojang.check.x.Misc.toShortString;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 /*
  * Formats client-provided messages.
@@ -57,7 +54,8 @@ public final class CustomMsgFormatter {
     } while (true);
   }
 
-  static String formatWithPrefabArgsOnly(String msg, Object[] msgArgs) {
+  // Only ${arg}, ${tag}, etc.
+  static String formatWithPrefabArgs(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {
       return msg;
@@ -76,8 +74,8 @@ public final class CustomMsgFormatter {
     } while (true);
   }
 
-  // Only positional args: ${0}, ${1}, etc. Used by Check.fail()
-  public static String formatSimple(String msg, Object[] msgArgs) {
+  // Only  ${0}, ${1}, etc. Used by Check.fail()
+  public static String formatWithUserArgs(String msg, Object[] msgArgs) {
     int x;
     if ((x = msg.indexOf(ARG_START)) == -1) {
       return msg;
@@ -102,7 +100,7 @@ public final class CustomMsgFormatter {
           "test", CustomMsgFormatter::getCheck,
           "arg",  args -> toShortString(args[1], MAX_STRING_WIDTH),
           "type", CustomMsgFormatter::getType,
-          "tag", CustomMsgFormatter::getTag,
+          "tag",  CustomMsgFormatter::getTag,
           "obj",  args -> toShortString(args[4], MAX_STRING_WIDTH));
   //@formatter:on
 
@@ -111,12 +109,12 @@ public final class CustomMsgFormatter {
     if (fnc != null) {
       return fnc.apply(args);
     }
-    OptionalInt x = getInt(arg);
-    if (x.isPresent()) {
-      int i = 5 + x.getAsInt();
+    try {
+      int i = 5 + new BigInteger(arg).intValueExact();
       if (i < args.length) {
         return Objects.toString(args[i]);
       }
+    } catch(NumberFormatException ignore) {
     }
     return ARG_START + arg + ARG_END;
   }
@@ -132,22 +130,14 @@ public final class CustomMsgFormatter {
 
   // ${0}, ${1} ... etc.
   private static String getUserArgVal(String arg, Object[] args) {
-    OptionalInt x = getInt(arg);
-    if (x.isPresent()) {
-      int i = x.getAsInt();
+    try {
+      int i = new BigInteger(arg).intValueExact();
       if (i >= 0 && i < args.length) {
         return Objects.toString(args[i]);
       }
+    } catch (NumberFormatException ignore) {
     }
     return ARG_START + arg + ARG_END;
-  }
-
-  private static OptionalInt getInt(String arg) {
-    try {
-      return OptionalInt.of(new BigInteger(arg).intValueExact());
-    } catch (NumberFormatException e) {
-      return OptionalInt.empty();
-    }
   }
 
   private static String getCheck(Object[] args) {

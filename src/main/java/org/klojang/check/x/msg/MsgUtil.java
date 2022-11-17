@@ -70,7 +70,7 @@ public final class MsgUtil {
     if (msgArgs == null || msg == null) {
       return msg;
     } else if (msgArgs.length == 0) {
-      return CustomMsgFormatter.formatWithPrefabArgsOnly(msg,
+      return CustomMsgFormatter.formatWithPrefabArgs(msg,
           new Object[] {test, argVal, argType, argName, obj});
     }
     Object[] all = new Object[msgArgs.length + 5];

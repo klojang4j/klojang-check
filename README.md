@@ -8,13 +8,6 @@ of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.che
 on values of various types. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves.
 
-With a surface area of barely 15 types and zero dependencies outside
-```java.base```, Klojang Check is genuinely light-weight. Yet, being all about secure
-programming, the Klojang Check code base is itself regularly tested for
-vulnerabilities. Every build gets pulled through
-the [OWASP vulnerability scanner](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
-for Maven.
-
 ## Getting Started
 
 To use Klojang Check, add the following dependency to your Maven POM file:
@@ -23,23 +16,14 @@ To use Klojang Check, add the following dependency to your Maven POM file:
 <dependency>
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
-## Documentation
-
-The **Javadocs** for Klojang Check can be
-found **[here](https://klojang4j.github.io/klojang-check/api)**.
-
-The **User Guide** for Klojang Check can be
-found **[here](https://klojang4j.github.io/klojang-check/index.html)**.
-
-Klojang Check is also fast. If you are interested in the **JMH test results**, they
-can be found **[here](https://github.com/klojang4j/klojang-check-jmh)**.
-
-The latest **test coverage reports**
-are **[here](https://klojang4j.github.io/klojang-check/jacoco)**.
+or Gradle build script:
+```
+implementation group: 'org.klojang', name: 'klojang-check', version: '1.0.4'
+```
 
 ## Example
 
@@ -72,6 +56,34 @@ public class InteriorDesigner {
 
 }
 ```
+
+## Documentation
+
+The **Javadocs** for Klojang Check can be
+found **[here](https://klojang4j.github.io/klojang-check/api)**.
+
+The **User Guide** for Klojang Check can be
+found **[here](https://klojang4j.github.io/klojang-check/index.html)**.
+
+Klojang Check is also fast. If you are interested in the **JMH test results**, they
+can be found **[here](https://github.com/klojang4j/klojang-check-jmh)**.
+
+The latest **test coverage reports**
+are **[here](https://klojang4j.github.io/klojang-check/jacoco)**.
+
+## Vulnerabilities
+
+With a surface area of barely 15 types and zero dependencies outside
+```java.base```, Klojang Check is genuinely light-weight. Yet, being all about making
+your code as robust as possible, the Klojang Check code base is itself regularly
+tested for vulnerabilities. Every build gets pulled through the
+[OWASP vulnerability scanner](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
+for Maven.
+
+Not surprisingly, given its tiny surface area and singular dependency
+on ```java.base```, it is currently not affected by even the most light-weight CVEs.
+
+
 
 
 
