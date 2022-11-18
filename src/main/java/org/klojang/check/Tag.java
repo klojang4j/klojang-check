@@ -1,9 +1,11 @@
 package org.klojang.check;
 
 /**
- * Ubiquitous parameter names.
+ * String constants for some commonly used field, parameter and variable names. Meant
+ * to be used as the second argument to the {@code Check.that()} methods of the
+ * {@link Check} class.
  */
-public final class Param {
+public final class Tag {
 
   /**
    * "array"
@@ -66,6 +68,10 @@ public final class Param {
    */
   public static final String MSG_ARGS = "message arguments";
   /**
+   * "offset"
+   */
+  public static final String OFFSET = "offset";
+  /**
    * "out"
    */
   public static final String OUT = "out";
@@ -118,7 +124,7 @@ public final class Param {
    */
   public static final String STR = "str";
 
-  private Param() {
+  private Tag() {
     throw new UnsupportedOperationException();
   }
 
