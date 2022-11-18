@@ -764,7 +764,7 @@ public final class CommonChecks {
    * fully describes the string).
    *
    * @return a function implementing the test described above
-   * @see #matching()
+   * @see #matches()
    */
   public static Relation<String, Pattern> hasPattern() {
     return (string, pattern) -> pattern.matcher(string).matches();
@@ -775,7 +775,7 @@ public final class CommonChecks {
    * can be found somewhere in the string).
    *
    * @return a function implementing the test described above
-   * @see #matchFor()
+   * @see #containsMatch()
    */
   public static Relation<String, Pattern> containsPattern() {
     return (string, pattern) -> pattern.matcher(string).find();
@@ -783,37 +783,36 @@ public final class CommonChecks {
 
   /**
    * Verifies that the argument matches the specified pattern (that is, the pattern
-   * fully describes the string). The subject ("left hand side") of this
-   * {@code Relation} is the string to match; the object ("right hand side") of the
-   * {@code Relation} is the regular expression to be compiled into a
-   * {@link Pattern}.
+   * fully describes the string). The subject of the returned {@code Relation} is the
+   * string to match; the object of the {@code Relation} is a regular expression to
+   * be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
-   * Check.that("abcd123").is(matching(), "^\\w{4}\\d{3}$"); // yes
-   * Check.that("abcd123").is(matching(), "\\d{3}"); // no
+   * Check.that("abcd123").is(matches(), "^\\w{4}\\d{3}$"); // yes
+   * Check.that("abcd123").is(matches(), "\\d{3}"); // no
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> matching() {
+  public static Relation<String, String> matches() {
     return (string, pattern) ->
         hasPattern().exists(string, compile(pattern));
   }
 
   /**
    * Verifies that the argument contains the specified pattern (that is, the pattern
-   * can be found somewhere in the string). The subject of this {@code Relation} is
-   * the string to match; the object of the {@code Relation} is the regular
-   * expression to be compiled into a {@link Pattern}.
+   * can be found somewhere in the string). The subject of the returned
+   * {@code Relation} is the string to match; the object of the {@code Relation} is a
+   * regular expression to be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
-   * Check.that("abcd123").is(matchFor(), "\\d{3}"); // yes
-   * Check.that("abcd123").is(matchFor(), "\\d{4}"); // no
+   * Check.that("abcd123").is(containsMatch(), "\\d{3}"); // yes
+   * Check.that("abcd123").is(containsMatch(), "\\d{4}"); // no
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> matchFor() {
+  public static Relation<String, String> containsMatch() {
     return (string, pattern) ->
         containsPattern().exists(string, compile(pattern));
   }
@@ -823,7 +822,7 @@ public final class CommonChecks {
    * loss of information. The provided type must be one of the <i>primitive</i>
    * number types: {@code long}, {@code int}, {@code short}, {@code byte},
    * {@code double} or {@code float}. Specifying a wrapper type (e.g.
-   * {@code Integer}) will result in an {@link CorruptCheckException}.
+   * {@code Integer}) will result in a {@link CorruptCheckException}.
    *
    * <blockquote><pre>{@code
    * Check.that("123").is(numerical(), int.class); // yes
@@ -851,9 +850,9 @@ public final class CommonChecks {
    * without loss of information. The provided type must be one of the
    * <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
    * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g.
-   * {@code Integer}) will result in an {@link CorruptCheckException}. Contrary to
-   * the {@link #numerical()}, this check allows the string to contain a fractional
-   * part even if the target type is an integral type (like {@code int}), as long as
+   * {@code Integer}) will result in a {@link CorruptCheckException}. Contrary to the
+   * {@link #numerical()} check, this check allows the string to contain a fractional
+   * part even if the target type is an integral type (like {@code byte}), as long as
    * it consists of zeros only. Scientific notation is allowed, too, as long as the
    * effective fractional part consists of zeros only. For {@code Double} and
    * {@code Float} there is no difference between the two checks.

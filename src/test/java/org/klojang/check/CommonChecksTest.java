@@ -416,22 +416,22 @@ public class CommonChecksTest {
 
   @Test
   public void matching00() {
-    Check.that("abcd123").is(matching(), "^\\w{4}\\d{3}$");
+    Check.that("abcd123").is(matches(), "^\\w{4}\\d{3}$");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void matching01() {
-    Check.that("abcd123").is(matching(), "\\d{4}");
+    Check.that("abcd123").is(matches(), "\\d{4}");
   }
 
   @Test
   public void matchFor00() {
-    Check.that("abcd123").is(matchFor(), "\\d{3}");
+    Check.that("abcd123").is(containsMatch(), "\\d{3}");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void matchFor01() {
-    Check.that("abcd123").is(matchFor(), "\\d{4}");
+    Check.that("abcd123").is(containsMatch(), "\\d{4}");
   }
 
   @Test(expected = IllegalArgumentException.class)

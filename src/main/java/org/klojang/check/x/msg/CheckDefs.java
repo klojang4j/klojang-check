@@ -97,8 +97,8 @@ public final class CheckDefs {
     setMetadata(endsWithIC(), msgEndsWithIC(), "endsWithIC");
     setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
     setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
-    setMetadata(matching(), msgHasPattern(), "matching"); // recycle message
-    setMetadata(matchFor(), msgContainsPattern(), "matchFor"); // recycle message
+    setMetadata(matches(), msgHasPattern(), "matches"); // recycle message
+    setMetadata(containsMatch(), msgContainsPattern(), "containsMatch"); // recycle message
     setMetadata(numerical(), msgNumerical(), "numerical");
     setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
     setMetadata(indexOf(), msgIndexOf(), "indexOf");
