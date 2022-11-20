@@ -83,6 +83,14 @@ for Maven.
 Not surprisingly, given its tiny surface area and singular dependency
 on ```java.base```, it is currently not affected by even the most light-weight CVEs.
 
+## About
+<img src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0"/>
+
+Klojang Check is developed by [Naturalis](https://www.naturalis.nl/en), 
+a biodiversity research institute and natural history museum
+maintaining one of the largest collections of zoological and botanical specimens 
+in the world.
+
 
 
 

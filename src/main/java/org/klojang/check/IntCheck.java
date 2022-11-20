@@ -51,7 +51,7 @@ public final class IntCheck<X extends Exception> {
    * <blockquote>
    *
    * <pre>{@code
-   * int moderate = Check.that(t, "temperature").has(abs(), lt(), 30).ok(abs());
+   * int moderate = Check.that(t, "temperature").has(abs(), lt(), 30).ok(Math::abs);
    * }</pre>
    *
    * </blockquote>
@@ -70,6 +70,15 @@ public final class IntCheck<X extends Exception> {
   /**
    * Passes the validated value to the specified function and returns the value it
    * computes. To be used as the last call after a chain of checks.
+   *
+   * <blockquote>
+   *
+   * <pre>{@code
+   * List<String> list = ...;
+   * String s = Check.that(index).is(indexOf(), list).ok(list::get);
+   * }</pre>
+   *
+   * </blockquote>
    *
    * @param transformer a function that transforms the {@code int} value
    *     validated by this instance
@@ -184,8 +193,7 @@ public final class IntCheck<X extends Exception> {
   public IntCheck<X> isNot(IntPredicate test, String message, Object... msgArgs)
       throws X {
     // WATCH OUT. Do not call: is(test.negate(), message, msgArgs). If the test came
-    // from the CommonChecks class it must preserve its identity in order to be looked
-    // up in the CommonChecks.NAMES map
+    // from the CommonChecks class it must preserve its identity
     if (!test.test(arg)) {
       return this;
     }

@@ -1,9 +1,9 @@
 package org.klojang.check;
 
 /**
- * String constants for some commonly used field, parameter and variable names. Meant
- * to be used as the second argument to the {@code Check.that()} methods of the
- * {@link Check} class.
+ * String constants for some commonly used names for fields, parameters and
+ * variables. To be used as the second argument to the {@code Check.that()} methods
+ * of the {@link Check} class.
  */
 public final class Tag {
 
@@ -22,11 +22,15 @@ public final class Tag {
   /**
    * "class"
    */
-  public static final String CLAZZ = "class";
+  public static final String CLASS = "class";
   /**
    * "collection"
    */
   public static final String COLLECTION = "collection";
+  /**
+   * "element"
+   */
+  public static final String ELEMENT = "element";
   /**
    * "exception"
    */
@@ -48,9 +52,17 @@ public final class Tag {
    */
   public static final String INDEX = "index";
   /**
+   * "input"
+   */
+  public static final String INPUT = "input";
+  /**
    * "length"
    */
   public static final String LENGTH = "length";
+  /**
+   * "key"
+   */
+  public static final String KEY = "key";
   /**
    * "list"
    */
@@ -64,9 +76,9 @@ public final class Tag {
    */
   public static final String MESSAGE = "message";
   /**
-   * "message arguments"
+   * "obj"
    */
-  public static final String MSG_ARGS = "message arguments";
+  public static final String OBJ = "obj";
   /**
    * "offset"
    */
@@ -90,7 +102,7 @@ public final class Tag {
   /**
    * "relative path"
    */
-  public static final String RELATIVE_PATH = "relative path";
+  public static final String REL_PATH = "relative path";
   /**
    * "set"
    */
@@ -99,6 +111,14 @@ public final class Tag {
    * "size"
    */
   public static final String SIZE = "size";
+  /**
+   * "str"
+   */
+  public static final String STR = "str";
+  /**
+   * "string"
+   */
+  public static final String STRING = "string";
   /**
    * "test"
    */
@@ -119,10 +139,6 @@ public final class Tag {
    * "values"
    */
   public static final String VALUES = "values";
-  /**
-   * "str"
-   */
-  public static final String STR = "str";
 
   private Tag() {
     throw new UnsupportedOperationException();

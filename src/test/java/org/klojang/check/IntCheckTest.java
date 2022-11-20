@@ -2,6 +2,7 @@ package org.klojang.check;
 
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntUnaryOperator;
 
@@ -396,6 +397,9 @@ public class IntCheckTest {
     Check.that(30).has(Math::cos, "cosine", LTE(), .5);
     Check.that(-7).has(Math::abs, "absolute value", eq(), 7);
     Check.that(7).has((IntUnaryOperator) Math::abs, i -> i < 10);
+    Check.that(7, "temperature").has(abs(), lt(), 30).ok(Math::abs);
+    var list= List.of("a","b","c");
+    assertEquals("b",Check.that(1).is(indexOf(),list).mapToObj(list::get));
   }
 
 }
