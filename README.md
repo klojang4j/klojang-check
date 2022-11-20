@@ -74,20 +74,17 @@ are **[here](https://klojang4j.github.io/klojang-check/jacoco)**.
 ## Vulnerabilities
 
 With a surface area of barely 15 types and zero dependencies outside
-```java.base```, Klojang Check is genuinely light-weight. Yet, being all about making
+`java.base`, Klojang Check is genuinely light-weight. Yet, being all about making
 your code as robust as possible, the Klojang Check code base is itself regularly
 tested for vulnerabilities. Every build gets pulled through the
 [OWASP vulnerability scanner](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
-for Maven.
-
-Not surprisingly, given its tiny surface area and singular dependency
-on ```java.base```, it is currently not affected by even the most light-weight CVEs.
+for Maven. It is currently not affected by any CVE.
 
 ## About
 <img src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0"/>
 
 Klojang Check is developed by [Naturalis](https://www.naturalis.nl/en), 
-a biodiversity research institute and natural history museum
+the Dutch national biodiversity research institute and natural history museum,
 maintaining one of the largest collections of zoological and botanical specimens 
 in the world.
 

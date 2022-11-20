@@ -7,12 +7,12 @@
 
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
 
     <name>Klojang Check</name>
     <description>
-        Light-weight Java module dedicated to Defensive Programming &amp; Precondition Validation
+        A new take on Defensive Programming &amp; Validating Preconditions
     </description>
     <url>https://klojang4j.github.io/klojang-check/</url>
 
@@ -50,9 +50,7 @@
         </snapshotRepository>
     </distributionManagement>
 
-
     <properties>
-
         <!-- ==================================================================== -->
         <!-- *** Build settings                                               *** -->
         <!-- ==================================================================== -->
@@ -86,9 +84,6 @@
         <!-- *** Check dependencies: mvn dependency:analyze                   *** -->
         <!-- ==================================================================== -->
         <junit.version>4.13.2</junit.version>
-        <jmh.version>1.35</jmh.version>
-
-
     </properties>
 
 
@@ -99,22 +94,9 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-core</artifactId>
-            <version>${jmh.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-generator-annprocess</artifactId>
-            <version>${jmh.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -397,4 +379,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
