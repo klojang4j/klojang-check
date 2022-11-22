@@ -139,6 +139,10 @@ public final class Tag {
    * "values"
    */
   public static final String VALUES = "values";
+  /**
+   * "varargs array"
+   */
+  public static final String VARARGS = "varargs array";
 
   private Tag() {
     throw new UnsupportedOperationException();
