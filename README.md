@@ -12,7 +12,6 @@ messages, so you don't have to invent them yourselves.
 To use Klojang Check, add the following dependency to your Maven POM file:
 
 ```xml
-
 <dependency>
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
