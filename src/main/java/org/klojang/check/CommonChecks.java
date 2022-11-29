@@ -715,7 +715,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <E, C0 extends Collection<E>, C1 extends Collection<? super E>>
-  Relation<C0, C1> enclosedBy() {
+  Relation<C0, C1> containedIn() {
     return (x, y) -> y.containsAll(x);
   }
 

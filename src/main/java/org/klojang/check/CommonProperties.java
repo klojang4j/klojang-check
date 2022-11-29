@@ -1,7 +1,6 @@
 package org.klojang.check;
 
-import static org.klojang.check.x.Misc.typeNotSupported;
-import static org.klojang.check.x.msg.MsgUtil.*;
+import org.klojang.check.relation.Relation;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -9,7 +8,8 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.function.*;
 
-import org.klojang.check.relation.Relation;
+import static org.klojang.check.x.Misc.typeNotSupported;
+import static org.klojang.check.x.msg.MsgUtil.*;
 
 /**
  * Defines various functions that can optionally be passed as the first argument to
@@ -58,7 +58,7 @@ public class CommonProperties {
 
   /**
    * Returns the boxed version of the argument. Equivalent to
-   * {@link Integer#valueOf(int) Integer::valueOf}. This "getter" is especially
+   * {@link Integer#valueOf(int) Integer::valueOf}. This "property" is especially
    * useful to get access to the many {@link Relation} checks in the
    * {@link CommonChecks} class when validating an {@code int} argument:
    *
@@ -85,9 +85,8 @@ public class CommonProperties {
   }
 
   static {
-    tmp.put(box(),
-        (arg, argName) ->
-            "Integer.valueOf(" + ifNull(argName, DEF_ARG_NAME) + ")");
+    tmp.put(box(), (arg, argName) ->
+        "Integer.valueOf(" + ifNull(argName, DEF_ARG_NAME) + ")");
   }
 
   /**
@@ -450,7 +449,7 @@ public class CommonProperties {
     return ifNull(argName, simpleClassName(arg));
   }
 
-  private static <T> T ifNull(T value, T defVal) {
+  private static String ifNull(String value, String defVal) {
     return value == null ? defVal : value;
   }
 

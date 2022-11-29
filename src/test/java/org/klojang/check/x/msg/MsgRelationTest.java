@@ -60,9 +60,9 @@ public class MsgRelationTest {
     Check.that(Set.of("1", "2", "3")).is(containsAll(), List.of("1", "2"));
     Check.that(Set.of("1", "4", "5")).isNot(containsAll(), List.of("1", "2"));
     Check.that(Set.of(MONDAY, TUESDAY, WEDNESDAY))
-        .is(enclosedBy(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
+        .is(containedIn(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
     Check.that(Set.of(MONDAY, TUESDAY, SATURDAY))
-        .isNot(enclosedBy(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
+        .isNot(containedIn(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
     Map<Integer, Integer> map = Map.of(1, 1, 2, 4, 3, 6, 4, 8, 5, 10);
     Check.that(map).is(containsKey(), 1);
     Check.that(map).isNot(containsKey(), 11);
@@ -645,7 +645,7 @@ public class MsgRelationTest {
   public void subsetOf00() {
     try {
       Check.that(List.of("mccartney", "harrisson", "lennon"), "kremlin")
-          .is(enclosedBy(), List.of("mccartney", "harrisson", "star"));
+          .is(containedIn(), List.of("mccartney", "harrisson", "star"));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(
@@ -661,7 +661,7 @@ public class MsgRelationTest {
   public void subsetOf01() {
     try {
       Check.that(List.of("lennon", "mccartney", "harrisson", "star"), "kremlin")
-          .isNot(enclosedBy(), List.of("lennon", "mccartney", "harrisson", "star"));
+          .isNot(containedIn(), List.of("lennon", "mccartney", "harrisson", "star"));
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals(

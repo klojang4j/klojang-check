@@ -2,8 +2,7 @@
 
 Klojang Check is a Java module dedicated to defensive programming. It provides a set
 of syntactical constructs that make it easy to specify checks on program input,
-object state, method arguments, variables, etc. In addition, it comes with a
-well-curated assortment
+object state, method arguments, variables, etc. In addition, it comes with a set
 of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 on values of various types. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves.
@@ -13,16 +12,18 @@ messages, so you don't have to invent them yourselves.
 To use Klojang Check, add the following dependency to your Maven POM file:
 
 ```xml
+
 <dependency>
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 or Gradle build script:
+
 ```
-implementation group: 'org.klojang', name: 'klojang-check', version: '1.0.4'
+implementation group: 'org.klojang', name: 'klojang-check', version: '2.0.0'
 ```
 
 ## Example
@@ -54,7 +55,7 @@ public class InteriorDesigner {
 ## Documentation
 
 The **Javadocs** for Klojang Check can be
-found **[here](https://klojang4j.github.io/klojang-check/api)**.
+found **[here](https://klojang4j.github.io/klojang-check/2/api)**.
 
 The **User Guide** for Klojang Check can be
 found **[here](https://klojang4j.github.io/klojang-check/index.html)**.
@@ -62,25 +63,25 @@ found **[here](https://klojang4j.github.io/klojang-check/index.html)**.
 Klojang Check is also fast. If you are interested in the **JMH test results**, they
 can be found **[here](https://github.com/klojang4j/klojang-check-jmh)**.
 
-The latest **test coverage reports**
-are **[here](https://klojang4j.github.io/klojang-check/jacoco)**.
+The latest **test coverage results**
+are **[here](https://klojang4j.github.io/klojang-check/2/coverage)**.
 
 ## Vulnerabilities
 
 With a surface area of barely 15 types and zero dependencies outside
-`java.base`, Klojang Check is genuinely light-weight. Yet, being all about making
-your code as robust as possible, the Klojang Check code base is itself regularly
-tested for vulnerabilities. Every build gets pulled through the
-[OWASP vulnerability scanner](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
-for Maven. It is currently not affected by any CVE.
+`java.base`, Klojang Check is genuinely light-weight. Nevertheless, being all about
+making your code as robust as possible, the Klojang Check code base is itself
+regularly tested for vulnerabilities. It is currently not affected by any CVE. You
+can find the latest **vulnerabilities report**
+**[here](https://klojang4j.github.io/klojang-check/2/vulnerabilities/dependency-check-report.html)**.
 
 ## About
+
 <img src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0"/>
 
-Klojang Check is developed by [Naturalis](https://www.naturalis.nl/en), 
-the Dutch national biodiversity research institute and natural history museum,
-maintaining one of the largest collections of zoological and botanical specimens 
-in the world.
+Klojang Check is developed by [Naturalis](https://www.naturalis.nl/en), a
+biodiversity research institute and natural history museum. It maintains one
+of the largest collections of zoological and botanical specimens in the world.
 
 
 

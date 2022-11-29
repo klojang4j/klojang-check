@@ -91,7 +91,7 @@ public final class MsgRelation {
     //@formatter:off
   }
 
-  public static PrefabMsgFormatter msgEnclosing() {
+  public static PrefabMsgFormatter msgContainsAll() {
     //@formatter:off
     return x -> x.negated()
         ? x.name() + " must not enclose " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
@@ -99,7 +99,7 @@ public final class MsgRelation {
     //@formatter:off
   }
 
-  public static PrefabMsgFormatter msgEnclosedBy() {
+  public static PrefabMsgFormatter msgContainedIn() {
     //@formatter:off
     return x -> x.negated()
         ? x.name() + " must not be subset of " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'

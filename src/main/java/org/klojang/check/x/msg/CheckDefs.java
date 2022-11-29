@@ -85,8 +85,8 @@ public final class CheckDefs {
     setMetadata(keyIn(), msgKeyIn(), "keyIn");
     setMetadata(valueIn(), msgValueIn(), "valueIn");
     setMetadata(inArray(), msgIn(), "inArray"); // Recycle message
-    setMetadata(containsAll(), msgEnclosing(), "enclosing");
-    setMetadata(enclosedBy(), msgEnclosedBy(), "enclosedBy");
+    setMetadata(containsAll(), msgContainsAll(), "containsAll");
+    setMetadata(containedIn(), msgContainedIn(), "containedIn");
     setMetadata(hasSubstring(), msgHasSubstring(), "hasSubstring");
     setMetadata(hasSubstringIC(), msgHasSubstringIC(), "hasSubstringIC");
     setMetadata(substringOf(), msgSubstringOf(), "substringOf");

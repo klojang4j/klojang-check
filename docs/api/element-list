@@ -1,7 +1,0 @@
-module:org.klojang.util
-org.klojang.util
-org.klojang.util.collection
-org.klojang.util.exception
-org.klojang.util.util
-org.klojang.util.x
-org.klojang.util.x.collection
