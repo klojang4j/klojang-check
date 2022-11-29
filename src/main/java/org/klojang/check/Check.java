@@ -94,11 +94,11 @@ public final class Check {
 
   /**
    * Static factory method. Returns an {@link ObjectCheck} instance suitable for
-   * validating values of type {@code <T>}. The argument will have already passed the
-   * {@linkplain CommonChecks#notNull() null test}. Note that an
-   * {@code IllegalArgumentException} thrown if the specified value fails any of the
-   * subsequently specified checks, but if the argument was {@code null}, a
-   * {@code NullPointerException} will be thrown.
+   * validating values of type {@code <T>} if the specified value is not
+   * {@code null}, else throws a {@code NullPointerException}.
+   * {@linkplain CommonChecks#notNull() null test}. An
+   * {@code IllegalArgumentException} will be thrown if the specified value fails any
+   * of the <i>subsequently</i> specified checks.
    *
    * @param <T> the type of the value to be validated
    * @param value the value to be validated
@@ -116,11 +116,11 @@ public final class Check {
 
   /**
    * Static factory method. Returns an {@link ObjectCheck} instance suitable for
-   * validating values of type {@code <T>}. The argument will have already passed the
-   * {@linkplain CommonChecks#notNull() null test}. Note that an
-   * {@code IllegalArgumentException} thrown if the specified value fails any of the
-   * subsequently specified checks, but if the argument was {@code null}, a
-   * {@code NullPointerException} will be thrown.
+   * validating values of type {@code <T>} if the specified value is not
+   * {@code null}, else throws a {@code NullPointerException}.
+   * {@linkplain CommonChecks#notNull() null test}. An
+   * {@code IllegalArgumentException} will be thrown if the specified value fails any
+   * of the <i>subsequently</i> specified checks.
    *
    * @param <T> the type of the value to be validated
    * @param value the value to be validated
@@ -409,8 +409,7 @@ public final class Check {
    *
    * @param <T> the desired type of the return value
    * @param message the message (pattern)
-   * @param msgArgs the message arguments. Note that these are not
-   *     {@code printf}-like message arguments. The first message argument within the
+   * @param msgArgs the message arguments. The first message argument within the
    *     message pattern would be {@code ${0}}; the second would be {@code ${1}},
    *     etc. For more information, see <a
    *     href="../../../module-summary.html#custom-error-messages">Custom Error
@@ -421,7 +420,7 @@ public final class Check {
    */
   public static <T> T fail(String message, Object... msgArgs)
       throws IllegalArgumentException {
-    return failOn(DEF_EXC_FACTORY, message, msgArgs);
+    return fail(DEF_EXC_FACTORY, message, msgArgs);
   }
 
   /**
@@ -441,7 +440,7 @@ public final class Check {
   }
 
   /**
-   * Always throws an exception produced by the specified exception factory with the
+   * Always throws the exception produced by the specified exception factory with the
    * specified message and message arguments. The method is still declared to return
    * a value of type {@code <T>} so it can be used as the expression for a
    * {@code return} statement.
@@ -452,8 +451,7 @@ public final class Check {
    * @param excFactory a function that takes a {@code String} (the exception
    *     message) and produces an {@code Exception}.
    * @param message the message
-   * @param msgArgs the message arguments. Note that these are not
-   *     {@code printf}-like message arguments. The first message argument within the
+   * @param msgArgs the message arguments. The first message argument within the
    *     message pattern would be {@code ${0}}; the second would be {@code ${1}},
    *     etc. For more information, see <a
    *     href="../../../module-summary.html#custom-error-messages">Custom Error
@@ -462,7 +460,7 @@ public final class Check {
    *     {@code return} statement
    * @throws X always
    */
-  public static <T, X extends Throwable> T failOn(
+  public static <T, X extends Throwable> T fail(
       Function<String, X> excFactory, String message, Object... msgArgs) throws X {
     if (msgArgs == null || message == null) {
       throw excFactory.apply(message);

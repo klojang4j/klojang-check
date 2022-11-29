@@ -11,11 +11,9 @@ import static org.klojang.check.relation.Private.testAgainstArray;
  * {@code IntPredicate} and the relational interfaces in this package. It enables the
  * composition of new tests from any number of instances of {@link Predicate},
  * {@link IntPredicate}, {@link Relation}, {@link IntRelation} and
- * {@link IntObjRelation}. It does not override any method of {@code IntPredicate}.
- * Instead, it extends it with a comprehensive set of {@code default} methods that
- * allow the composition to take place. For more information, see
- * {@link ComposableIntPredicate}.
- *
+ * {@link IntObjRelation}. {@code ComposableIntPredicate} extends
+ * {@link IntPredicate} with a set of {@code default} methods that allow the
+ * composition to take place. For more information, see {@link ComposablePredicate}.
  */
 @SuppressWarnings({"unchecked"})
 @FunctionalInterface
@@ -346,7 +344,7 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andNot(IntPredicate test) {
-   return x -> meFirst(x) && !test.test(x);
+    return x -> meFirst(x) && !test.test(x);
   }
 
   /**
@@ -439,7 +437,7 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate andThat(int subject,
       IntRelation relation,
       int object) {
-   return x -> meFirst(x) && relation.exists(subject, object);
+    return x -> meFirst(x) && relation.exists(subject, object);
   }
 
   /**
@@ -468,7 +466,7 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andNot(int value, IntPredicate test) {
-   return x -> meFirst(x) && !test.test(value);
+    return x -> meFirst(x) && !test.test(value);
   }
 
   /**

@@ -1,5 +1,7 @@
-module:org.klojang.check
-org.klojang.check
-org.klojang.check.aux
-org.klojang.check.fallible
-org.klojang.check.relation
+module:org.klojang.util
+org.klojang.util
+org.klojang.util.collection
+org.klojang.util.exception
+org.klojang.util.util
+org.klojang.util.x
+org.klojang.util.x.collection

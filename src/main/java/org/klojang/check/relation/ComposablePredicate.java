@@ -1,5 +1,6 @@
 package org.klojang.check.relation;
 
+import org.klojang.check.Check;
 import org.klojang.check.CommonChecks;
 
 import java.util.function.IntPredicate;
@@ -13,33 +14,33 @@ import static org.klojang.check.relation.Private.testAgainstArray;
  * and the relational interfaces in this package. It enables the composition of new
  * tests from any number of instances of {@link Predicate}, {@link IntPredicate},
  * {@link Relation}, {@link IntRelation} and {@link IntObjRelation}.
- * {@code ComposablePredicate} does not override any method of {@code Predicate}.
- * Instead, it extends it with a set of {@code default} methods that allow the
- * composition to take place. These methods can be divided along two axes:
+ * {@code ComposablePredicate} extends {@code Predicate} with a set of
+ * {@code default} methods that allow the composition to take place. These methods
+ * can be divided along two axes:
  * <ol>
  *   <li>{@code and()} versus {@code or()} methods
- *   <li>methods that execute two checks on a single value versus methods
- *      that effectively constitute a single check on two interrelated
- *      values
+ *   <li>methods that execute <i>two checks on a single value</i> versus methods
+ *      that effectively constitute a <i>single check on two interrelated
+ *      values</i>
  * </ol>
  *
  * <h2>AND vs. OR Compositions</h2>
  *
  * <p>Generally, you will have more use for compositions expressing a logical
  * disjunction (OR), as the chain of checks following
- * {@link org.klojang.check.Check#that(Object) Check.that(...)} already constitutes
+ * {@link Check#that(Object) Check.that(...)} already constitutes
  * a logical conjunction (AND). For example, this statement:
  *
  * <blockquote><pre>{@code
  * Check.that(numChairs).is(positive()).is(lte(), 4).is(even());
  * }</pre></blockquote>
  *
- * <p>requires the number of chairs to be positive <b>and</b> less than, or equal to 4
- * <b>and</b> even. If the number of chairs needs to pass just one of
- * these tests, write:
+ * <p>requires the number of chairs to be positive <b>and</b> less than, or equal
+ * to 4 <b>and</b> even. If the number of chairs needs to pass just one of these
+ * tests, write:
  *
  * <blockquote><pre>{@code
- * Check.that(numChairs).is(positive().orElse(lt(), 5).orElse(even()));
+ * Check.that(numChairs).is(positive().orElse(lte(), 4).orElse(even()));
  * }</pre></blockquote>
  *
  * <p>Nevertheless, you might still want to use the {@code and()} methods for
@@ -47,6 +48,12 @@ import static org.klojang.check.relation.Private.testAgainstArray;
  *
  * <blockquote><pre>{@code
  * Check.that(string).is(notNull().and(hasSubstring(), allOf(), "to", "be", "or", "not"));
+ * // is equivalent to:
+ * Check.that(string).is(notNull())
+ *    .is(hasSubstring(), "to")
+ *    .is(hasSubstring(), "be")
+ *    .is(hasSubstring(), "or")
+ *    .is(hasSubstring(), "not")
  * }</pre></blockquote>
  *
  * <p>(See {@link Quantifier} for the {@code allOf()} argument.)
@@ -61,28 +68,30 @@ import static org.klojang.check.relation.Private.testAgainstArray;
  * }</pre></blockquote>
  *
  * <p>In the above example, the engine only needs to be ready if there is more data
- * in the buffer. Note, however, that Klojang Check doesn't care whether the values
- * are interrelated or not. In the end it is up to the client to decide why two
- * different values should be validated in a single composition. Also note that the
- * second check continues nicely in the idiom of Klojang Check, even though it is
- * now just syntactic sugar. Depending on your taste you can also just write:
+ * in the buffer.
+ *
+ * <p>Notice that the second check continues nicely in the idiom of Klojang Check,
+ * even though it is now just syntactic sugar. Depending on your taste you can also
+ * just write:
  *
  * <blockquote><pre>{@code
  * Check.that(engine.ready()).is(yes().or(buffer.size() == 0);
  * }</pre></blockquote>
  *
+ * <p>(Contrary to what you might perhaps expect, it will not make your code run
+ * faster, though.)
+ *
  * <h2>Generics</h2>
  *
  * <p>Even though the type parameter for {@code ComposablePredicate} is {@code <T>},
- * the type parameter for the predicates and relations it strings together is not
- * {@code <? super T>}, as you would ordinarily expect. Instead, it is simply
- * {@code <?>}. This allows generic checks like
- * {@link CommonChecks#notNull() notNull()} and
+ * the type parameter for the predicates and relations passed to the values
+ * {@code and()} and {@code or()} methods is simply {@code <?>}. This allows
+ * checks like {@link CommonChecks#notNull() notNull()} and
  * {@link CommonChecks#notEmpty() notEmpty()}, which can be applied to any
  * non-primitive type, to be followed by checks that can only be applied to a
- * specific type. For example, the following example would <i>not</i> compile if
- * {@code andAlso()} would take a {@code Predicate<? super T>} rather than
- * simply {@code Predicate<?>}:
+ * specific type. For example, the following code would <i>not</i> compile if the
+ * argument to {@code andAlso()} were {@code Predicate<? super T>} instead of
+ * {@code Predicate<?>}:
  *
  * <blockquote><pre>{@code
  * Check.that(file).is(empty().andAlso(writable()));
@@ -90,15 +99,14 @@ import static org.klojang.check.relation.Private.testAgainstArray;
  *
  * <p>The downside is that it is easier for a composition of tests to harbor a type
  * error without the compiler noticing it, resulting in a {@link ClassCastException}
- * at runtime. For example, the following nonsensical statement compiles just as
- * well:
+ * at runtime. For example, the following nonsensical statement compiles just fine:
  *
  * <blockquote><pre>{@code
  * Check.that(list).is(empty().andAlso(writable()));
  * }</pre></blockquote>
  *
- * In addition, when providing a check in the form of a lambda, you will now have to
- * specify the type of the lambda parameter:
+ * <p> In addition, when using lambdas, you will now have to specify the type of the
+ * lambda parameter:
  *
  * <blockquote><pre>{@code
  * Check.that(file).is(empty().andAlso(f -> f.canWrite())); // WON'T COMPILE!!

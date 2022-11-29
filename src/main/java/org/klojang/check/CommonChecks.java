@@ -568,10 +568,9 @@ public final class CommonChecks {
    *
    * @param <S> the type of the subject of the relation (which is the value being
    *     tested)
-   * @param <O> the type of the object of the relation
    * @return a function implementing the test described above
    */
-  public static <S, O extends Class<?>> Relation<S, O> instanceOf() {
+  public static <S> Relation<S, Class<?>> instanceOf() {
     return (x, y) -> y.isInstance(x);
   }
 
@@ -697,7 +696,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static <E, C0 extends Collection<? super E>, C1 extends Collection<E>>
-  Relation<C0, C1> enclosing() {
+  Relation<C0, C1> containsAll() {
     return Collection::containsAll;
   }
 

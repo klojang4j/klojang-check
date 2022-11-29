@@ -7,12 +7,14 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
- * Utility methods that help you begin a new composition. Note that while the
- * predicates in the {@link CommonChecks} class are, in fact, already either a
- * {@link ComposablePredicate} or a {@link ComposableIntPredicate}, the relational
- * interfaces in this package obviously are not, and neither are handwritten lambdas
- * and method references. The utility methods defined in this class make sure you can
- * still start your composition with a {@link Relation}, lambda or method reference.
+ * Utility methods that assist in the creation of new checks by combining multiple
+ * individual checks. Note that while the predicates in the {@link CommonChecks}
+ * class are, in fact, already either a {@link ComposablePredicate} or a
+ * {@link ComposableIntPredicate}, the relational checks obviously are not.
+ * Handwritten lambdas and method references (for example: {@code i -> i % 3 == 0})
+ * neither are a {@code ComposablePredicate} or {@code ComposableIntPredicate} <i>in
+ * and of themselves</i>. The utility methods defined in this class make sure a
+ * composition can start with a {@link Relation}, lambda or method reference.
  *
  * @author Ayco Holleman
  */

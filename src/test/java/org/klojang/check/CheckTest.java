@@ -2,8 +2,6 @@ package org.klojang.check;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.klojang.check.Check;
-import org.klojang.check.ObjectCheck;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class CheckTest {
   public void fail00() {
     Long l = 42L;
     try {
-      l = Check.failOn(IndexOutOfBoundsException::new, "Got that wrong ${0}", "bro");
+      l = Check.fail(IndexOutOfBoundsException::new, "Got that wrong ${0}", "bro");
     } catch (IndexOutOfBoundsException e) {
       assertEquals(42L, (long) l);
       assertEquals("Got that wrong bro", e.getMessage());
@@ -79,7 +77,7 @@ public class CheckTest {
 
   @Test(expected = IllegalStateException.class)
   public void fail04() {
-    String s = Check.failOn(IllegalStateException::new, null, null);
+    String s = Check.fail(IllegalStateException::new, null, null);
   }
 
   @Test

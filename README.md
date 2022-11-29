@@ -30,11 +30,6 @@ implementation group: 'org.klojang', name: 'klojang-check', version: '1.0.4'
 Here is an example of Klojang Check in action:
 
 ```java
-import org.klojang.check.Check;
-
-import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.Quantifier.noneOf;
-
 public class InteriorDesigner {
 
   private final int numChairs;
@@ -44,14 +39,13 @@ public class InteriorDesigner {
   }
 
   public void applyColors(List<Color> colors) {
-    Check.that(colors).is(notEmpty()
-        .and(contains(), noneOf(), PINK, YELLOW, PURPLE));
-    // apply the colors
+    Check.that(colors).is(notEmpty().and(contains(), noneOf(), RED, BLUE, PINK));
+    // apply the colors ...
   }
 
   public void addCouch(Couch couch) {
     Check.that(couch).isNot(Couch::isExpensive, ExpensiveCouchException::new);
-    // add the couch
+    // add the couch ...
   }
 
 }
