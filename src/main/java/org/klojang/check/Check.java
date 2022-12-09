@@ -302,7 +302,8 @@ public final class Check {
       throw argumentMustNotBeNull("list");
     }
     if (fromIndex < 0 || toIndex < fromIndex || list.size() < toIndex) {
-      throw new IndexOutOfBoundsException();
+      throw new IndexOutOfBoundsException(
+          "from=" + fromIndex + ";to=" + toIndex + ";size=" + list.size());
     }
     return toIndex - fromIndex;
   }
