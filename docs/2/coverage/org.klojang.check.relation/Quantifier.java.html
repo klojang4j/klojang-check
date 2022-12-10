@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Quantifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.relation</a> &gt; <span class="el_source">Quantifier.java</span></div><h1>Quantifier.java</h1><pre class="source lang-java linenums">package org.klojang.check.relation;
+
+/**
+ * Symbolic constants for logical quantifiers. {@link ComposablePredicate} and
+ * {@link ComposableIntPredicate} let you use logical quantifiers to define not just
+ * a {@linkplain Relation relation} between one value and another value, but also
+ * between one value and an array of other values:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(list).is(notNull().and(contains(), noneOf(), &quot;to&quot;, &quot;be&quot;, &quot;or&quot;, &quot;not&quot;));
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;(Strictly speaking the value domain of a logical quantifier would better be
+ * modeled as a {@link java.util.Set Set}. For convenience sake, however, it is
+ * modeled as a varargs array within Klojang Check.)
+ *
+ * @see ComposablePredicate
+ * @see ComposableIntPredicate
+ */
+<span class="fc" id="L20">public enum Quantifier {</span>
+
+  /**
+   * Symbolic constant for the universal quantifier (∀).
+   */
+<span class="fc" id="L25">  ALL,</span>
+  /**
+   * Symbolic constant for the existential quantifier (∃).
+   */
+<span class="fc" id="L29">  ANY,</span>
+  /**
+   * Symbolic constant for the negation of the existential quantifier (¬∃).
+   */
+<span class="fc" id="L33">  NONE;</span>
+
+  /**
+   * Returns {@link #ALL}.
+   *
+   * @return {@code Quantifier.ALL}
+   */
+  public static Quantifier allOf() {
+<span class="fc" id="L41">    return ALL;</span>
+  }
+
+  /**
+   * Returns {@link #ANY}.
+   *
+   * @return {@code Quantifier.ANY}
+   */
+  public static Quantifier anyOf() {
+<span class="fc" id="L50">    return ANY;</span>
+  }
+
+  /**
+   * Returns {@link #NONE}.
+   *
+   * @return {@code Quantifier.NONE}
+   */
+  public static Quantifier noneOf() {
+<span class="fc" id="L59">    return NONE;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

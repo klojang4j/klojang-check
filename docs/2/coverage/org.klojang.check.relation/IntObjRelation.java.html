@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IntObjRelation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.relation</a> &gt; <span class="el_source">IntObjRelation.java</span></div><h1>IntObjRelation.java</h1><pre class="source lang-java linenums">package org.klojang.check.relation;
+
+/**
+ * Defines a relationship between an integer and an object. For example, if x equals
+ * 6, and y is an {@code int[]} array containing 6, then the &lt;b&gt;is-element-of&lt;/b&gt;
+ * relation exists between x and y. See the
+ * {@linkplain org.klojang.check.relation package description} for more
+ * information.
+ *
+ * @param &lt;O&gt; the type of the object of the relation
+ * @author Ayco Holleman
+ */
+@FunctionalInterface
+public interface IntObjRelation&lt;O&gt; {
+
+  /**
+   * Returns the converse of this relation, swapping subject and object in the
+   * relationship. Thus, the converse of an {@code IntObjRelation} is an
+   * {@link ObjIntRelation}.
+   *
+   * @return an {@code ObjIntRelation} that is the converse of this
+   *     {@code IntObjRelation}.
+   */
+  default ObjIntRelation&lt;O&gt; converse() {
+<span class="nc" id="L25">    return (x, y) -&gt; exists(y, x);</span>
+  }
+
+  /**
+   * Returns the negation of this {@code IntObjRelation}.
+   *
+   * @return the negation of this {@code IntObjRelation}
+   */
+  default IntObjRelation&lt;O&gt; negate() {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">    return (x, y) -&gt; !exists(x, y);</span>
+  }
+
+  /**
+   * Returns whether the relationship between {@code subject} and {@code object}
+   * exists.
+   *
+   * @param subject The value to test
+   * @param object The value to test it against
+   * @return {@code true} if the relation exists, {@code false} otherwise
+   */
+  boolean exists(int subject, O object);
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjIntRelation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.relation</a> &gt; <span class="el_source">ObjIntRelation.java</span></div><h1>ObjIntRelation.java</h1><pre class="source lang-java linenums">package org.klojang.check.relation;
+
+import org.klojang.check.CommonChecks;
+import org.klojang.check.IntCheck;
+import org.klojang.check.ObjectCheck;
+
+/**
+ * Defines some kind of relationship between an object and an integer. For example,
+ * if x is an {@code int[]} array containing 6, and y equals 6, then the
+ * &lt;b&gt;contain-elements&lt;/b&gt; relation exists between x and y. See the
+ * {@linkplain org.klojang.check.relation package description} for more
+ * information.
+ *
+ * &lt;p&gt;This interface is included for completeness and because it represents the
+ * {@linkplain #converse() converse} of the {@link IntObjRelation}.
+ * {@link ObjectCheck} and {@link IntCheck} do not currently support checks in the
+ * form of an {@code ObjIntRelation} and the {@link CommonChecks} does not define
+ * any.
+ *
+ * @param &lt;S&gt; The type of the subject of the relation
+ * @author Ayco Holleman
+ * @see Relation
+ */
+@FunctionalInterface
+public interface ObjIntRelation&lt;S&gt; {
+
+  /**
+   * Returns the converse of this relation, swapping subject and object in the
+   * relationship. Thus, the converse of an {@code ObjIntRelation} is an
+   * {@link IntObjRelation}.
+   *
+   * @return an {@code IntObjRelation} that is the converse of this
+   *     {@code ObjIntRelation}.
+   */
+  default IntObjRelation&lt;S&gt; converse() {
+<span class="nc" id="L36">    return (x, y) -&gt; exists(y, x);</span>
+  }
+
+  /**
+   * Returns the negation of the this {@code ObjIntRelation}.
+   *
+   * @return the negation of the this {@code ObjIntRelation}
+   */
+  default ObjIntRelation&lt;S&gt; negate() {
+<span class="nc bnc" id="L45" title="All 2 branches missed.">    return (x, y) -&gt; !exists(x, y);</span>
+  }
+
+  /**
+   * Whether this {@code ObjIntRelation} is found to exist between the provided
+   * {@code subject} and {@code object}.
+   *
+   * @param subject The subject of the relation (the entity from which the
+   *     relationship extends)
+   * @param object The object of the relation (the entity to which the
+   *     relationship extends)
+   * @return {@code true} if the relation exists, {@code false} otherwise.
+   */
+  boolean exists(S subject, int object);
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
