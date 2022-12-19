@@ -936,6 +936,18 @@ public final class CommonChecks {
   }
 
   /**
+   * Alias for {@link #indexOf()}. Can be used if the class you are working in
+   * already contains an {@code indexOf()} method.
+   *
+   * @param &lt;T&gt; the type of the object of the {@code IntObjRelation} - must be a
+   *     {@code String}, {@code List} or array
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; IntObjRelation&lt;T&gt; indexExclusiveOf() {
+<span class="nc" id="L947">    return indexOf();</span>
+  }
+
+  /**
    * Verifies that a value can be used as a &quot;from&quot; or &quot;to&quot; index in operations like
    * {@link Arrays#copyOfRange(int[], int, int) Arrays.copyOfRange()},
    * {@link String#substring(int, int) String.substring()} and
@@ -952,7 +964,7 @@ public final class CommonChecks {
    * @see Check#fromTo(Object[], int, int)
    */
   public static &lt;T&gt; IntObjRelation&lt;T&gt; indexInclusiveOf() {
-<span class="fc" id="L955">    return CheckImpls::isIndexInclusiveOf;</span>
+<span class="fc" id="L967">    return CheckImpls::isIndexInclusiveOf;</span>
   }
 
   /**
@@ -961,13 +973,13 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static IntObjRelation&lt;int[]&gt; inIntArray() {
-<span class="fc" id="L964">    return (x, y) -&gt; {</span>
-<span class="fc bfc" id="L965" title="All 2 branches covered.">      for (int i : y) {</span>
-<span class="fc bfc" id="L966" title="All 2 branches covered.">        if (x == i) {</span>
-<span class="fc" id="L967">          return true;</span>
+<span class="fc" id="L976">    return (x, y) -&gt; {</span>
+<span class="fc bfc" id="L977" title="All 2 branches covered.">      for (int i : y) {</span>
+<span class="fc bfc" id="L978" title="All 2 branches covered.">        if (x == i) {</span>
+<span class="fc" id="L979">          return true;</span>
         }
       }
-<span class="fc" id="L970">      return false;</span>
+<span class="fc" id="L982">      return false;</span>
     };
   }
 

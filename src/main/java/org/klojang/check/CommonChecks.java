@@ -936,6 +936,18 @@ public final class CommonChecks {
   }
 
   /**
+   * Alias for {@link #indexOf()}. Can be used if the class you are working in
+   * already contains an {@code indexOf()} method.
+   *
+   * @param <T> the type of the object of the {@code IntObjRelation} - must be a
+   *     {@code String}, {@code List} or array
+   * @return a function implementing the test described above
+   */
+  public static <T> IntObjRelation<T> indexExclusiveOf() {
+    return indexOf();
+  }
+
+  /**
    * Verifies that a value can be used as a "from" or "to" index in operations like
    * {@link Arrays#copyOfRange(int[], int, int) Arrays.copyOfRange()},
    * {@link String#substring(int, int) String.substring()} and
