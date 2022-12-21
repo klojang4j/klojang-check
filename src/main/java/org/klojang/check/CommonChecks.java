@@ -132,6 +132,18 @@ public final class CommonChecks {
   }
 
   /**
+   * Verifies that the argument is either null or an empty string.
+   *
+   * <p>This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate<String> emptyString() {
+    return s -> s == null || s.isEmpty();
+  }
+
+  /**
    * Verifies that the argument is not empty. More precisely: it verifies the
    * negation of the {@link #empty()} test.
    *
@@ -937,7 +949,14 @@ public final class CommonChecks {
 
   /**
    * Alias for {@link #indexOf()}. Can be used if the class you are working in
-   * already contains an {@code indexOf()} method.
+   * already contains an {@code indexOf()} method. Note that this method is
+   * <i>nothing but</i> an alias for the {@code indexOf()} check; it will even report
+   * itself to be the {@code indexOf()} check:
+   *
+   * <blockquote><pre>{@code
+   * Check.that(42, "foo").is(indexExclusiveOf(), new int[10], "${tag} did not pass the ${test}() test");
+   * // "foo did not pass the indexOf() test"
+   * }</pre></blockquote>
    *
    * @param <T> the type of the object of the {@code IntObjRelation} - must be a
    *     {@code String}, {@code List} or array

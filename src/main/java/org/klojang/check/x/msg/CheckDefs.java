@@ -40,6 +40,7 @@ public final class CheckDefs {
     setMetadata(yes(), msgYes(), "yes");
     setMetadata(no(), msgNo(), "no");
     setMetadata(empty(), msgEmpty(), "empty");
+    setMetadata(emptyString(), msgEmpty(), "emptyString"); // recycle message
     setMetadata(notEmpty(), msgNotEmpty(), "notEmpty");
     setMetadata(deepNotNull(), msgDeepNotNull(), "deepNotNull");
     setMetadata(deepNotEmpty(), msgDeepNotEmpty(), "deepNotEmpty");

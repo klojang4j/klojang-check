@@ -76,6 +76,10 @@ public final class Tag {
    */
   public static final String MESSAGE = "message";
   /**
+   * "name"
+   */
+  public static final String NAME = "name";
+  /**
    * "obj"
    */
   public static final String OBJ = "obj";

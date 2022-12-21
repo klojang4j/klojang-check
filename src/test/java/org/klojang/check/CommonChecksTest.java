@@ -184,6 +184,21 @@ public class CommonChecksTest {
   }
 
   @Test
+  public void emptyString00() {
+    Check.that((String) null).is(emptyString());
+  }
+
+  @Test
+  public void emptyString01() {
+    Check.that("").is(emptyString());
+  }
+
+  @Test
+  public void emptyString02() {
+    Check.that(" ").isNot(emptyString());
+  }
+
+  @Test
   public void deepNotNull01() {
     Check.that(Short.valueOf((short) 7)).is(deepNotNull());
     Check.that(LocalDateTime.now()).is(deepNotNull());
@@ -438,6 +453,25 @@ public class CommonChecksTest {
   public void indexOf00() {
     int[] ints = new int[0];
     Check.that(0).is(indexOf(), ints);
+  }
+
+  @Test
+  public void indexExclusiveOf00() {
+    // we want to especially test here that indexExclusiveOf() is a
+    // pure alias of indexOf(): it just returns indexOf(), and so should
+    // inherit its error message
+    int[] ints = new int[10];
+    try {
+      Check.that(42).is(indexExclusiveOf(), ints);
+    } catch (IllegalArgumentException e) {
+      assertEquals("argument must be >= 0 and < 10 (was 42)", e.getMessage());
+    }
+    // but also its name!
+    try {
+      Check.that(42).is(indexExclusiveOf(), ints, "${test} test failed");
+    } catch (IllegalArgumentException e) {
+      assertEquals("indexOf test failed", e.getMessage());
+    }
   }
 
   @Test

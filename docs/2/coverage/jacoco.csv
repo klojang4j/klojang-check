@@ -1,7 +1,7 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 Klojang Check,org.klojang.check,CommonExceptions,28,119,0,0,5,24,7,28,7,28
 Klojang Check,org.klojang.check,Check,11,244,3,45,3,49,5,42,2,21
-Klojang Check,org.klojang.check,CommonChecks,11,446,1,53,4,86,3,137,2,111
+Klojang Check,org.klojang.check,CommonChecks,9,459,1,57,3,88,2,142,1,114
 Klojang Check,org.klojang.check,CorruptCheckException,0,4,0,0,0,2,0,1,0,1
 Klojang Check,org.klojang.check,IntCheck,0,760,0,44,0,136,0,82,0,60
 Klojang Check,org.klojang.check,ObjectCheck,11,643,2,28,3,108,3,73,1,60
