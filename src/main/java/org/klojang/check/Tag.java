@@ -36,6 +36,10 @@ public final class Tag {
    */
   public static final String EXCEPTION = "exception";
   /**
+   * "file"
+   */
+  public static final String FILE = "file";
+  /**
    * "filter"
    */
   public static final String FILTER = "filter";
