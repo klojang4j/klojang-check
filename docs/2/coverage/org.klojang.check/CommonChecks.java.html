@@ -659,6 +659,18 @@ public final class CommonChecks {
   }
 
   /**
+   * Alias for {@link #in()}. Note that this method will even report itself to be the
+   * &quot;in&quot; check.
+   *
+   * @param &lt;S&gt; the type of the argument
+   * @param &lt;O&gt; the type of the {@code Collection}
+   * @return a function implementing the test described above
+   */
+  public static &lt;S, O extends Collection&lt;? super S&gt;&gt; Relation&lt;S, O&gt; elementOf() {
+<span class="nc" id="L670">    return in();</span>
+  }
+
+  /**
    * Verifies the presence of a key within a map.
    *
    * @param &lt;S&gt; the type of the keys within the map
@@ -666,7 +678,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static &lt;S, O extends Map&lt;? super S, ?&gt;&gt; Relation&lt;S, O&gt; keyIn() {
-<span class="fc" id="L669">    return (x, y) -&gt; y.containsKey(x);</span>
+<span class="fc" id="L681">    return (x, y) -&gt; y.containsKey(x);</span>
   }
 
   /**
@@ -677,7 +689,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static &lt;S, O extends Map&lt;?, ? super S&gt;&gt; Relation&lt;S, O&gt; valueIn() {
-<span class="fc" id="L680">    return (x, y) -&gt; y.containsValue(x);</span>
+<span class="fc" id="L692">    return (x, y) -&gt; y.containsValue(x);</span>
   }
 
   /**
@@ -689,7 +701,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static &lt;O, S extends O&gt; Relation&lt;S, O[]&gt; inArray() {
-<span class="fc" id="L692">    return CheckImpls::inArray;</span>
+<span class="fc" id="L704">    return CheckImpls::inArray;</span>
   }
 
   /**
@@ -709,7 +721,7 @@ public final class CommonChecks {
    */
   public static &lt;E, C0 extends Collection&lt;? super E&gt;, C1 extends Collection&lt;E&gt;&gt;
   Relation&lt;C0, C1&gt; containsAll() {
-<span class="fc" id="L712">    return Collection::containsAll;</span>
+<span class="fc" id="L724">    return Collection::containsAll;</span>
   }
 
   /**
@@ -728,7 +740,7 @@ public final class CommonChecks {
    */
   public static &lt;E, C0 extends Collection&lt;E&gt;, C1 extends Collection&lt;? super E&gt;&gt;
   Relation&lt;C0, C1&gt; containedIn() {
-<span class="fc" id="L731">    return (x, y) -&gt; y.containsAll(x);</span>
+<span class="fc" id="L743">    return (x, y) -&gt; y.containsAll(x);</span>
   }
 
   /**
@@ -738,7 +750,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, CharSequence&gt; hasSubstring() {
-<span class="fc" id="L741">    return String::contains;</span>
+<span class="fc" id="L753">    return String::contains;</span>
   }
 
   /**
@@ -747,7 +759,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; substringOf() {
-<span class="fc" id="L750">    return (x, y) -&gt; y.contains(x);</span>
+<span class="fc" id="L762">    return (x, y) -&gt; y.contains(x);</span>
   }
 
   /**
@@ -757,7 +769,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; startsWith() {
-<span class="fc" id="L760">    return String::startsWith;</span>
+<span class="fc" id="L772">    return String::startsWith;</span>
   }
 
   /**
@@ -767,7 +779,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; endsWith() {
-<span class="fc" id="L770">    return String::endsWith;</span>
+<span class="fc" id="L782">    return String::endsWith;</span>
   }
 
   /**
@@ -778,7 +790,7 @@ public final class CommonChecks {
    * @see #matches()
    */
   public static Relation&lt;String, Pattern&gt; hasPattern() {
-<span class="fc" id="L781">    return (string, pattern) -&gt; pattern.matcher(string).matches();</span>
+<span class="fc" id="L793">    return (string, pattern) -&gt; pattern.matcher(string).matches();</span>
   }
 
   /**
@@ -789,7 +801,7 @@ public final class CommonChecks {
    * @see #containsMatch()
    */
   public static Relation&lt;String, Pattern&gt; containsPattern() {
-<span class="fc" id="L792">    return (string, pattern) -&gt; pattern.matcher(string).find();</span>
+<span class="fc" id="L804">    return (string, pattern) -&gt; pattern.matcher(string).find();</span>
   }
 
   /**
@@ -806,8 +818,8 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; matches() {
-<span class="fc" id="L809">    return (string, pattern) -&gt;</span>
-<span class="fc" id="L810">        hasPattern().exists(string, compile(pattern));</span>
+<span class="fc" id="L821">    return (string, pattern) -&gt;</span>
+<span class="fc" id="L822">        hasPattern().exists(string, compile(pattern));</span>
   }
 
   /**
@@ -824,8 +836,8 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; containsMatch() {
-<span class="fc" id="L827">    return (string, pattern) -&gt;</span>
-<span class="fc" id="L828">        containsPattern().exists(string, compile(pattern));</span>
+<span class="fc" id="L839">    return (string, pattern) -&gt;</span>
+<span class="fc" id="L840">        containsPattern().exists(string, compile(pattern));</span>
   }
 
   /**
@@ -847,12 +859,12 @@ public final class CommonChecks {
    * @see #plainShort()
    */
   public static &lt;T extends Number&gt; Relation&lt;String, Class&lt;T&gt;&gt; numerical() {
-<span class="fc" id="L850">    return (x, y) -&gt; {</span>
-<span class="fc" id="L851">      Predicate&lt;String&gt; p = NUMERICALS.get(y);</span>
-<span class="pc bpc" id="L852" title="1 of 2 branches missed.">      if (p != null) {</span>
-<span class="fc" id="L853">        return p.test(x);</span>
+<span class="fc" id="L862">    return (x, y) -&gt; {</span>
+<span class="fc" id="L863">      Predicate&lt;String&gt; p = NUMERICALS.get(y);</span>
+<span class="pc bpc" id="L864" title="1 of 2 branches missed.">      if (p != null) {</span>
+<span class="fc" id="L865">        return p.test(x);</span>
       }
-<span class="nc" id="L855">      throw typeNotSupported(y);</span>
+<span class="nc" id="L867">      throw typeNotSupported(y);</span>
     };
   }
 
@@ -880,12 +892,12 @@ public final class CommonChecks {
    * @see #plainShort()
    */
   public static &lt;T extends Number&gt; Relation&lt;String, Class&lt;T&gt;&gt; parsableAs() {
-<span class="fc" id="L883">    return (x, y) -&gt; {</span>
-<span class="fc" id="L884">      Predicate&lt;String&gt; p = PARSABLES.get(y);</span>
-<span class="fc bfc" id="L885" title="All 2 branches covered.">      if (p != null) {</span>
-<span class="fc" id="L886">        return p.test(x);</span>
+<span class="fc" id="L895">    return (x, y) -&gt; {</span>
+<span class="fc" id="L896">      Predicate&lt;String&gt; p = PARSABLES.get(y);</span>
+<span class="fc bfc" id="L897" title="All 2 branches covered.">      if (p != null) {</span>
+<span class="fc" id="L898">        return p.test(x);</span>
       }
-<span class="fc" id="L888">      throw typeNotSupported(y);</span>
+<span class="fc" id="L900">      throw typeNotSupported(y);</span>
     };
   }
 
@@ -896,7 +908,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; equalsIC() {
-<span class="fc" id="L899">    return String::equalsIgnoreCase;</span>
+<span class="fc" id="L911">    return String::equalsIgnoreCase;</span>
   }
 
   /**
@@ -905,7 +917,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; startsWithIC() {
-<span class="fc" id="L908">    return (s, o) -&gt; s.regionMatches(true, 0, o, 0, o.length());</span>
+<span class="fc" id="L920">    return (s, o) -&gt; s.regionMatches(true, 0, o, 0, o.length());</span>
   }
 
   /**
@@ -914,8 +926,8 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; endsWithIC() {
-<span class="fc" id="L917">    return (s, o) -&gt;</span>
-<span class="fc" id="L918">        s.regionMatches(true, s.length() - o.length(), o, 0, o.length());</span>
+<span class="fc" id="L929">    return (s, o) -&gt;</span>
+<span class="fc" id="L930">        s.regionMatches(true, s.length() - o.length(), o, 0, o.length());</span>
   }
 
   /**
@@ -924,8 +936,8 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation&lt;String, String&gt; hasSubstringIC() {
-<span class="fc" id="L927">    return (s, o) -&gt;</span>
-<span class="fc" id="L928">        containsPattern().exists(s, compile(o, CASE_INSENSITIVE | LITERAL));</span>
+<span class="fc" id="L939">    return (s, o) -&gt;</span>
+<span class="fc" id="L940">        containsPattern().exists(s, compile(o, CASE_INSENSITIVE | LITERAL));</span>
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -944,14 +956,13 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static &lt;T&gt; IntObjRelation&lt;T&gt; indexOf() {
-<span class="fc" id="L947">    return CheckImpls::isIndexOf;</span>
+<span class="fc" id="L959">    return CheckImpls::isIndexOf;</span>
   }
 
   /**
    * Alias for {@link #indexOf()}. Can be used if the class you are working in
-   * already contains an {@code indexOf()} method. Note that this method is
-   * &lt;i&gt;nothing but&lt;/i&gt; an alias for the {@code indexOf()} check; it will even report
-   * itself to be the {@code indexOf()} check:
+   * already contains an {@code indexOf()} method. Note that this will report itself
+   * to be the {@code indexOf()} check:
    *
    * &lt;blockquote&gt;&lt;pre&gt;{@code
    * Check.that(42, &quot;foo&quot;).is(indexExclusiveOf(), new int[10], &quot;${tag} did not pass the ${test}() test&quot;);
@@ -963,7 +974,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static &lt;T&gt; IntObjRelation&lt;T&gt; indexExclusiveOf() {
-<span class="fc" id="L966">    return indexOf();</span>
+<span class="fc" id="L977">    return indexOf();</span>
   }
 
   /**
@@ -983,7 +994,7 @@ public final class CommonChecks {
    * @see Check#fromTo(Object[], int, int)
    */
   public static &lt;T&gt; IntObjRelation&lt;T&gt; indexInclusiveOf() {
-<span class="fc" id="L986">    return CheckImpls::isIndexInclusiveOf;</span>
+<span class="fc" id="L997">    return CheckImpls::isIndexInclusiveOf;</span>
   }
 
   /**
@@ -992,13 +1003,13 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static IntObjRelation&lt;int[]&gt; inIntArray() {
-<span class="fc" id="L995">    return (x, y) -&gt; {</span>
-<span class="fc bfc" id="L996" title="All 2 branches covered.">      for (int i : y) {</span>
-<span class="fc bfc" id="L997" title="All 2 branches covered.">        if (x == i) {</span>
-<span class="fc" id="L998">          return true;</span>
+<span class="fc" id="L1006">    return (x, y) -&gt; {</span>
+<span class="fc bfc" id="L1007" title="All 2 branches covered.">      for (int i : y) {</span>
+<span class="fc bfc" id="L1008" title="All 2 branches covered.">        if (x == i) {</span>
+<span class="fc" id="L1009">          return true;</span>
         }
       }
-<span class="fc" id="L1001">      return false;</span>
+<span class="fc" id="L1012">      return false;</span>
     };
   }
 

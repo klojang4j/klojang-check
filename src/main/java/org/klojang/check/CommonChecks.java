@@ -659,6 +659,18 @@ public final class CommonChecks {
   }
 
   /**
+   * Alias for {@link #in()}. Note that this method will even report itself to be the
+   * "in" check.
+   *
+   * @param <S> the type of the argument
+   * @param <O> the type of the {@code Collection}
+   * @return a function implementing the test described above
+   */
+  public static <S, O extends Collection<? super S>> Relation<S, O> elementOf() {
+    return in();
+  }
+
+  /**
    * Verifies the presence of a key within a map.
    *
    * @param <S> the type of the keys within the map
@@ -949,9 +961,8 @@ public final class CommonChecks {
 
   /**
    * Alias for {@link #indexOf()}. Can be used if the class you are working in
-   * already contains an {@code indexOf()} method. Note that this method is
-   * <i>nothing but</i> an alias for the {@code indexOf()} check; it will even report
-   * itself to be the {@code indexOf()} check:
+   * already contains an {@code indexOf()} method. Note that this will report itself
+   * to be the {@code indexOf()} check:
    *
    * <blockquote><pre>{@code
    * Check.that(42, "foo").is(indexExclusiveOf(), new int[10], "${tag} did not pass the ${test}() test");
