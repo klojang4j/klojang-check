@@ -79,6 +79,7 @@ public final class CheckDefs {
     setMetadata(instanceOf(), msgInstanceOf(), "instanceOf");
     setMetadata(supertypeOf(), msgSupertypeOf(), "supertypeOf");
     setMetadata(subtypeOf(), msgSubtypeOf(), "subtypeOf");
+    setMetadata(resourceOf(), msgResourceOf(), "resourceOf");
     setMetadata(contains(), msgContains(), "contains");
     setMetadata(containsKey(), msgContainsKey(), "containsKey");
     setMetadata(containsValue(), msgContainsValue(), "containsValue");

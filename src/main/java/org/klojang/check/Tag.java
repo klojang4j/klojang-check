@@ -120,6 +120,10 @@ public final class Tag {
    */
   public static final String SIZE = "size";
   /**
+   * "source"
+   */
+  public static final String SOURCE = "source";
+  /**
    * "str"
    */
   public static final String STR = "str";
@@ -127,6 +131,10 @@ public final class Tag {
    * "string"
    */
   public static final String STRING = "string";
+  /**
+   * "target"
+   */
+  public static final String TARGET = "target";
   /**
    * "test"
    */

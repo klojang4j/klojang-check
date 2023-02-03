@@ -261,7 +261,12 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is an existing, regular file.
+   * Verifies that the argument is an existing, regular file. NB To verify that a
+   * path <i>string</i> is valid, execute:
+   *
+   * <blockquote><pre>{@code
+   * Check.that(path).has(File::new, regularFile());
+   * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    */
@@ -609,6 +614,18 @@ public final class CommonChecks {
    */
   public static <S, O> Relation<Class<S>, Class<O>> subtypeOf() {
     return (x, y) -> y.isAssignableFrom(x);
+  }
+
+  /**
+   * Verifies that the argument is a resource that can be loaded using the class
+   * loader of the specified class. In other words, it returns
+   * {@code object.getResource(subject) != null}.
+   *
+   * @param <T> the type of the subject's class
+   * @return a function that implements the test described above
+   */
+  public static <T> Relation<String, Class<T>> resourceOf() {
+    return (x, y) -> y.getResource(x) != null;
   }
 
   /**

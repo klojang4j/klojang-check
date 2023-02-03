@@ -47,6 +47,14 @@ public final class MsgRelation {
     //@formatter:on
   }
 
+  public static PrefabMsgFormatter msgResourceOf() {
+    //@formatter:off
+    return x -> x.negated()
+        ? "illegal classpath resource: " + x.arg()
+        : "no such resource: " + x.arg();
+    //@formatter:on
+  }
+
   public static PrefabMsgFormatter msgContains() {
     //@formatter:off
     return x -> x.negated()

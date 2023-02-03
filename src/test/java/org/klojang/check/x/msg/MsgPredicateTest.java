@@ -379,14 +379,12 @@ public class MsgPredicateTest {
 
   @Test
   public void file01() throws IOException {
-    File f = Path.of("bla", "bla", "bar.foo").toFile();
+    File f = Path.of("bla", "bla", "bar.Φ").toFile();
     try {
       Check.that(f, "lithium").is(regularFile());
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      assertEquals(
-          "lithium must be an existing, regular file (was " + f + ")",
-          e.getMessage());
+      assertEquals("no such file: bla/bla/bar.Φ", e.getMessage());
       return;
     } finally {
       f.delete();
