@@ -617,18 +617,6 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is a resource that can be loaded using the class
-   * loader of the specified class. In other words, it returns
-   * {@code object.getResource(subject) != null}.
-   *
-   * @param <T> the type of the subject's class
-   * @return a function that implements the test described above
-   */
-  public static <T> Relation<String, Class<T>> resourceOf() {
-    return (x, y) -> y.getResource(x) != null;
-  }
-
-  /**
    * Verifies that a collection contains a particular value. Equivalent to
    * {@link Collection#contains(Object) Collection::contains}.
    *

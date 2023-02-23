@@ -1,6 +1,9 @@
 package org.klojang.check.x.msg;
 
-import org.klojang.check.relation.*;
+import org.klojang.check.relation.ComposableIntPredicate;
+import org.klojang.check.relation.IntObjRelation;
+import org.klojang.check.relation.IntRelation;
+import org.klojang.check.relation.Relation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +12,8 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.x.msg.MsgIntObjRelation.*;
+import static org.klojang.check.x.msg.MsgIntObjRelation.msgIndexInclusiveInto;
+import static org.klojang.check.x.msg.MsgIntObjRelation.msgIndexOf;
 import static org.klojang.check.x.msg.MsgIntPredicate.*;
 import static org.klojang.check.x.msg.MsgIntRelation.*;
 import static org.klojang.check.x.msg.MsgObjIntRelation.*;
@@ -79,7 +83,6 @@ public final class CheckDefs {
     setMetadata(instanceOf(), msgInstanceOf(), "instanceOf");
     setMetadata(supertypeOf(), msgSupertypeOf(), "supertypeOf");
     setMetadata(subtypeOf(), msgSubtypeOf(), "subtypeOf");
-    setMetadata(resourceOf(), msgResourceOf(), "resourceOf");
     setMetadata(contains(), msgContains(), "contains");
     setMetadata(containsKey(), msgContainsKey(), "containsKey");
     setMetadata(containsValue(), msgContainsValue(), "containsValue");
@@ -100,7 +103,9 @@ public final class CheckDefs {
     setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
     setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
     setMetadata(matches(), msgHasPattern(), "matches"); // recycle message
-    setMetadata(containsMatch(), msgContainsPattern(), "containsMatch"); // recycle message
+    setMetadata(containsMatch(),
+        msgContainsPattern(),
+        "containsMatch"); // recycle message
     setMetadata(numerical(), msgNumerical(), "numerical");
     setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
     setMetadata(indexOf(), msgIndexOf(), "indexOf");
