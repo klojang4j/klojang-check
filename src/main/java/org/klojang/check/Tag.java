@@ -28,6 +28,10 @@ public final class Tag {
    */
   public static final String COLLECTION = "collection";
   /**
+   * "data"
+   */
+  public static final String DATA = "data";
+  /**
    * "element"
    */
   public static final String ELEMENT = "element";
