@@ -31,7 +31,7 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void orElsePredicate02() {
     Check.that("hello world")
-        .is(validIf((String s) -> s.charAt(1) == 'f')
+        .is(validWhen((String s) -> s.charAt(1) == 'f')
             .orElse((String s) -> s.charAt(1) == 'g'));
   }
 
@@ -63,32 +63,32 @@ public class ComposablePredicateTest {
 
   @Test
   public void orThatBoolean00() {
-    Check.that(9.3).is(validIf(LT(), 10D).or(10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).or(10 > 11));
   }
 
   @Test
   public void orThatBoolean01() {
-    Check.that(9.3).is(validIf(LT(), 8D).or(10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).or(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orThatBoolean02() {
-    Check.that(9.3).is(validIf(LT(), 8D).or(10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).or(10 > 11));
   }
 
   @Test
   public void orEval00() {
-    Check.that(9.3).is(validIf(LT(), 10D).orEval(() -> 10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).orEval(() -> 10 > 11));
   }
 
   @Test
   public void orEval01() {
-    Check.that(9.3).is(validIf(LT(), 8D).orEval(() -> 10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).orEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orEval02() {
-    Check.that(9.3).is(validIf(LT(), 8D).orEval(() -> 10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).orEval(() -> 10 > 11));
   }
 
   @Test
@@ -100,13 +100,13 @@ public class ComposablePredicateTest {
 
   @Test
   public void orNotPredicate00() {
-    Check.that((Integer) 8).is(validIf(LT(), 10).orNot(x -> (int) x % 2 == 0));
-    Check.that((Integer) 8).is(validIf(GT(), 10).orNot(x -> (int) x % 3 == 0));
+    Check.that((Integer) 8).is(Compose.validWhen(LT(), 10).orNot(x -> (int) x % 2 == 0));
+    Check.that((Integer) 8).is(Compose.validWhen(GT(), 10).orNot(x -> (int) x % 3 == 0));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate02() {
-    Check.that("hello world").is(validIf((String s) -> s.length()
+    Check.that("hello world").is(validWhen((String s) -> s.length()
         > 100)
         .orNot((String s) -> s.charAt(1) == 'e'));
   }
@@ -119,19 +119,19 @@ public class ComposablePredicateTest {
 
   @Test(expected = ClassCastException.class)
   public void orNotRelation01() {
-    Check.that(42F).is(validIf((Float f) -> f > 50F)
+    Check.that(42F).is(validWhen((Float f) -> f > 50F)
         .orNot(contains(), "bozo"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation02() {
-    Check.that(42L).is(validIf((Long l) -> l > 50)
+    Check.that(42L).is(validWhen((Long l) -> l > 50)
         .orNot((Long l) -> l % 2 == 0));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation03() {
-    Check.that(42L).is(validIf(GTE(), 50L).orNot(60, LT(), 70));
+    Check.that(42L).is(Compose.validWhen(GTE(), 50L).orNot(60, LT(), 70));
   }
 
   @Test
@@ -230,7 +230,7 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void orThatIntRelation101() {
     Check.that(OutputStream.class).is(
-        validIf(subtypeOf(), File.class).orThat(1, eq(), 2));
+        Compose.validWhen(subtypeOf(), File.class).orThat(1, eq(), 2));
   }
 
 
@@ -249,7 +249,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate102() {
-    Check.that(42L).is(validIf(GTE(), 100L).orNot("", empty()));
+    Check.that(42L).is(Compose.validWhen(GTE(), 100L).orNot("", empty()));
   }
 
   @Test
@@ -262,7 +262,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation102() {
-    Check.that(Year.of(2001)).is(validIf(GT(), Year.of(3000))
+    Check.that(Year.of(2001)).is(Compose.validWhen(GT(), Year.of(3000))
         .orNot("foo", substringOf(), "foo bar"));
   }
 
@@ -276,7 +276,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orAll101() {
-    Check.that(42F).is(validIf(GTE(), 100F).or(10, GT(), allOf(), 1, 2, 3, 200));
+    Check.that(42F).is(Compose.validWhen(GTE(), 100F).or(10, GT(), allOf(), 1, 2, 3, 200));
   }
 
   @Test
@@ -371,20 +371,20 @@ public class ComposablePredicateTest {
   @Test
   public void andAlsoRelation00() {
     Check.that(List.of("foo", "bar"))
-        .is(validIf((List l) -> l.size() < 100)
+        .is(validWhen((List l) -> l.size() < 100)
             .andAlso(contains(), "foo"));
   }
 
   @Test
   public void andAlsoRelation01() {
-    Check.that(Year.now()).is(validIf(GT(), Year.of(2000))
+    Check.that(Year.now()).is(Compose.validWhen(GT(), Year.of(2000))
         .andAlso(LT(), Year.of(3000)));
   }
 
   @Test
   public void andAlsoRelation02() {
     Check.that(List.of("foo", "bar"))
-        .is(validIf((List l) -> l.size() < 100)
+        .is(validWhen((List l) -> l.size() < 100)
             .andAlso((List l) -> l.size() > 1)
             .andAlso(contains(), "foo"));
   }
@@ -401,32 +401,32 @@ public class ComposablePredicateTest {
 
   @Test
   public void andAlsoBoolean00() {
-    Check.that(9.3).is(validIf(LT(), 10D).and(10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).and(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAlsoBoolean01() {
-    Check.that(9.3).is(validIf(LT(), 8D).and(10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).and(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAlsoBoolean02() {
-    Check.that(9.3).is(validIf(LT(), 10D).and(10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).and(10 > 11));
   }
 
   @Test
   public void andEval00() {
-    Check.that(9.3).is(validIf(LT(), 10D).andEval(() -> 10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).andEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval01() {
-    Check.that(9.3).is(validIf(LT(), 8D).andEval(() -> 10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).andEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval02() {
-    Check.that(9.3).is(validIf(LT(), 10D).andEval(() -> 10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).andEval(() -> 10 > 11));
   }
 
   @Test
@@ -443,7 +443,7 @@ public class ComposablePredicateTest {
   @Test(expected = IllegalArgumentException.class)
   public void andNotPredicate02() {
     Check.that(List.of("foo", "bar")).is(
-        validIf((List<String> list) -> list.size() > 100)
+        validWhen((List<String> list) -> list.size() > 100)
             .andNot(empty()));
   }
 
@@ -512,7 +512,7 @@ public class ComposablePredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void andNone02() {
-    Check.that("hello, world").is(validIf((String s) -> s.length() < 100)
+    Check.that("hello, world").is(validWhen((String s) -> s.length() < 100)
         .and(hasSubstring(), noneOf(), "hello", "bar"));
   }
 
@@ -554,7 +554,7 @@ public class ComposablePredicateTest {
 
   @Test
   public void andThatRelation00() {
-    Check.that("foo").is(validIf((String s) -> s.length() < 100)
+    Check.that("foo").is(validWhen((String s) -> s.length() < 100)
         .andThat("bar", hasSubstring(), "ba"));
   }
 
@@ -687,7 +687,7 @@ public class ComposablePredicateTest {
 
   @Test
   public void andNone100() {
-    Check.that(Year.now()).is(validIf(GT(), Year.of(2000))
+    Check.that(Year.now()).is(Compose.validWhen(GT(), Year.of(2000))
         .and("bar, world", hasSubstring(), noneOf(), "hello", "foo"));
   }
 

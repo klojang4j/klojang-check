@@ -6,7 +6,6 @@ import org.klojang.check.Check;
 import java.util.List;
 
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.Compose.validIntIf;
 import static org.klojang.check.relation.Quantifier.*;
 
 public class ComposableIntPredicateTest {
@@ -33,7 +32,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orElsePredicate02() {
-    Check.that(42).is(validIntIf(i -> i == 20)
+    Check.that(42).is(Compose.validIntWhen(i -> i == 20)
         .orElse(i -> i % 20 == 0));
   }
 
@@ -54,32 +53,32 @@ public class ComposableIntPredicateTest {
 
   @Test
   public void orThatBoolean00() {
-    Check.that(9).is(validIntIf(lt(), 10).or(10 > 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 10).or(10 > 11));
   }
 
   @Test
   public void orThatBoolean01() {
-    Check.that(9).is(validIntIf(gt(), 8).or(10 < 11));
+    Check.that(9).is(Compose.validIntWhen(gt(), 8).or(10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orThatBoolean02() {
-    Check.that(9).is(validIntIf(lt(), 8).or(12 < 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 8).or(12 < 11));
   }
 
   @Test
   public void orEval00() {
-    Check.that(9).is(validIntIf(lt(), 10).orEval(() -> 10 > 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 10).orEval(() -> 10 > 11));
   }
 
   @Test
   public void orEval01() {
-    Check.that(9).is(validIntIf(lt(), 8).orEval(() -> 10 < 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 8).orEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orEval02() {
-    Check.that(9).is(validIntIf(lt(), 8).orEval(() -> 10 > 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 8).orEval(() -> 10 > 11));
   }
 
   @Test
@@ -89,8 +88,8 @@ public class ComposableIntPredicateTest {
 
   @Test
   public void orNotPredicate00() {
-    Check.that(8).is(validIntIf(lt(), 10).orNot(x -> (int) x % 2 == 0));
-    Check.that(8).is(validIntIf(gt(), 10).orNot(x -> (int) x % 3 == 0));
+    Check.that(8).is(Compose.validIntWhen(lt(), 10).orNot(x -> (int) x % 2 == 0));
+    Check.that(8).is(Compose.validIntWhen(gt(), 10).orNot(x -> (int) x % 3 == 0));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -106,7 +105,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation02() {
-    Check.that(42).is(validIntIf(i -> i > 50).orNot(i -> i % 2 == 0));
+    Check.that(42).is(Compose.validIntWhen(i -> i > 50).orNot(i -> i % 2 == 0));
   }
 
   @Test
@@ -221,7 +220,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate104() {
-    Check.that(42).is(validIntIf(odd()).orNot("", empty()));
+    Check.that(42).is(Compose.validIntWhen(odd()).orNot("", empty()));
   }
 
   @Test
@@ -406,17 +405,17 @@ public class ComposableIntPredicateTest {
 
   @Test
   public void andEval00() {
-    Check.that(9).is(validIntIf(lt(), 10).andEval(() -> 10 < 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 10).andEval(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval01() {
-    Check.that(9).is(validIntIf(lt(), 10).andEval(() -> 12 < 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 10).andEval(() -> 12 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval02() {
-    Check.that(9).is(validIntIf(lt(), 8).andEval(() -> 10 < 11));
+    Check.that(9).is(Compose.validIntWhen(lt(), 8).andEval(() -> 10 < 11));
   }
 
   @Test
@@ -446,7 +445,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void andNotRelation02() {
-    Check.that(42).is(validIntIf(i -> i > 50).andNot(i -> i % 2 == 0));
+    Check.that(42).is(Compose.validIntWhen(i -> i > 50).andNot(i -> i % 2 == 0));
   }
 
   @Test

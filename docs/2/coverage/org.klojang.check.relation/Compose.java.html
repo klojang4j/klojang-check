@@ -88,7 +88,7 @@ public final class Compose {
    * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
    *     value to be tested has the specified value
    */
-  public static &lt;T&gt; ComposablePredicate&lt;T&gt; validWhen(T value) {
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; validIf(T value) {
 <span class="fc" id="L92">    return x -&gt; Objects.equals(x, value);</span>
   }
 
@@ -100,7 +100,7 @@ public final class Compose {
    * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
    *     value to be tested has the specified value
    */
-  public static ComposableIntPredicate validIntWhen(int value) {
+  public static ComposableIntPredicate validIntIf(int value) {
 <span class="fc bfc" id="L104" title="All 2 branches covered.">    return x -&gt; x == value;</span>
   }
 
@@ -114,7 +114,7 @@ public final class Compose {
    * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
    *     value to be tested has the specified value
    */
-  public static &lt;T&gt; ComposablePredicate&lt;T&gt; invalidWhen(T value) {
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; invalidIf(T value) {
 <span class="fc bfc" id="L118" title="All 2 branches covered.">    return x -&gt; !Objects.equals(x, value);</span>
   }
 
@@ -126,7 +126,7 @@ public final class Compose {
    * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
    *     value to be tested has the specified value
    */
-  public static ComposableIntPredicate invalidIntWhen(int value) {
+  public static ComposableIntPredicate invalidIntIf(int value) {
 <span class="fc bfc" id="L130" title="All 2 branches covered.">    return x -&gt; x != value;</span>
   }
 
@@ -149,7 +149,7 @@ public final class Compose {
    * @param &lt;T&gt; the type of the value being tested
    * @return the equivalent {@code ComposablePredicate}
    */
-  public static &lt;T&gt; ComposablePredicate&lt;T&gt; validIf(Predicate&lt;T&gt; test) {
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; validWhen(Predicate&lt;T&gt; test) {
 <span class="fc" id="L153">    return test::test;</span>
   }
 
@@ -164,7 +164,7 @@ public final class Compose {
    * @param test the {@code IntPredicate} to convert
    * @return the equivalent {@code ComposableIntPredicate}
    */
-  public static ComposableIntPredicate validIntIf(IntPredicate test) {
+  public static ComposableIntPredicate validIntWhen(IntPredicate test) {
 <span class="fc" id="L168">    return test::test;</span>
   }
 
@@ -187,7 +187,7 @@ public final class Compose {
    * @return a {@code ComposablePredicate} that evaluates to {@code true} if the
    *     value being tested has the specified relation to the specified value
    */
-  public static &lt;S, O&gt; ComposablePredicate&lt;S&gt; validIf(Relation&lt;S, O&gt; relation,
+  public static &lt;S, O&gt; ComposablePredicate&lt;S&gt; validWhen(Relation&lt;S, O&gt; relation,
       O object) {
 <span class="fc" id="L192">    return s -&gt; relation.exists(s, object);</span>
   }
@@ -205,7 +205,7 @@ public final class Compose {
    * @return a {@code ComposableIntPredicate} that evaluates to {@code true} if the
    *     value being tested has the specified relation to the specified value
    */
-  public static &lt;O&gt; ComposableIntPredicate validIntIf(IntObjRelation&lt;O&gt; relation,
+  public static &lt;O&gt; ComposableIntPredicate validIntWhen(IntObjRelation&lt;O&gt; relation,
       O object) {
 <span class="fc" id="L210">    return s -&gt; relation.exists(s, object);</span>
   }
@@ -222,7 +222,7 @@ public final class Compose {
    * @return a {@code ComposableIntPredicate} that evaluates to {@code true} if the
    *     value being tested has the specified relation to the specified value
    */
-  public static ComposableIntPredicate validIntIf(IntRelation relation, int object) {
+  public static ComposableIntPredicate validIntWhen(IntRelation relation, int object) {
 <span class="fc" id="L226">    return s -&gt; relation.exists(s, object);</span>
   }
 
