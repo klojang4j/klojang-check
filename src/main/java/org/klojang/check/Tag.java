@@ -1,9 +1,9 @@
 package org.klojang.check;
 
 /**
- * String constants for some commonly used names for fields, parameters and
- * variables. To be used as the second argument to the {@code Check.that()} methods
- * of the {@link Check} class.
+ * String constants for some commonly used names for fields, parameters and variables. To
+ * be used as the second argument to the {@code Check.that()} methods of the {@link Check}
+ * class.
  */
 public final class Tag {
 
@@ -106,11 +106,19 @@ public final class Tag {
   /**
    * "path"
    */
+  public static final String PARAM = "param";
+  /**
+   * "path"
+   */
   public static final String PATH = "path";
   /**
    * "property"
    */
   public static final String PROPERTY = "property";
+  /**
+   * "properties"
+   */
+  public static final String PROPERTIES = "properties";
   /**
    * "relative path"
    */
