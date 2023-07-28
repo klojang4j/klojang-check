@@ -138,7 +138,7 @@ To do this, provide a [Function](https://download.java.net/java/early_access/pan
 that extracts the value to be tested from the argument.
 
 ```java
-Check.that(fullName).has(String::length, gte(), 0);
+Check.that(fullName).has(String::length, lte(), 100);
 ```
 
 The [CommonProperties](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonProperties.html)
