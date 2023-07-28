@@ -122,10 +122,12 @@ Check.that(length, "length").is(gte(), 0);
 ```
 
 The [Tag](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/Tag.html)
-contains string constants for some commonly used argument names:
+class contains string constants for some commonly used argument names:
 
 ```java
-Check.that(length, Tag.LENGTH).is(gte(), 0);
+import static org.klojang.check.Tag.LENGTH;
+
+Check.that(length, LENGTH).is(gte(), 0);
 // error message: length must be >= 0 (was -4)
 ```
 
@@ -144,7 +146,9 @@ class contains some `Function`, `ToIntFunction` and `IntFunction` constants that
 of help:
 
 ```java
-import static org.klojang.check.CommonProperties.*;
+import static org.klojang.check.CommonProperties.strlen;
+import static org.klojang.check.CommonProperties.type;
+import static org.klojang.check.CommonProperties.abs;
 
 Check.that(fullName).has(strlen(), lte(), 100);
 Check.that(foo).has(type(), instanceOf(), InputStream.class);
@@ -196,8 +200,9 @@ ways:
 Here is an example of each of these:
 
 ```java
-Check.on(IllegalStateException::new, connection.isOpen()),is(yes());
-Check.that(connection.isOpen()),is(yes(), () -> new IllegalStateException());
+// Error message "stale connection" is passed to the constructor of IllegalStateException:
+Check.on(IllegalStateException::new, connection.isOpen()),is(yes(), "stale connection");
+Check.that(connection.isOpen()),is(yes(), () -> new IllegalStateException("stale connection"));
 ```
 
 The [CommonExceptions](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonExceptions.html)
@@ -213,12 +218,20 @@ Check.that(connection.isOpen()),is(yes(), illegalState("stale connection"));
 
 ### Combining Checks
 
-Sometimes you will want to do tests of the form _x must be either A or B_, or of the form
-_either x must be A or y must be B_:
+Sometimes you will want to do tests of the form **x must be either A or B**, or of the form
+**either x must be A or y must be B**:
 
 ```java
 Check.that(collection).is(empty().or(contains(), "FOO"));
 Check.that(collection1).is(empty().or(collection2, contains(), "FOO"));
+```
+
+The latter example nicely maintains the <i>Klojang Check</i> idiom, but if you prefer 
+your code with less syntactical sugar, you can also just write:
+
+
+```java
+Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 ```
 
 ## About
