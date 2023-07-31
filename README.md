@@ -2,12 +2,12 @@
 
 <i>Klojang Check</i> is a Java module dedicated to defensive programming &#8212; making
 sure your program or method starts with a clean and workable set of inputs before
-continuing with the business logic. Null checks are the most common example of this, but
-often it seems like everything beyond that is treated as part of the business logic.
-Yet, if your program needs a value from a configuration file, is the presence
-of the configuration file part of the business logic? Probably not. <i>Klojang Check</i>
-allows you to separate precondition validation and business logic in an elegant and
-concise way.
+continuing with the business logic. Null checks are the most common example of this. It
+often seems, however, like everything beyond that is handled as part of the business
+logic, even though it really isn't. If a method that calculates a price needs some value 
+from a configuration file, is the presence of the configuration file part of the business 
+logic? Probably not. <i>Klojang Check</i> allows you to separate precondition validation 
+and business logic in an elegant and concise way.
 
 <i>Klojang Check</i>'s take on precondition validation is rather different from, for
 example, Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
