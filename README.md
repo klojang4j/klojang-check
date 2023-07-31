@@ -3,7 +3,7 @@
 <i>Klojang Check</i> is a Java module dedicated to defensive programming &#8212; making
 sure your program or method starts with a clean and workable set of inputs before
 continuing with the business logic. Null checks are the most common example of this, but
-often it seems like everything beyond that is treated as part of this the business logic.
+often it seems like everything beyond that is treated as part of the business logic.
 Yet, if your program needs a value from a configuration file, is the presence
 of the configuration file part of the business logic? Probably not. <i>Klojang Check</i>
 allows you to separate precondition validation and business logic in an elegant and
