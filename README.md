@@ -80,15 +80,15 @@ are **[here](https://klojang4j.github.io/klojang-check/2/coverage)**.
 ## Vulnerabilities
 
 Being all about making code as robust as possible, the <i>Klojang Check</i> code base is 
-itself regularly tested for vulnerabilities. It is currently not affected by any CVE. Its
-surface consists of barely 15 types and it has zero dependencies outside `java.base`.
-You can find the latest **vulnerabilities report**
+itself regularly tested for vulnerabilities. It is currently not affected by any CVE,
+however light-weight. Its surface consists of barely 15 types and it has zero dependencies 
+outside `java.base`. You can find the latest **vulnerabilities report**
 **[here](https://klojang4j.github.io/klojang-check/2/vulnerabilities/dependency-check-report.html)**.
 
 ## Performance
 
 No one is going to use a library just to check things that aren't even related to their
-business logic. <i>Klojang Check</i> is incurs practically zero overhead. That's because
+business logic. <i>Klojang Check</i> incurs practically zero overhead. That's because
 it doesn't really _do stuff_. As mentioned, it only provides a set of syntactical
 constructs that make precondition validation more concise. Of course, if a value
 needs to be in a `Map` before it even makes sense to continue with the rest of a
@@ -111,7 +111,7 @@ The latest **JMH test results** can be found
 Check.notNull(foo);
 ```
 
-### Using the CommonChecks class
+### The CommonChecks class
 
 The [CommonChecks](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 class is a grab bag of common checks on arguments, fields (a.k.a. state) and other types of 
