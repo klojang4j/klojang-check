@@ -242,8 +242,8 @@ Check.that(connection.isOpen()),is(yes(), illegalState("stale connection"));
 
 ### Combining Checks
 
-Sometimes you will want to do tests of the form **x must be either A or B**, or of the form
-**either x must be A or y must be B**:
+Sometimes you will want to do tests of the form _**x must be either A or B**_, or of the form
+_**either x must be A or y must be B**_:
 
 ```java
 Check.that(collection).is(empty().or(contains(), "FOO"));
