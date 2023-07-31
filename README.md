@@ -10,7 +10,7 @@ allows you to separate precondition validation and business logic in an elegant 
 concise way.
 
 <i>Klojang Check</i>'s take on precondition validation is rather different from, for
-example Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
+example, Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
 class or Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
 class. It provides a set of syntactical constructs that make it easy to specify checks on 
 program input, object state, method arguments, variables, etc. In addition, it comes with 
@@ -81,7 +81,7 @@ are **[here](https://klojang4j.github.io/klojang-check/2/coverage)**.
 
 Being all about making code as robust as possible, the <i>Klojang Check</i> code base is 
 itself regularly tested for vulnerabilities. It is currently not affected by any CVE. Its
-surface are consists of barely 15 types and it has zero dependencies outside `java.base`.
+surface consists of barely 15 types and it has zero dependencies outside `java.base`.
 You can find the latest **vulnerabilities report**
 **[here](https://klojang4j.github.io/klojang-check/2/vulnerabilities/dependency-check-report.html)**.
 
