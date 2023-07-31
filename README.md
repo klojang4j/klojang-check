@@ -1,9 +1,20 @@
 # Klojang Check
 
-<i>Klojang Check</i> is a Java module dedicated to defensive programming. It provides a set
-of syntactical constructs that make it easy to specify checks on program input,
-object state, method arguments, variables, etc. In addition, it comes with a set
-of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
+<i>Klojang Check</i> is a Java module dedicated to defensive programming &#8212; making
+sure your program or method starts with a clean and workable set of inputs before
+continuing with the business logic. Null checks are the most common example of this, but
+often it seems like everything beyond that is treated as part of this the business logic.
+Yet, if your program needs a value from a configuration file, is the presence
+of the configuration file part of the business logic? Probably not. <i>Klojang Check</i>
+allows you to separate precondition validation and business logic in an elegant and
+concise way.
+
+<i>Klojang Check</i>'s take on precondition validation is rather different from, for
+example Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
+class or Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
+class. It provides a set of syntactical constructs that make it easy to specify checks on 
+program input, object state, method arguments, variables, etc. In addition, it comes with 
+a set of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 on values of various types. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves.
 
@@ -36,7 +47,7 @@ public class InteriorDesigner {
 
   public InteriorDesigner(int numChairs) {
     this.numChairs = Check.that(numChairs)
-          .is(gte(), 0)
+          .is(gt(), 0)
           .is(lte(), 4)
           .is(even())
           .ok();
@@ -63,20 +74,33 @@ found **[here](https://klojang4j.github.io/klojang-check/2/api)**.
 The **User Guide** for <i>Klojang Check</i> can be
 found **[here](https://klojang4j.github.io/klojang-check/index.html)**.
 
-<i>Klojang Check</i> is also fast. If you are interested in the **JMH test results**, they
-can be found **[here](https://github.com/klojang4j/klojang-check-jmh)**.
-
 The latest **test coverage results**
 are **[here](https://klojang4j.github.io/klojang-check/2/coverage)**.
 
 ## Vulnerabilities
 
-With a surface area of barely 15 types and zero dependencies outside
-`java.base`, <i>Klojang Check</i> is genuinely light-weight. Nevertheless, being all about
-making code as robust as possible, the <i>Klojang Check</i> code base is itself
-regularly tested for vulnerabilities. It is currently not affected by any CVE. You
-can find the latest **vulnerabilities report**
+Being all about making code as robust as possible, the <i>Klojang Check</i> code base is 
+itself regularly tested for vulnerabilities. It is currently not affected by any CVE. Its
+surface are consists of barely 15 types and it has zero dependencies outside `java.base`.
+You can find the latest **vulnerabilities report**
 **[here](https://klojang4j.github.io/klojang-check/2/vulnerabilities/dependency-check-report.html)**.
+
+## Performance
+
+No one is going to use a library just to check things that aren't even related to their
+business logic. <i>Klojang Check</i> is incurs practically zero overhead. That's because
+it doesn't really _do stuff_. As mentioned, it only provides a set of syntactical
+constructs that make precondition validation more concise. Of course, if a value
+needs to be in a `Map` before it even makes sense to continue with the rest of a
+computation, you will have to do the lookup. There's no two ways around it. It just looks 
+more elegant with <i>Klojang Check</i>:
+
+```java
+Check.that(value).is(keyIn(), map);
+```
+
+The latest **JMH test results** can be found 
+**[here](https://github.com/klojang4j/klojang-check-jmh)**.
 
 ## Usage
 
@@ -98,7 +122,6 @@ import static org.klojang.check.CommonChecks.*;
 
 Check.that(length).is(gte(), 0);
 Check.that(divisor).isNot(zero());
-Check.that(key).is(keyIn(), map);
 Check.that(file).is(writable());
 Check.that(firstName).is(substringOf(), fullName);
 Check.that(i).is(indexOf(), list);
@@ -152,7 +175,7 @@ import static org.klojang.check.CommonProperties.abs;
 
 Check.that(fullName).has(strlen(), lte(), 100);
 Check.that(foo).has(type(), instanceOf(), InputStream.class);
-Check.that(angle).has(abs(), lt(), 90);
+Check.that(angle).has(abs(), lte(), 90);
 ```
 
 As the last example illustrates, the word "property" needs to be taken in the broadest
@@ -164,6 +187,7 @@ value to be tested.
 If you prefer, you can provide your own error message:
 
 ```java
+Check.that(foo).is(notNull(), "there you go again");
 Check.that(fullName).has(strlen(), lte(), 100, "full name must not exceed 100 characters");
 ```
 
