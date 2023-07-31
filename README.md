@@ -92,8 +92,8 @@ business logic. <i>Klojang Check</i> incurs practically zero overhead. That's be
 it doesn't really _do stuff_. As mentioned, it only provides a set of syntactical
 constructs that make precondition validation more concise. Of course, if a value
 needs to be in a `Map` before it even makes sense to continue with the rest of a
-computation, you will have to do the lookup. There's no two ways around it. It just looks 
-more elegant with <i>Klojang Check</i>:
+computation, you will have to do the lookup. There's no two ways around it. <i>Klojang 
+Check</i> just lets you express this fact more elegantly:
 
 ```java
 Check.that(value).is(keyIn(), map);
