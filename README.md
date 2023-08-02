@@ -88,18 +88,18 @@ outside `java.base`. You can find the latest **vulnerabilities report**
 ## Performance
 
 No one is going to use a library just to check things that aren't even related to their
-business logic. <i>Klojang Check</i> incurs practically zero overhead. That's because
-it doesn't really _do stuff_. As mentioned, it only provides a set of syntactical
-constructs that make precondition validation more concise. Of course, if a value
-needs to be in a `Map` before it even makes sense to continue with the rest of a
-computation, you will have to do the lookup. There's no two ways around it. <i>Klojang 
+business logic if it hogs their CPU. <i>Klojang Check</i> incurs practically zero
+overhead. That's because it doesn't really _do stuff_. As mentioned, it only provides a
+set of syntactical constructs that make precondition validation more concise. Of course,
+if a value needs to be in a `Map` before it even makes sense to continue with the rest of
+a computation, you will have to do the lookup. There's no two ways around it. <i>Klojang
 Check</i> just lets you express this fact more elegantly:
 
 ```java
 Check.that(value).is(keyIn(), map);
 ```
 
-The latest **JMH test results** can be found 
+The latest **JMH benchmarks** can be found 
 **[here](https://github.com/klojang4j/klojang-check-jmh)**.
 
 ## Usage
