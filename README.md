@@ -236,8 +236,8 @@ class contains exception factories for some common exceptions:
 import static org.klojang.check.CommonExceptions.STATE;
 import static org.klojang.check.CommonExceptions.illegalState;
 
-Check.on(STATE, connection.isOpen()),is(yes(), "stale connection");
-Check.that(connection.isOpen()),is(yes(), illegalState("stale connection"));
+Check.on(STATE, connection.isOpen()).is(yes(), "stale connection");
+Check.that(connection.isOpen()).is(yes(), illegalState("stale connection"));
 ```
 
 ### Combining Checks
