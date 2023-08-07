@@ -1,13 +1,13 @@
 # Klojang Check
 
-<i>Klojang Check</i> is a Java module dedicated to defensive programming &#8212; making
-sure your program or method starts with a clean and workable set of inputs before
+<i>Klojang Check</i> is a Java module dedicated to defensive programming &#8212; ensuring
+your program or method starts with a clean and workable set of inputs before
 continuing with the business logic. Null checks are the most common example of this. It
 often seems, however, like everything beyond that is handled as part of the business
-logic, even though it really isn't. If a method that calculates a price needs some value 
-from a configuration file, is the presence of the configuration file part of the business 
-logic? Probably not. <i>Klojang Check</i> allows you to separate precondition validation 
-and business logic in an elegant and concise way.
+logic, even when it arguably isn't. If a method that calculates a price needs some value
+from a configuration file, is the presence of the configuration file part of the business
+logic? Probably not, but it needs to be checked nonetheless. <i>Klojang Check</i> allows
+you to separate precondition validation and business logic in an elegant and concise way.
 
 <i>Klojang Check</i>'s take on precondition validation is rather different from, for
 example, Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
@@ -93,7 +93,7 @@ overhead. That's because it doesn't really _do stuff_. As mentioned, it only pro
 set of syntactical constructs that make precondition validation more concise. Of course,
 if a value needs to be in a `Map` before it even makes sense to continue with the rest of
 a computation, you will have to do the lookup. There's no two ways around it. <i>Klojang
-Check</i> just lets you express this fact more elegantly:
+Check</i> just lets you express this fact more clearly:
 
 ```java
 Check.that(value).is(keyIn(), map);
@@ -134,14 +134,14 @@ a test.
 
 ```java
 Check.that(length).is(gte(), 0);
-// error message: argument must be >= 0 (was -4)
+// error message: argument must be >= 0 (was -42)
 ```
 
 You can provide a name for the value you are testing to give the user more context:
 
 ```java
 Check.that(length, "length").is(gte(), 0);
-// error message: length must be >= 0 (was -4)
+// error message: length must be >= 0 (was -42)
 ```
 
 The [Tag](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/Tag.html)
@@ -151,7 +151,7 @@ class contains string constants for some commonly used argument names:
 import static org.klojang.check.Tag.LENGTH;
 
 Check.that(length, LENGTH).is(gte(), 0);
-// error message: length must be >= 0 (was -4)
+// error message: length must be >= 0 (was -42)
 ```
 
 ### Testing Argument Properties
@@ -260,11 +260,13 @@ Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 
 ## About
 
-<img src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0"/>
+<img src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0" />
 
 <i>Klojang Check</i> is developed by [Naturalis](https://www.naturalis.nl/en), the
-Dutch national biodiversity research institute and natural history museum. It maintains one
-of the largest collections of zoological and botanical specimens in the world.
+Dutch national biodiversity research institute and natural history museum. It maintains
+one of the largest collections of zoological and botanical specimens in the world. Help
+fund biodiversity research by 
+[donating to Naturalis](https://www.naturalis.nl/over-ons/steun-naturalis/doneren).
 
 
 
