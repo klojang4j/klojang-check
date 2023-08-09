@@ -14,7 +14,7 @@ example, Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/go
 class or Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
 class. It provides a set of syntactical constructs that make it easy to specify checks on 
 program input, object state, method arguments, variables, etc. In addition, it comes with 
-a set of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
+a set of [common checks](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 on values of various types. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves.
 
@@ -225,8 +225,8 @@ Here is an example of each of these:
 
 ```java
 // Error message "stale connection" is passed to the constructor of IllegalStateException:
-Check.on(IllegalStateException::new, connection.isOpen()),is(yes(), "stale connection");
-Check.that(connection.isOpen()),is(yes(), () -> new IllegalStateException("stale connection"));
+Check.on(IllegalStateException::new, connection.isOpen()).is(yes(), "stale connection");
+Check.that(connection.isOpen()).is(yes(), () -> new IllegalStateException("stale connection"));
 ```
 
 The [CommonExceptions](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonExceptions.html)

@@ -10,18 +10,18 @@ import java.util.Objects;
 import static org.klojang.check.CommonChecks.*;
 
 /**
- * A value container that explicitly allows the value to be {@code null}. This class
- * is meant to be used as the return value of methods that would otherwise return
- * {@code null} both as the legitimate outcome of a computation <i>and</i> as a
- * signal that the computation yielded no result. The {@link java.util.HashMap} class
- * is a prime example. If its {@code get} method returns {@code null}, it is not
- * clear whether the requested key was absent, or whether it was present, but
- * associated with value {@code null}.
+ * A simple value container that explicitly allows the value to be {@code null}. This
+ * class is meant to be used as the return value of methods that would otherwise return
+ * {@code null} both as the legitimate outcome of a computation and as a signal that the
+ * computation yielded no result. The {@link java.util.HashMap} class is a well-known
+ * example. If its {@code get} method returns {@code null}, it is not clear whether the
+ * requested key was absent, or whether it was present, but associated with value
+ * {@code null}.
  *
  * <p>Another scenario (and one that we can control) would be iterating over an
  * array and returning a particular element, if found. If the element can itself
- * legitimately be {@code null}, it is not clear what a return value of {@code null}
- * actually means: not present or "really" {@code null}.
+ * legitimately be {@code null}, it is not clear what a return value of {@code null} means
+ * <b>not present</b> or <b>really null</b>.
  *
  * <p>Using the {@code Result} class, you would return a {@code Result} containing
  * {@code null} if the element was present but {@code null}. If the element was not
@@ -31,19 +31,19 @@ import static org.klojang.check.CommonChecks.*;
  */
 public final class Result<T> implements Emptyable {
 
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  private static final Result NONE = new Result(null);
+  private static final Result<?> NONE = new Result<>(null);
+  private static final Result<?> NULL = new Result<>(null);
 
   /**
-   * Returns a {@code Result} containing the specified value (possibly
-   * {@code null}).
+   * Returns a {@code Result} containing the specified value (possibly {@code null}).
    *
    * @param value The value
    * @param <T> The type of the result value
    * @return a {@code Result} containing the specified value
    */
+  @SuppressWarnings("unchecked")
   public static <T> Result<T> of(T value) {
-    return new Result<>(value);
+    return value == null ? (Result<T>) NULL : new Result<>(value);
   }
 
   /**
@@ -64,7 +64,9 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns the result.
+   * Returns the result. You should have established first that a result value
+   * {@linkplain #isAvailable() is available} or a {@link NoSuchElementException} will be
+   * thrown.
    *
    * @return the value
    * @throws NoSuchElementException if no result is available
@@ -77,9 +79,9 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result}
-   * successfully computed the result. If so, the result value can be retrieved via
-   * the {@link #get()} method. If not, calling {@code get()} method will result in a
+   * Returns {@code true} if the operation that produced this {@code Result} successfully
+   * computed the result. If so, the result value can be retrieved via the {@link #get()}
+   * method. If not, calling {@code get()} method will result in a
    * {@link NoSuchElementException}.
    *
    * @return {@code true} if a result could be computed
@@ -89,11 +91,33 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result} could
-   * not compute a proper result.
+   * Returns {@code true} if the operation that produced this {@code Result} successfully
+   * computed the result, but the result value was {@code null}.
    *
-   * @return {@code true} if the operation that produced this {@code Result} could
-   *     not compute a proper result
+   * @return {@code true} if a result could be computed, but it turned out to be
+   * {@code null}
+   */
+  public boolean isAvailableAndNull() {
+    return this == NULL;
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} successfully
+   * computed the result and the result value was not {@code null}.
+   *
+   * @return {@code true} if a result could be computed and it was a non-{@code null}
+   * result
+   */
+  public boolean isAvailableAndNotNull() {
+    return this != NONE && this != NULL;
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} could not
+   * compute a proper result.
+   *
+   * @return {@code true} if the operation that produced this {@code Result} could not
+   * compute a proper result
    */
   public boolean isUnavailable() {
     return this == NONE;
@@ -107,7 +131,7 @@ public final class Result<T> implements Emptyable {
    * @throws X if the consumer experiences an error
    */
   public <X extends Throwable> void ifAvailable(FallibleConsumer<T, X> consumer)
-      throws X {
+        throws X {
     Check.notNull(consumer);
     if (isAvailable()) {
       consumer.accept(val);
@@ -129,11 +153,11 @@ public final class Result<T> implements Emptyable {
    * {@code null}), else the provided {@code Result}.
    *
    * @param alternative the {@code Result} to return if this {@code Result} is
-   *     {@link Result#notAvailable() Result.notAvailable()}. Must not be
-   *     {@code null}, and must not be {@code Result.notAvailable()}.
+   * {@link Result#notAvailable() Result.notAvailable()}. Must not be {@code null}, and
+   * must not be {@code Result.notAvailable()}.
    * @return this instance or the provided instance
    * @throws IllegalArgumentException if the specified {@code Result} is
-   *     {@code Result.notAvailable()}
+   * {@code Result.notAvailable()}
    */
   public Result<T> or(Result<T> alternative) throws IllegalArgumentException {
     Check.notNull(alternative).isNot(sameAs(), NONE);
@@ -141,8 +165,8 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns {@code true} if no result is available <i>or</i> if the result value is
-   * empty as per the {@link CommonChecks#empty() empty()} test.
+   * Returns {@code true} if no result is available <i>or</i> if the result value is empty
+   * as per the {@link CommonChecks#empty() empty()} test.
    *
    * @return {@code true} if no result is available or the result value is empty.
    */
@@ -152,8 +176,8 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns {@code true} a result is available and is recursively non-empty as per
-   * the {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
+   * Returns {@code true} a result is available and is recursively non-empty as per the
+   * {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
    *
    * @return {@code true} if a result is available and is deep-not-empty
    */
@@ -181,11 +205,11 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns the hashcode of the value contained in this {@code Result}, or 0 if no
-   * result was available.
+   * Returns the hashcode of the value contained in this {@code Result}, or 0 if no result
+   * was available.
    *
-   * @return the hashcode of the value contained in this {@code Result}, or 0 if no
-   *     result was available
+   * @return the hashcode of the value contained in this {@code Result}, or 0 if no result
+   * was available
    */
   @Override
   public int hashCode() {
@@ -197,7 +221,7 @@ public final class Result<T> implements Emptyable {
    * {@link java.util.Optional}.
    *
    * @return a string representation analogous to the one provided by
-   *     {@link java.util.Optional}
+   * {@link java.util.Optional}
    */
   @Override
   public String toString() {
