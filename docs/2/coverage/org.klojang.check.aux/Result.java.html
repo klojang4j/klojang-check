@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Result.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.aux</a> &gt; <span class="el_source">Result.java</span></div><h1>Result.java</h1><pre class="source lang-java linenums">package org.klojang.check.aux;
+
+import org.klojang.check.Check;
+import org.klojang.check.CommonChecks;
+import org.klojang.check.fallible.FallibleConsumer;
+
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
+import static org.klojang.check.CommonChecks.*;
+
+/**
+ * A simple value container that explicitly allows the value to be {@code null}. This
+ * class is meant to be used as the return value of methods that would otherwise return
+ * {@code null} both as the legitimate outcome of a computation and as a signal that the
+ * computation yielded no result. The {@link java.util.HashMap} class is a well-known
+ * example. If its {@code get} method returns {@code null}, it is not clear whether the
+ * requested key was absent, or whether it was present, but associated with value
+ * {@code null}.
+ *
+ * &lt;p&gt;Another scenario (and one that we can control) would be iterating over an
+ * array and returning a particular element, if found. If the element can itself
+ * legitimately be {@code null}, it is not clear what a return value of {@code null} means
+ * &lt;b&gt;not present&lt;/b&gt; or &lt;b&gt;really null&lt;/b&gt;.
+ *
+ * &lt;p&gt;Using the {@code Result} class, you would return a {@code Result} containing
+ * {@code null} if the element was present but {@code null}. If the element was not
+ * present, you would return {@link Result#notAvailable()}.
+ *
+ * @param &lt;T&gt; the type of the result value
+ */
+public final class Result&lt;T&gt; implements Emptyable {
+
+<span class="fc" id="L34">  private static final Result&lt;?&gt; NONE = new Result&lt;&gt;(null);</span>
+<span class="fc" id="L35">  private static final Result&lt;?&gt; NULL = new Result&lt;&gt;(null);</span>
+
+  /**
+   * Returns a {@code Result} containing the specified value (possibly {@code null}).
+   *
+   * @param value The value
+   * @param &lt;T&gt; The type of the result value
+   * @return a {@code Result} containing the specified value
+   */
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public static &lt;T&gt; Result&lt;T&gt; of(T value) {
+<span class="fc bfc" id="L46" title="All 2 branches covered.">    return value == null ? (Result&lt;T&gt;) NULL : new Result&lt;&gt;(value);</span>
+  }
+
+  /**
+   * Returns a special {@code Result} instance signifying the absence of a result.
+   *
+   * @param &lt;T&gt; the type of the result value
+   * @return a special {@code Result} object signifying the absence of a result
+   */
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public static &lt;T&gt; Result&lt;T&gt; notAvailable() {
+<span class="fc" id="L57">    return (Result&lt;T&gt;) NONE;</span>
+  }
+
+  private final T val;
+
+<span class="fc" id="L62">  private Result(T value) {</span>
+<span class="fc" id="L63">    this.val = value;</span>
+<span class="fc" id="L64">  }</span>
+
+  /**
+   * Returns the result. You should have established first that a result value
+   * {@linkplain #isAvailable() is available} or a {@link NoSuchElementException} will be
+   * thrown.
+   *
+   * @return the value
+   * @throws NoSuchElementException if no result is available
+   */
+  public T get() throws NoSuchElementException {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    if (this != NONE) {</span>
+<span class="fc" id="L76">      return val;</span>
+    }
+<span class="fc" id="L78">    throw new NoSuchElementException(&quot;no result available&quot;);</span>
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} successfully
+   * computed the result. If so, the result value can be retrieved via the {@link #get()}
+   * method. If not, calling {@code get()} method will result in a
+   * {@link NoSuchElementException}.
+   *
+   * @return {@code true} if a result could be computed
+   */
+  public boolean isAvailable() {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    return this != NONE;</span>
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} successfully
+   * computed the result, but the result value was {@code null}.
+   *
+   * @return {@code true} if a result could be computed, but it turned out to be
+   * {@code null}
+   */
+  public boolean isAvailableAndNull() {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">    return this == NULL;</span>
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} successfully
+   * computed the result and the result value was not {@code null}.
+   *
+   * @return {@code true} if a result could be computed and it was a non-{@code null}
+   * result
+   */
+  public boolean isAvailableAndNotNull() {
+<span class="nc bnc" id="L112" title="All 4 branches missed.">    return this != NONE &amp;&amp; this != NULL;</span>
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} could not
+   * compute a proper result.
+   *
+   * @return {@code true} if the operation that produced this {@code Result} could not
+   * compute a proper result
+   */
+  public boolean isUnavailable() {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    return this == NONE;</span>
+  }
+
+  /**
+   * If available, passes the result to the specified consumer; else does nothing.
+   *
+   * @param consumer the consumer of the result
+   * @param &lt;X&gt; the type of the exception thrown by the consumer
+   * @throws X if the consumer experiences an error
+   */
+  public &lt;X extends Throwable&gt; void ifAvailable(FallibleConsumer&lt;T, X&gt; consumer)
+        throws X {
+<span class="fc" id="L135">    Check.notNull(consumer);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">    if (isAvailable()) {</span>
+<span class="fc" id="L137">      consumer.accept(val);</span>
+    }
+<span class="fc" id="L139">  }</span>
+
+  /**
+   * Returns the result value, if available, else the provided default value.
+   *
+   * @param defaultValue the default value
+   * @return the result value, if available, else the provided default value
+   */
+  public T orElse(T defaultValue) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">    return isAvailable() ? val : defaultValue;</span>
+  }
+
+  /**
+   * Returns this {@code Result} if it contains a proper result value (possibly
+   * {@code null}), else the provided {@code Result}.
+   *
+   * @param alternative the {@code Result} to return if this {@code Result} is
+   * {@link Result#notAvailable() Result.notAvailable()}. Must not be {@code null}, and
+   * must not be {@code Result.notAvailable()}.
+   * @return this instance or the provided instance
+   * @throws IllegalArgumentException if the specified {@code Result} is
+   * {@code Result.notAvailable()}
+   */
+  public Result&lt;T&gt; or(Result&lt;T&gt; alternative) throws IllegalArgumentException {
+<span class="fc" id="L163">    Check.notNull(alternative).isNot(sameAs(), NONE);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">    return isAvailable() ? this : alternative;</span>
+  }
+
+  /**
+   * Returns {@code true} if no result is available &lt;i&gt;or&lt;/i&gt; if the result value is empty
+   * as per the {@link CommonChecks#empty() empty()} test.
+   *
+   * @return {@code true} if no result is available or the result value is empty.
+   */
+  @Override
+  public boolean isEmpty() {
+<span class="fc bfc" id="L175" title="All 4 branches covered.">    return this == NONE || empty().test(val);</span>
+  }
+
+  /**
+   * Returns {@code true} a result is available and is recursively non-empty as per the
+   * {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
+   *
+   * @return {@code true} if a result is available and is deep-not-empty
+   */
+  @Override
+  public boolean isDeepNotEmpty() {
+<span class="fc bfc" id="L186" title="All 4 branches covered.">    return this != NONE &amp;&amp; deepNotEmpty().test(val);</span>
+  }
+
+  /**
+   * Returns {@code true} if the specified object is a {@code Result} that either is
+   * &lt;i&gt;this&lt;/i&gt; {@code Result} or contains the same value.
+   *
+   * @param obj the object to compare this instance with
+   * @return whether this instance equals the specified object.
+   */
+  @Override
+  public boolean equals(Object obj) {
+<span class="fc bfc" id="L198" title="All 2 branches covered.">    if (this == obj) {</span>
+<span class="fc" id="L199">      return true;</span>
+<span class="fc bfc" id="L200" title="All 4 branches covered.">    } else if (obj == null || obj.getClass() != Result.class) {</span>
+<span class="fc" id="L201">      return false;</span>
+    }
+<span class="fc" id="L203">    Result&lt;?&gt; other = (Result&lt;?&gt;) obj;</span>
+<span class="fc" id="L204">    return Objects.equals(val, other.val);</span>
+  }
+
+  /**
+   * Returns the hashcode of the value contained in this {@code Result}, or 0 if no result
+   * was available.
+   *
+   * @return the hashcode of the value contained in this {@code Result}, or 0 if no result
+   * was available
+   */
+  @Override
+  public int hashCode() {
+<span class="fc" id="L216">    return Objects.hashCode(val);</span>
+  }
+
+  /**
+   * Returns a string representation analogous to the one provided by
+   * {@link java.util.Optional}.
+   *
+   * @return a string representation analogous to the one provided by
+   * {@link java.util.Optional}
+   */
+  @Override
+  public String toString() {
+<span class="fc bfc" id="L228" title="All 2 branches covered.">    return val != null ? String.format(&quot;Result[%s]&quot;, val) : &quot;Result.notAvailable&quot;;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

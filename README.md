@@ -258,6 +258,17 @@ your code with less syntactical sugar, you can also just write:
 Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 ```
 
+When combining checks you can also employ 
+[logical quantifiers](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/relation/Quantifier.html):
+
+```java
+import static org.klojang.check.relation.Quantifier.noneOf;
+import static org.klojang.check.CommonChecks.notEmpty;
+import static org.klojang.check.CommonChecks.contains;
+
+Check.that(collection).is(notEmpty().and(contains(), noneOf(), "FOO", "BAR"));
+```
+
 ## About
 
 <img src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0" />

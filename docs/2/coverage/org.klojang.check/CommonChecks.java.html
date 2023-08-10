@@ -1,0 +1,1022 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonChecks.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check</a> &gt; <span class="el_source">CommonChecks.java</span></div><h1>CommonChecks.java</h1><pre class="source lang-java linenums">package org.klojang.check;
+
+import org.klojang.check.aux.Emptyable;
+import org.klojang.check.aux.Result;
+import org.klojang.check.relation.*;
+import org.klojang.check.x.CheckImpls;
+import org.klojang.check.x.StringCheckImpls;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
+import static java.util.regex.Pattern.*;
+import static org.klojang.check.x.Misc.typeNotSupported;
+import static org.klojang.check.x.StringCheckImpls.NUMERICALS;
+import static org.klojang.check.x.StringCheckImpls.PARSABLES;
+
+/**
+ * Defines various common checks on arguments, variables, object state, program
+ * input, etc. The checks have short, informative error messages associated with
+ * them, so you don't have to invent them yourself. Unless specified otherwise they
+ * &lt;i&gt;only&lt;/i&gt; test what they are documented to be testing. Many of them do nothing
+ * but return a method reference (e.g.
+ * {@link Collection#contains(Object) Collection::contains}). More specifically:
+ * &lt;b&gt;the checks will not execute a preliminary null check&lt;/b&gt; on the argument
+ * before proceeding with the actual check. If the argument might be {@code null},
+ * always perform a {@link #notNull()} check first. Otherwise, a raw, unprocessed
+ * {@link NullPointerException} &lt;i&gt;can and will&lt;/i&gt; be thrown from the code
+ * underlying Klojang Check.
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.notNull(file).is(readable());
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;For ease of reading, the documentation for the checks will mostly use the term
+ * &quot;argument&quot; for the value being tested. Constantly repeating &quot;argument, field,
+ * variable, program argument, system property, environment variable, etc.&quot; would not
+ * improve the quality and clarity of the documentation.
+ *
+ * @author Ayco Holleman
+ */
+public final class CommonChecks {
+
+<span class="nc" id="L46">  private CommonChecks() {</span>
+<span class="nc" id="L47">    throw new UnsupportedOperationException();</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // Predicate
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Verifies that the argument is null. Equivalent to
+   * {@link Objects#isNull(Object) Objects::isNull}.
+   *
+   * @param &lt;T&gt; the type of the argument
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; NULL() {
+<span class="fc" id="L62">    return Objects::isNull;</span>
+  }
+
+  /**
+   * Verifies that the argument is not null. Equivalent to
+   * {@link Objects#nonNull(Object) Objects::nonNull}. Note that {@link #NULL()},
+   * {@link #yes()} and {@link #empty()} are the only checks that come with their
+   * negation: {@code notNull()}, {@link #no()} and {@link #notEmpty()}. The other
+   * checks need to be inverted using the {@code isNot(...)} and {@code notHas(...)}
+   * methods of {@link ObjectCheck} and {@link IntCheck}.
+   *
+   * @param &lt;T&gt; the type of the argument
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; notNull() {
+<span class="fc" id="L77">    return Objects::nonNull;</span>
+  }
+
+  /**
+   * Verifies that a condition evaluates to {@code true}.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(connection.isOpen()).is(yes());
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;Boolean&gt; yes() {
+<span class="fc" id="L90">    return x -&gt; x;</span>
+  }
+
+  /**
+   * Verifies that a condition evaluates to {@code false}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;Boolean&gt; no() {
+<span class="fc bfc" id="L99" title="All 2 branches covered.">    return x -&gt; !x;</span>
+  }
+
+  /**
+   * Verifies that the argument is empty.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(list).isNot(empty());
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * &lt;p&gt;
+   * A value is defined to be empty if any of the following applies:
+   *
+   * &lt;ul&gt;
+   *   &lt;li&gt;it is {@code null}
+   *   &lt;li&gt;it is an empty {@link CharSequence}
+   *   &lt;li&gt;it is an empty {@link Collection}
+   *   &lt;li&gt;it is an empty {@link Map}
+   *   &lt;li&gt;it is an empty {@link Emptyable}
+   *   &lt;li&gt;it is an empty {@link File}
+   *   &lt;li&gt;it is a zero-length array
+   *   &lt;li&gt;it is an empty {@link Optional} &lt;b&gt;or&lt;/b&gt; an {@code Optional}
+   *      containing an empty value
+   * &lt;/ul&gt;
+   *
+   * &lt;p&gt;This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @param &lt;T&gt; the type of the argument
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; empty() {
+<span class="fc" id="L131">    return CheckImpls::isEmpty;</span>
+  }
+
+  /**
+   * Verifies that the argument is either null or an empty string.
+   *
+   * &lt;p&gt;This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;String&gt; emptyString() {
+<span class="fc bfc" id="L143" title="All 4 branches covered.">    return s -&gt; s == null || s.isEmpty();</span>
+  }
+
+  /**
+   * Verifies that the argument is not empty. More precisely: it verifies the
+   * negation of the {@link #empty()} test.
+   *
+   * &lt;p&gt;This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @param &lt;T&gt; the type of the argument
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; notEmpty() {
+<span class="fc" id="L157">    return CheckImpls::isNotEmpty;</span>
+  }
+
+  /**
+   * Verifies that the argument is not {@code null} and, if it is an array,
+   * collection or map, that it does not contain any {@code null} values. It could
+   * still be a zero-length array or zero-size collection or map, however. For maps,
+   * both keys and values are tested for {@code null}.
+   *
+   * &lt;p&gt;This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @param &lt;T&gt; the type of the argument
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; deepNotNull() {
+<span class="fc" id="L173">    return CheckImpls::isDeepNotNull;</span>
+  }
+
+  /**
+   * Verifies that the argument is recursively non-empty. A value is defined to be
+   * deep-not-empty if any of the following applies:
+   *
+   * &lt;ul&gt;
+   *   &lt;li&gt;it is a non-empty {@link CharSequence}
+   *   &lt;li&gt;it is a non-empty {@link Collection} containing only
+   *      &lt;i&gt;deep-not-empty&lt;/i&gt; elements
+   *   &lt;li&gt;it is a non-empty {@link Map} containing only &lt;i&gt;deep-not-empty&lt;/i&gt; keys
+   *      and values
+   *   &lt;li&gt;it is a deep-not-empty {@link Emptyable}
+   *   &lt;li&gt;it is a non-zero-length {@code Object[]} containing only
+   *      &lt;i&gt;deep-not-empty&lt;/i&gt; elements
+   *   &lt;li&gt;it is a non-zero-length array of primitive values
+   *   &lt;li&gt;it is a non-empty {@link Optional} containing a &lt;i&gt;deep-not-empty&lt;/i&gt;
+   *      value
+   *   &lt;li&gt;it is a {@link File} containing at least one non-whitespace character.
+   *      Consequently, this check could be expensive if the argument is a large
+   *      {@code File}. Also note that this check will not verify that the file
+   *      exists in the first place. If in doubt, execute the {@link #regularFile()} check
+   *      first.
+   *   &lt;li&gt;it is a non-null object of any other type
+   * &lt;/ul&gt;
+   *
+   * &lt;p&gt;This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @param &lt;T&gt; the type of the argument
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; deepNotEmpty() {
+<span class="fc" id="L207">    return CheckImpls::isDeepNotEmpty;</span>
+  }
+
+  /**
+   * Verifies that the argument is {@code null} or contains whitespace only. Probably
+   * more useful when called from an {@code isNot} method.
+   *
+   * &lt;p&gt;This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;String&gt; blank() {
+<span class="fc bfc" id="L220" title="All 4 branches covered.">    return s -&gt; s == null || s.isBlank();</span>
+  }
+
+  /**
+   * Verifies that a string consists of digits only (without '+' or '-' sign), no
+   * leading zeros, and can be parsed into an integer (by implication non-negative).
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;String&gt; plainInt() {
+<span class="fc" id="L230">    return StringCheckImpls::isPlainInt;</span>
+  }
+
+  /**
+   * Verifies that a string consists of digits only (without '+' or '-' sign),  no
+   * leading zeros, and can be parsed into a half-precision integer (by implication
+   * non-negative). Useful, for example, for validating TCP port numbers.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;String&gt; plainShort() {
+<span class="fc" id="L241">    return StringCheckImpls::isPlainShort;</span>
+  }
+
+  /**
+   * Verifies that the argument is an array or an array &lt;i&gt;type&lt;/i&gt;.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Object obj = new int[] {1, 2, 3, 4, 5};
+   * Check.that(obj).is(array());             // OK
+   * Check.that(obj.getClass()).is(array());  // OK
+   * Check.that(&quot;foo&quot;).is(array());           // IllegalArgumentException
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param &lt;T&gt; the type of the argument
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;T&gt; array() {
+<span class="fc bfc" id="L258" title="All 2 branches covered.">    return x -&gt; x.getClass() == Class.class</span>
+<span class="fc" id="L259">        ? ((Class&lt;?&gt;) x).isArray()</span>
+<span class="fc" id="L260">        : x.getClass().isArray();</span>
+  }
+
+  /**
+   * Verifies that the argument is an existing, regular file. NB To verify that a
+   * path &lt;i&gt;string&lt;/i&gt; is valid, execute:
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(path).has(File::new, regularFile());
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;File&gt; regularFile() {
+<span class="fc" id="L274">    return f -&gt; Files.isRegularFile(f.toPath());</span>
+  }
+
+  /**
+   * Verifies that the argument is an existing directory.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;File&gt; directory() {
+<span class="fc" id="L283">    return f -&gt; Files.isDirectory(f.toPath());</span>
+  }
+
+  /**
+   * Verifies that the argument is a symbolic link.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;File&gt; symlink() {
+<span class="fc" id="L292">    return f -&gt; Files.isSymbolicLink(f.toPath());</span>
+  }
+
+  /**
+   * Verifies that the specified file is present on the file system. Equivalent to
+   * {@link File#exists() File::exists}.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * // import static org.klojang.CommonChecks.fileExists;
+   * // import static org.klojang.CommonExceptions.fileNotFound;
+   * Check.that(file).is(fileExists(), fileNotFound(file));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @return a function implementing the test described above
+   * @see CommonExceptions#fileNotFound(File)
+   */
+  public static ComposablePredicate&lt;File&gt; fileExists() {
+<span class="fc" id="L309">    return File::exists;</span>
+  }
+
+  /**
+   * Verifies that a file is readable. Implies that the file exists. Equivalent to
+   * {@link File#canRead() File::canRead}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;File&gt; readable() {
+<span class="fc" id="L319">    return File::canRead;</span>
+  }
+
+  /**
+   * Verifies that a file is writable. Implies that the file exists. Equivalent to
+   * {@link File#canWrite() File::canWrite}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposablePredicate&lt;File&gt; writable() {
+<span class="fc" id="L329">    return File::canWrite;</span>
+  }
+
+  /**
+   * Verifies that the argument is a non-empty {@code Optional}. Note that this check
+   * differs from the {@link #empty()} check in that it &lt;i&gt;only&lt;/i&gt; verifies that the
+   * {@code Optional} contains a value. The {@code empty()} check (in its negation)
+   * additionally requires that the value is itself non-empty.
+   *
+   * @param &lt;T&gt; the type of the value contained in the {@code Optional}
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;Optional&lt;T&gt;&gt; present() {
+<span class="fc" id="L342">    return Optional::isPresent;</span>
+  }
+
+  /**
+   * Verifies that a {@linkplain Result result} is available. Note that this check
+   * differs from the {@link #empty()} check in that it &lt;i&gt;only&lt;/i&gt; verifies that
+   * {@code Result} contains a value. The {@code empty()} check (in its negation)
+   * additionally requires that the value it contains is itself non-empty.
+   *
+   * @param &lt;T&gt; the type of the value contained in the {@code Result}
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; ComposablePredicate&lt;Result&lt;T&gt;&gt; available() {
+<span class="fc" id="L355">    return Result::isAvailable;</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // IntPredicate
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Verifies that the argument is an even integer.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposableIntPredicate even() {
+<span class="fc bfc" id="L368" title="All 2 branches covered.">    return x -&gt; x % 2 == 0;</span>
+  }
+
+  /**
+   * Verifies that the argument is an odd integer.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposableIntPredicate odd() {
+<span class="fc bfc" id="L377" title="All 2 branches covered.">    return x -&gt; x % 2 == 1;</span>
+  }
+
+  /**
+   * Verifies that the argument is a positive integer.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposableIntPredicate positive() {
+<span class="fc bfc" id="L386" title="All 2 branches covered.">    return x -&gt; x &gt; 0;</span>
+  }
+
+  /**
+   * Verifies that the argument is a negative integer.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposableIntPredicate negative() {
+<span class="fc bfc" id="L395" title="All 2 branches covered.">    return x -&gt; x &lt; 0;</span>
+  }
+
+  /**
+   * Verifies that the argument is zero (0).
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposableIntPredicate zero() {
+<span class="fc bfc" id="L404" title="All 2 branches covered.">    return x -&gt; x == 0;</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // IntRelation
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Verifies that the argument equals the specified {@code int} value.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntRelation eq() {
+<span class="fc bfc" id="L417" title="All 2 branches covered.">    return (x, y) -&gt; x == y;</span>
+  }
+
+  /**
+   * Verifies that the argument does not equal the specified {@code int} value.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntRelation ne() {
+<span class="fc bfc" id="L426" title="All 2 branches covered.">    return (x, y) -&gt; x != y;</span>
+  }
+
+  /**
+   * Verifies that the argument is greater than the specified {@code int} value.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntRelation gt() {
+<span class="fc bfc" id="L435" title="All 2 branches covered.">    return (x, y) -&gt; x &gt; y;</span>
+  }
+
+  /**
+   * Verifies that the argument is greater than or equal to the specified {@code int}
+   * value.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntRelation gte() {
+<span class="fc bfc" id="L445" title="All 2 branches covered.">    return (x, y) -&gt; x &gt;= y;</span>
+  }
+
+  /**
+   * Verifies that the argument is less than the specified {@code int} value.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntRelation lt() {
+<span class="fc bfc" id="L454" title="All 2 branches covered.">    return (x, y) -&gt; x &lt; y;</span>
+  }
+
+  /**
+   * Verifies that the argument is less than or equal to the specified {@code int}
+   * value.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntRelation lte() {
+<span class="fc bfc" id="L464" title="All 2 branches covered.">    return (x, y) -&gt; x &lt;= y;</span>
+  }
+
+  /**
+   * Verifies that the argument is a multiple of the specified {@code int} value.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntRelation multipleOf() {
+<span class="fc bfc" id="L473" title="All 2 branches covered.">    return (x, y) -&gt; x % y == 0;</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // Relation
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Verifies that the argument equals the provided value. Equivalent to
+   * {@link Object#equals(Object) Object::equals}. Note that this method is
+   * &lt;i&gt;not&lt;/i&gt; equivalent to {@link Objects#equals(Object, Object) Objects::equals}
+   * and is therefore not null-safe. Execute a {@linkplain #notNull() null check}
+   * first, if necessary.
+   *
+   * @param &lt;S&gt; the type of the subject of the relationship (which is the value
+   *     being tested)
+   * @param &lt;O&gt; the type of the object of the relationship
+   * @return a function implementing the test described above
+   */
+  public static &lt;S, O&gt; Relation&lt;S, O&gt; EQ() {
+<span class="fc" id="L493">    return Object::equals;</span>
+  }
+
+  /**
+   * Verifies that the argument equals some value. Equivalent to
+   * {@link Object#equals(Object) Object::equals}. Use this check instead of
+   * {@link #EQ()} if you want the compiler to enforce type equality between subject
+   * and object.
+   *
+   * @param &lt;T&gt; the type of the objects being compared
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; Relation&lt;T, T&gt; equalTo() {
+<span class="fc" id="L506">    return Object::equals;</span>
+  }
+
+  /**
+   * Verifies that the argument is greater than another value.
+   *
+   * @param &lt;T&gt; the type of the values being compared
+   * @return a function implementing the test described above
+   * @see #gt()
+   */
+  public static &lt;T extends Comparable&lt;T&gt;&gt; Relation&lt;T, T&gt; GT() {
+<span class="fc bfc" id="L517" title="All 2 branches covered.">    return (x, y) -&gt; x.compareTo(y) &gt; 0;</span>
+  }
+
+  /**
+   * Verifies that the argument is less than another value.
+   *
+   * @param &lt;T&gt; the type of the values being compared
+   * @return a function implementing the test described above
+   * @see CommonProperties#unbox()
+   * @see #lt()
+   */
+  public static &lt;T extends Comparable&lt;T&gt;&gt; Relation&lt;T, T&gt; LT() {
+<span class="fc bfc" id="L529" title="All 2 branches covered.">    return (x, y) -&gt; x.compareTo(y) &lt; 0;</span>
+  }
+
+  /**
+   * Verifies that the argument is greater than or equal to another value.
+   *
+   * @param &lt;T&gt; the type of the values being compared
+   * @return a function implementing the test described above
+   * @see CommonProperties#unbox()
+   * @see #gte()
+   */
+  public static &lt;T extends Comparable&lt;T&gt;&gt; Relation&lt;T, T&gt; GTE() {
+<span class="fc bfc" id="L541" title="All 2 branches covered.">    return (x, y) -&gt; x.compareTo(y) &gt;= 0;</span>
+  }
+
+  /**
+   * Verifies that the argument is less than or equal to another value.
+   *
+   * @param &lt;T&gt; the type of the values being compared
+   * @return a function implementing the test described above
+   * @see CommonProperties#unbox()
+   * @see #lte()
+   */
+  public static &lt;T extends Comparable&lt;T&gt;&gt; Relation&lt;T, T&gt; LTE() {
+<span class="fc bfc" id="L553" title="All 2 branches covered.">    return (x, y) -&gt; x.compareTo(y) &lt;= 0;</span>
+  }
+
+  /**
+   * Verifies that a value references the same object as another value.
+   *
+   * @param &lt;S&gt; the type of the subject of the relationship (which is the value
+   *     being tested) (the subject of the {@code Relation})
+   * @param &lt;O&gt; the type of the value to compare it with (the object of the
+   *     {@code Relation})
+   * @return a function implementing the test described above
+   */
+  public static &lt;S, O&gt; Relation&lt;S, O&gt; sameAs() {
+<span class="fc bfc" id="L566" title="All 2 branches covered.">    return (x, y) -&gt; x == y;</span>
+  }
+
+  /**
+   * Verifies that the argument is either null or equals a particular value.
+   *
+   * &lt;p&gt;This check (implicitly) performs a null check and can be safely executed
+   * without or instead of executing the {@link #notNull()} check first.
+   *
+   * @param &lt;T&gt; the type of the subject of the relationship (which is the value
+   *     being tested)
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; Relation&lt;T, T&gt; nullOr() {
+<span class="fc bfc" id="L580" title="All 4 branches covered.">    return (x, y) -&gt; x == null || x.equals(y);</span>
+  }
+
+  /**
+   * Verifies that the argument is an instance of a particular class or interface.
+   *
+   * @param &lt;S&gt; the type of the subject of the relation (which is the value being
+   *     tested)
+   * @return a function implementing the test described above
+   */
+  public static &lt;S&gt; Relation&lt;S, Class&lt;?&gt;&gt; instanceOf() {
+<span class="fc" id="L591">    return (x, y) -&gt; y.isInstance(x);</span>
+  }
+
+  /**
+   * Verifies that the argument is a supertype of the provided type. In other words,
+   * the provided type should extend, implement or equal the argument. Equivalent to
+   * {@link Class#isAssignableFrom(Class) Class::isAssignableFrom}.
+   *
+   * @param &lt;S&gt; the type of the subject's class
+   * @param &lt;O&gt; the type of the object's class
+   * @return a function that implements the test described above
+   */
+  public static &lt;S, O&gt; Relation&lt;Class&lt;S&gt;, Class&lt;O&gt;&gt; supertypeOf() {
+<span class="fc" id="L604">    return Class::isAssignableFrom;</span>
+  }
+
+  /**
+   * Verifies that the argument is a subtype of the provided type. In other words,
+   * the argument should extend, implement or equal the provided type.
+   *
+   * @param &lt;S&gt; the type of the subject's class
+   * @param &lt;O&gt; the type of the object's class
+   * @return a function that implements the test described above
+   */
+  public static &lt;S, O&gt; Relation&lt;Class&lt;S&gt;, Class&lt;O&gt;&gt; subtypeOf() {
+<span class="fc" id="L616">    return (x, y) -&gt; y.isAssignableFrom(x);</span>
+  }
+
+  /**
+   * Verifies that a collection contains a particular value. Equivalent to
+   * {@link Collection#contains(Object) Collection::contains}.
+   *
+   * @param &lt;O&gt; the type of the elements in the {@code Collection}
+   * @param &lt;S&gt; the type of the collection
+   * @return a function implementing the test described above
+   */
+  public static &lt;O, S extends Collection&lt;? super O&gt;&gt; Relation&lt;S, O&gt; contains() {
+<span class="fc" id="L628">    return Collection::contains;</span>
+  }
+
+  /**
+   * Verifies that a map contains a particular key. Equivalent to
+   * {@link Map#containsKey(Object) Map::containsKey}.
+   *
+   * @param &lt;O&gt; the type of the keys within the map
+   * @param &lt;S&gt; the Type of the {@code Map}
+   * @return a function implementing the test described above
+   */
+  public static &lt;O, S extends Map&lt;? super O, ?&gt;&gt; Relation&lt;S, O&gt; containsKey() {
+<span class="fc" id="L640">    return Map::containsKey;</span>
+  }
+
+  /**
+   * Verifies that a map contains a particular value. Equivalent to
+   * {@link Map#containsValue(Object) Map::containsValue}.
+   *
+   * @param &lt;O&gt; the type of the values within the map
+   * @param &lt;S&gt; the Type of the {@code Map}
+   * @return a function implementing the test described above
+   */
+  public static &lt;O, S extends Map&lt;?, ? super O&gt;&gt; Relation&lt;S, O&gt; containsValue() {
+<span class="fc" id="L652">    return Map::containsValue;</span>
+  }
+
+  /**
+   * Verifies that the argument is an element of a collection.
+   *
+   * @param &lt;S&gt; the type of the argument
+   * @param &lt;O&gt; the type of the {@code Collection}
+   * @return a function implementing the test described above
+   */
+  public static &lt;S, O extends Collection&lt;? super S&gt;&gt; Relation&lt;S, O&gt; in() {
+<span class="fc" id="L663">    return (x, y) -&gt; y.contains(x);</span>
+  }
+
+  /**
+   * Alias for {@link #in()}. Note that this method will even report itself to be the
+   * &quot;in&quot; check.
+   *
+   * @param &lt;S&gt; the type of the argument
+   * @param &lt;O&gt; the type of the {@code Collection}
+   * @return a function implementing the test described above
+   */
+  public static &lt;S, O extends Collection&lt;? super S&gt;&gt; Relation&lt;S, O&gt; elementOf() {
+<span class="nc" id="L675">    return in();</span>
+  }
+
+  /**
+   * Verifies the presence of a key within a map.
+   *
+   * @param &lt;S&gt; the type of the keys within the map
+   * @param &lt;O&gt; the Type of the {@code Map}
+   * @return a function implementing the test described above
+   */
+  public static &lt;S, O extends Map&lt;? super S, ?&gt;&gt; Relation&lt;S, O&gt; keyIn() {
+<span class="fc" id="L686">    return (x, y) -&gt; y.containsKey(x);</span>
+  }
+
+  /**
+   * Verifies the presence of a value within a map.
+   *
+   * @param &lt;S&gt; the type of the keys within the map
+   * @param &lt;O&gt; the Type of the {@code Map}
+   * @return a function implementing the test described above
+   */
+  public static &lt;S, O extends Map&lt;?, ? super S&gt;&gt; Relation&lt;S, O&gt; valueIn() {
+<span class="fc" id="L697">    return (x, y) -&gt; y.containsValue(x);</span>
+  }
+
+  /**
+   * Verifies that the argument is an element of an array.
+   *
+   * @param &lt;S&gt; the type of the subject of the relationship (which is the value
+   *     being tested)
+   * @param &lt;O&gt; the component type of the array
+   * @return a function implementing the test described above
+   */
+  public static &lt;O, S extends O&gt; Relation&lt;S, O[]&gt; inArray() {
+<span class="fc" id="L709">    return CheckImpls::inArray;</span>
+  }
+
+  /**
+   * Verifies that a {@code Collection} argument contains all the elements of the
+   * specified collection. Equivalent to
+   * {@link Collection#containsAll(Collection) Collection::containsAll}.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(List.of(1, 2, 3)).is(enclosing(), Set.of(1, 2)); // true
+   * Check.that(List.of(1, 2)).is(enclosing(), Set.of(1, 2, 3)); // false
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param &lt;E&gt; The type of the elements in the {@code Collection}
+   * @param &lt;C0&gt; The type of the argument (the subject of the {@code Relation})
+   * @param &lt;C1&gt; The type of the object of the {@code Relation}
+   * @return a function implementing the test described above
+   */
+  public static &lt;E, C0 extends Collection&lt;? super E&gt;, C1 extends Collection&lt;E&gt;&gt;
+  Relation&lt;C0, C1&gt; containsAll() {
+<span class="fc" id="L729">    return Collection::containsAll;</span>
+  }
+
+  /**
+   * Verifies that a {@code Collection} argument is a subset or sublist of another
+   * {@code Collection}.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(List.of(1, 2, 3)).is(enclosedBy(), Set.of(1, 2)); // false
+   * Check.that(List.of(1, 2)).is(enclosedBy(), Set.of(1, 2, 3)); // true
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param &lt;E&gt; The type of the elements in the {@code Collection}
+   * @param &lt;C0&gt; The type of the argument (the subject of the {@code Relation})
+   * @param &lt;C1&gt; The type of the object of the {@code Relation}
+   * @return a function implementing the test described above
+   */
+  public static &lt;E, C0 extends Collection&lt;E&gt;, C1 extends Collection&lt;? super E&gt;&gt;
+  Relation&lt;C0, C1&gt; containedIn() {
+<span class="fc" id="L748">    return (x, y) -&gt; y.containsAll(x);</span>
+  }
+
+  /**
+   * Verifies that the argument contains the specified substring. Equivalent to
+   * {@link String#contains(CharSequence) String::contains}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, CharSequence&gt; hasSubstring() {
+<span class="fc" id="L758">    return String::contains;</span>
+  }
+
+  /**
+   * Verifies that the argument is a substring of the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; substringOf() {
+<span class="fc" id="L767">    return (x, y) -&gt; y.contains(x);</span>
+  }
+
+  /**
+   * Verifies that the argument starts with the specified substring. Equivalent to
+   * {@link String#startsWith(String) String::startsWith}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; startsWith() {
+<span class="fc" id="L777">    return String::startsWith;</span>
+  }
+
+  /**
+   * Verifies that the argument ends with the specified substring. Equivalent to
+   * {@link String#endsWith(String) String::endsWith}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; endsWith() {
+<span class="fc" id="L787">    return String::endsWith;</span>
+  }
+
+  /**
+   * Verifies that the argument matches the specified pattern (that is, the pattern
+   * fully describes the string).
+   *
+   * @return a function implementing the test described above
+   * @see #matches()
+   */
+  public static Relation&lt;String, Pattern&gt; hasPattern() {
+<span class="fc" id="L798">    return (string, pattern) -&gt; pattern.matcher(string).matches();</span>
+  }
+
+  /**
+   * Verifies that the argument contains the specified pattern (that is, the pattern
+   * can be found somewhere in the string).
+   *
+   * @return a function implementing the test described above
+   * @see #containsMatch()
+   */
+  public static Relation&lt;String, Pattern&gt; containsPattern() {
+<span class="fc" id="L809">    return (string, pattern) -&gt; pattern.matcher(string).find();</span>
+  }
+
+  /**
+   * Verifies that the argument matches the specified pattern (that is, the pattern
+   * fully describes the string). The subject of the returned {@code Relation} is the
+   * string to match; the object of the {@code Relation} is a regular expression to
+   * be compiled into a {@link Pattern}.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(&quot;abcd123&quot;).is(matches(), &quot;^\\w{4}\\d{3}$&quot;); // yes
+   * Check.that(&quot;abcd123&quot;).is(matches(), &quot;\\d{3}&quot;); // no
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; matches() {
+<span class="fc" id="L826">    return (string, pattern) -&gt;</span>
+<span class="fc" id="L827">        hasPattern().exists(string, compile(pattern));</span>
+  }
+
+  /**
+   * Verifies that the argument contains the specified pattern (that is, the pattern
+   * can be found somewhere in the string). The subject of the returned
+   * {@code Relation} is the string to match; the object of the {@code Relation} is a
+   * regular expression to be compiled into a {@link Pattern}.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(&quot;abcd123&quot;).is(containsMatch(), &quot;\\d{3}&quot;); // yes
+   * Check.that(&quot;abcd123&quot;).is(containsMatch(), &quot;\\d{4}&quot;); // no
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; containsMatch() {
+<span class="fc" id="L844">    return (string, pattern) -&gt;</span>
+<span class="fc" id="L845">        containsPattern().exists(string, compile(pattern));</span>
+  }
+
+  /**
+   * Verifies that a string can be parsed into a number of the specified type without
+   * loss of information. The provided type must be one of the &lt;i&gt;primitive&lt;/i&gt;
+   * number types: {@code long}, {@code int}, {@code short}, {@code byte},
+   * {@code double} or {@code float}. Specifying a wrapper type (e.g.
+   * {@code Integer}) will result in a {@link CorruptCheckException}.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(&quot;123&quot;).is(numerical(), int.class); // yes
+   * Check.that(&quot;123.0&quot;).is(numerical(), int.class); // no
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param &lt;T&gt; the type of the number into which to parse the string
+   * @return a function implementing the test described above
+   * @see #parsableAs
+   * @see #plainInt()
+   * @see #plainShort()
+   */
+  public static &lt;T extends Number&gt; Relation&lt;String, Class&lt;T&gt;&gt; numerical() {
+<span class="fc" id="L867">    return (x, y) -&gt; {</span>
+<span class="fc" id="L868">      Predicate&lt;String&gt; p = NUMERICALS.get(y);</span>
+<span class="pc bpc" id="L869" title="1 of 2 branches missed.">      if (p != null) {</span>
+<span class="fc" id="L870">        return p.test(x);</span>
+      }
+<span class="nc" id="L872">      throw typeNotSupported(y);</span>
+    };
+  }
+
+  /**
+   * Verifies that a string can be parsed into a {@code Number} of the specified type
+   * without loss of information. The provided type must be one of the
+   * &lt;i&gt;primitive&lt;/i&gt; number types: {@code long}, {@code int}, {@code short},
+   * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g.
+   * {@code Integer}) will result in a {@link CorruptCheckException}. Contrary to the
+   * {@link #numerical()} check, this check allows the string to contain a fractional
+   * part even if the target type is an integral type (like {@code byte}), as long as
+   * it consists of zeros only. Scientific notation is allowed, too, as long as the
+   * effective fractional part consists of zeros only. For {@code Double} and
+   * {@code Float} there is no difference between the two checks.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(&quot;123&quot;).is(parsableAs(), int.class); // yes
+   * Check.that(&quot;123.0&quot;).is(parsableAs(), int.class); // yes
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param &lt;T&gt; the type of the number into which to parse the string
+   * @return a function implementing the test described above
+   * @see #numerical()
+   * @see #plainInt()
+   * @see #plainShort()
+   */
+  public static &lt;T extends Number&gt; Relation&lt;String, Class&lt;T&gt;&gt; parsableAs() {
+<span class="fc" id="L900">    return (x, y) -&gt; {</span>
+<span class="fc" id="L901">      Predicate&lt;String&gt; p = PARSABLES.get(y);</span>
+<span class="fc bfc" id="L902" title="All 2 branches covered.">      if (p != null) {</span>
+<span class="fc" id="L903">        return p.test(x);</span>
+      }
+<span class="fc" id="L905">      throw typeNotSupported(y);</span>
+    };
+  }
+
+  /**
+   * Verifies that a string value equals, ignoring case, the specified string.
+   * Equivalent to {@link String#equalsIgnoreCase(String) String::equalsIgnoreCase}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; equalsIC() {
+<span class="fc" id="L916">    return String::equalsIgnoreCase;</span>
+  }
+
+  /**
+   * Verifies that a string value starts with, ignoring case, the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; startsWithIC() {
+<span class="fc" id="L925">    return (s, o) -&gt; s.regionMatches(true, 0, o, 0, o.length());</span>
+  }
+
+  /**
+   * Verifies that a string value starts with, ignoring case, the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; endsWithIC() {
+<span class="fc" id="L934">    return (s, o) -&gt;</span>
+<span class="fc" id="L935">        s.regionMatches(true, s.length() - o.length(), o, 0, o.length());</span>
+  }
+
+  /**
+   * Verifies that a string value contains, ignoring case, the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation&lt;String, String&gt; hasSubstringIC() {
+<span class="fc" id="L944">    return (s, o) -&gt;</span>
+<span class="fc" id="L945">        containsPattern().exists(s, compile(o, CASE_INSENSITIVE | LITERAL));</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // IntObjRelation
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Verifies that the argument is a valid index into the specified array,
+   * {@code List} or {@code String}. No preliminary check is done to ensure the
+   * provided object actually is an array, {@code List} or {@code String}. A
+   * {@link CorruptCheckException} is thrown if it is not. Execute the
+   * {@link #instanceOf()} or {@link #array()} check first, if necessary.
+   *
+   * @param &lt;T&gt; the type of the object of the {@code IntObjRelation} - must be a
+   *     {@code String}, {@code List} or array
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; IntObjRelation&lt;T&gt; indexOf() {
+<span class="fc" id="L964">    return CheckImpls::isIndexOf;</span>
+  }
+
+  /**
+   * Alias for {@link #indexOf()}. Can be used if the class you are working in
+   * already contains an {@code indexOf()} method. Note that this will report itself
+   * to be the {@code indexOf()} check:
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(42, &quot;foo&quot;).is(indexExclusiveOf(), new int[10], &quot;${tag} did not pass the ${test}() test&quot;);
+   * // &quot;foo did not pass the indexOf() test&quot;
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param &lt;T&gt; the type of the object of the {@code IntObjRelation} - must be a
+   *     {@code String}, {@code List} or array
+   * @return a function implementing the test described above
+   */
+  public static &lt;T&gt; IntObjRelation&lt;T&gt; indexExclusiveOf() {
+<span class="fc" id="L982">    return indexOf();</span>
+  }
+
+  /**
+   * Verifies that a value can be used as a &quot;from&quot; or &quot;to&quot; index in operations like
+   * {@link Arrays#copyOfRange(int[], int, int) Arrays.copyOfRange()},
+   * {@link String#substring(int, int) String.substring()} and
+   * {@link List#subList(int, int) List.subList()}. These operations allow both the
+   * &quot;from&quot; index and the &quot;to&quot; index to be equal to the length of the array, string
+   * or list. No preliminary check is done to ensure the provided object actually is
+   * an array, {@code List} or {@code String}. A {@link CorruptCheckException} is
+   * thrown if it is not. Execute the {@link #instanceOf()} or {@link #array()} check
+   * first, if necessary.
+   *
+   * @param &lt;T&gt; the type of the object of the {@code IntObjRelation} - must be a
+   *     {@code String}, {@code List} or array
+   * @return a function implementing the test described above
+   * @see Check#fromTo(Object[], int, int)
+   */
+  public static &lt;T&gt; IntObjRelation&lt;T&gt; indexInclusiveOf() {
+<span class="fc" id="L1002">    return CheckImpls::isIndexInclusiveOf;</span>
+  }
+
+  /**
+   * Verifies that the argument is present in the specified {@code int} array.
+   *
+   * @return a function implementing the test described above
+   */
+  public static IntObjRelation&lt;int[]&gt; inIntArray() {
+<span class="fc" id="L1011">    return (x, y) -&gt; {</span>
+<span class="fc bfc" id="L1012" title="All 2 branches covered.">      for (int i : y) {</span>
+<span class="fc bfc" id="L1013" title="All 2 branches covered.">        if (x == i) {</span>
+<span class="fc" id="L1014">          return true;</span>
+        }
+      }
+<span class="fc" id="L1017">      return false;</span>
+    };
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

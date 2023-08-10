@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectCheckHelper2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check</a> &gt; <span class="el_source">ObjectCheckHelper2.java</span></div><h1>ObjectCheckHelper2.java</h1><pre class="source lang-java linenums">package org.klojang.check;
+
+import org.klojang.check.relation.IntObjRelation;
+import org.klojang.check.relation.IntRelation;
+import org.klojang.check.x.msg.MsgArgs;
+
+import java.util.function.Function;
+import java.util.function.IntPredicate;
+import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
+
+import static org.klojang.check.CommonProperties.formatProperty;
+import static org.klojang.check.x.msg.CheckDefs.*;
+import static org.klojang.check.x.msg.MsgUtil.*;
+
+/*
+ * Helper class for ObjectCheck. Helps with has() methods that extract and validate an int
+ * property of the argument.
+ */
+final class ObjectCheckHelper2&lt;T, X extends Exception&gt; {
+
+  static &lt;T, X extends Exception&gt; ObjectCheckHelper2&lt;T, X&gt; help(ObjectCheck&lt;T, X&gt; check) {
+<span class="fc" id="L23">    return new ObjectCheckHelper2&lt;&gt;(check);</span>
+  }
+
+  private final ObjectCheck&lt;T, X&gt; check;
+
+<span class="fc" id="L28">  private ObjectCheckHelper2(ObjectCheck&lt;T, X&gt; check) {</span>
+<span class="fc" id="L29">    this.check = check;</span>
+<span class="fc" id="L30">  }</span>
+
+  ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; prop, IntPredicate test) throws X {
+<span class="fc" id="L33">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L34">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">    if (test.test(val)) {</span>
+<span class="fc" id="L36">      return check;</span>
+    }
+<span class="fc" id="L38">    String name = formatProperty(check.arg, check.argName, prop, Function.class);</span>
+<span class="fc" id="L39">    Function&lt;MsgArgs, String&gt; formatter = getIntPredicateFormatter(test);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L41">      throw check.exc.apply(getDefaultPredicateMessage(name, val));</span>
+    }
+<span class="fc" id="L43">    throw check.exc.apply(</span>
+<span class="fc" id="L44">        getPrefabMessage(formatter, test, false, name, val, int.class, null));</span>
+  }
+
+  ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; prop, IntPredicate test) throws X {
+<span class="fc" id="L48">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L49">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">    if (!test.test(val)) {</span>
+<span class="fc" id="L51">      return check;</span>
+    }
+<span class="fc" id="L53">    String name = formatProperty(check.arg, check.argName, prop, Function.class);</span>
+<span class="fc" id="L54">    Function&lt;MsgArgs, String&gt; formatter = getIntPredicateFormatter(test);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L56">      throw check.exc.apply(getDefaultPredicateMessage(name, val));</span>
+    }
+<span class="fc" id="L58">    throw check.exc.apply(</span>
+<span class="fc" id="L59">        getPrefabMessage(formatter, test, true, name, val, int.class, null));</span>
+  }
+
+  ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; prop, String name, IntPredicate test)
+      throws X {
+<span class="fc" id="L64">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L65">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">    if (test.test(val)) {</span>
+<span class="fc" id="L67">      return check;</span>
+    }
+<span class="fc" id="L69">    Function&lt;MsgArgs, String&gt; formatter = getIntPredicateFormatter(test);</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L71">      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));</span>
+    }
+<span class="fc" id="L73">    throw check.exc.apply(</span>
+<span class="fc" id="L74">        getPrefabMessage(formatter,</span>
+            test,
+            false,
+<span class="fc" id="L77">            check.FQN(name),</span>
+<span class="fc" id="L78">            val,</span>
+            int.class,
+            null));
+  }
+
+  ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; prop, String name, IntPredicate test)
+      throws X {
+<span class="fc" id="L85">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L86">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">    if (!test.test(val)) {</span>
+<span class="fc" id="L88">      return check;</span>
+    }
+<span class="fc" id="L90">    Function&lt;MsgArgs, String&gt; formatter = getIntPredicateFormatter(test);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L92">      throw check.exc.apply(getDefaultPredicateMessage(check.FQN(name), val));</span>
+    }
+<span class="fc" id="L94">    throw check.exc.apply(</span>
+<span class="fc" id="L95">        getPrefabMessage(formatter,</span>
+            test,
+            true,
+<span class="fc" id="L98">            check.FQN(name),</span>
+<span class="fc" id="L99">            val,</span>
+            int.class,
+            null));
+  }
+
+  ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; prop,
+      IntPredicate test,
+      String msg,
+      Object[] msgArgs)
+      throws X {
+<span class="fc" id="L109">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L110">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">    if (test.test(val)) {</span>
+<span class="fc" id="L112">      return check;</span>
+    }
+<span class="fc" id="L114">    throw check.exc.apply(</span>
+<span class="fc" id="L115">        getCustomMessage(msg, msgArgs, test, check.argName, val, int.class, null));</span>
+  }
+
+  ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; prop, IntPredicate test, String msg, Object[] msgArgs)
+      throws X {
+<span class="fc" id="L121">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L122">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    if (!test.test(val)) {</span>
+<span class="fc" id="L124">      return check;</span>
+    }
+<span class="fc" id="L126">    throw check.exc.apply(</span>
+<span class="fc" id="L127">        getCustomMessage(msg, msgArgs, test, check.argName, val, int.class, null));</span>
+  }
+
+  &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; prop, IntPredicate test, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L132">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">    if (test.test(prop.applyAsInt(check.arg))) {</span>
+<span class="fc" id="L134">      return check;</span>
+    }
+<span class="fc" id="L136">    throw exception.get();</span>
+  }
+
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; prop,
+      IntObjRelation&lt;O&gt; test,
+      O obj) throws X {
+<span class="fc" id="L142">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L143">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">    if (test.exists(val, obj)) {</span>
+<span class="fc" id="L145">      return check;</span>
+    }
+<span class="fc" id="L147">    String name = formatProperty(check.arg, check.argName, prop, Function.class);</span>
+<span class="fc" id="L148">    Function&lt;MsgArgs, String&gt; formatter = getIntObjRelationFormatter(test);</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L150">      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));</span>
+    }
+<span class="fc" id="L152">    throw check.exc.apply(</span>
+<span class="fc" id="L153">        getPrefabMessage(formatter, test, false, name, val, int.class, obj));</span>
+  }
+
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; prop,
+      IntObjRelation&lt;O&gt; test,
+      O obj)
+      throws X {
+<span class="fc" id="L160">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L161">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (!test.exists(val, obj)) {</span>
+<span class="fc" id="L163">      return check;</span>
+    }
+<span class="fc" id="L165">    String name = formatProperty(check.arg, check.argName, prop, Function.class);</span>
+<span class="fc" id="L166">    Function&lt;MsgArgs, String&gt; formatter = getIntObjRelationFormatter(test);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L168">      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));</span>
+    }
+<span class="fc" id="L170">    throw check.exc.apply(</span>
+<span class="fc" id="L171">        getPrefabMessage(formatter, test, true, name, val, int.class, obj));</span>
+  }
+
+  &lt;O&gt; ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; prop,
+      String name,
+      IntObjRelation&lt;O&gt; test,
+      O obj)
+      throws X {
+<span class="fc" id="L179">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L180">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">    if (test.exists(val, obj)) {</span>
+<span class="fc" id="L182">      return check;</span>
+    }
+<span class="fc" id="L184">    Function&lt;MsgArgs, String&gt; formatter = getIntObjRelationFormatter(test);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L186">      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));</span>
+    }
+<span class="fc" id="L188">    throw check.exc.apply(</span>
+<span class="fc" id="L189">        getPrefabMessage(formatter,</span>
+            test,
+            false,
+<span class="fc" id="L192">            check.FQN(name),</span>
+<span class="fc" id="L193">            val,</span>
+            int.class,
+            obj));
+  }
+
+  &lt;O&gt; ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; prop,
+      String name,
+      IntObjRelation&lt;O&gt; test,
+      O obj)
+      throws X {
+<span class="fc" id="L203">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L204">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">    if (!test.exists(val, obj)) {</span>
+<span class="fc" id="L206">      return check;</span>
+    }
+<span class="fc" id="L208">    Function&lt;MsgArgs, String&gt; formatter = getIntObjRelationFormatter(test);</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L210">      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));</span>
+    }
+<span class="fc" id="L212">    throw check.exc.apply(</span>
+<span class="fc" id="L213">        getPrefabMessage(formatter,</span>
+            test,
+            true,
+<span class="fc" id="L216">            check.FQN(name),</span>
+<span class="fc" id="L217">            val,</span>
+            int.class,
+            obj));
+  }
+
+  &lt;O&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; prop,
+      IntObjRelation&lt;O&gt; test,
+      O obj,
+      String msg,
+      Object[] msgArgs) throws X {
+<span class="fc" id="L228">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L229">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">    if (test.exists(val, obj)) {</span>
+<span class="fc" id="L231">      return check;</span>
+    }
+<span class="fc" id="L233">    throw check.exc.apply(getCustomMessage(msg,</span>
+        msgArgs,
+        test,
+        check.argName,
+<span class="fc" id="L237">        val,</span>
+        int.class,
+        obj));
+  }
+
+  &lt;O&gt; ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; prop,
+      IntObjRelation&lt;O&gt; test,
+      O obj,
+      String msg,
+      Object[] msgArgs) throws X {
+<span class="fc" id="L248">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L249">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">    if (!test.exists(val, obj)) {</span>
+<span class="fc" id="L251">      return check;</span>
+    }
+<span class="fc" id="L253">    throw check.exc.apply(getCustomMessage(msg,</span>
+        msgArgs,
+        test,
+        check.argName,
+<span class="fc" id="L257">        val,</span>
+        int.class,
+        obj));
+  }
+
+  &lt;O, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; prop, IntObjRelation&lt;O&gt; test, O obj, Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L265">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">    if (test.exists(prop.applyAsInt(check.arg), obj)) {</span>
+<span class="fc" id="L267">      return check;</span>
+    }
+<span class="nc" id="L269">    throw exception.get();</span>
+  }
+
+  public ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; prop, IntRelation test, int obj)
+      throws X {
+<span class="fc" id="L274">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L275">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">    if (test.exists(val, obj)) {</span>
+<span class="fc" id="L277">      return check;</span>
+    }
+<span class="fc" id="L279">    String name = formatProperty(check.arg, check.argName, prop, Function.class);</span>
+<span class="fc" id="L280">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L282">      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));</span>
+    }
+<span class="fc" id="L284">    throw check.exc.apply(</span>
+<span class="fc" id="L285">        getPrefabMessage(formatter, test, false, name, val, int.class, obj));</span>
+  }
+
+  public ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; prop, IntRelation test, int obj)
+      throws X {
+<span class="fc" id="L290">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L291">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">    if (!test.exists(val, obj)) {</span>
+<span class="fc" id="L293">      return check;</span>
+    }
+<span class="fc" id="L295">    String name = formatProperty(check.arg, check.argName, prop, Function.class);</span>
+<span class="fc" id="L296">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L298">      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));</span>
+    }
+<span class="fc" id="L300">    throw check.exc.apply(</span>
+<span class="fc" id="L301">        getPrefabMessage(formatter, test, true, name, val, int.class, obj));</span>
+  }
+
+  ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; prop,
+      String name,
+      IntRelation test,
+      int obj) throws X {
+<span class="fc" id="L308">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L309">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">    if (test.exists(val, obj)) {</span>
+<span class="fc" id="L311">      return check;</span>
+    }
+<span class="fc" id="L313">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L315">      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));</span>
+    }
+<span class="fc" id="L317">    throw check.exc.apply(</span>
+<span class="fc" id="L318">        getPrefabMessage(formatter,</span>
+            test,
+            false,
+<span class="fc" id="L321">            check.FQN(name),</span>
+<span class="fc" id="L322">            val,</span>
+            int.class,
+<span class="fc" id="L324">            obj));</span>
+  }
+
+  ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; prop,
+      String name,
+      IntRelation test,
+      int obj) throws X {
+<span class="fc" id="L331">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L332">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">    if (!test.exists(val, obj)) {</span>
+<span class="fc" id="L334">      return check;</span>
+    }
+<span class="fc" id="L336">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L338">      throw check.exc.apply(getDefaultRelationMessage(check.FQN(name), val, obj));</span>
+    }
+<span class="fc" id="L340">    throw check.exc.apply(</span>
+<span class="fc" id="L341">        getPrefabMessage(formatter,</span>
+            test,
+            true,
+<span class="fc" id="L344">            check.FQN(name),</span>
+<span class="fc" id="L345">            val,</span>
+            int.class,
+<span class="fc" id="L347">            obj));</span>
+  }
+
+  ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; prop, IntRelation test, int obj, String msg, Object[] msgArgs)
+      throws X {
+<span class="fc" id="L353">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L354">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L355" title="All 2 branches covered.">    if (test.exists(val, obj)) {</span>
+<span class="fc" id="L356">      return check;</span>
+    }
+<span class="fc" id="L358">    throw check.exc.apply(getCustomMessage(msg,</span>
+        msgArgs,
+        test,
+        check.argName,
+<span class="fc" id="L362">        val,</span>
+        int.class,
+<span class="fc" id="L364">        obj));</span>
+  }
+
+  ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; prop, IntRelation test, int obj, String msg, Object[] msgArgs)
+      throws X {
+<span class="fc" id="L370">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc" id="L371">    int val = prop.applyAsInt(check.arg);</span>
+<span class="fc bfc" id="L372" title="All 2 branches covered.">    if (!test.exists(val, obj)) {</span>
+<span class="fc" id="L373">      return check;</span>
+    }
+<span class="fc" id="L375">    throw check.exc.apply(getCustomMessage(msg,</span>
+        msgArgs,
+        test,
+        check.argName,
+<span class="fc" id="L379">        val,</span>
+        int.class,
+<span class="fc" id="L381">        obj));</span>
+  }
+
+  &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; prop, IntRelation test, int obj, Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L387">    ObjectCheck&lt;T, X&gt; check = this.check;</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">    if (test.exists(prop.applyAsInt(check.arg), obj)) {</span>
+<span class="fc" id="L389">      return check;</span>
+    }
+<span class="fc" id="L391">    throw exception.get();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
