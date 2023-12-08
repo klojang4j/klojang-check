@@ -15,7 +15,7 @@ Klojang Check,org.klojang.check.relation,Compose,6,93,0,6,2,13,1,27,1,24
 Klojang Check,org.klojang.check.relation,ObjIntRelation,20,0,2,0,2,0,5,0,4,0
 Klojang Check,org.klojang.check.relation,ComposableIntPredicate,1,605,5,129,0,41,5,131,0,69
 Klojang Check,org.klojang.check.relation,Relation,8,12,0,2,1,1,2,3,2,2
-Klojang Check,org.klojang.check.relation,Private,11,82,2,6,1,8,3,12,1,8
+Klojang Check,org.klojang.check.relation,Private,3,82,0,6,1,8,1,12,1,8
 Klojang Check,org.klojang.check.relation,IntRelation,0,20,0,2,0,2,0,5,0,4
 Klojang Check,org.klojang.check.relation,Quantifier,0,27,0,0,0,7,0,4,0,4
 Klojang Check,org.klojang.check.relation,ComposablePredicate,13,540,7,115,1,37,8,116,2,61

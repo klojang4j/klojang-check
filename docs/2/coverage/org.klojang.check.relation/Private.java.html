@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
       Relation&lt;S, O&gt; relation,
       Quantifier quantifier,
       P[] objects) {
-<span class="pc bpc" id="L15" title="1 of 4 branches missed.">    return switch (quantifier) {</span>
+<span class="fc bfc" id="L15" title="All 3 branches covered.">    return switch (quantifier) {</span>
 <span class="fc" id="L16">      case ALL -&gt; stream(objects).allMatch(o -&gt; relation.exists(subject, o));</span>
 <span class="fc" id="L17">      case ANY -&gt; stream(objects).anyMatch(o -&gt; relation.exists(subject, o));</span>
 <span class="fc" id="L18">      case NONE -&gt; stream(objects).noneMatch(o -&gt; relation.exists(subject, o));</span>
@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
       IntRelation relation,
       Quantifier quantifier,
       int[] objects) {
-<span class="pc bpc" id="L26" title="1 of 4 branches missed.">    return switch (quantifier) {</span>
+<span class="fc bfc" id="L26" title="All 3 branches covered.">    return switch (quantifier) {</span>
 <span class="fc" id="L27">      case ALL -&gt; stream(objects).allMatch(o -&gt; relation.exists(subject, o));</span>
 <span class="fc" id="L28">      case ANY -&gt; stream(objects).anyMatch(o -&gt; relation.exists(subject, o));</span>
 <span class="fc" id="L29">      case NONE -&gt; stream(objects).noneMatch(o -&gt; relation.exists(subject, o));</span>
@@ -31,4 +31,4 @@ import static java.util.Objects.requireNonNull;
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
