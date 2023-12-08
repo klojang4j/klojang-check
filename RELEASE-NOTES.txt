@@ -1,0 +1,6 @@
+Version 3.0.0
+=============
+As of version 3, we will publish and maintain two versions of klojang-check. One version will be compiled against JDK 17
+while the other will be allowed to move along with the JDK release cadence. The version strings will reflect this. So
+we now have version 3.0.0-jdk17 and version 3.0.0-jdk21 of klojang-check. Once we start compiling against a newer JDK,
+the *.*.*-jdk21 release trail has come to an end and will no longer be maintained.
