@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Emptyable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.aux</a> &gt; <span class="el_source">Emptyable.java</span></div><h1>Emptyable.java</h1><pre class="source lang-java linenums">package org.klojang.check.aux;
+
+import org.klojang.check.CommonChecks;
+
+/**
+ * Marks objects that can meaningfully be said to be empty. An example could be a
+ * POJO with all fields set to their default values. Classes that implement this
+ * interface get a free ride on the {@link CommonChecks#empty() empty()},
+ * {@link CommonChecks#notEmpty() notEmpty()} and
+ * {@link CommonChecks#deepNotEmpty() deepNotEmpty()} checks from the
+ * {@code CommonChecks} class. That is, instances of {@code Emptyable} can be tested
+ * using:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(myEmptyablePojo).isNot(empty());
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ */
+@FunctionalInterface
+public interface Emptyable {
+
+  /**
+   * Returns {@code true} if this is an empty instance.
+   *
+   * @return {@code true} if this is an empty instance
+   */
+  boolean isEmpty();
+
+  /**
+   * Returns {@code true} if this is a recursively non-empty instance. The default
+   * implementation returns the negation of {@link #isEmpty()}.
+   *
+   * @return {@code true} if this is a recursively non-empty instance
+   */
+  default boolean isDeepNotEmpty() {
+<span class="nc bnc" id="L35" title="All 2 branches missed.">    return !isEmpty();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

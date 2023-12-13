@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonExceptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check</a> &gt; <span class="el_source">CommonExceptions.java</span></div><h1>CommonExceptions.java</h1><pre class="source lang-java linenums">package org.klojang.check;
+
+import static org.klojang.check.aux.DuplicateValueException.Usage;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.NoSuchElementException;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import org.klojang.check.aux.DuplicateValueException;
+
+/**
+ * Provides factories for some commonly thrown exceptions. Typically (but not
+ * always), for each type of exception, three exception factories are provided:
+ *
+ * &lt;ol&gt;
+ *   &lt;li&gt;A {@code public static final} class constant of type
+ *      {@code Function&lt;String, Exception&gt;}. This function can be used as the first
+ *      argument to the {@code Check.on(...)} methods of the {@link Check} class. It
+ *      sets the default exception, to be thrown if the value fails to pass any of
+ *      the subsequent tests.
+ *   &lt;li&gt;A method that takes a {@code String} (the error message) and returns a
+ *      {@code Supplier&lt;Exception&gt;}. The {@code Supplier} will pass the string to
+ *      the exception's constructor when requested to supply the exception. The
+ *      {@code Supplier} can be used as the last argument to checks that allow you
+ *      to specify an alternative exception.
+ *   &lt;li&gt;A method that takes no arguments and returns a {@code Supplier&lt;Exception&gt;}.
+ *      The {@code Supplier} will instantiate the exception using its no-arg
+ *      constructor. This {@code Supplier}, too, can be used as the last argument to
+ *      checks that allow you to specify an alternative exception.
+ * &lt;/ol&gt;
+ *
+ * &lt;p&gt;The following examples make this more concrete:
+ *
+ * &lt;blockquote&gt;
+ *
+ * &lt;pre&gt;{@code
+ * Check.on(STATE, file, &quot;file&quot;).is(writable());
+ * // is shortcut for:
+ * Check.on(IllegalStateException::new, file, &quot;file&quot;).is(writable());
+ *
+ * Check.on(STATE, file).is(writable(), &quot;file not writable&quot;);
+ * // is shortcut for:
+ * Check.on(IllegalStateException::new, file).is(writable(), &quot;file not writable&quot;);
+ *
+ * Check.that(file).is(writable(), illegalState(&quot;file not writable&quot;));
+ * // is shortcut for:
+ * Check.that(file).is(writable(), () -&gt; new IllegalStateException(&quot;file not writable&quot;));
+ *
+ * Check.that(file).is(writable(), illegalState());
+ * // is shortcut for:
+ * Check.that(file).is(writable(), () -&gt; new IllegalStateException());
+ * }&lt;/pre&gt;
+ *
+ * &lt;/blockquote&gt;
+ *
+ * @author Ayco Holleman
+ */
+public final class CommonExceptions {
+
+<span class="nc" id="L63">  private CommonExceptions() {</span>
+<span class="nc" id="L64">    throw new UnsupportedOperationException();</span>
+  }
+
+  /**
+   * Shortcut for {@code IllegalStateException::new}.
+   */
+<span class="fc" id="L70">  public static final Function&lt;String, IllegalStateException&gt; STATE = IllegalStateException::new;</span>
+
+  /**
+   * Shortcut for {@code IndexOutOfBoundsException::new}.
+   */
+<span class="fc" id="L75">  public static final Function&lt;String, IndexOutOfBoundsException&gt; INDEX =</span>
+      IndexOutOfBoundsException::new;
+
+  /**
+   * Shortcut for {@code IOException::new}.
+   */
+<span class="fc" id="L81">  public static final Function&lt;String, IOException&gt; IO = IOException::new;</span>
+
+  /**
+   * Shortcut for {@code FileNotFoundException::new}.
+   */
+<span class="fc" id="L86">  public static final Function&lt;String, FileNotFoundException&gt; FILE = FileNotFoundException::new;</span>
+
+  /**
+   * Shortcut for {@code NullPointerException::new}.
+   */
+<span class="fc" id="L91">  public static final Function&lt;String, NullPointerException&gt; NPE = NullPointerException::new;</span>
+
+  /**
+   * Shortcut for {@code NoSuchElementException::new}.
+   */
+<span class="fc" id="L96">  public static final Function&lt;String, NoSuchElementException&gt; ELEMENT =</span>
+      NoSuchElementException::new;
+
+  /**
+   * Shortcut for {@code DuplicateValueException::new}.
+   */
+<span class="fc" id="L102">  public static final Function&lt;String, DuplicateValueException&gt; DUPLICATE =</span>
+      DuplicateValueException::new;
+
+  /**
+   * Shortcut for {@code IllegalArgumentException::new}. Included for completeness.
+   * {@code IllegalArgumentException} already is the exception that is thrown by
+   * default if a value fails to pass a test.
+   */
+<span class="fc" id="L110">  public static final Function&lt;String, IllegalArgumentException&gt; ARGUMENT =</span>
+      IllegalArgumentException::new;
+
+  /**
+   * Returns a {@code Supplier} of an {@link IllegalStateException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of an {@code IllegalStateException}
+   */
+  public static Supplier&lt;IllegalStateException&gt; illegalState(String message) {
+<span class="fc" id="L120">    return () -&gt; new IllegalStateException(message);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IllegalStateException}. The supplier
+   * will call the no-arg constructor of {@code IllegalStateException}.
+   *
+   * @return a {@code Supplier} of an {@code IllegalStateException}
+   */
+  public static Supplier&lt;IllegalStateException&gt; illegalState() {
+<span class="fc" id="L130">    return IllegalStateException::new;</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IllegalArgumentException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of an {@code IllegalArgumentException}
+   */
+  public static Supplier&lt;IllegalArgumentException&gt; illegalArgument(String message) {
+<span class="fc" id="L140">    return () -&gt; new IllegalArgumentException(message);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IllegalArgumentException}. The supplier
+   * will call the no-arg constructor of {@code IllegalArgumentException}.
+   *
+   * @return a {@code Supplier} of an {@code IllegalArgumentException}
+   */
+  public static Supplier&lt;IllegalArgumentException&gt; illegalArgument() {
+<span class="fc" id="L150">    return IllegalArgumentException::new;</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IndexOutOfBoundsException}.
+   *
+   * @param index the out-of-bounds index
+   * @return a {@code Supplier} of an {@code IndexOutOfBoundsException}
+   * @see IndexOutOfBoundsException#IndexOutOfBoundsException(int)
+   */
+  public static Supplier&lt;IndexOutOfBoundsException&gt; indexOutOfBounds(int index) {
+<span class="fc" id="L161">    return () -&gt; new IndexOutOfBoundsException(index);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IndexOutOfBoundsException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of an {@code IndexOutOfBoundsException}
+   * @see IndexOutOfBoundsException#IndexOutOfBoundsException(int)
+   */
+  public static Supplier&lt;IndexOutOfBoundsException&gt; indexOutOfBounds(String message) {
+<span class="fc" id="L172">    return () -&gt; new IndexOutOfBoundsException(message);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IOException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of an {@code IOException}
+   */
+  public static Supplier&lt;IOException&gt; ioException(String message) {
+<span class="fc" id="L182">    return () -&gt; new IOException(message);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link IOException}. The supplier will call the
+   * no-arg constructor of {@code IOException}.
+   *
+   * @return a {@code Supplier} of an {@code IOException}
+   */
+  public static Supplier&lt;IOException&gt; ioException() {
+<span class="fc" id="L192">    return IOException::new;</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link FileNotFoundException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of a {@link FileNotFoundException}
+   */
+  public static Supplier&lt;FileNotFoundException&gt; fileNotFound(String message) {
+<span class="fc" id="L202">    return () -&gt; new FileNotFoundException(message);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link FileNotFoundException}.
+   *
+   * @param f the {@link File} object corresponding to the non-existent file
+   * @return a {@code Supplier} of a {@link FileNotFoundException}
+   */
+  public static Supplier&lt;FileNotFoundException&gt; fileNotFound(File f) {
+<span class="fc" id="L212">    return () -&gt; new FileNotFoundException(&quot;file not found: &quot; + f);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link NullPointerException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of an {@code NullPointerException}
+   */
+  public static Supplier&lt;NullPointerException&gt; npe(String message) {
+<span class="fc" id="L222">    return () -&gt; new NullPointerException(message);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link NullPointerException}. The supplier will
+   * call the no-arg constructor of {@code NullPointerException}.
+   *
+   * @return a {@code Supplier} of an {@code NullPointerException}
+   */
+  public static Supplier&lt;NullPointerException&gt; npe() {
+<span class="fc" id="L232">    return NullPointerException::new;</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link NoSuchElementException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of an {@code NoSuchElementException}
+   */
+  public static Supplier&lt;NoSuchElementException&gt; noSuchElement(String message) {
+<span class="fc" id="L242">    return () -&gt; new NoSuchElementException(message);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of an {@link NoSuchElementException}. The supplier
+   * will call the no-arg constructor of {@code NoSuchElementException}.
+   *
+   * @return a {@code Supplier} of an {@code NoSuchElementException}
+   */
+  public static Supplier&lt;NoSuchElementException&gt; noSuchElement() {
+<span class="fc" id="L252">    return NoSuchElementException::new;</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
+   *
+   * @return a {@code Supplier} of a {@code DuplicateValueException}
+   */
+  public static Supplier&lt;DuplicateValueException&gt; duplicateKey() {
+<span class="nc" id="L261">    return () -&gt; new DuplicateValueException(Usage.KEY);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
+   *
+   * @param key the key found to be a duplicate
+   * @return a {@code Supplier} of a {@code DuplicateValueException}
+   */
+  public static Supplier&lt;DuplicateValueException&gt; duplicateKey(Object key) {
+<span class="fc" id="L271">    return () -&gt; new DuplicateValueException(Usage.KEY, key);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
+   *
+   * @param element the element found to be a duplicate
+   * @return a {@code Supplier} of a {@code DuplicateValueException}
+   */
+  public static Supplier&lt;DuplicateValueException&gt; duplicateElement(Object element) {
+<span class="fc" id="L281">    return () -&gt; new DuplicateValueException(Usage.ELEMENT, element);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
+   *
+   * @return a {@code Supplier} of a {@code DuplicateValueException}
+   */
+  public static Supplier&lt;DuplicateValueException&gt; duplicateElement() {
+<span class="nc" id="L290">    return () -&gt; new DuplicateValueException(Usage.ELEMENT);</span>
+  }
+
+  /**
+   * Returns a {@code Supplier} of a {@link DuplicateValueException}.
+   *
+   * @param message the exception message
+   * @return a {@code Supplier} of a {@code DuplicateValueException}
+   */
+  public static Supplier&lt;DuplicateValueException&gt; duplicateValue(String message) {
+<span class="nc" id="L300">    return () -&gt; new DuplicateValueException(message);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
