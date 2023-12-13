@@ -7,7 +7,7 @@
 
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>3.0.0-jdk21</version>
+    <version>3.0.1-jdk21</version>
     <packaging>jar</packaging>
 
     <name>Klojang Check</name>
