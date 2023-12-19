@@ -7,7 +7,7 @@
 
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>3.0.1-jdk21</version>
+    <version>3.0.2-jdk21</version>
     <packaging>jar</packaging>
 
     <name>Klojang Check</name>
@@ -215,19 +215,19 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>docs/2/api</directory>
+                            <directory>docs/api</directory>
                             <includes>
                                 <include>**/*</include>
                             </includes>
                         </fileset>
                         <fileset>
-                            <directory>docs/2/coverage</directory>
+                            <directory>docs/coverage</directory>
                             <includes>
                                 <include>**/*</include>
                             </includes>
                         </fileset>
                         <fileset>
-                            <directory>docs/2/vulnerabilities</directory>
+                            <directory>docs/vulnerabilities</directory>
                             <includes>
                                 <include>**/*</include>
                             </includes>
@@ -291,6 +291,7 @@
                 <version>${owasp-plugin.version}</version>
                 <configuration>
                     <failBuildOnCVSS>1</failBuildOnCVSS>
+                    <nvdApiKey>29bb9b20-8dba-4ae7-94b4-6656e154e6e1</nvdApiKey>
                 </configuration>
                 <executions>
                     <execution>
@@ -365,7 +366,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>docs/2/api</outputDirectory>
+                            <outputDirectory>docs/api</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target/apidocs</directory>
@@ -380,7 +381,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>docs/2/coverage</outputDirectory>
+                            <outputDirectory>docs/coverage</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target/site/jacoco</directory>
@@ -395,7 +396,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>docs/2/vulnerabilities</outputDirectory>
+                            <outputDirectory>docs/vulnerabilities</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>

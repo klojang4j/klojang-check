@@ -14,7 +14,7 @@ example, Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/go
 class or Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
 class. It provides a set of syntactical constructs that make it easy to specify checks on 
 program input, object state, method arguments, variables, etc. In addition, it comes with 
-a set of [common checks](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonChecks.html)
+a set of [common checks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 on values of various types. These checks are associated with short, informative error
 messages, so you don't have to invent them yourselves.
 
@@ -26,14 +26,14 @@ To use <i>Klojang Check</i>, add the following dependency to your Maven POM file
 <dependency>
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>2.1.3</version>
+    <version>3.0.2-jdk21</version>
 </dependency>
 ```
 
 or Gradle build script:
 
 ```
-implementation group: 'org.klojang', name: 'klojang-check', version: '2.1.3'
+implementation group: 'org.klojang', name: 'klojang-check', version: '3.0.2-jdk21'
 ```
 
 ## Example
@@ -69,13 +69,13 @@ public class InteriorDesigner {
 ## Documentation
 
 The **Javadocs** for <i>Klojang Check</i> can be
-found **[here](https://klojang4j.github.io/klojang-check/2/api)**.
+found **[here](https://klojang4j.github.io/klojang-check/api)**.
 
 The **User Guide** for <i>Klojang Check</i> can be
 found **[here](https://klojang4j.github.io/klojang-check/index.html)**.
 
 The latest **test coverage results**
-are **[here](https://klojang4j.github.io/klojang-check/2/coverage)**.
+are **[here](https://klojang4j.github.io/klojang-check/coverage)**.
 
 ## Vulnerabilities
 
@@ -83,7 +83,7 @@ Being all about making code as robust as possible, the <i>Klojang Check</i> code
 itself regularly tested for vulnerabilities. It is currently not affected by any CVE,
 however light-weight. Its surface consists of barely 15 types and it has zero dependencies 
 outside `java.base`. You can find the latest **vulnerabilities report**
-**[here](https://klojang4j.github.io/klojang-check/2/vulnerabilities/dependency-check-report.html)**.
+**[here](https://klojang4j.github.io/klojang-check/vulnerabilities/dependency-check-report.html)**.
 
 ## Performance
 
@@ -113,7 +113,7 @@ Check.notNull(foo);
 
 ### The CommonChecks class
 
-The [CommonChecks](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonChecks.html)
+The [CommonChecks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
 class is a grab bag of common checks on arguments, fields (a.k.a. state) and other types of 
 program input. 
 
@@ -144,7 +144,7 @@ Check.that(length, "length").is(gte(), 0);
 // error message: length must be >= 0 (was -42)
 ```
 
-The [Tag](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/Tag.html)
+The [Tag](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Tag.html)
 class contains string constants for some commonly used argument names:
 
 ```java
@@ -164,7 +164,7 @@ that extracts the value to be tested from the argument.
 Check.that(fullName).has(String::length, lte(), 100);
 ```
 
-The [CommonProperties](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonProperties.html)
+The [CommonProperties](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonProperties.html)
 class contains some `Function`, `ToIntFunction` and `IntFunction` constants that might be
 of help:
 
@@ -211,7 +211,7 @@ Check.that(fullName).has(strlen(), lte(), maxLength,
 _against_. The reason the latter message argument is called `${obj}` is because it is the
 _object_ of the less-than-or-equal-to relationship, while the argument is used as the
 _subject_ of that relationship. For more information, see
-[here](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/relation/package-summary.html).
+[here](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/package-summary.html).
 
 ### Throwing a Custom Exception
 
@@ -229,7 +229,7 @@ Check.on(IllegalStateException::new, connection.isOpen()).is(yes(), "stale conne
 Check.that(connection.isOpen()).is(yes(), () -> new IllegalStateException("stale connection"));
 ```
 
-The [CommonExceptions](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/CommonExceptions.html)
+The [CommonExceptions](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonExceptions.html)
 class contains exception factories for some common exceptions:
 
 ```java
@@ -259,7 +259,7 @@ Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 ```
 
 When combining checks you can also employ 
-[logical quantifiers](https://klojang4j.github.io/klojang-check/2/api/org.klojang.check/org/klojang/check/relation/Quantifier.html):
+[logical quantifiers](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Quantifier.html):
 
 ```java
 import static org.klojang.check.relation.Quantifier.noneOf;
