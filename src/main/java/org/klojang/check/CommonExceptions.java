@@ -88,7 +88,7 @@ public final class CommonExceptions {
   /**
    * Shortcut for {@code NullPointerException::new}.
    */
-  public static final Function<String, NullPointerException> NPE = NullPointerException::new;
+  public static final Function<String, NullPointerException> NULL = NullPointerException::new;
 
   /**
    * Shortcut for {@code NoSuchElementException::new}.

@@ -78,7 +78,7 @@ public class CommonExceptionsTest {
 
   @Test(expected = NullPointerException.class)
   public void npe00() {
-    Check.on(NPE, null).is(notNull());
+    Check.on(NULL, null).is(notNull());
   }
 
   @Test(expected = NullPointerException.class)
