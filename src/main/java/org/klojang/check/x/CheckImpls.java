@@ -18,83 +18,80 @@ import static org.klojang.check.x.Misc.notApplicable;
 public final class CheckImpls {
 
   private static final Set<Class<?>> NULL_REPELLERS =
-      // Actually, List.of(1) and List.of(1, 2) currently return the same type, but
-      // better safe than sorry. They will anyhow be de-duplicated when entering
-      // the HashSet
-      Set.copyOf(new HashSet<>(
-          Arrays.asList(
-              Collections.emptyList().getClass(),
-              Collections.emptySet().getClass(),
-              List.of().getClass(),
-              List.of(1).getClass(),
-              List.of(1, 2).getClass(),
-              List.of(1, 2, 3).getClass(),
-              Set.of().getClass(),
-              Set.of(1).getClass(),
-              Set.of(1, 2).getClass(),
-              Set.of(1, 2, 3).getClass())));
+        // Actually, List.of(1) and List.of(1, 2) currently return the same type, but
+        // better safe than sorry. They will anyhow be de-duplicated when entering
+        // the HashSet
+        Set.copyOf(new HashSet<>(
+              Arrays.asList(
+                    Collections.emptyList().getClass(),
+                    Collections.emptySet().getClass(),
+                    List.of().getClass(),
+                    List.of(1).getClass(),
+                    List.of(1, 2).getClass(),
+                    List.of(1, 2, 3).getClass(),
+                    Set.of().getClass(),
+                    Set.of(1).getClass(),
+                    Set.of(1, 2).getClass(),
+                    Set.of(1, 2, 3).getClass())));
 
   private static final Set<Class<?>> NULL_REPELLENT_MAPS =
-      Set.copyOf(new HashSet<>(Arrays.asList(
-          Collections.emptyMap().getClass(),
-          Map.of().getClass(),
-          Map.of(1, 'a').getClass(),
-          Map.of(1, 'a', 2, 'b').getClass(),
-          Map.of(1, 'a', 2, 'b', 3, 'c').getClass()
-      )));
+        Set.copyOf(new HashSet<>(Arrays.asList(
+              Collections.emptyMap().getClass(),
+              Map.of().getClass(),
+              Map.of(1, 'a').getClass(),
+              Map.of(1, 'a', 2, 'b').getClass(),
+              Map.of(1, 'a', 2, 'b', 3, 'c').getClass()
+        )));
 
   public static <T> boolean isEmpty(T arg) {
     return arg == null
-        || (arg instanceof CharSequence cs && cs.length() == 0)
-        || (arg instanceof Collection<?> c && c.size() == 0)
-        || (isArray(arg) && getArrayLength(arg) == 0)
-        || (arg instanceof Map<?, ?> m && m.size() == 0)
-        || (arg instanceof Object[] x && x.length == 0)
-        || (arg instanceof Optional<?> o && (o.isEmpty() || isEmpty(o.get())))
-        || (arg instanceof Emptyable e && e.isEmpty())
-        || (arg instanceof File f && fileSize(f) == 0)
-        ;
+          || (arg instanceof CharSequence cs && cs.length() == 0)
+          || (arg instanceof Collection<?> c && c.size() == 0)
+          || (isArray(arg) && getArrayLength(arg) == 0)
+          || (arg instanceof Map<?, ?> m && m.size() == 0)
+          || (arg instanceof Object[] x && x.length == 0)
+          || (arg instanceof Optional<?> o && (o.isEmpty() || isEmpty(o.get())))
+          || (arg instanceof Emptyable e && e.isEmpty())
+          || (arg instanceof File f && fileSize(f) == 0)
+          ;
   }
 
   public static <T> boolean isNotEmpty(T arg) {
     return arg != null
-        && (!(arg instanceof CharSequence cs) || cs.length() != 0)
-        && (!(arg instanceof Collection<?> c) || c.size() != 0)
-        && (!isArray(arg) || getArrayLength(arg) != 0)
-        && (!(arg instanceof Map<?, ?> m) || m.size() != 0)
-        && (!(arg instanceof Object[] x) || x.length != 0)
-        && (!(arg instanceof Optional<?> o)
-                || (o.isPresent() && isNotEmpty(o.get())))
-        && (!(arg instanceof Emptyable e) || !e.isEmpty())
-        && (!(arg instanceof File f) || fileSize(f) != 0)
-        ;
+          && (!(arg instanceof CharSequence cs) || cs.length() != 0)
+          && (!(arg instanceof Collection<?> c) || c.size() != 0)
+          && (!isArray(arg) || getArrayLength(arg) != 0)
+          && (!(arg instanceof Map<?, ?> m) || m.size() != 0)
+          && (!(arg instanceof Object[] x) || x.length != 0)
+          && (!(arg instanceof Optional<?> o)
+          || (o.isPresent() && isNotEmpty(o.get())))
+          && (!(arg instanceof Emptyable e) || !e.isEmpty())
+          && (!(arg instanceof File f) || fileSize(f) != 0)
+          ;
   }
 
   public static boolean isDeepNotEmpty(Object arg) {
     return arg != null
-        && (!(arg instanceof CharSequence cs) || cs.length() > 0)
-        && (!(arg instanceof Collection<?> c) || dne(c))
-        && (!isArray(arg) || getArrayLength(arg) != 0)
-        && (!(arg instanceof Map<?, ?> m) || dne(m))
-        && (!(arg instanceof Object[] x) || dne(x))
-        && (!(arg instanceof Optional<?> o) || dne(o))
-        && (!(arg instanceof Emptyable e) || e.isDeepNotEmpty())
-        && (!(arg instanceof File f) || isBlankFile(f))
-        ;
+          && (!(arg instanceof CharSequence cs) || cs.length() > 0)
+          && (!(arg instanceof Collection<?> c) || dne(c))
+          && (!isArray(arg) || getArrayLength(arg) != 0)
+          && (!(arg instanceof Map<?, ?> m) || dne(m))
+          && (!(arg instanceof Object[] x) || dne(x))
+          && (!(arg instanceof Optional<?> o) || dne(o))
+          && (!(arg instanceof Emptyable e) || e.isDeepNotEmpty())
+          && (!(arg instanceof File f) || isBlankFile(f))
+          ;
   }
 
   public static boolean isDeepNotNull(Object arg) {
-    if (arg == null) {
-      return false;
-    } else if (arg instanceof Object[] o) {
-      return Arrays.stream(o).allMatch(Objects::nonNull);
-    } else if (arg instanceof Collection<?> c) {
-      return isNullRepellent(c) || c.stream().allMatch(Objects::nonNull);
-    } else if (arg instanceof Map<?, ?> m) {
-      return isNullRepellent(m) || m.entrySet().stream()
-          .allMatch(e -> e.getKey() != null && e.getValue() != null);
-    }
-    return true;
+    return switch (arg) {
+      case null -> false;
+      case Collection<?> c -> isNullRepellent(c) || c.stream().allMatch(Objects::nonNull);
+      case Map<?, ?> m -> isNullRepellent(m) || m.entrySet().stream()
+            .allMatch(e -> e.getKey() != null && e.getValue() != null);
+      case Object[] o -> Arrays.stream(o).allMatch(Objects::nonNull);
+      default -> true;
+    };
   }
 
   public static <T, U extends T> boolean inArray(U elem, T[] array) {
