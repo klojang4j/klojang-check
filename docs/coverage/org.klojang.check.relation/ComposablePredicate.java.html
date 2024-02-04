@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComposablePredicate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.relation</a> &gt; <span class="el_source">ComposablePredicate.java</span></div><h1>ComposablePredicate.java</h1><pre class="source lang-java linenums">package org.klojang.check.relation;
+
+import org.klojang.check.Check;
+import org.klojang.check.CommonChecks;
+
+import java.util.function.IntPredicate;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import static org.klojang.check.relation.Private.testAgainstArray;
+
+/**
+ * An extension of {@link Predicate} that acts as a bridge between {@code Predicate}
+ * and the relational interfaces in this package. It enables the composition of new
+ * tests from any number of instances of {@link Predicate}, {@link IntPredicate},
+ * {@link Relation}, {@link IntRelation} and {@link IntObjRelation}.
+ * {@code ComposablePredicate} extends {@code Predicate} with a set of
+ * {@code default} methods that allow the composition to take place. These methods
+ * can be divided along two axes:
+ * &lt;ol&gt;
+ *   &lt;li&gt;{@code and()} versus {@code or()} methods
+ *   &lt;li&gt;methods that execute &lt;i&gt;two checks on a single value&lt;/i&gt; versus methods
+ *      that effectively constitute a &lt;i&gt;single check on two interrelated
+ *      values&lt;/i&gt;
+ * &lt;/ol&gt;
+ *
+ * &lt;h2&gt;AND vs. OR Compositions&lt;/h2&gt;
+ *
+ * &lt;p&gt;Generally, you will have more use for compositions expressing a logical
+ * disjunction (OR), as the chain of checks following
+ * {@link Check#that(Object) Check.that(...)} already constitutes
+ * a logical conjunction (AND). For example, this statement:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(numChairs).is(positive()).is(lte(), 4).is(even());
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;requires the number of chairs to be positive &lt;b&gt;and&lt;/b&gt; less than, or equal
+ * to 4 &lt;b&gt;and&lt;/b&gt; even. If the number of chairs needs to pass just one of these
+ * tests, write:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(numChairs).is(positive().orElse(lte(), 4).orElse(even()));
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;Nevertheless, you might still want to use the {@code and()} methods for
+ * conciseness:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(string).is(notNull().and(hasSubstring(), allOf(), &quot;to&quot;, &quot;be&quot;, &quot;or&quot;, &quot;not&quot;));
+ * // is equivalent to:
+ * Check.that(string).is(notNull())
+ *    .is(hasSubstring(), &quot;to&quot;)
+ *    .is(hasSubstring(), &quot;be&quot;)
+ *    .is(hasSubstring(), &quot;or&quot;)
+ *    .is(hasSubstring(), &quot;not&quot;)
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;(See {@link Quantifier} for the {@code allOf()} argument.)
+ *
+ * &lt;h2&gt;Validating Interrelated Values&lt;/h2&gt;
+ *
+ * &lt;p&gt;Sometimes, an argument, field or variable cannot be tested in isolation. Its
+ * validity depends on the value of another argument, field or variable:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(engine.ready()).is(yes().or(buffer.size(), eq(), 0);
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;In the above example, the engine only needs to be ready if there is more data
+ * in the buffer.
+ *
+ * &lt;p&gt;Notice that the second check continues nicely in the idiom of Klojang Check,
+ * even though it is now just syntactic sugar. Depending on your taste you can also
+ * just write:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(engine.ready()).is(yes().or(buffer.size() == 0);
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;(Contrary to what you might perhaps expect, it will not make your code run
+ * faster, though.)
+ *
+ * &lt;h2&gt;Generics&lt;/h2&gt;
+ *
+ * &lt;p&gt;Even though the type parameter for {@code ComposablePredicate} is {@code &lt;T&gt;},
+ * the type parameter for the predicates and relations passed to the values
+ * {@code and()} and {@code or()} methods is simply {@code &lt;?&gt;}. This allows
+ * checks like {@link CommonChecks#notNull() notNull()} and
+ * {@link CommonChecks#notEmpty() notEmpty()}, which can be applied to any
+ * non-primitive type, to be followed by checks that can only be applied to a
+ * specific type. For example, the following code would &lt;i&gt;not&lt;/i&gt; compile if the
+ * argument to {@code andAlso()} were {@code Predicate&lt;? super T&gt;} instead of
+ * {@code Predicate&lt;?&gt;}:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(file).is(empty().andAlso(writable()));
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;The downside is that it is easier for a composition of tests to harbor a type
+ * error without the compiler noticing it, resulting in a {@link ClassCastException}
+ * at runtime. For example, the following nonsensical statement compiles just fine:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(list).is(empty().andAlso(writable()));
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt; In addition, when using lambdas, you will now have to specify the type of the
+ * lambda parameter:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(file).is(empty().andAlso(f -&gt; f.canWrite())); // WON'T COMPILE!!
+ * Check.that(file).is(empty().andAlso((File f) -&gt; f.canWrite())); // OK
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;If you are not comfortable with this, you can instead use the
+ * {@link #orThat(Object, Predicate) orThat()} method and repeat the argument for
+ * every call to {@code orThat()}:
+ *
+ * &lt;blockquote&gt;&lt;pre&gt;{@code
+ * Check.that(list).is(empty().orThat(list, contains(), &quot;foo&quot;));
+ * }&lt;/pre&gt;&lt;/blockquote&gt;
+ *
+ * &lt;p&gt;Note, however, that the {@code orThat()} method is primarily meant to test
+ * interrelated values (see above).
+ *
+ * @param &lt;T&gt; the type of the value being tested
+ * @see Relation
+ * @see IntRelation
+ * @see IntObjRelation
+ * @see ObjIntRelation
+ */
+@SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
+@FunctionalInterface
+public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
+
+  /**
+   * Returns the negation of this predicate.
+   *
+   * @return the negation of this predicate
+   * @see Predicate#negate()
+   */
+  default ComposablePredicate&lt;T&gt; negated() {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">    return x -&gt; !meFirst(x);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or the specified test.
+   *
+   * @param test the test to combine this test with
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; orElse(Predicate&lt;?&gt; test) {
+<span class="fc bfc" id="L158" title="All 4 branches covered.">    return x -&gt; meFirst(x) || ((Predicate) test).test(x);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if it has the specified relation
+   * to the specified value.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(&quot;foo bar&quot;).is(empty().orElse(hasSubstring(), &quot;foo&quot;));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation, with the value of this
+   *     {@code ComposablePredicate} now becoming the subject of that relation
+   * @param &lt;O&gt; the type of the object of the provided {@code Relation}
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;O, V&gt; ComposablePredicate&lt;V&gt; orElse(Relation&lt;?, O&gt; relation,
+      O object) {
+<span class="fc bfc" id="L181" title="All 4 branches covered.">    return x -&gt; meFirst(x) || ((Relation) relation).exists(x, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or the negation of the specified
+   * test.
+   *
+   * @param test the test to combine this test with
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; orNot(Predicate&lt;?&gt; test) {
+<span class="fc bfc" id="L196" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !((Predicate) test).test(x);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if it does not have the specified
+   * relation to the specified value.
+   *
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the provided {@code Relation}, with the value
+   *     of
+   *     &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate} now becoming the &lt;i&gt;subject&lt;/i&gt; of
+   *     that relation
+   * @param &lt;O&gt; the type of the object of the provided {@code Relation}
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;O, V&gt; ComposablePredicate&lt;V&gt; orNot(Relation&lt;?, O&gt; relation,
+      O object) {
+<span class="pc bpc" id="L217" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !((Relation) relation).exists(x, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if it has a particular relation to
+   * the specified set of values.
+   *
+   * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the value against
+   * @param &lt;O&gt; the type of the object of the relation
+   * @param &lt;P&gt; the type of the values fed as &quot;objects&quot; into the relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;O, P extends O, V&gt; ComposablePredicate&lt;V&gt; or(Relation&lt;V, O&gt; relation,
+      Quantifier quantifier,
+      P... objects) {
+<span class="fc bfc" id="L238" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        || testAgainstArray(x, relation, quantifier, objects);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(file1).is(readable().orThat(file2, writable()));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param &lt;U&gt; the type of the value being tested by the specified predicate
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;U, V&gt; ComposablePredicate&lt;V&gt; orThat(U value, Predicate&lt;U&gt; test) {
+<span class="fc bfc" id="L260" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(file1).is(readable().orThat(file2, writable()));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; orThat(int value, IntPredicate test) {
+<span class="fc bfc" id="L280" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param &lt;S&gt; the type of the subject of the specified relation
+   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; orThat(S subject,
+      Relation&lt;S, O&gt; relation,
+      O object) {
+<span class="fc bfc" id="L301" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; orThat(int subject,
+      IntRelation relation,
+      int object) {
+<span class="fc bfc" id="L320" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the negation of the other
+   * test.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(file1).is(readable().orThat(file2, writable()));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param &lt;U&gt; the type of the value being tested by the specified predicate
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;U, V&gt; ComposablePredicate&lt;V&gt; orNot(U value, Predicate&lt;U&gt; test) {
+<span class="pc bpc" id="L342" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !test.test(value);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the negation of the other
+   * test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param &lt;S&gt; the type of the subject of the specified relation
+   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; orNot(S subject,
+      Relation&lt;S, O&gt; relation,
+      O object) {
+<span class="fc bfc" id="L364" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !relation.exists(subject, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * relation to the specified set of values.
+   *
+   * @param subject the subject of the specified {@code Relation}
+   * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
+   * @param &lt;S&gt; the type of the subject of the relation
+   * @param &lt;O&gt; the type of the object of the relation
+   * @param &lt;P&gt; the type of the values fed as &quot;objects&quot; into the relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;S, O, P extends O, V&gt; ComposablePredicate&lt;V&gt; or(S subject,
+      Relation&lt;S, O&gt; relation, Quantifier quantifier, P... objects) {
+<span class="fc bfc" id="L387" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        || testAgainstArray(subject, relation, quantifier, objects);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * relation to the specified set of values.
+   *
+   * @param subject the subject of the relation
+   * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; or(int subject,
+      IntRelation relation, Quantifier quantifier, int... objects) {
+<span class="fc bfc" id="L408" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
+<span class="fc bfc" id="L409" title="All 2 branches covered.">        || testAgainstArray(subject, relation, quantifier, objects);</span>
+  }
+
+  /**
+   * Returns a new test combining this test with the specified free-form test. A
+   * value will pass the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if the provided
+   * expression evaluates to {@code true}.
+   *
+   * @param test the boolean expression to evaluate if the value fails to pass
+   *     this test
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; or(boolean test) {
+<span class="fc bfc" id="L425" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test;</span>
+  }
+
+  /**
+   * Returns a new test combining this test with the free-form test supplied by the
+   * specified {@code Supplier}. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test or if the expression supplied by the {@code Supplier}
+   * evaluates to {@code true}. The supplier's {@link Supplier#get() get()} method
+   * will only be called if the value fails to pass this test. Useful if evaluating
+   * the expression could be expensive.
+   *
+   * @param test the supplier of a boolean expression
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; orEval(Supplier&lt;Boolean&gt; test) {
+<span class="fc bfc" id="L443" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.get();</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////// [ AND methods ] ////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes both this test and the specified test.
+   *
+   * @param test the test to combine this test with
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; andAlso(Predicate&lt;?&gt; test) {
+<span class="pc bpc" id="L463" title="2 of 4 branches missed.">    return x -&gt; meFirst(x) &amp;&amp; ((Predicate) test).test(x);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if it has the specified relation
+   * to the specified value.
+   *
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the relation, with the value being tested now
+   *     becoming the subject of the relation
+   * @param &lt;O&gt; the type of the object of the provided {@code Relation}
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;O, V&gt; ComposablePredicate&lt;V&gt; andAlso(Relation&lt;?, O&gt; relation, O object) {
+<span class="fc bfc" id="L481" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; ((Relation) relation).exists(x, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test with the specified free-form test. A
+   * value will pass the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if the provided
+   * expression evaluates to {@code true}.
+   *
+   * @param test the boolean expression to evaluate if the value fails to pass
+   *     this test
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; and(boolean test) {
+<span class="fc bfc" id="L497" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test;</span>
+  }
+
+  /**
+   * Returns a new test combining this test with the free-form test supplied by the
+   * specified {@code Supplier}. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if the expression supplied by the {@code Supplier}
+   * evaluates to {@code true}. The supplier's {@link Supplier#get() get()} method
+   * will only be called if the value passes this test. Useful if evaluating the
+   * boolean expression could be expensive.
+   *
+   * @param test the supplier of a boolean expression
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified free-form test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; andEval(Supplier&lt;Boolean&gt; test) {
+<span class="fc bfc" id="L515" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.get();</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes both this test and the negation of the specified
+   * test.
+   *
+   * @param test the test to combine this test with
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; andNot(Predicate&lt;?&gt; test) {
+<span class="fc bfc" id="L530" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !((Predicate) test).test(x);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if it does not have the specified
+   * relation to the specified value.
+   *
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the relation, with the value being tested now
+   *     becoming the subject of the relation
+   * @param &lt;O&gt; the type of the object of the provided {@code Relation}
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;O, V&gt; ComposablePredicate&lt;V&gt; andNot(Relation&lt;?, O&gt; relation, O object) {
+<span class="fc bfc" id="L548" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !((Relation) relation).exists(x, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. A value will pass
+   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if it has a particular relation
+   * to the specified set of values.
+   *
+   * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the value against
+   * @param &lt;O&gt; the type of the object of the relation
+   * @param &lt;P&gt; the type of the values fed as &quot;objects&quot; into the relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;O, P extends O, V&gt; ComposablePredicate&lt;V&gt; and(Relation&lt;V, O&gt; relation,
+      Quantifier quantifier,
+      P... objects) {
+<span class="fc bfc" id="L569" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">        &amp;&amp; testAgainstArray(x, relation, quantifier, objects);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(file1).is(readable().andThat(file2, writable()));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param &lt;U&gt; the type of the value being tested by the specified predicate
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;U, V&gt; ComposablePredicate&lt;V&gt; andThat(U value, Predicate&lt;U&gt; test) {
+<span class="fc bfc" id="L591" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(file1).is(readable().andThat(file2, writable()));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; andThat(int value, IntPredicate test) {
+<span class="fc bfc" id="L611" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param &lt;S&gt; the type of the subject of the specified relation
+   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; andThat(S subject,
+      Relation&lt;S, O&gt; relation,
+      O object) {
+<span class="pc bpc" id="L632" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; andThat(int subject,
+      IntRelation relation,
+      int object) {
+<span class="fc bfc" id="L651" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the negation of the other
+   * test.
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(file1).is(readable().andThat(file2, writable()));
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * @param value the value to be tested by the specified test
+   * @param test the test to combine this test with
+   * @param &lt;U&gt; the type of the value being tested by the specified predicate
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;U, V&gt; ComposablePredicate&lt;V&gt; andNot(U value, Predicate&lt;U&gt; test) {
+<span class="fc bfc" id="L673" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !test.test(value);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the negation of the other
+   * test.
+   *
+   * @param subject the subject of the specified relation
+   * @param relation the relationship test to combine this test with
+   * @param object the object of the specified relation
+   * @param &lt;S&gt; the type of the subject of the specified relation
+   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; andNot(S subject,
+      Relation&lt;S, O&gt; relation,
+      O object) {
+<span class="fc bfc" id="L695" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !relation.exists(subject, object);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * relation to the specified set of values.
+   *
+   * @param subject the subject of the specified {@code Relation}
+   * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
+   * @param &lt;S&gt; the type of the subject of the relation
+   * @param &lt;O&gt; the type of the object of the relation
+   * @param &lt;P&gt; the type of the values fed as &quot;objects&quot; into the relation
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;S, O, P extends O, V&gt; ComposablePredicate&lt;V&gt; and(S subject,
+      Relation&lt;S, O&gt; relation, Quantifier quantifier, P... objects) {
+<span class="fc bfc" id="L718" title="All 2 branches covered.">    return x -&gt; meFirst(x) &amp;&amp;</span>
+<span class="fc bfc" id="L719" title="All 2 branches covered.">        testAgainstArray(subject, relation, quantifier, objects);</span>
+  }
+
+  /**
+   * Returns a new test combining this test and the specified test. It combines two
+   * checks on two different values. A value will pass the new test if it passes
+   * &lt;i&gt;this&lt;/i&gt; test and if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * relation to the specified set of values.
+   *
+   * @param subject the subject of the relation
+   * @param relation the relationship test to combine this test with
+   * @param quantifier a logical quantifier modulating the relationship
+   * @param objects the set of values to test the subject against
+   * @param &lt;V&gt; the type of the value that is tested by the returned
+   *     {@code ComposablePredicate}. Note that in actual fact, that really is the
+   *     type of the value being tested by &lt;i&gt;this&lt;/i&gt; {@code ComposablePredicate}.
+   * @return a new test combining this test and the specified test
+   */
+  default &lt;V&gt; ComposablePredicate&lt;V&gt; and(int subject,
+      IntRelation relation, Quantifier quantifier, int... objects) {
+<span class="fc bfc" id="L739" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
+<span class="fc bfc" id="L740" title="All 2 branches covered.">        &amp;&amp; testAgainstArray(subject, relation, quantifier, objects);</span>
+  }
+
+  private &lt;V&gt; boolean meFirst(V v) {
+<span class="fc" id="L744">    return ComposablePredicate.this.test((T) v);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

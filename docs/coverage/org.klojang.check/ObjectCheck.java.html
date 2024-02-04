@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectCheck.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check</a> &gt; <span class="el_source">ObjectCheck.java</span></div><h1>ObjectCheck.java</h1><pre class="source lang-java linenums">package org.klojang.check;
+
+import org.klojang.check.fallible.FallibleConsumer;
+import org.klojang.check.fallible.FallibleFunction;
+import org.klojang.check.relation.IntObjRelation;
+import org.klojang.check.relation.IntRelation;
+import org.klojang.check.relation.Relation;
+import org.klojang.check.x.msg.MsgArgs;
+
+import java.util.function.*;
+
+import static org.klojang.check.x.msg.CheckDefs.getPredicateFormatter;
+import static org.klojang.check.x.msg.CheckDefs.getRelationFormatter;
+import static org.klojang.check.x.msg.MsgUtil.*;
+
+/**
+ * Facilitates the validation of arbitrarily typed values. See the
+ * &lt;a href=&quot;../../../module-summary.html&quot;&gt;module summary&lt;/a&gt; for a detailed
+ * explanation.
+ *
+ * @param &lt;T&gt; The type of the value to be validated
+ * @param &lt;X&gt; The type of the exception that is thrown by default if the value
+ *     fails a test (this can be overridden for individual tests in the chain of
+ *     checks)
+ */
+public final class ObjectCheck&lt;T, X extends Exception&gt; {
+
+  final T arg;
+  final String argName;
+  final Function&lt;String, X&gt; exc;
+
+<span class="fc" id="L32">  ObjectCheck(T arg, String argName, Function&lt;String, X&gt; exc) {</span>
+<span class="fc" id="L33">    this.arg = arg;</span>
+<span class="fc" id="L34">    this.argName = argName;</span>
+<span class="fc" id="L35">    this.exc = exc;</span>
+<span class="fc" id="L36">  }</span>
+
+  /**
+   * Returns the validated value. To be used as the last call after a chain of
+   * checks.
+   *
+   * @return the value validated by this instance
+   */
+  public T ok() {
+<span class="fc" id="L45">    return arg;</span>
+  }
+
+  /**
+   * Passes the validated value to the specified function and returns the value it
+   * computes. To be used as the last call after a chain of checks. For example:
+   *
+   * &lt;blockquote&gt;
+   *
+   * &lt;pre&gt;{@code
+   * int age = Check.that(person).has(Person::getAge, &quot;age&quot;, lt(), 50).ok(Person::getAge);
+   * }&lt;/pre&gt;
+   *
+   * &lt;/blockquote&gt;
+   *
+   * @param transformer a function that transforms the value validated by this
+   *     instance
+   * @param &lt;R&gt; the type of the returned value
+   * @param &lt;X2&gt; the type of the exception thrown if the transformation fails
+   * @return the value computed by the transformation function
+   * @throws X2 if the transformation fails
+   */
+  public &lt;R, X2 extends Throwable&gt; R ok(FallibleFunction&lt;T, R, X2&gt; transformer)
+      throws X2 {
+<span class="fc" id="L69">    return transformer.apply(arg);</span>
+  }
+
+  /**
+   * Passes the validated value to a consumer for further processing. To be used as
+   * the last call after a chain of checks.
+   *
+   * @param consumer a consumer of the value validated by this instance
+   * @param &lt;X2&gt; the type of the exception thrown if the consumer fails while
+   *     processing the value
+   * @throws X2 if the consumer fails while processing the value
+   */
+  public &lt;X2 extends Throwable&gt; void then(FallibleConsumer&lt;T, X2&gt; consumer) throws
+      X2 {
+<span class="fc" id="L83">    consumer.accept(arg);</span>
+<span class="fc" id="L84">  }</span>
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be used with a check from the {@link CommonChecks} class
+   * so that an informative error message is generated if the argument turns out to
+   * be invalid.
+   *
+   * @param test the test
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; is(Predicate&lt;T&gt; test) throws X {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    if (test.test(arg)) {</span>
+<span class="fc" id="L98">      return this;</span>
+    }
+<span class="fc" id="L100">    Function&lt;MsgArgs, String&gt; formatter = getPredicateFormatter(test);</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L102">      throw exc.apply(getDefaultPredicateMessage(argName, arg));</span>
+    }
+<span class="fc" id="L104">    throw exc.apply(</span>
+<span class="fc" id="L105">        getPrefabMessage(formatter,</span>
+            test,
+            false,
+            argName,
+            arg,
+            null,
+            null));
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be used with a check from the {@link CommonChecks} class
+   * so that an informative error message is generated if the argument turns out to
+   * be invalid.
+   *
+   * @param test the test
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; isNot(Predicate&lt;T&gt; test) throws X {
+<span class="fc bfc" id="L125" title="All 2 branches covered.">    if (!test.test(arg)) {</span>
+<span class="fc" id="L126">      return this;</span>
+    }
+<span class="fc" id="L128">    Function&lt;MsgArgs, String&gt; formatter = getPredicateFormatter(test);</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L130">      throw exc.apply(getDefaultPredicateMessage(argName, arg));</span>
+    }
+<span class="fc" id="L132">    throw exc.apply(</span>
+<span class="fc" id="L133">        getPrefabMessage(formatter,</span>
+            test,
+            true,
+            argName,
+            arg,
+            null,
+            null));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; is(Predicate&lt;T&gt; test, String message, Object... msgArgs)
+      throws X {
+<span class="fc bfc" id="L156" title="All 2 branches covered.">    if (test.test(arg)) {</span>
+<span class="fc" id="L157">      return this;</span>
+    }
+<span class="fc" id="L159">    throw exc.apply(</span>
+<span class="fc" id="L160">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+            arg,
+            null,
+            null));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; isNot(Predicate&lt;T&gt; test,
+      String message,
+      Object... msgArgs) throws X {
+    // WATCH OUT. Don't call: is(test.negate(), message, msgArgs)
+    // If the test came from the CommonChecks class it must preserve its identity
+    // in order to be looked up in the CommonChecks.NAMES map
+<span class="fc bfc" id="L187" title="All 2 branches covered.">    if (!test.test(arg)) {</span>
+<span class="fc" id="L188">      return this;</span>
+    }
+<span class="fc" id="L190">    throw exc.apply(</span>
+<span class="fc" id="L191">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+            arg,
+            null,
+            null));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; is(Predicate&lt;T&gt; test,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc bfc" id="L214" title="All 2 branches covered.">    if (test.test(arg)) {</span>
+<span class="fc" id="L215">      return this;</span>
+    }
+<span class="fc" id="L217">    throw exception.get();</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; isNot(Predicate&lt;T&gt; test,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L234">    return is(test.negate(), exception);</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be used in combination with a check from the
+   * {@link CommonChecks} class so that an informative error message is generated if
+   * the argument turns out to be invalid.
+   *
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; is(Relation&lt;T, O&gt; test, O object) throws X {
+<span class="fc bfc" id="L251" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L252">      return this;</span>
+    }
+<span class="fc" id="L254">    Function&lt;MsgArgs, String&gt; formatter = getRelationFormatter(test);</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L256">      throw exc.apply(getDefaultRelationMessage(argName, arg, object));</span>
+    }
+<span class="fc" id="L258">    throw exc.apply(</span>
+<span class="fc" id="L259">        getPrefabMessage(formatter, test, false, argName, arg, null, object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be used in combination with a check from the
+   * {@link CommonChecks} class so that an informative error message is generated if
+   * the argument turns out to be invalid.
+   *
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; isNot(Relation&lt;T, O&gt; test, O object) throws X {
+<span class="fc bfc" id="L276" title="All 2 branches covered.">    if (!test.exists(arg, object)) {</span>
+<span class="fc" id="L277">      return this;</span>
+    }
+<span class="fc" id="L279">    Function&lt;MsgArgs, String&gt; formatter = getRelationFormatter(test);</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L281">      throw exc.apply(getDefaultRelationMessage(argName, arg, object));</span>
+    }
+<span class="fc" id="L283">    throw exc.apply(</span>
+<span class="fc" id="L284">        getPrefabMessage(formatter, test, true, argName, arg, null, object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; is(Relation&lt;T, O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc bfc" id="L307" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L308">      return this;</span>
+    }
+<span class="fc" id="L310">    throw exc.apply(</span>
+<span class="fc" id="L311">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+            arg,
+            null,
+            object));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; isNot(
+      Relation&lt;T, O&gt; test, O object, String message, Object... msgArgs) throws X {
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">    if (!test.exists(arg, object)) {</span>
+<span class="nc" id="L338">      return this;</span>
+    }
+<span class="fc" id="L340">    throw exc.apply(</span>
+<span class="fc" id="L341">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+            arg,
+            null,
+            object));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;O, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; is(
+      Relation&lt;T, O&gt; test, O object, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">    if (test.exists(arg, object)) {</span>
+<span class="nc" id="L367">      return this;</span>
+    }
+<span class="fc" id="L369">    throw exception.get();</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;O, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; isNot(
+      Relation&lt;T, O&gt; test, O object, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="nc" id="L388">    return is(test.negate(), object, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P&gt; ObjectCheck&lt;T, X&gt; has(Function&lt;T, P&gt; property, Predicate&lt;P&gt; test)
+      throws X {
+<span class="fc" id="L409">    return ObjectCheckHelper1.help(this).has(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P&gt; ObjectCheck&lt;T, X&gt; notHas(Function&lt;T, P&gt; property, Predicate&lt;P&gt; test)
+      throws X {
+<span class="fc" id="L430">    return ObjectCheckHelper1.help(this).notHas(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P&gt; ObjectCheck&lt;T, X&gt; has(Function&lt;T, P&gt; property,
+      String name,
+      Predicate&lt;P&gt; test)
+      throws X {
+<span class="fc" id="L456">    return ObjectCheckHelper1.help(this).has(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P&gt; ObjectCheck&lt;T, X&gt; notHas(Function&lt;T, P&gt; property,
+      String name,
+      Predicate&lt;P&gt; test)
+      throws X {
+<span class="fc" id="L480">    return ObjectCheckHelper1.help(this).notHas(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P&gt; ObjectCheck&lt;T, X&gt; has(
+      Function&lt;T, P&gt; property, Predicate&lt;P&gt; test, String message, Object... msgArgs)
+      throws X {
+<span class="fc" id="L503">    return ObjectCheckHelper1.help(this).has(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P&gt; ObjectCheck&lt;T, X&gt; notHas(
+      Function&lt;T, P&gt; property, Predicate&lt;P&gt; test, String message, Object... msgArgs)
+      throws X {
+<span class="fc" id="L526">    return ObjectCheckHelper1.help(this).notHas(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      Function&lt;T, P&gt; property, Predicate&lt;P&gt; test, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L548">    return ObjectCheckHelper1.help(this).has(property, test, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; notHas(
+      Function&lt;T, P&gt; property, Predicate&lt;P&gt; test, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L570">    return ObjectCheckHelper1.help(this).has(property, test.negate(), exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P, O&gt; ObjectCheck&lt;T, X&gt; has(Function&lt;T, P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object)
+      throws X {
+<span class="fc" id="L596">    return ObjectCheckHelper1.help(this).has(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P, O&gt; ObjectCheck&lt;T, X&gt; notHas(Function&lt;T, P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object)
+      throws X {
+<span class="fc" id="L622">    return ObjectCheckHelper1.help(this).notHas(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P, O&gt; ObjectCheck&lt;T, X&gt; has(
+      Function&lt;T, P&gt; property, String name, Relation&lt;P, O&gt; test, O object) throws X {
+<span class="fc" id="L647">    return ObjectCheckHelper1.help(this).has(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P, O&gt; ObjectCheck&lt;T, X&gt; notHas(
+      Function&lt;T, P&gt; property, String name, Relation&lt;P, O&gt; test, O object) throws X {
+<span class="fc" id="L674">    return ObjectCheckHelper1.help(this).notHas(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P, O&gt; ObjectCheck&lt;T, X&gt; has(
+      Function&lt;T, P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L704">    return ObjectCheckHelper1.help(this).has(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P, O&gt; ObjectCheck&lt;T, X&gt; notHas(
+      Function&lt;T, P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L738">    return ObjectCheckHelper1.help(this).notHas(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, O, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      Function&lt;T, P&gt; property, Relation&lt;P, O&gt; test, O object, Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L768">    return ObjectCheckHelper1.help(this).has(property, test, object, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, O, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; notHas(
+      Function&lt;T, P&gt; property, Relation&lt;P, O&gt; test, O object, Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L794">    return ObjectCheckHelper1.help(this).has(property,</span>
+<span class="fc" id="L795">        test.negate(),</span>
+        object,
+        exception);
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; property, IntPredicate test)
+      throws X {
+<span class="fc" id="L817">    return ObjectCheckHelper2.help(this).has(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; property, IntPredicate test)
+      throws X {
+<span class="fc" id="L837">    return ObjectCheckHelper2.help(this).notHas(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested.
+   * @param test the test
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; property,
+      String name,
+      IntPredicate test) throws X {
+<span class="fc" id="L859">    return ObjectCheckHelper2.help(this).has(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested.
+   * @param test the test
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; property,
+      String name,
+      IntPredicate test)
+      throws X {
+<span class="fc" id="L882">    return ObjectCheckHelper2.help(this).notHas(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; property,
+      IntPredicate test,
+      String message,
+      Object... msgArgs) throws X {
+<span class="fc" id="L906">    return ObjectCheckHelper2.help(this).has(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property,
+      IntPredicate test,
+      String message,
+      Object... msgArgs) throws X {
+<span class="fc" id="L930">    return ObjectCheckHelper2.help(this).notHas(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; property, IntPredicate test, Supplier&lt;X2&gt; exception) throws
+      X2 {
+<span class="fc" id="L952">    return ObjectCheckHelper2.help(this).has(property, test, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property, IntPredicate test, Supplier&lt;X2&gt; exception) throws
+      X2 {
+<span class="fc" id="L974">    return ObjectCheckHelper2.help(this).has(property, test.negate(), exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; property,
+      IntObjRelation&lt;O&gt; test,
+      O object)
+      throws X {
+<span class="fc" id="L1007">    return ObjectCheckHelper2.help(this).has(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; property,
+      IntObjRelation&lt;O&gt; test,
+      O object)
+      throws X {
+<span class="fc" id="L1040">    return ObjectCheckHelper2.help(this).notHas(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; property, String name, IntObjRelation&lt;O&gt; test, O object)
+      throws X {
+<span class="fc" id="L1075">    return ObjectCheckHelper2.help(this).has(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property, String name, IntObjRelation&lt;O&gt; test, O object)
+      throws X {
+<span class="fc" id="L1110">    return ObjectCheckHelper2.help(this).notHas(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; property,
+      IntObjRelation&lt;O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L1147">    return ObjectCheckHelper2.help(this).has(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;O&gt; ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property,
+      IntObjRelation&lt;O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L1188">    return ObjectCheckHelper2.help(this).notHas(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;O, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; property,
+      IntObjRelation&lt;O&gt; test,
+      O object,
+      Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L1219">    return ObjectCheckHelper2.help(this).has(property, test, object, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;O, X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property,
+      IntObjRelation&lt;O&gt; test,
+      O object,
+      Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L1254">    return ObjectCheckHelper2.help(this).has(property,</span>
+<span class="fc" id="L1255">        test.negate(),</span>
+        object,
+        exception);
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; property,
+      IntRelation test,
+      int object) throws X {
+<span class="fc" id="L1288">    return ObjectCheckHelper2.help(this).has(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a &quot;property&quot; from the {@link CommonProperties} class so that an
+   * informative error message is generated if the argument turns out to be invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; notHas(ToIntFunction&lt;T&gt; property,
+      IntRelation test,
+      int object)
+      throws X {
+<span class="fc" id="L1320">    return ObjectCheckHelper2.help(this).notHas(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; has(ToIntFunction&lt;T&gt; property,
+      String name,
+      IntRelation test,
+      int object)
+      throws X {
+<span class="fc" id="L1356">    return ObjectCheckHelper2.help(this).has(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. While not strictly required, this method is meant to
+   * be used in combination with a check from the {@link CommonChecks} class so that
+   * an informative error message is generated if the argument turns out to be
+   * invalid.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param name the name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property, String name, IntRelation test, int object)
+      throws X {
+<span class="fc" id="L1390">    return ObjectCheckHelper2.help(this).notHas(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to provide a custom error message. See the
+   * {@link org.klojang.check package description} for how to specify a custom error
+   * message.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; property,
+      IntRelation test,
+      int object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L1426">    return ObjectCheckHelper2.help(this).has(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument using the specified test. Allows you to
+   * provide a custom error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property,
+      IntRelation test,
+      int object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L1466">    return ObjectCheckHelper2.help(this).notHas(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; has(
+      ToIntFunction&lt;T&gt; property,
+      IntRelation test,
+      int object,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L1505">    return ObjectCheckHelper2.help(this).has(property, test, object, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument, retrieved through the specified function,
+   * using the specified test. Allows you to throw a different type of exception for
+   * this particular test.
+   *
+   * &lt;p&gt;Note that this method is heavily overloaded. Therefore you need to pay
+   * attention when providing a lambda or method reference for &lt;b&gt;both&lt;/b&gt; the
+   * {@code property} argument &lt;b&gt;and&lt;/b&gt; the {@code test} argument. Plain lambdas or
+   * method references may cause the compiler to complain about an &lt;b&gt;Ambiguous
+   * method call&lt;/b&gt;. If so, see the &lt;a
+   * href=&quot;package-summary.html#custom-checks&quot;&gt;package description&lt;/a&gt; for what you
+   * need to do.
+   *
+   * @param property a function that transforms the value validated by this
+   *     {@code ObjectCheck} into another value, which is to be validated using the
+   *     specified test. This would typically be a function that extracts a bean
+   *     property from a JavaBean
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; ObjectCheck&lt;T, X&gt; notHas(
+      ToIntFunction&lt;T&gt; property,
+      IntRelation test,
+      int object,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L1540">    return ObjectCheckHelper2.help(this).has(property,</span>
+<span class="fc" id="L1541">        test.negate(),</span>
+        object,
+        exception);
+  }
+
+  /**
+   * Returns an {@link IntCheck} instance for validating the specified value. The new
+   * instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @return a new {@code IntCheck} instance for validating the specified value
+   */
+  public IntCheck&lt;X&gt; and(int arg) {
+<span class="fc" id="L1554">    return new IntCheck&lt;&gt;(arg, DEF_ARG_NAME, exc);</span>
+  }
+
+  /**
+   * Returns an {@link IntCheck} instance for validating the specified value. The new
+   * instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @param argName the name of the argument, field or variable being validated
+   * @return a new {@code IntCheck} instance for validating the specified value
+   */
+  public IntCheck&lt;X&gt; and(int arg, String argName) {
+<span class="fc" id="L1566">    return new IntCheck&lt;&gt;(arg, argName, exc);</span>
+  }
+
+  /**
+   * Returns a &lt;i&gt;new&lt;/i&gt; {@code ObjectCheck} instance for validating the specified
+   * value; supposedly another value than the one validated by this instance. The new
+   * instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @param &lt;U&gt; the type of the value
+   * @return a new {@code ObjectCheck} instance for validating the specified value
+   */
+  public &lt;U&gt; ObjectCheck&lt;U, X&gt; and(U arg) {
+<span class="fc" id="L1579">    return new ObjectCheck&lt;&gt;(arg, DEF_ARG_NAME, exc);</span>
+  }
+
+  /**
+   * Returns a &lt;i&gt;new&lt;/i&gt; {@code ObjectCheck} instance for validating the specified
+   * value; supposedly another value than the one validated by this instance. The new
+   * instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @param argName the name of the argument, field or variable being validated
+   * @param &lt;U&gt; the type of the value
+   * @return a new {@code ObjectCheck} instance for validating the specified value
+   */
+  public &lt;U&gt; ObjectCheck&lt;U, X&gt; and(U arg, String argName) {
+<span class="fc" id="L1593">    return new ObjectCheck&lt;&gt;(arg, argName, exc);</span>
+  }
+
+  String FQN(String propName) {
+<span class="fc bfc" id="L1597" title="All 2 branches covered.">    if (argName == null) {</span>
+<span class="fc" id="L1598">      return propName;</span>
+    }
+<span class="fc" id="L1600">    return argName + &quot;.&quot; + propName;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
