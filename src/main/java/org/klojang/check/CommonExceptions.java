@@ -216,7 +216,7 @@ public final class CommonExceptions {
    * Returns a {@code Supplier} of a {@link NullPointerException}.
    *
    * @param message the exception message
-   * @return a {@code Supplier} of an {@code NullPointerException}
+   * @return a {@code Supplier} of a {@code NullPointerException}
    */
   public static Supplier<NullPointerException> npe(String message) {
     return () -> new NullPointerException(message);
@@ -226,27 +226,27 @@ public final class CommonExceptions {
    * Returns a {@code Supplier} of a {@link NullPointerException}. The supplier will
    * call the no-arg constructor of {@code NullPointerException}.
    *
-   * @return a {@code Supplier} of an {@code NullPointerException}
+   * @return a {@code Supplier} of a {@code NullPointerException}
    */
   public static Supplier<NullPointerException> npe() {
     return NullPointerException::new;
   }
 
   /**
-   * Returns a {@code Supplier} of an {@link NoSuchElementException}.
+   * Returns a {@code Supplier} of a {@link NoSuchElementException}.
    *
    * @param message the exception message
-   * @return a {@code Supplier} of an {@code NoSuchElementException}
+   * @return a {@code Supplier} of a {@code NoSuchElementException}
    */
   public static Supplier<NoSuchElementException> noSuchElement(String message) {
     return () -> new NoSuchElementException(message);
   }
 
   /**
-   * Returns a {@code Supplier} of an {@link NoSuchElementException}. The supplier
+   * Returns a {@code Supplier} of a {@link NoSuchElementException}. The supplier
    * will call the no-arg constructor of {@code NoSuchElementException}.
    *
-   * @return a {@code Supplier} of an {@code NoSuchElementException}
+   * @return a {@code Supplier} of a {@code NoSuchElementException}
    */
   public static Supplier<NoSuchElementException> noSuchElement() {
     return NoSuchElementException::new;

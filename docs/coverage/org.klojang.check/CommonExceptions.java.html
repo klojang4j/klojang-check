@@ -216,7 +216,7 @@ public final class CommonExceptions {
    * Returns a {@code Supplier} of a {@link NullPointerException}.
    *
    * @param message the exception message
-   * @return a {@code Supplier} of an {@code NullPointerException}
+   * @return a {@code Supplier} of a {@code NullPointerException}
    */
   public static Supplier&lt;NullPointerException&gt; npe(String message) {
 <span class="fc" id="L222">    return () -&gt; new NullPointerException(message);</span>
@@ -226,27 +226,27 @@ public final class CommonExceptions {
    * Returns a {@code Supplier} of a {@link NullPointerException}. The supplier will
    * call the no-arg constructor of {@code NullPointerException}.
    *
-   * @return a {@code Supplier} of an {@code NullPointerException}
+   * @return a {@code Supplier} of a {@code NullPointerException}
    */
   public static Supplier&lt;NullPointerException&gt; npe() {
 <span class="fc" id="L232">    return NullPointerException::new;</span>
   }
 
   /**
-   * Returns a {@code Supplier} of an {@link NoSuchElementException}.
+   * Returns a {@code Supplier} of a {@link NoSuchElementException}.
    *
    * @param message the exception message
-   * @return a {@code Supplier} of an {@code NoSuchElementException}
+   * @return a {@code Supplier} of a {@code NoSuchElementException}
    */
   public static Supplier&lt;NoSuchElementException&gt; noSuchElement(String message) {
 <span class="fc" id="L242">    return () -&gt; new NoSuchElementException(message);</span>
   }
 
   /**
-   * Returns a {@code Supplier} of an {@link NoSuchElementException}. The supplier
+   * Returns a {@code Supplier} of a {@link NoSuchElementException}. The supplier
    * will call the no-arg constructor of {@code NoSuchElementException}.
    *
-   * @return a {@code Supplier} of an {@code NoSuchElementException}
+   * @return a {@code Supplier} of a {@code NoSuchElementException}
    */
   public static Supplier&lt;NoSuchElementException&gt; noSuchElement() {
 <span class="fc" id="L252">    return NoSuchElementException::new;</span>
