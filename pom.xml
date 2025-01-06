@@ -7,12 +7,12 @@
 
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>3.0.3-jdk21</version>
+    <version>21.1.0</version>
     <packaging>jar</packaging>
 
     <name>Klojang Check</name>
     <description>
-        A new take on Defensive Programming &amp;amp; Validating Preconditions
+        Defensive Programming &amp; Validating Preconditions
     </description>
     <url>https://klojang4j.github.io/klojang-check/</url>
 
@@ -62,20 +62,17 @@
         <!-- *** Maven plugin versions                                        *** -->
         <!-- *** Check for updates: mvn versions:display-plugin-updates       *** -->
         <!-- ==================================================================== -->
-        <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
-        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
+        <maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
-        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
-        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-        <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
-        <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <jacoco-plugin.version>0.8.11</jacoco-plugin.version>
-        <owasp-plugin.version>9.0.3</owasp-plugin.version>
         <nexus-plugin.version>1.6.13</nexus-plugin.version>
 
         <!-- ==================================================================== -->
@@ -119,16 +116,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>${maven-enforcer-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${maven-checkstyle-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${maven-source-plugin.version}</version>
                 </plugin>
@@ -146,11 +133,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${maven-dependency-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>pl.project13.maven</groupId>
-                    <artifactId>git-commit-id-plugin</artifactId>
-                    <version>${git-commit-id-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -189,28 +171,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.6.3,)</version>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>[17,)</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
                     <filesets>
@@ -226,55 +186,8 @@
                                 <include>**/*</include>
                             </includes>
                         </fileset>
-                        <fileset>
-                            <directory>docs/vulnerabilities</directory>
-                            <includes>
-                                <include>**/*</include>
-                            </includes>
-                        </fileset>
                     </filesets>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <configuration>
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>
-                        ${project.build.outputDirectory}/${project.artifactId}.git.properties
-                    </generateGitPropertiesFilename>
-                    <format>properties</format>
-                    <dateFormat>yyyy-MM-dd HH:mm:ss</dateFormat>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-git-properties</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>check-style</id>
-                        <configuration>
-                            <configLocation>google_checks.xml</configLocation>
-                            <failsOnError>true</failsOnError>
-                            <consoleOutput>true</consoleOutput>
-                            <includeTestSourceDirectory>true
-                            </includeTestSourceDirectory>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -284,23 +197,6 @@
                     <target>${maven.compiler.target}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>${owasp-plugin.version}</version>
-                <configuration>
-                    <failBuildOnCVSS>1</failBuildOnCVSS>
-                    <nvdApiKey>29bb9b20-8dba-4ae7-94b4-6656e154e6e1</nvdApiKey>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -389,24 +285,6 @@
                             </resources>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>publish-vulnerabilities</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>docs/vulnerabilities</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>target</directory>
-                                    <includes>
-                                        <include>dependency-check-report.html</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -419,10 +297,6 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
-                        <configuration>
-                            <keyname>${gpg.keyname}</keyname>
-                            <passphraseServerId>${gpg.keyname}</passphraseServerId>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

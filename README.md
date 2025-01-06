@@ -26,14 +26,14 @@ To use <i>Klojang Check</i>, add the following dependency to your Maven POM file
 <dependency>
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>3.0.2-jdk21</version>
+    <version>21.1.0</version>
 </dependency>
 ```
 
 or Gradle build script:
 
 ```
-implementation group: 'org.klojang', name: 'klojang-check', version: '3.0.2-jdk21'
+implementation group: 'org.klojang', name: 'klojang-check', version: '21.1.0'
 ```
 
 ## Example
@@ -81,9 +81,8 @@ are **[here](https://klojang4j.github.io/klojang-check/coverage)**.
 
 Being all about making code as robust as possible, the <i>Klojang Check</i> code base is 
 itself regularly tested for vulnerabilities. It is currently not affected by any CVE,
-however light-weight. Its surface consists of barely 15 types and it has zero dependencies 
-outside `java.base`. You can find the latest **vulnerabilities report**
-**[here](https://klojang4j.github.io/klojang-check/vulnerabilities/dependency-check-report.html)**.
+however light-weight. Its surface area consists of barely 15 types and it only depends on 
+`java.base`.
 
 ## Performance
 
