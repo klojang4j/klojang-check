@@ -103,9 +103,7 @@ public final class CheckDefs {
     setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
     setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
     setMetadata(matches(), msgHasPattern(), "matches"); // recycle message
-    setMetadata(containsMatch(),
-        msgContainsPattern(),
-        "containsMatch"); // recycle message
+    setMetadata(containsMatch(), msgContainsPattern(), "containsMatch"); // recycle message
     setMetadata(numerical(), msgNumerical(), "numerical");
     setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
     setMetadata(indexOf(), msgIndexOf(), "indexOf");
@@ -151,37 +149,27 @@ public final class CheckDefs {
     return intObjRelationFormatters.get(relation);
   }
 
-  private static void setMetadata(Predicate<?> check,
-      PrefabMsgFormatter formatter,
-      String name) {
+  private static void setMetadata(Predicate<?> check, PrefabMsgFormatter formatter, String name) {
     predicateFormattersTemp.put(check, formatter);
     namesTemp.put(check, name);
   }
 
-  private static void setMetadata(ComposableIntPredicate check,
-      PrefabMsgFormatter formatter,
-      String name) {
+  private static void setMetadata(ComposableIntPredicate check, PrefabMsgFormatter formatter, String name) {
     intPredicateFormattersTemp.put(check, formatter);
     namesTemp.put(check, name);
   }
 
-  private static void setMetadata(Relation<?, ?> check,
-      PrefabMsgFormatter formatter,
-      String name) {
+  private static void setMetadata(Relation<?, ?> check, PrefabMsgFormatter formatter, String name) {
     relationFormattersTemp.put(check, formatter);
     namesTemp.put(check, name);
   }
 
-  private static void setMetadata(IntRelation check,
-      PrefabMsgFormatter formatter,
-      String name) {
+  private static void setMetadata(IntRelation check, PrefabMsgFormatter formatter, String name) {
     intRelationFormattersTemp.put(check, formatter);
     namesTemp.put(check, name);
   }
 
-  private static void setMetadata(IntObjRelation<?> check,
-      PrefabMsgFormatter formatter,
-      String name) {
+  private static void setMetadata(IntObjRelation<?> check, PrefabMsgFormatter formatter, String name) {
     intObjRelationFormattersTemp.put(check, formatter);
     namesTemp.put(check, name);
   }

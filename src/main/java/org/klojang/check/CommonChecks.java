@@ -115,7 +115,7 @@ public final class CommonChecks {
    *   <li>it is an empty {@link Collection}
    *   <li>it is an empty {@link Map}
    *   <li>it is an empty {@link Emptyable}
-   *   <li>it is an empty {@link File}
+   *   <li>it is a {@link File} representing an existing but empty file or directory
    *   <li>it is a zero-length array
    *   <li>it is an empty {@link Optional} <b>or</b> an {@code Optional}
    *      containing an empty value

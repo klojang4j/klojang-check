@@ -201,7 +201,7 @@ public final class Misc {
   }
 
   public static CorruptCheckException notApplicable(String check, Object arg) {
-    String msg = String.format("%s not applicable to %s", check, arg.getClass());
+    String msg = String.format("[%s] check not applicable to %s", check, arg.getClass());
     return new CorruptCheckException(msg);
   }
 

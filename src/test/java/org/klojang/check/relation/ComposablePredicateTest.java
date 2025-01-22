@@ -42,23 +42,23 @@ public class ComposablePredicateTest {
 
   @Test
   public void orElseRelation00() {
-    Check.that(List.of("foo", "bar")).is(empty().orElse(contains(), "foo"));
+    Check.that(List.of("foo", "bar")).is(empty().or(contains(), "foo"));
   }
 
   @Test
   public void orElseRelation01() {
-    Check.that(List.of()).is(empty().orElse(contains(), "foo"));
+    Check.that(List.of()).is(empty().or(contains(), "foo"));
   }
 
   @Test
   public void orElseRelation02() {
-    Check.that(List.of("foo", "bar")).is(empty().orElse(contains(), 30)
-        .orElse(contains(), "foo"));
+    Check.that(List.of("foo", "bar")).is(empty().or(contains(), 30)
+        .or(contains(), "foo"));
   }
 
   @Test(expected = ClassCastException.class)
   public void orElseRelation03() {
-    Check.that(List.of("foo", "bar")).is(empty().orElse(hasSubstring(), "foo"));
+    Check.that(List.of("foo", "bar")).is(empty().or(hasSubstring(), "foo"));
   }
 
   @Test
@@ -78,17 +78,17 @@ public class ComposablePredicateTest {
 
   @Test
   public void orEval00() {
-    Check.that(9.3).is(Compose.validWhen(LT(), 10D).orEval(() -> 10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).or(() -> 10 > 11));
   }
 
   @Test
   public void orEval01() {
-    Check.that(9.3).is(Compose.validWhen(LT(), 8D).orEval(() -> 10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).or(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orEval02() {
-    Check.that(9.3).is(Compose.validWhen(LT(), 8D).orEval(() -> 10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).or(() -> 10 > 11));
   }
 
   @Test
@@ -416,17 +416,17 @@ public class ComposablePredicateTest {
 
   @Test
   public void andEval00() {
-    Check.that(9.3).is(Compose.validWhen(LT(), 10D).andEval(() -> 10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).and(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval01() {
-    Check.that(9.3).is(Compose.validWhen(LT(), 8D).andEval(() -> 10 < 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 8D).and(() -> 10 < 11));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andEval02() {
-    Check.that(9.3).is(Compose.validWhen(LT(), 10D).andEval(() -> 10 > 11));
+    Check.that(9.3).is(Compose.validWhen(LT(), 10D).and(() -> 10 > 11));
   }
 
   @Test
