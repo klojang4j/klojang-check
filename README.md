@@ -178,11 +178,10 @@ There are a five predefined message arguments that you can use in your error mes
 
 - **${arg}** &#8212; The value being tested.
 - **${obj}** &#8212; The value against which the input value is tested, if applicable. For
-  example, in `Check.that(length).is(lt(), 100)`, the value of `length` is tested against
+  example, in `Check.that(length).is(lte(), 100)`, the value of `length` is tested against
   the value of `maxLen`.
 - **${type}** &#8212; The type of the value being tested.
-- **${tag}** &#8212; The name you gave to the value, or "argument" if you did not provide
-  a name.
+- **${tag}** &#8212; The tag you gave to the value (defaults to "argument" if you did not provide a tag).
 - **${test}** &#8212; The name of the test. For example: "notNull" or "lte". If you
   executed a custom check (a lambda or method reference), this will be a pretty
   unintelligible string.
