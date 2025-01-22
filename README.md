@@ -93,7 +93,7 @@ Check.that(file).is(File::canWrite);
 Check.that(employee).is(Employee::isManager);
 ```
 
-### Providing an Argument Name
+### Tagging the Tested Value
 
 <i>Klojang Check</i> generates a short, informative error message if the input value fails
 a test.
