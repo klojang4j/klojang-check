@@ -1,7 +1,7 @@
 # Klojang Check
 
 <i>Klojang Check</i> is a tiny framework for validating program input, object state,
-method arguments, variable &#8212; anything that needs to have the right value before
+method arguments, variables &#8212; anything that needs to have the right value before
 you can safely execute the next line of code. It enables you to separate precondition 
 validation and business logic in an elegant and concise way.
 
@@ -78,21 +78,9 @@ import static org.klojang.check.CommonChecks.*;
 Check.that(length).is(gte(), 0);
 Check.that(divisor).isNot(zero());
 Check.that(file).is(writable());
-Check.
-
-that(firstName).
-
-is(substringOf(),fullName);
-    Check.
-
-that(i).
-
-is(indexOf(),list);
-    Check.
-
-that(employee.isManager()).
-
-is(yes());
+Check.that(firstName).is(substringOf(),fullName);
+Check.that(i).is(indexOf(),list);
+Check.that(employee.isManager()).is(yes());
 ```
 
 ### Custom Checks
@@ -118,7 +106,7 @@ Check.that(length).is(gte(), 0);
 // error message: argument must be >= 0 (was -42)
 ```
 
-You can provide a name for the value you are testing to give the user more context:
+You can provide a "tag" for the value you are testing to give the user more context:
 
 ```java
 Check.notNull(foo, "foo");
@@ -128,7 +116,10 @@ Check.that(length, "length").is(gte(), 0);
 // error message: length must be >= 0 (was -42)
 ```
 
-The [Tag](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Tag.html)
+This is especially useful when checking multiple method arguments within a method as the
+error message makes it immediately clear which argument violated some constraint. The tag
+could be the name of the method parameter, but it can really be anything you like. The 
+[Tag](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Tag.html)
 class contains string constants for some commonly used argument names:
 
 ```java
