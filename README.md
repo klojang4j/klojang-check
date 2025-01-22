@@ -93,6 +93,14 @@ Check.that(file).is(File::canWrite);
 Check.that(employee).is(Employee::isManager);
 ```
 
+### Chaining Checks
+
+Checks on the same value can be chained:
+
+```java
+Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
+```
+
 ### Tagging the Tested Value
 
 <i>Klojang Check</i> generates a short, informative error message if the input value fails
