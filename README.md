@@ -106,7 +106,8 @@ Check.that(length).is(gte(), 0);
 // error message: argument must be >= 0 (was -42)
 ```
 
-You can provide a "tag" for the value you are testing to give the user more context:
+You can provide a "tag" for the value you are testing in order to give the user more 
+context:
 
 ```java
 Check.notNull(foo, "foo");
@@ -117,7 +118,7 @@ Check.that(length, "length").is(gte(), 0);
 ```
 
 This is especially useful when checking multiple method arguments within a method as the
-error message makes it immediately clear which argument violated some constraint. The tag
+error message makes it immediately clear which argument failed to pass a test. The tag
 could be the name of the method parameter, but it can really be anything you like. The 
 [Tag](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Tag.html)
 class contains string constants for some commonly used argument names:
@@ -129,7 +130,7 @@ Check.that(length, LENGTH).is(gte(), 0);
 // error message: length must be >= 0 (was -42)
 ```
 
-### Testing Argument Properties
+### Validating Argument Properties
 
 With <i>Klojang Check</i> you can test not just arguments, but also argument properties.
 To do this, provide
@@ -149,9 +150,9 @@ import static org.klojang.check.CommonProperties.strlen;
 import static org.klojang.check.CommonProperties.type;
 import static org.klojang.check.CommonProperties.abs;
 
-Check.that(fullName).has(strlen(),lte(),100);
-Check.that(foo).has(type(),instanceOf(),InputStream .class);
-Check.that(angle).has(abs(),lte(),90);
+Check.that(fullName).has(strlen(), lte(), 100);
+Check.that(foo).has(type(), instanceOf(), InputStream .class);
+Check.that(angle).has(abs(), lte(), 90);
 ```
 
 As the last example illustrates, the word "property" needs to be taken in the broadest
