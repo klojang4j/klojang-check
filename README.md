@@ -164,14 +164,14 @@ value to be tested.
 If you prefer, you can provide your own error message:
 
 ```java
-Check.that(foo).is(notNull(), "there you go again");
-Check.that(fullName).has(strlen(), lte(), 100, "full name must not exceed 100 characters");
+Check.that(foo).is(notNull(), "null is not a valid value for foo");
+Check.that(length).is(lte(), 100, "length must not exceed 100 characters");
 ```
 
 The message may contain message arguments:
 
 ```java
-Check.that(length).is(lte(),maxLen, "length must be <= ${0} (was ${1})", maxLen, length);
+Check.that(length).is(lte(), maxLen, "length must be <= ${0} (was ${1})", maxLen, length);
 ```
 
 There are a five predefined message arguments that you can use in your error message:
