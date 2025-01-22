@@ -78,8 +78,8 @@ import static org.klojang.check.CommonChecks.*;
 Check.that(length).is(gte(), 0);
 Check.that(divisor).isNot(zero());
 Check.that(file).is(writable());
-Check.that(firstName).is(substringOf(),fullName);
-Check.that(i).is(indexOf(),list);
+Check.that(firstName).is(substringOf(), fullName);
+Check.that(i).is(indexOf(), list);
 Check.that(employee.isManager()).is(yes());
 ```
 
@@ -88,7 +88,7 @@ Check.that(employee.isManager()).is(yes());
 Of course, you can also provide your own checks:
 
 ```java
-Check.that(length).is(i ->i >=0);
+Check.that(length).is(i -> i >= 0);
 Check.that(file).is(File::canWrite);
 Check.that(employee).is(Employee::isManager);
 ```
