@@ -101,6 +101,19 @@ Checks on the same value can be chained:
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 ```
 
+Checks on different values can be chained as follows:
+
+```java
+Check.that(numberOfChairs).is(positive()).and(numberOfTables).is(one());
+```
+
+Generally, though, we do not recommend this. Just write:
+
+```java
+Check.that(numberOfChairs).is(positive());
+Check.that(numberOfTables).is(one());
+```
+
 ### Tagging the Tested Value
 
 <i>Klojang Check</i> generates a short, informative error message if the input value fails
