@@ -107,12 +107,14 @@ Checks on different values can be chained as follows:
 Check.that(numberOfChairs).is(positive()).and(numberOfTables).is(one());
 ```
 
-Generally, though, we do not recommend the latter. Just write:
+Generally, though, we do not recommend the latter practice. Just write:
 
 ```java
 Check.that(numberOfChairs).is(positive());
 Check.that(numberOfTables).is(one());
 ```
+
+This makes it easier to see which values have been validated.
 
 ### Tagging the Tested Value
 
