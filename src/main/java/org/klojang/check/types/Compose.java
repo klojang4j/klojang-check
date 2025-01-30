@@ -1,4 +1,4 @@
-package org.klojang.check.relation;
+package org.klojang.check.types;
 
 import org.klojang.check.CommonChecks;
 
@@ -24,59 +24,6 @@ public final class Compose {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * Returns a {@code ComposablePredicate} that always evaluates to {@code true}. Can
-   * be used as the first of a series of AND-joined checks if there is no need for an
-   * initial {@linkplain CommonChecks#notNull() notNull() null check}.
-   *
-   * <blockquote><pre>{@code
-   * Check.that(color).is(valid().and(equalTo(), noneOf(), GREEN, BLUE, YELLOW));
-   * }</pre></blockquote>
-   *
-   * @param <T> the type of the value being tested (which is ignored by the
-   *     returned {@code ComposablePredicate})
-   * @return a {@code ComposablePredicate} that always evaluates to {@code true}
-   */
-  public static <T> ComposablePredicate<T> valid() {
-    return x -> true;
-  }
-
-  /**
-   * Returns a {@code ComposableIntPredicate} that always evaluates to {@code true}.
-   * Can be used as the first of a series of AND-joined checks.
-   *
-   * @return a {@code ComposableIntPredicate} that always evaluates to {@code true}
-   */
-  public static ComposableIntPredicate validInt() {
-    return x -> true;
-  }
-
-  /**
-   * Returns a {@code ComposablePredicate} that always evaluates to {@code false}.
-   * Can be used as the first of a series of OR-joined checks if there is no need for
-   * an initial {@linkplain CommonChecks#notNull() notNull() null check}.
-   *
-   * <blockquote><pre>{@code
-   * Check.that(color).is(invalid().or(equalTo(), anyOf(), GREEN, BLUE, YELLOW));
-   * }</pre></blockquote>
-   *
-   * @param <T> the type of the value being tested (which is ignored by the
-   *     returned {@code ComposablePredicate})
-   * @return a {@code ComposablePredicate} that always evaluates to {@code false}
-   */
-  public static <T> ComposablePredicate<T> invalid() {
-    return x -> false;
-  }
-
-  /**
-   * Returns a {@code ComposableIntPredicate} that always evaluates to {@code false}.
-   * Can be used as the first of a series of OR-joined checks.
-   *
-   * @return a {@code ComposableIntPredicate} that always evaluates to {@code false}
-   */
-  public static ComposableIntPredicate invalidInt() {
-    return x -> false;
-  }
 
   /**
    * Returns a {@code ComposablePredicate} that evaluates to {@code true} if the

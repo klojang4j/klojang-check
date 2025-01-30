@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.klojang.check.relation.Relation;
+import org.klojang.check.types.Relation;
 import org.klojang.check.x.msg.MsgArgs;
 
 /**

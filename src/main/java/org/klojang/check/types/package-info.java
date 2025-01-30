@@ -4,13 +4,13 @@
  * the twin interfaces of {@link java.util.function.Predicate Predicate} and
  * {@link java.util.function.IntPredicate IntPredicate} from the JDK itself. This
  * package also contains extensions of these two interfaces:
- * {@link org.klojang.check.relation.ComposablePredicate} and
- * {@link org.klojang.check.relation.ComposableIntPredicate}. They function as a
+ * {@link org.klojang.check.types.ComposablePredicate} and
+ * {@link org.klojang.check.types.ComposableIntPredicate}. They function as a
  * bridge to the relational interfaces of this package. See
- * {@link org.klojang.check.relation.ComposablePredicate} for more information.
+ * {@link org.klojang.check.types.ComposablePredicate} for more information.
  *
  *
- * <p>The {@link org.klojang.check.relation.Relation} interface
+ * <p>The {@link org.klojang.check.types.Relation} interface
  * and its sister interfaces in this package assess whether a certain type of
  * relation exists between one object and another. The object being assessed is
  * called the <b>subject</b> of the relationship, and the object that it is compared
@@ -21,4 +21,4 @@
  * between x and y.
  *
  */
-package org.klojang.check.relation;
+package org.klojang.check.types;

@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComposableIntPredicate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.relation</a> &gt; <span class="el_source">ComposableIntPredicate.java</span></div><h1>ComposableIntPredicate.java</h1><pre class="source lang-java linenums">package org.klojang.check.relation;
+package org.klojang.check.types;
 
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static org.klojang.check.relation.Private.testAgainstArray;
+import static org.klojang.check.types.Private.testAgainstArray;
 
 /**
  * An extension of {@link IntPredicate} that acts as a bridge between
@@ -15,7 +15,7 @@ import static org.klojang.check.relation.Private.testAgainstArray;
  * {@link IntPredicate} with a set of {@code default} methods that allow the
  * composition to take place. For more information, see {@link ComposablePredicate}.
  */
-@SuppressWarnings({&quot;unchecked&quot;})
+@SuppressWarnings({"unchecked"})
 @FunctionalInterface
 public interface ComposableIntPredicate extends IntPredicate {
 
@@ -25,28 +25,28 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return the negation of this predicate
    */
   default ComposableIntPredicate negated() {
-<span class="fc bfc" id="L28" title="All 2 branches covered.">    return x -&gt; !meFirst(x);</span>
+    return x -> !meFirst(x);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or the specified test.
+   * the new test if it passes <i>this</i> test or the specified test.
    *
    * @param test the test to combine this test with
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orElse(IntPredicate test) {
-<span class="fc bfc" id="L39" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(x);</span>
+    return x -> meFirst(x) || test.test(x);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if it has the specified relation
+   * the new test if it passes <i>this</i> test or if it has the specified relation
    * to the specified value.
    *
-   * &lt;blockquote&gt;&lt;pre&gt;{@code
-   * Check.that(&quot;foo bar&quot;).is(empty().orElse(hasSubstring(), &quot;foo&quot;));
-   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   * <blockquote><pre>{@code
+   * Check.that("foo bar").is(empty().orElse(hasSubstring(), "foo"));
+   * }</pre></blockquote>
    *
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified relation, with the value of this
@@ -54,24 +54,24 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orElse(IntRelation relation, int object) {
-<span class="fc bfc" id="L57" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(x, object);</span>
+    return x -> meFirst(x) || relation.exists(x, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or the negation of the specified
+   * the new test if it passes <i>this</i> test or the negation of the specified
    * test.
    *
    * @param test the test to combine this test with
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orNot(IntPredicate test) {
-<span class="fc bfc" id="L69" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !test.test(x);</span>
+    return x -> meFirst(x) || !test.test(x);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if it does not have the specified
+   * the new test if it passes <i>this</i> test or if it does not have the specified
    * relation to the specified value.
    *
    * @param relation the relationship test to combine this test with
@@ -80,12 +80,12 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orNot(IntRelation relation, int object) {
-<span class="pc bpc" id="L83" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !relation.exists(x, object);</span>
+    return x -> meFirst(x) || !relation.exists(x, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if it has a particular relation to
+   * the new test if it passes <i>this</i> test or if it has a particular relation to
    * the specified set of values.
    *
    * @param relation the relationship test to combine this test with
@@ -96,59 +96,59 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate or(IntRelation relation,
       Quantifier quantifier,
       int... objects) {
-<span class="fc bfc" id="L99" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">        || testAgainstArray(x, relation, quantifier, objects);</span>
+    return x -> meFirst(x)
+        || testAgainstArray(x, relation, quantifier, objects);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   * <i>this</i> test or if another value manages to pass the other test.
    *
    * @param value the value to be tested by the specified test
    * @param test the test to combine this test with
-   * @param &lt;T&gt; the type of the value tested by the predicate
+   * @param <T> the type of the value tested by the predicate
    * @return a new test combining this test and the specified test
    */
-  default &lt;T&gt; ComposableIntPredicate orThat(T value, Predicate&lt;T&gt; test) {
-<span class="fc bfc" id="L114" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
+  default <T> ComposableIntPredicate orThat(T value, Predicate<T> test) {
+    return x -> meFirst(x) || test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   * <i>this</i> test or if another value manages to pass the other test.
    *
    * @param value the value to be tested by the specified test
    * @param test the test to combine this test with
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orThat(int value, IntPredicate test) {
-<span class="fc bfc" id="L127" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
+    return x -> meFirst(x) || test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   * <i>this</i> test or if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified relation
-   * @param &lt;S&gt; the type of the subject of the specified relation
-   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param <S> the type of the subject of the specified relation
+   * @param <O> the type of the object of the specified relation
    * @return a new test combining this test and the specified test
    */
-  default &lt;S, O&gt; ComposableIntPredicate orThat(S subject,
-      Relation&lt;S, O&gt; relation,
+  default <S, O> ComposableIntPredicate orThat(S subject,
+      Relation<S, O> relation,
       O object) {
-<span class="fc bfc" id="L145" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
+    return x -> meFirst(x) || relation.exists(subject, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the other test.
+   * <i>this</i> test or if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -158,28 +158,28 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate orThat(int subject,
       IntRelation relation,
       int object) {
-<span class="fc bfc" id="L161" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
+    return x -> meFirst(x) || relation.exists(subject, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the negation of the other
+   * <i>this</i> test or if another value manages to pass the negation of the other
    * test.
    *
    * @param value the value to be tested by the specified predicate
    * @param test the test to combine this test with
-   * @param &lt;T&gt; the type of values being tested by the specified predicate
+   * @param <T> the type of values being tested by the specified predicate
    * @return a new test combining this test and the specified test
    */
-  default &lt;T&gt; ComposableIntPredicate orNot(T value, Predicate&lt;T&gt; test) {
-<span class="pc bpc" id="L176" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !test.test(value);</span>
+  default <T> ComposableIntPredicate orNot(T value, Predicate<T> test) {
+    return x -> meFirst(x) || !test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the negation of the other
+   * <i>this</i> test or if another value manages to pass the negation of the other
    * test.
    *
    * @param value the value to be tested by the specified predicate
@@ -187,53 +187,53 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate orNot(int value, IntPredicate test) {
-<span class="pc bpc" id="L190" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !test.test(value);</span>
+    return x -> meFirst(x) || !test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if another value manages to pass the negation of the other
+   * <i>this</i> test or if another value manages to pass the negation of the other
    * test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified relation
-   * @param &lt;S&gt; the type of the subject of the specified relation
-   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param <S> the type of the subject of the specified relation
+   * @param <O> the type of the object of the specified relation
    * @return a new test combining this test and the specified test
    */
-  default &lt;S, O&gt; ComposableIntPredicate orNot(S subject,
-      Relation&lt;S, O&gt; relation,
+  default <S, O> ComposableIntPredicate orNot(S subject,
+      Relation<S, O> relation,
       O object) {
-<span class="fc bfc" id="L209" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !relation.exists(subject, object);</span>
+    return x -> meFirst(x) || !relation.exists(subject, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * <i>this</i> test or if <i>another</i> value ({@code subject}) has a particular
    * relation to the specified set of values.
    *
    * @param subject the subject of the specified {@code Relation}
    * @param relation the relationship test to combine this test with
    * @param quantifier a logical quantifier modulating the relationship
    * @param objects the set of values to test the subject against
-   * @param &lt;S&gt; the type of the subject of the relation
-   * @param &lt;O&gt; the type of the object of the relation
-   * @param &lt;P&gt; the type of the values fed as &quot;objects&quot; into the relation
+   * @param <S> the type of the subject of the relation
+   * @param <O> the type of the object of the relation
+   * @param <P> the type of the values fed as "objects" into the relation
    * @return a new test combining this test and the specified test
    */
-  default &lt;S, O, P extends O&gt; ComposableIntPredicate or(S subject,
-      Relation&lt;S, O&gt; relation, Quantifier quantifier, P... objects) {
-<span class="fc bfc" id="L229" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
-<span class="fc bfc" id="L230" title="All 2 branches covered.">        || testAgainstArray(subject, relation, quantifier, objects);</span>
+  default <S, O, P extends O> ComposableIntPredicate or(S subject,
+      Relation<S, O> relation, Quantifier quantifier, P... objects) {
+    return x -> meFirst(x)
+        || testAgainstArray(subject, relation, quantifier, objects);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * <i>this</i> test and if <i>another</i> value ({@code subject}) has a particular
    * relation to the specified set of values.
    *
    * @param subject the subject of the relation
@@ -244,13 +244,13 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default ComposableIntPredicate or(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-<span class="fc bfc" id="L247" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
-<span class="fc bfc" id="L248" title="All 2 branches covered.">        || testAgainstArray(subject, relation, quantifier, objects);</span>
+    return x -> meFirst(x)
+        || testAgainstArray(subject, relation, quantifier, objects);
   }
 
   /**
    * Returns a new test combining this test with the specified free-form test. A
-   * value will pass the new test if it passes &lt;i&gt;this&lt;/i&gt; test or if the provided
+   * value will pass the new test if it passes <i>this</i> test or if the provided
    * expression evaluates to {@code true}.
    *
    * @param test the boolean expression to evaluate if the value fails to pass
@@ -258,13 +258,13 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified free-form test
    */
   default ComposableIntPredicate or(boolean test) {
-<span class="pc bpc" id="L261" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || test;</span>
+    return x -> meFirst(x) || test;
   }
 
   /**
    * Returns a new test combining this test with the free-form test supplied by the
    * specified {@code Supplier}. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test or if the expression supplied by the {@code Supplier}
+   * <i>this</i> test or if the expression supplied by the {@code Supplier}
    * evaluates to {@code true}. The supplier's {@link Supplier#get() get()} method
    * will only be called if the value fails to pass this test. Useful if evaluating
    * the expression could be expensive.
@@ -272,8 +272,8 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @param test the supplier of a boolean expression
    * @return a new test combining this test and the specified free-form test
    */
-  default ComposableIntPredicate orEval(Supplier&lt;Boolean&gt; test) {
-<span class="fc bfc" id="L276" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.get();</span>
+  default ComposableIntPredicate orEval(Supplier<Boolean> test) {
+    return x -> meFirst(x) || test.get();
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -290,12 +290,12 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andAlso(IntPredicate test) {
-<span class="fc bfc" id="L293" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(x);</span>
+    return x -> meFirst(x) && test.test(x);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if it has the specified relation
+   * the new test if it passes <i>this</i> test and if it has the specified relation
    * to the specified value.
    *
    * @param relation the relationship test to combine this test with
@@ -304,12 +304,12 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andAlso(IntRelation relation, int object) {
-<span class="fc bfc" id="L307" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(x, object);</span>
+    return x -> meFirst(x) && relation.exists(x, object);
   }
 
   /**
    * Returns a new test combining this test with the specified free-form test. A
-   * value will pass the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if the provided
+   * value will pass the new test if it passes <i>this</i> test and if the provided
    * expression evaluates to {@code true}.
    *
    * @param test the boolean expression to evaluate if the value fails to pass
@@ -317,13 +317,13 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified free-form test
    */
   default ComposableIntPredicate and(boolean test) {
-<span class="fc bfc" id="L320" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test;</span>
+    return x -> meFirst(x) && test;
   }
 
   /**
    * Returns a new test combining this test with the free-form test supplied by the
    * specified {@code Supplier}. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if the expression supplied by the {@code Supplier}
+   * <i>this</i> test and if the expression supplied by the {@code Supplier}
    * evaluates to {@code true}. The supplier's {@link Supplier#get() get()} method
    * will only be called if the value passes this test. Useful if evaluating the
    * boolean expression could be expensive.
@@ -331,8 +331,8 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @param test the supplier of a boolean expression
    * @return a new test combining this test and the specified free-form test
    */
-  default ComposableIntPredicate andEval(Supplier&lt;Boolean&gt; test) {
-<span class="fc bfc" id="L335" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.get();</span>
+  default ComposableIntPredicate andEval(Supplier<Boolean> test) {
+    return x -> meFirst(x) && test.get();
   }
 
   /**
@@ -344,12 +344,12 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andNot(IntPredicate test) {
-<span class="fc bfc" id="L347" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !test.test(x);</span>
+    return x -> meFirst(x) && !test.test(x);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if it does not have the specified
+   * the new test if it passes <i>this</i> test and if it does not have the specified
    * relation to the specified value.
    *
    * @param relation the relationship test to combine this test with
@@ -359,12 +359,12 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default ComposableIntPredicate andNot(IntRelation relation,
       int object) {
-<span class="pc bpc" id="L362" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) &amp;&amp; !relation.exists(x, object);</span>
+    return x -> meFirst(x) && !relation.exists(x, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. A value will pass
-   * the new test if it passes &lt;i&gt;this&lt;/i&gt; test and if it has a particular relation
+   * the new test if it passes <i>this</i> test and if it has a particular relation
    * to the specified set of values.
    *
    * @param relation the relationship test to combine this test with
@@ -375,59 +375,59 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate and(IntRelation relation,
       Quantifier quantifier,
       int... objects) {
-<span class="fc bfc" id="L378" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
-<span class="fc bfc" id="L379" title="All 2 branches covered.">        &amp;&amp; testAgainstArray(x, relation, quantifier, objects);</span>
+    return x -> meFirst(x)
+        && testAgainstArray(x, relation, quantifier, objects);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   * <i>this</i> test and if another value manages to pass the other test.
    *
    * @param value the value to be tested by the specified predicate
    * @param test the test to combine this test with
-   * @param &lt;T&gt; the type of values being tested by the specified predicate
+   * @param <T> the type of values being tested by the specified predicate
    * @return a new test combining this test and the specified test
    */
-  default &lt;T&gt; ComposableIntPredicate andThat(T value, Predicate&lt;T&gt; test) {
-<span class="fc bfc" id="L393" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
+  default <T> ComposableIntPredicate andThat(T value, Predicate<T> test) {
+    return x -> meFirst(x) && test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   * <i>this</i> test and if another value manages to pass the other test.
    *
    * @param value the value to be tested by the specified predicate
    * @param test the test to combine this test with
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andThat(int value, IntPredicate test) {
-<span class="fc bfc" id="L406" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
+    return x -> meFirst(x) && test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   * <i>this</i> test and if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified relation
-   * @param &lt;S&gt; the type of the subject of the specified relation
-   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param <S> the type of the subject of the specified relation
+   * @param <O> the type of the object of the specified relation
    * @return a new test combining this test and the specified test
    */
-  default &lt;S, O&gt; ComposableIntPredicate andThat(S subject,
-      Relation&lt;S, O&gt; relation,
+  default <S, O> ComposableIntPredicate andThat(S subject,
+      Relation<S, O> relation,
       O object) {
-<span class="fc bfc" id="L424" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
+    return x -> meFirst(x) && relation.exists(subject, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the other test.
+   * <i>this</i> test and if another value manages to pass the other test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
@@ -437,28 +437,28 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate andThat(int subject,
       IntRelation relation,
       int object) {
-<span class="fc bfc" id="L440" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
+    return x -> meFirst(x) && relation.exists(subject, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the negation of the other
+   * <i>this</i> test and if another value manages to pass the negation of the other
    * test.
    *
    * @param value the value to be tested by the specified predicate
    * @param test the test to combine this test with
-   * @param &lt;T&gt; the type of values being tested by the specified predicate
+   * @param <T> the type of values being tested by the specified predicate
    * @return a new test combining this test and the specified test
    */
-  default &lt;T&gt; ComposableIntPredicate andNot(T value, Predicate&lt;T&gt; test) {
-<span class="fc bfc" id="L455" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !test.test(value);</span>
+  default <T> ComposableIntPredicate andNot(T value, Predicate<T> test) {
+    return x -> meFirst(x) && !test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the negation of the other
+   * <i>this</i> test and if another value manages to pass the negation of the other
    * test.
    *
    * @param value the value to be tested by the specified predicate
@@ -466,32 +466,32 @@ public interface ComposableIntPredicate extends IntPredicate {
    * @return a new test combining this test and the specified test
    */
   default ComposableIntPredicate andNot(int value, IntPredicate test) {
-<span class="fc bfc" id="L469" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !test.test(value);</span>
+    return x -> meFirst(x) && !test.test(value);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the negation of the other
+   * <i>this</i> test and if another value manages to pass the negation of the other
    * test.
    *
    * @param subject the subject of the specified relation
    * @param relation the relationship test to combine this test with
    * @param object the object of the specified relation
-   * @param &lt;S&gt; the type of the subject of the specified relation
-   * @param &lt;O&gt; the type of the object of the specified relation
+   * @param <S> the type of the subject of the specified relation
+   * @param <O> the type of the object of the specified relation
    * @return a new test combining this test and the specified test
    */
-  default &lt;S, O&gt; ComposableIntPredicate andNot(S subject,
-      Relation&lt;S, O&gt; relation,
+  default <S, O> ComposableIntPredicate andNot(S subject,
+      Relation<S, O> relation,
       O object) {
-<span class="fc bfc" id="L488" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !relation.exists(subject, object);</span>
+    return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if another value manages to pass the negation of the other
+   * <i>this</i> test and if another value manages to pass the negation of the other
    * test.
    *
    * @param subject the subject of the specified relation
@@ -502,34 +502,34 @@ public interface ComposableIntPredicate extends IntPredicate {
   default ComposableIntPredicate andNot(int subject,
       IntRelation relation,
       int object) {
-<span class="fc bfc" id="L505" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !relation.exists(subject, object);</span>
+    return x -> meFirst(x) && !relation.exists(subject, object);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * <i>this</i> test and if <i>another</i> value ({@code subject}) has a particular
    * relation to the specified set of values.
    *
    * @param subject the subject of the specified {@code Relation}
    * @param relation the relationship test to combine this test with
    * @param quantifier a logical quantifier modulating the relationship
    * @param objects the set of values to test the subject against
-   * @param &lt;S&gt; the type of the subject of the relation
-   * @param &lt;O&gt; the type of the object of the relation
-   * @param &lt;P&gt; the type of the values fed as &quot;objects&quot; into the relation
+   * @param <S> the type of the subject of the relation
+   * @param <O> the type of the object of the relation
+   * @param <P> the type of the values fed as "objects" into the relation
    * @return a new test combining this test and the specified test
    */
-  default &lt;S, O, P extends O&gt; ComposableIntPredicate and(S subject,
-      Relation&lt;S, O&gt; relation, Quantifier quantifier, P... objects) {
-<span class="fc bfc" id="L525" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
-<span class="fc bfc" id="L526" title="All 2 branches covered.">        &amp;&amp; testAgainstArray(subject, relation, quantifier, objects);</span>
+  default <S, O, P extends O> ComposableIntPredicate and(S subject,
+      Relation<S, O> relation, Quantifier quantifier, P... objects) {
+    return x -> meFirst(x)
+        && testAgainstArray(subject, relation, quantifier, objects);
   }
 
   /**
    * Returns a new test combining this test and the specified test. It combines two
    * checks on two different values. A value will pass the new test if it passes
-   * &lt;i&gt;this&lt;/i&gt; test and if &lt;i&gt;another&lt;/i&gt; value ({@code subject}) has a particular
+   * <i>this</i> test and if <i>another</i> value ({@code subject}) has a particular
    * relation to the specified set of values.
    *
    * @param subject the subject of the relation
@@ -540,13 +540,12 @@ public interface ComposableIntPredicate extends IntPredicate {
    */
   default ComposableIntPredicate and(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-<span class="fc bfc" id="L543" title="All 2 branches covered.">    return x -&gt; meFirst(x)</span>
-<span class="fc bfc" id="L544" title="All 2 branches covered.">        &amp;&amp; testAgainstArray(subject, relation, quantifier, objects);</span>
+    return x -> meFirst(x)
+        && testAgainstArray(subject, relation, quantifier, objects);
   }
 
   private boolean meFirst(int i) {
-<span class="fc" id="L548">    return ComposableIntPredicate.this.test(i);</span>
+    return ComposableIntPredicate.this.test(i);
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

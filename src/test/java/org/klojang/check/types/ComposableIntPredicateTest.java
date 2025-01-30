@@ -1,4 +1,4 @@
-package org.klojang.check.relation;
+package org.klojang.check.types;
 
 import org.junit.Test;
 import org.klojang.check.Check;
@@ -6,7 +6,7 @@ import org.klojang.check.Check;
 import java.util.List;
 
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.Quantifier.*;
+import static org.klojang.check.types.Quantifier.*;
 
 public class ComposableIntPredicateTest {
   @Test
@@ -125,7 +125,7 @@ public class ComposableIntPredicateTest {
 
   @Test
   public void orAll00() {
-    Check.that(18).is(Compose.invalidInt().or(gt(), allOf(), 1, 2, 3, 4));
+    Check.that(18).is(invalidInt().or(gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test
@@ -215,7 +215,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotPredicate103() {
-    Check.that(42).is(Compose.invalidInt().orNot("", empty()));
+    Check.that(42).is(invalidInt().orNot("", empty()));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -370,7 +370,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void andAlsoIntRelation02() {
-    Check.that(23).is(Compose.invalidInt().andAlso(lt(), 50));
+    Check.that(23).is(invalidInt().andAlso(lt(), 50));
   }
 
   @Test
@@ -430,7 +430,7 @@ public class ComposableIntPredicateTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void andNotPredicate02() {
-    Check.that(0).is(Compose.validInt().andNot(zero()));
+    Check.that(0).is(validInt().andNot(zero()));
   }
 
   @Test
@@ -465,12 +465,12 @@ public class ComposableIntPredicateTest {
 
   @Test
   public void andAll00() {
-    Check.that(18).is(Compose.validInt().and(gt(), allOf(), 1, 2, 3, 4));
+    Check.that(18).is(validInt().and(gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void andAll01() {
-    Check.that(18).is(Compose.invalidInt().and(gt(), allOf(), 1, 2, 3, 4));
+    Check.that(18).is(invalidInt().and(gt(), allOf(), 1, 2, 3, 4));
   }
 
   @Test(expected = IllegalArgumentException.class)

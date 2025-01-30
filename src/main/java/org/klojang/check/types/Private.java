@@ -1,7 +1,4 @@
-package org.klojang.check.relation;
-
-import java.util.function.IntPredicate;
-import java.util.function.Predicate;
+package org.klojang.check.types;
 
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;

@@ -1,4 +1,4 @@
-package org.klojang.check.relation;
+package org.klojang.check.types;
 
 import org.klojang.check.Check;
 import org.klojang.check.CommonChecks;
@@ -7,7 +7,7 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static org.klojang.check.relation.Private.testAgainstArray;
+import static org.klojang.check.types.Private.testAgainstArray;
 
 /**
  * An extension of {@link Predicate} that acts as a bridge between {@code Predicate} and the relational

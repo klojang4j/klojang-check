@@ -1,4 +1,4 @@
-package org.klojang.check.relation;
+package org.klojang.check.types;
 
 import org.junit.Test;
 import org.klojang.check.Check;
@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.relation.Compose.*;
-import static org.klojang.check.relation.Quantifier.*;
+import static org.klojang.check.types.Compose.*;
+import static org.klojang.check.types.Quantifier.*;
 
 public class ComposablePredicateTest {
 

@@ -1,7 +1,7 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.relation.IntRelation;
+import org.klojang.check.types.IntRelation;
 
 import java.io.IOException;
 import java.util.function.IntFunction;

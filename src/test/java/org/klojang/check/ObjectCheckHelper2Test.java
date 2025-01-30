@@ -1,8 +1,8 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.relation.IntObjRelation;
-import org.klojang.check.relation.IntRelation;
+import org.klojang.check.types.IntObjRelation;
+import org.klojang.check.types.IntRelation;
 
 import java.io.IOException;
 import java.time.DayOfWeek;

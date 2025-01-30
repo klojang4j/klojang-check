@@ -1,7 +1,7 @@
 package org.klojang.check;
 
-import org.klojang.check.relation.IntObjRelation;
-import org.klojang.check.relation.IntRelation;
+import org.klojang.check.types.IntObjRelation;
+import org.klojang.check.types.IntRelation;
 import org.klojang.check.x.msg.MsgArgs;
 
 import java.util.function.Function;

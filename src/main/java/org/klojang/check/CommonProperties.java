@@ -1,6 +1,6 @@
 package org.klojang.check;
 
-import org.klojang.check.relation.Relation;
+import org.klojang.check.types.Relation;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;

@@ -1,10 +1,9 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.relation.Relation;
+import org.klojang.check.types.Relation;
 
 import java.time.DayOfWeek;
-import java.util.Comparator;
 import java.util.function.IntPredicate;
 
 import static java.time.DayOfWeek.*;

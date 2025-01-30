@@ -2,7 +2,7 @@ package org.klojang.check;
 
 import org.klojang.check.aux.Emptyable;
 import org.klojang.check.aux.Result;
-import org.klojang.check.relation.*;
+import org.klojang.check.types.*;
 import org.klojang.check.x.CheckImpls;
 import org.klojang.check.x.StringCheckImpls;
 
@@ -18,26 +18,25 @@ import static org.klojang.check.x.StringCheckImpls.NUMERICALS;
 import static org.klojang.check.x.StringCheckImpls.PARSABLES;
 
 /**
- * Defines various common checks on arguments, variables, object state, program
- * input, etc. The checks have short, informative error messages associated with
- * them, so you don't have to invent them yourself. Unless specified otherwise they
+ * Defines various common checks on arguments, variables, object state, program input, etc. The checks have
+ * short, informative error messages associated with them, so you don't have to invent them yourself. Unless
+ * specified otherwise they
  * <i>only</i> test what they are documented to be testing. Many of them do nothing
- * but return a method reference (e.g.
- * {@link Collection#contains(Object) Collection::contains}). More specifically:
+ * but return a method reference (e.g. {@link Collection#contains(Object) Collection::contains}). More
+ * specifically:
  * <b>the checks will not execute a preliminary null check</b> on the argument
- * before proceeding with the actual check. If the argument might be {@code null},
- * always perform a {@link #notNull()} check first. Otherwise, a raw, unprocessed
- * {@link NullPointerException} <i>can and will</i> be thrown from the code
- * underlying Klojang Check.
+ * before proceeding with the actual check. If the argument might be {@code null}, always perform a
+ * {@link #notNull()} check first. Otherwise, a raw, unprocessed {@link NullPointerException} <i>can and
+ * will</i> be thrown from the code underlying Klojang Check.
  *
  * <blockquote><pre>{@code
  * Check.notNull(file).is(readable());
  * }</pre></blockquote>
  *
  * <p>For ease of reading, the documentation for the checks will mostly use the term
- * "argument" for the value being tested. Constantly repeating "argument, field,
- * variable, program argument, system property, environment variable, etc." would not
- * improve the quality and clarity of the documentation.
+ * "argument" for the value being tested. Constantly repeating "argument, field, variable, program argument,
+ * system property, environment variable, etc." would not improve the quality and clarity of the
+ * documentation.
  *
  * @author Ayco Holleman
  */
@@ -52,8 +51,7 @@ public final class CommonChecks {
   //////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Verifies that the argument is null. Equivalent to
-   * {@link Objects#isNull(Object) Objects::isNull}.
+   * Verifies that the argument is null. Equivalent to {@link Objects#isNull(Object) Objects::isNull}.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -63,12 +61,11 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is not null. Equivalent to
-   * {@link Objects#nonNull(Object) Objects::nonNull}. Note that {@link #NULL()},
-   * {@link #yes()} and {@link #empty()} are the only checks that come with their
-   * negation: {@code notNull()}, {@link #no()} and {@link #notEmpty()}. The other
-   * checks need to be inverted using the {@code isNot(...)} and {@code notHas(...)}
-   * methods of {@link ObjectCheck} and {@link IntCheck}.
+   * Verifies that the argument is not null. Equivalent to {@link Objects#nonNull(Object) Objects::nonNull}.
+   * Note that {@link #NULL()}, {@link #yes()} and {@link #empty()} are the only checks that come with their
+   * negation: {@code notNull()}, {@link #no()} and {@link #notEmpty()}. The other checks need to be inverted
+   * using the {@code isNot(...)} and {@code notHas(...)} methods of {@link ObjectCheck} and
+   * {@link IntCheck}.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -144,8 +141,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is not empty. More precisely: it verifies the
-   * negation of the {@link #empty()} test.
+   * Verifies that the argument is not empty. More precisely: it verifies the negation of the {@link #empty()}
+   * test.
    *
    * <p>This check (implicitly) performs a null check and can be safely executed
    * without or instead of executing the {@link #notNull()} check first.
@@ -158,10 +155,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is not {@code null} and, if it is an array,
-   * collection or map, that it does not contain any {@code null} values. It could
-   * still be a zero-length array or zero-size collection or map, however. For maps,
-   * both keys and values are tested for {@code null}.
+   * Verifies that the argument is not {@code null} and, if it is an array, collection or map, that it does
+   * not contain any {@code null} values. It could still be a zero-length array or zero-size collection or
+   * map, however. For maps, both keys and values are tested for {@code null}.
    *
    * <p>This check (implicitly) performs a null check and can be safely executed
    * without or instead of executing the {@link #notNull()} check first.
@@ -174,8 +170,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is recursively non-empty. A value is defined to be
-   * deep-not-empty if any of the following applies:
+   * Verifies that the argument is recursively non-empty. A value is defined to be deep-not-empty if any of
+   * the following applies:
    *
    * <ul>
    *   <li>it is a non-empty {@link CharSequence}
@@ -208,8 +204,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is {@code null} or contains whitespace only. Probably
-   * more useful when called from an {@code isNot} method.
+   * Verifies that the argument is {@code null} or contains whitespace only. Probably more useful when called
+   * from an {@code isNot} method.
    *
    * <p>This check (implicitly) performs a null check and can be safely executed
    * without or instead of executing the {@link #notNull()} check first.
@@ -221,8 +217,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a string consists of digits only (without '+' or '-' sign), no
-   * leading zeros, and can be parsed into an integer (by implication non-negative).
+   * Verifies that a string consists of digits only (without '+' or '-' sign), no leading zeros, and can be
+   * parsed into an integer (by implication non-negative).
    *
    * @return a function implementing the test described above
    */
@@ -231,9 +227,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a string consists of digits only (without '+' or '-' sign),  no
-   * leading zeros, and can be parsed into a half-precision integer (by implication
-   * non-negative). Useful, for example, for validating TCP port numbers.
+   * Verifies that a string consists of digits only (without '+' or '-' sign),  no leading zeros, and can be
+   * parsed into a half-precision integer (by implication non-negative). Useful, for example, for validating
+   * TCP port numbers.
    *
    * @return a function implementing the test described above
    */
@@ -256,13 +252,13 @@ public final class CommonChecks {
    */
   public static <T> ComposablePredicate<T> array() {
     return x -> x.getClass() == Class.class
-        ? ((Class<?>) x).isArray()
-        : x.getClass().isArray();
+                ? ((Class<?>) x).isArray()
+                : x.getClass().isArray();
   }
 
   /**
-   * Verifies that the argument is an existing, regular file. NB To verify that a
-   * path <i>string</i> is valid, execute:
+   * Verifies that the argument is an existing, regular file. NB To verify that a path <i>string</i> is valid,
+   * execute:
    *
    * <blockquote><pre>{@code
    * Check.that(path).has(File::new, regularFile());
@@ -330,10 +326,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is a non-empty {@code Optional}. Note that this check
-   * differs from the {@link #empty()} check in that it <i>only</i> verifies that the
-   * {@code Optional} contains a value. The {@code empty()} check (in its negation)
-   * additionally requires that the value is itself non-empty.
+   * Verifies that the argument is a non-empty {@code Optional}. Note that this check differs from the
+   * {@link #empty()} check in that it <i>only</i> verifies that the {@code Optional} contains a value. The
+   * {@code empty()} check (in its negation) additionally requires that the value is itself non-empty.
    *
    * @param <T> the type of the value contained in the {@code Optional}
    * @return a function implementing the test described above
@@ -343,10 +338,10 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a {@linkplain Result result} is available. Note that this check
-   * differs from the {@link #empty()} check in that it <i>only</i> verifies that
-   * {@code Result} contains a value. The {@code empty()} check (in its negation)
-   * additionally requires that the value it contains is itself non-empty.
+   * Verifies that a {@linkplain Result result} is available. Note that this check differs from the
+   * {@link #empty()} check in that it <i>only</i> verifies that {@code Result} contains a value. The
+   * {@code empty()} check (in its negation) additionally requires that the value it contains is itself
+   * non-empty.
    *
    * @param <T> the type of the value contained in the {@code Result}
    * @return a function implementing the test described above
@@ -436,8 +431,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is greater than or equal to the specified {@code int}
-   * value.
+   * Verifies that the argument is greater than or equal to the specified {@code int} value.
    *
    * @return a function implementing the test described above
    */
@@ -455,8 +449,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is less than or equal to the specified {@code int}
-   * value.
+   * Verifies that the argument is less than or equal to the specified {@code int} value.
    *
    * @return a function implementing the test described above
    */
@@ -481,11 +474,9 @@ public final class CommonChecks {
    * Verifies that the argument equals the provided value. Equivalent to
    * {@link Object#equals(Object) Object::equals}. Note that this method is
    * <i>not</i> equivalent to {@link Objects#equals(Object, Object) Objects::equals}
-   * and is therefore not null-safe. Execute a {@linkplain #notNull() null check}
-   * first, if necessary.
+   * and is therefore not null-safe. Execute a {@linkplain #notNull() null check} first, if necessary.
    *
-   * @param <S> the type of the subject of the relationship (which is the value
-   *     being tested)
+   * @param <S> the type of the subject of the relationship (which is the value being tested)
    * @param <O> the type of the object of the relationship
    * @return a function implementing the test described above
    */
@@ -494,9 +485,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument equals some value. Equivalent to
-   * {@link Object#equals(Object) Object::equals}. Use this check instead of
-   * {@link #EQ()} if you want the compiler to enforce type equality between subject
+   * Verifies that the argument equals some value. Equivalent to {@link Object#equals(Object) Object::equals}.
+   * Use this check instead of {@link #EQ()} if you want the compiler to enforce type equality between subject
    * and object.
    *
    * @param <T> the type of the objects being compared
@@ -556,10 +546,9 @@ public final class CommonChecks {
   /**
    * Verifies that a value references the same object as another value.
    *
-   * @param <S> the type of the subject of the relationship (which is the value
-   *     being tested) (the subject of the {@code Relation})
-   * @param <O> the type of the value to compare it with (the object of the
-   *     {@code Relation})
+   * @param <S> the type of the subject of the relationship (which is the value being tested) (the subject of
+   *            the {@code Relation})
+   * @param <O> the type of the value to compare it with (the object of the {@code Relation})
    * @return a function implementing the test described above
    */
   public static <S, O> Relation<S, O> sameAs() {
@@ -572,8 +561,7 @@ public final class CommonChecks {
    * <p>This check (implicitly) performs a null check and can be safely executed
    * without or instead of executing the {@link #notNull()} check first.
    *
-   * @param <T> the type of the subject of the relationship (which is the value
-   *     being tested)
+   * @param <T> the type of the subject of the relationship (which is the value being tested)
    * @return a function implementing the test described above
    */
   public static <T> Relation<T, T> nullOr() {
@@ -583,8 +571,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is an instance of a particular class or interface.
    *
-   * @param <S> the type of the subject of the relation (which is the value being
-   *     tested)
+   * @param <S> the type of the subject of the relation (which is the value being tested)
    * @return a function implementing the test described above
    */
   public static <S> Relation<S, Class<?>> instanceOf() {
@@ -592,8 +579,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is a supertype of the provided type. In other words,
-   * the provided type should extend, implement or equal the argument. Equivalent to
+   * Verifies that the argument is a supertype of the provided type. In other words, the provided type should
+   * extend, implement or equal the argument. Equivalent to
    * {@link Class#isAssignableFrom(Class) Class::isAssignableFrom}.
    *
    * @param <S> the type of the subject's class
@@ -605,8 +592,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is a subtype of the provided type. In other words,
-   * the argument should extend, implement or equal the provided type.
+   * Verifies that the argument is a subtype of the provided type. In other words, the argument should extend,
+   * implement or equal the provided type.
    *
    * @param <S> the type of the subject's class
    * @param <O> the type of the object's class
@@ -664,8 +651,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Alias for {@link #in()}. Note that this method will even report itself to be the
-   * "in" check.
+   * Alias for {@link #in()}. Note that this method will even report itself to be the "in" check.
    *
    * @param <S> the type of the argument
    * @param <O> the type of the {@code Collection}
@@ -700,8 +686,7 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is an element of an array.
    *
-   * @param <S> the type of the subject of the relationship (which is the value
-   *     being tested)
+   * @param <S> the type of the subject of the relationship (which is the value being tested)
    * @param <O> the component type of the array
    * @return a function implementing the test described above
    */
@@ -710,16 +695,15 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a {@code Collection} argument contains all the elements of the
-   * specified collection. Equivalent to
-   * {@link Collection#containsAll(Collection) Collection::containsAll}.
+   * Verifies that a {@code Collection} argument contains all the elements of the specified collection.
+   * Equivalent to {@link Collection#containsAll(Collection) Collection::containsAll}.
    *
    * <blockquote><pre>{@code
    * Check.that(List.of(1, 2, 3)).is(enclosing(), Set.of(1, 2)); // true
    * Check.that(List.of(1, 2)).is(enclosing(), Set.of(1, 2, 3)); // false
    * }</pre></blockquote>
    *
-   * @param <E> The type of the elements in the {@code Collection}
+   * @param <E>  The type of the elements in the {@code Collection}
    * @param <C0> The type of the argument (the subject of the {@code Relation})
    * @param <C1> The type of the object of the {@code Relation}
    * @return a function implementing the test described above
@@ -730,15 +714,14 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a {@code Collection} argument is a subset or sublist of another
-   * {@code Collection}.
+   * Verifies that a {@code Collection} argument is a subset or sublist of another {@code Collection}.
    *
    * <blockquote><pre>{@code
    * Check.that(List.of(1, 2, 3)).is(enclosedBy(), Set.of(1, 2)); // false
    * Check.that(List.of(1, 2)).is(enclosedBy(), Set.of(1, 2, 3)); // true
    * }</pre></blockquote>
    *
-   * @param <E> The type of the elements in the {@code Collection}
+   * @param <E>  The type of the elements in the {@code Collection}
    * @param <C0> The type of the argument (the subject of the {@code Relation})
    * @param <C1> The type of the object of the {@code Relation}
    * @return a function implementing the test described above
@@ -788,8 +771,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument matches the specified pattern (that is, the pattern
-   * fully describes the string).
+   * Verifies that the argument matches the specified pattern (that is, the pattern fully describes the
+   * string).
    *
    * @return a function implementing the test described above
    * @see #matches()
@@ -799,8 +782,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument contains the specified pattern (that is, the pattern
-   * can be found somewhere in the string).
+   * Verifies that the argument contains the specified pattern (that is, the pattern can be found somewhere in
+   * the string).
    *
    * @return a function implementing the test described above
    * @see #containsMatch()
@@ -810,10 +793,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument matches the specified pattern (that is, the pattern
-   * fully describes the string). The subject of the returned {@code Relation} is the
-   * string to match; the object of the {@code Relation} is a regular expression to
-   * be compiled into a {@link Pattern}.
+   * Verifies that the argument matches the specified pattern (that is, the pattern fully describes the
+   * string). The subject of the returned {@code Relation} is the string to match; the object of the
+   * {@code Relation} is a regular expression to be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
    * Check.that("abcd123").is(matches(), "^\\w{4}\\d{3}$"); // yes
@@ -828,10 +810,9 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument contains the specified pattern (that is, the pattern
-   * can be found somewhere in the string). The subject of the returned
-   * {@code Relation} is the string to match; the object of the {@code Relation} is a
-   * regular expression to be compiled into a {@link Pattern}.
+   * Verifies that the argument contains the specified pattern (that is, the pattern can be found somewhere in
+   * the string). The subject of the returned {@code Relation} is the string to match; the object of the
+   * {@code Relation} is a regular expression to be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
    * Check.that("abcd123").is(containsMatch(), "\\d{3}"); // yes
@@ -846,11 +827,10 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a string can be parsed into a number of the specified type without
-   * loss of information. The provided type must be one of the <i>primitive</i>
-   * number types: {@code long}, {@code int}, {@code short}, {@code byte},
-   * {@code double} or {@code float}. Specifying a wrapper type (e.g.
-   * {@code Integer}) will result in a {@link CorruptCheckException}.
+   * Verifies that a string can be parsed into a number of the specified type without loss of information. The
+   * provided type must be one of the <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
+   * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g. {@code Integer}) will
+   * result in a {@link CorruptCheckException}.
    *
    * <blockquote><pre>{@code
    * Check.that("123").is(numerical(), int.class); // yes
@@ -874,16 +854,15 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a string can be parsed into a {@code Number} of the specified type
-   * without loss of information. The provided type must be one of the
+   * Verifies that a string can be parsed into a {@code Number} of the specified type without loss of
+   * information. The provided type must be one of the
    * <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
-   * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g.
-   * {@code Integer}) will result in a {@link CorruptCheckException}. Contrary to the
-   * {@link #numerical()} check, this check allows the string to contain a fractional
-   * part even if the target type is an integral type (like {@code byte}), as long as
-   * it consists of zeros only. Scientific notation is allowed, too, as long as the
-   * effective fractional part consists of zeros only. For {@code Double} and
-   * {@code Float} there is no difference between the two checks.
+   * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g. {@code Integer}) will
+   * result in a {@link CorruptCheckException}. Contrary to the {@link #numerical()} check, this check allows
+   * the string to contain a fractional part even if the target type is an integral type (like {@code byte}),
+   * as long as it consists of zeros only. Scientific notation is allowed, too, as long as the effective
+   * fractional part consists of zeros only. For {@code Double} and {@code Float} there is no difference
+   * between the two checks.
    *
    * <blockquote><pre>{@code
    * Check.that("123").is(parsableAs(), int.class); // yes
@@ -907,8 +886,8 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a string value equals, ignoring case, the specified string.
-   * Equivalent to {@link String#equalsIgnoreCase(String) String::equalsIgnoreCase}.
+   * Verifies that a string value equals, ignoring case, the specified string. Equivalent to
+   * {@link String#equalsIgnoreCase(String) String::equalsIgnoreCase}.
    *
    * @return a function implementing the test described above
    */
@@ -950,14 +929,13 @@ public final class CommonChecks {
   //////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Verifies that the argument is a valid index into the specified array,
-   * {@code List} or {@code String}. No preliminary check is done to ensure the
-   * provided object actually is an array, {@code List} or {@code String}. A
-   * {@link CorruptCheckException} is thrown if it is not. Execute the
-   * {@link #instanceOf()} or {@link #array()} check first, if necessary.
+   * Verifies that the argument is a valid index into the specified array, {@code List} or {@code String}. No
+   * preliminary check is done to ensure the provided object actually is an array, {@code List} or
+   * {@code String}. A {@link CorruptCheckException} is thrown if it is not. Execute the {@link #instanceOf()}
+   * or {@link #array()} check first, if necessary.
    *
-   * @param <T> the type of the object of the {@code IntObjRelation} - must be a
-   *     {@code String}, {@code List} or array
+   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String}, {@code List}
+   *            or array
    * @return a function implementing the test described above
    */
   public static <T> IntObjRelation<T> indexOf() {
@@ -965,17 +943,16 @@ public final class CommonChecks {
   }
 
   /**
-   * Alias for {@link #indexOf()}. Can be used if the class you are working in
-   * already contains an {@code indexOf()} method. Note that this will report itself
-   * to be the {@code indexOf()} check:
+   * Alias for {@link #indexOf()}. Can be used if the class you are working in already contains an
+   * {@code indexOf()} method. Note that this will report itself to be the {@code indexOf()} check:
    *
    * <blockquote><pre>{@code
    * Check.that(42, "foo").is(indexExclusiveOf(), new int[10], "${tag} did not pass the ${test}() test");
    * // "foo did not pass the indexOf() test"
    * }</pre></blockquote>
    *
-   * @param <T> the type of the object of the {@code IntObjRelation} - must be a
-   *     {@code String}, {@code List} or array
+   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String}, {@code List}
+   *            or array
    * @return a function implementing the test described above
    */
   public static <T> IntObjRelation<T> indexExclusiveOf() {
@@ -985,16 +962,14 @@ public final class CommonChecks {
   /**
    * Verifies that a value can be used as a "from" or "to" index in operations like
    * {@link Arrays#copyOfRange(int[], int, int) Arrays.copyOfRange()},
-   * {@link String#substring(int, int) String.substring()} and
-   * {@link List#subList(int, int) List.subList()}. These operations allow both the
-   * "from" index and the "to" index to be equal to the length of the array, string
-   * or list. No preliminary check is done to ensure the provided object actually is
-   * an array, {@code List} or {@code String}. A {@link CorruptCheckException} is
-   * thrown if it is not. Execute the {@link #instanceOf()} or {@link #array()} check
-   * first, if necessary.
+   * {@link String#substring(int, int) String.substring()} and {@link List#subList(int, int) List.subList()}.
+   * These operations allow both the "from" index and the "to" index to be equal to the length of the array,
+   * string or list. No preliminary check is done to ensure the provided object actually is an array,
+   * {@code List} or {@code String}. A {@link CorruptCheckException} is thrown if it is not. Execute the
+   * {@link #instanceOf()} or {@link #array()} check first, if necessary.
    *
-   * @param <T> the type of the object of the {@code IntObjRelation} - must be a
-   *     {@code String}, {@code List} or array
+   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String}, {@code List}
+   *            or array
    * @return a function implementing the test described above
    * @see Check#fromTo(Object[], int, int)
    */
@@ -1016,6 +991,63 @@ public final class CommonChecks {
       }
       return false;
     };
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // Special
+  //////////////////////////////////////////////////////////////////////////////////
+
+
+  /**
+   * Returns a {@code ComposablePredicate} that always evaluates to {@code true}. Can be used as the first of
+   * a series of AND-joined checks:
+   *
+   * <blockquote><pre>{@code
+   * Check.that(color).is(valid().and(equalTo(), noneOf(), GREEN, BLUE, YELLOW));
+   * }</pre></blockquote>
+   *
+   * @param <T> the type of the value being tested (which is ignored by the returned
+   *            {@code ComposablePredicate})
+   * @return a {@code ComposablePredicate} that always evaluates to {@code true}
+   */
+  public static <T> ComposablePredicate<T> valid() {
+    return x -> true;
+  }
+
+  /**
+   * Returns a {@code ComposableIntPredicate} that always evaluates to {@code true}. Can be used as the first
+   * of a series of AND-joined checks.
+   *
+   * @return a {@code ComposableIntPredicate} that always evaluates to {@code true}
+   */
+  public static ComposableIntPredicate validInt() {
+    return x -> true;
+  }
+
+  /**
+   * Returns a {@code ComposablePredicate} that always evaluates to {@code false}. Can be used as the first of
+   * a series of OR-joined checks:
+   *
+   * <blockquote><pre>{@code
+   * Check.that(color).is(invalid().or(equalTo(), anyOf(), GREEN, BLUE, YELLOW));
+   * }</pre></blockquote>
+   *
+   * @param <T> the type of the value being tested (which is ignored by the returned
+   *            {@code ComposablePredicate})
+   * @return a {@code ComposablePredicate} that always evaluates to {@code false}
+   */
+  public static <T> ComposablePredicate<T> invalid() {
+    return x -> false;
+  }
+
+  /**
+   * Returns a {@code ComposableIntPredicate} that always evaluates to {@code false}. Can be used as the first
+   * of a series of OR-joined checks.
+   *
+   * @return a {@code ComposableIntPredicate} that always evaluates to {@code false}
+   */
+  public static ComposableIntPredicate invalidInt() {
+    return x -> false;
   }
 
 }

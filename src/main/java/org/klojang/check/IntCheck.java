@@ -3,9 +3,9 @@ package org.klojang.check;
 import org.klojang.check.fallible.FallibleIntConsumer;
 import org.klojang.check.fallible.FallibleIntFunction;
 import org.klojang.check.fallible.FallibleIntUnaryOperator;
-import org.klojang.check.relation.IntObjRelation;
-import org.klojang.check.relation.IntRelation;
-import org.klojang.check.relation.Relation;
+import org.klojang.check.types.IntObjRelation;
+import org.klojang.check.types.IntRelation;
+import org.klojang.check.types.Relation;
 import org.klojang.check.x.msg.MsgArgs;
 
 import java.util.function.*;
