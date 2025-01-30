@@ -83,6 +83,16 @@ Check.that(i).is(indexOf(), list);
 Check.that(employee.isManager()).is(yes());
 ```
 
+### The ComposablePredicate and Relation Interfaces
+
+What exactly is going on in the above examples? You probably, and correctly, suspected
+`zero()` and `writable()` to be predicates (instances of 
+[Predicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html)
+or [IntPredicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntPredicate.html)).
+But what about `gte()` and `substringOf()`?
+
+The `is(...)` methods can take two types of checks: 
+
 ### Custom Checks
 
 Of course, you can also provide your own checks:
@@ -140,9 +150,9 @@ Check.that(length, "length").is(gte(), 0);
 // error message: length must be >= 0 (was -42)
 ```
 
-This is especially useful when checking multiple method arguments within a method as the
-error message makes it immediately clear which argument failed to pass a test. The tag
-could be the name of the method parameter, but it can really be anything you like. The 
+This is especially useful when checking multiple method arguments as the
+error message will make it immediately clear which argument failed to pass a test. The tag
+could be the name of the method parameter, but it can really be anything you like. The
 [Tag](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/Tag.html)
 class contains string constants for some commonly used argument names:
 
@@ -224,11 +234,12 @@ By default, <i>Klojang Check</i> will throw an `IllegalArgumentException` if the
 value fails any of the checks following `Check.that(...)`. This can be customized in two
 ways:
 
-1. by providing a `Function` that takes a string (the error message) and returns the
-   exception to be thrown;
-2. by providing a `Supplier` that supplies the exception to be thrown.
+1. By using the `Check.on(...)` methods in stead of the `Check.that(...)` methods. These
+   methods allow you to provide a `Function` that takes a string (the error message) and
+   returns the exception to be thrown.
+2. By providing a `Supplier` that supplies the exception to be thrown.
 
-Here is an example of each of these:
+Here is an example of each:
 
 ```java
 // Error message "stale connection" is passed to the constructor of IllegalStateException:
@@ -247,33 +258,85 @@ Check.on(STATE, connection.isOpen()).is(yes(), "stale connection");
 Check.that(connection.isOpen()).is(yes(), illegalState("stale connection"));
 ```
 
+### Returning the Validated Value
+
+Once a value has passed all checks, you can assign it to a field or variable using
+[ObjectCheck::ok()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/ObjectCheck.html#ok())
+or [IntCheck::ok()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/IntCheck.html#ok()):
+
+```java
+this.person = Check.notNull(person).has(Person::age, gte(), 18).ok();
+```
+
+You can optionally pass a transformation function to the `ok()` method:
+
+```java
+this.age = Check.notNull(person).ok(Person::age);
+```
+
+The transformation function is allowed to throw a checked exception, so even at this late
+stage the value may turn out to be invalid after all. This is because what gets passed to
+the `ok()` method is not a
+[Function](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html)
+or [ToIntFunction](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/ToIntFunction.html)
+but a [FallibleFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleFunction.html)
+or [FallibleToIntFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleToIntFunction.html),
+respectively.
+
 ### Composite Checks
 
-Sometimes you will want to do tests of the form _**x must be either A or B**_, or of the
-form
-_**either x must be A or y must be B**_:
+Sometimes, proper validation can only be done through a combination of checks.
+Schematically, this is what you would want to accomplish:
+
+- _**x must be either A or B**_
+- or: _**either x must be A or y must be B**_:
+
+In the first case you want to provide two alternative checks for the same value. In the
+second case you want to validate two interrelated values.
+
+<i>Klojang Check</i> enables you to do this using the `default` methods on the
+[ComposablePredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposablePredicate.html)
+and [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposableIntPredicate.html)
+interfaces. Here we use the `or(...)` method:
 
 ```java
 Check.that(collection).is(empty().or(contains(), "FOO"));
 Check.that(collection1).is(empty().or(collection2, contains(), "FOO"));
-```
-
-The latter example nicely maintains the <i>Klojang Check</i> idiom, but if you prefer
-your code with less syntactical sugar, you can also just write:
-
-```java
+// or, if you prefer a little less syntactic sugar:
 Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 ```
+
+But what if you want your first check to be a
+[Relation](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html),
+like [gte()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte()) 
+or [instanceOf()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#instanceOf())?
+In that case you can start your composition with one of four special checks:
+[valid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#valid()),
+[validInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#validInt()),
+[invalid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalid()),
+and [invalidInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalidInt()).
+The first two always pass and can be used as the start of a series of AND-joined checks.
+The last two always fail and can be used as the start of a series of OR-joined checks.
+
+
+```java
+Check.that(collection).is(invalid().or(contains(), "FOO").or(contains(), "BAR"));
+Check.that(collection).is(valid().and(contains(), "FOO").and(contains(), "BAR"));
+```
+
+### Logical Quantifiers
 
 When combining checks you can also employ
 [logical quantifiers](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Quantifier.html):
 
 ```java
-import static org.klojang.check.relation.Quantifier.noneOf;
-import static org.klojang.check.CommonChecks.notEmpty;
-import static org.klojang.check.CommonChecks.contains;
 
-Check.that(collection).is(notEmpty().and(contains(), noneOf(), "FOO", "BAR"));
+
+Check.that(collection).
+
+is(notEmpty().
+
+and(contains(),noneOf(),"FOO","BAR"));
 ```
 
 ## About
