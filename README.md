@@ -91,7 +91,9 @@ What exactly is going on in the above examples? You probably, and correctly, sus
 or [IntPredicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntPredicate.html)).
 But what about `gte()` and `substringOf()`?
 
-The `is(...)` methods can take two types of checks: 
+The `is(...)` methods can take two basic types of checks: 
+[ComposablePredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html)
+and [Relation](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/Relation.html).
 
 ### Custom Checks
 
