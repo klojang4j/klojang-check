@@ -1,4 +1,4 @@
-package org.klojang.check.aux;
+package org.klojang.check.extra;
 
 import org.klojang.check.Check;
 import org.klojang.check.CommonExceptions;
@@ -6,7 +6,7 @@ import org.klojang.check.CommonExceptions;
 import java.util.Collection;
 
 import static java.util.stream.Collectors.joining;
-import static org.klojang.check.aux.DuplicateValueException.Usage.VALUE;
+import static org.klojang.check.extra.DuplicateValueException.Usage.VALUE;
 
 /**
  * Indicates that insertion into a {@linkplain java.util.Map Map}, {@linkplain java.util.Set Set} or some

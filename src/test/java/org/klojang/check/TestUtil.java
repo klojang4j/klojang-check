@@ -1,12 +1,11 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.aux.Result;
+import org.klojang.check.extra.Result;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import static org.junit.Assert.*;
 

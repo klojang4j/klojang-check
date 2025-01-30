@@ -1,11 +1,11 @@
-package org.klojang.check.aux;
+package org.klojang.check.extra;
 
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.klojang.check.aux.DuplicateValueException.Usage.*;
+import static org.klojang.check.extra.DuplicateValueException.Usage.*;
 
 public class DuplicateValueExceptionTest {
 

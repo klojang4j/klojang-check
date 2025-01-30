@@ -2,7 +2,7 @@ package org.klojang.check.x.msg;
 
 import org.junit.Test;
 import org.klojang.check.Check;
-import org.klojang.check.aux.Result;
+import org.klojang.check.extra.Result;
 
 import java.io.File;
 import java.io.IOException;

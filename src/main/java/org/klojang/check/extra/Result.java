@@ -1,4 +1,4 @@
-package org.klojang.check.aux;
+package org.klojang.check.extra;
 
 import org.klojang.check.Check;
 import org.klojang.check.CommonChecks;

@@ -1,7 +1,7 @@
 package org.klojang.check;
 
-import org.klojang.check.aux.Emptyable;
-import org.klojang.check.aux.Result;
+import org.klojang.check.extra.Emptyable;
+import org.klojang.check.extra.Result;
 import org.klojang.check.types.*;
 import org.klojang.check.x.CheckImpls;
 import org.klojang.check.x.StringCheckImpls;

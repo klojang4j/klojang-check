@@ -4,7 +4,7 @@
  */
 module org.klojang.check {
   exports org.klojang.check;
-  exports org.klojang.check.aux;
+  exports org.klojang.check.extra;
   exports org.klojang.check.fallible;
   exports org.klojang.check.types;
 }

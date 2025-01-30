@@ -1,7 +1,7 @@
 package org.klojang.check;
 
 import org.junit.Test;
-import org.klojang.check.aux.DuplicateValueException;
+import org.klojang.check.extra.DuplicateValueException;
 
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonExceptions.*;

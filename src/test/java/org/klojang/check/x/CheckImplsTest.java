@@ -3,7 +3,7 @@ package org.klojang.check.x;
 import org.junit.Test;
 import org.klojang.check.Check;
 import org.klojang.check.CorruptCheckException;
-import org.klojang.check.aux.Result;
+import org.klojang.check.extra.Result;
 
 import static org.klojang.check.CommonChecks.*;
 

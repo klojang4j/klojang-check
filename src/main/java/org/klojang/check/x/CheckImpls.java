@@ -1,7 +1,7 @@
 package org.klojang.check.x;
 
 import org.klojang.check.CorruptCheckException;
-import org.klojang.check.aux.Emptyable;
+import org.klojang.check.extra.Emptyable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
