@@ -9,12 +9,11 @@ import static java.util.stream.Collectors.joining;
 import static org.klojang.check.aux.DuplicateValueException.Usage.VALUE;
 
 /**
- * Indicates that insertion into a {@linkplain java.util.Map Map},
- * {@linkplain java.util.Set Set} or some other uniqueness-enforcing data structure
- * failed because the value to be inserted turned out to be a duplicate. Klojang
- * Check does not itself ever throw a {@code DuplicateValueException}, but the error
- * condition it represents is general and important enough to merit inclusion as a
- * common exception in the {@link CommonExceptions} class.
+ * Indicates that insertion into a {@linkplain java.util.Map Map}, {@linkplain java.util.Set Set} or some
+ * other uniqueness-enforcing data structure failed because the value to be inserted turned out to be a
+ * duplicate. Klojang Check does not itself ever throw a {@code DuplicateValueException}, but the error
+ * condition it represents is general and important enough to merit inclusion as a common exception in the
+ * {@link CommonExceptions} class.
  *
  * <blockquote><pre>{@code
  * Check.that(arg).isNot(keyIn(), map, duplicateKey(arg));
@@ -29,8 +28,7 @@ public class DuplicateValueException extends RuntimeException {
    */
   public enum Usage {
     /**
-     * The value was meant to be used as a map key, or possibly some record-like
-     * structure.
+     * The value was meant to be used as a map key.
      */
     KEY,
     /**
@@ -75,7 +73,7 @@ public class DuplicateValueException extends RuntimeException {
   /**
    * Creates a new {@code DuplicateValueException} for the specified value.
    *
-   * @param usage the intended usage of the value
+   * @param usage     the intended usage of the value
    * @param duplicate the duplicate value.
    */
   public DuplicateValueException(Usage usage, Object duplicate) {
@@ -85,7 +83,7 @@ public class DuplicateValueException extends RuntimeException {
   /**
    * Creates a new {@code DuplicateValueException} for the specified values.
    *
-   * @param usage the intended usage of the values
+   * @param usage      the intended usage of the values
    * @param duplicates the duplicate values.
    */
   public DuplicateValueException(Usage usage, Collection<Object> duplicates) {
