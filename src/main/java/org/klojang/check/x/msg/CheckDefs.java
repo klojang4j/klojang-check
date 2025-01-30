@@ -65,6 +65,7 @@ public final class CheckDefs {
     setMetadata(positive(), msgPositive(), "positive");
     setMetadata(negative(), msgNegative(), "negative");
     setMetadata(zero(), msgZero(), "zero");
+    setMetadata(one(), msgOne(), "one");
     setMetadata(eq(), msgEq(), "eq");
     setMetadata(ne(), msgNe(), "ne");
     setMetadata(gt(), msgGt(), "gt");

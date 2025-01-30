@@ -39,6 +39,8 @@ public class MsgIntPredicateTest {
     Check.that(-3).isNot(positive());
     Check.that(0).is(zero());
     Check.that(1).isNot(zero());
+    Check.that(1).is(one());
+    Check.that(0).isNot(one());
   }
 
   @Test

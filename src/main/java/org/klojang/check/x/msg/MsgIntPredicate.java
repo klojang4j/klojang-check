@@ -1,7 +1,5 @@
 package org.klojang.check.x.msg;
 
-import org.klojang.check.x.msg.PrefabMsgFormatter;
-
 final class MsgIntPredicate {
 
   private MsgIntPredicate() {
@@ -34,8 +32,14 @@ final class MsgIntPredicate {
 
   static PrefabMsgFormatter msgZero() {
     return x -> x.negated()
-        ? x.name() + " must not be 0"
-        : x.name() + " must be 0 (was " + x.arg() + ')';
+                ? x.name() + " must not be 0"
+                : x.name() + " must be 0 (was " + x.arg() + ')';
+  }
+
+  static PrefabMsgFormatter msgOne() {
+    return x -> x.negated()
+                ? x.name() + " must not be 1"
+                : x.name() + " must be 1 (was " + x.arg() + ')';
   }
 
 }

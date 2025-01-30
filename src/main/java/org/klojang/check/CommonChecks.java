@@ -399,6 +399,15 @@ public final class CommonChecks {
     return x -> x == 0;
   }
 
+  /**
+   * Verifies that the argument equals 1.
+   *
+   * @return a function implementing the test described above
+   */
+  public static ComposableIntPredicate one() {
+    return x -> x == 1;
+  }
+
   //////////////////////////////////////////////////////////////////////////////////
   // IntRelation
   //////////////////////////////////////////////////////////////////////////////////
