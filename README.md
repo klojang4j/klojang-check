@@ -83,18 +83,6 @@ Check.that(i).is(indexOf(), list);
 Check.that(employee.isManager()).is(yes());
 ```
 
-### The ComposablePredicate and Relation Interfaces
-
-What exactly is going on in the above examples? You probably, and correctly, suspected
-`zero()` and `writable()` to be predicates (instances of 
-[Predicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html)
-or [IntPredicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntPredicate.html)).
-But what about `gte()` and `substringOf()`?
-
-The `is(...)` methods can take two basic types of checks: 
-[ComposablePredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html)
-and [Relation](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/Relation.html).
-
 ### Custom Checks
 
 Of course, you can also provide your own checks:
@@ -113,7 +101,7 @@ Checks on the same value can be chained:
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 ```
 
-Checks on different values can be chained as follows:
+Checks on different values can be also be chained:
 
 ```java
 Check.that(numberOfChairs).is(positive()).and(numberOfTables).is(one());
@@ -236,7 +224,7 @@ By default, <i>Klojang Check</i> will throw an `IllegalArgumentException` if the
 value fails any of the checks following `Check.that(...)`. This can be customized in two
 ways:
 
-1. By using the `Check.on(...)` methods in stead of the `Check.that(...)` methods. These
+1. By using the `Check.on(...)` methods instead of the `Check.that(...)` methods. These
    methods allow you to provide a `Function` that takes a string (the error message) and
    returns the exception to be thrown.
 2. By providing a `Supplier` that supplies the exception to be thrown.
@@ -277,7 +265,7 @@ this.age = Check.notNull(person).ok(Person::age);
 ```
 
 The transformation function is allowed to throw a checked exception, so even at this late
-stage the value may turn out to be invalid after all. This is because what gets passed to
+stage you may decide the value is invalid after all. This is because what gets passed to
 the `ok()` method is not a
 [Function](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html)
 or [ToIntFunction](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/ToIntFunction.html)
@@ -308,37 +296,51 @@ Check.that(collection1).is(empty().or(collection2, contains(), "FOO"));
 Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 ```
 
-But what if you want your first check to be a
-[Relation](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Relation.html),
-like [gte()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte()) 
-or [instanceOf()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#instanceOf())?
+What if you want the first check to be a
+[Relation](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/Relation.html),
+like [gte()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte())
+or [instanceOf()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#instanceOf()),
+or you want the first check to be a self-written lambda or a method reference?
 In that case you can start your composition with one of four special checks:
 [valid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#valid()),
 [validInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#validInt()),
 [invalid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalid()),
 and [invalidInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalidInt()).
-The first two always pass and can be used as the start of a series of AND-joined checks.
-The last two always fail and can be used as the start of a series of OR-joined checks.
-
+These really are dummy checks that you should not use as the only check on a value. The 
+first two checks always pass and can be used as the start of a series of AND-joined 
+checks. The last two always fail and can be used as the start of a series of OR-joined 
+checks.
 
 ```java
-Check.that(collection).is(invalid().or(contains(), "FOO").or(contains(), "BAR"));
+import static org.klojang.check.CommonChecks.valid;
+import static org.klojang.check.CommonChecks.invalid;
+
 Check.that(collection).is(valid().and(contains(), "FOO").and(contains(), "BAR"));
+Check.that(collection).is(invalid().or(contains(), "FOO").or(contains(), "BAR"));
 ```
 
 ### Logical Quantifiers
 
 When combining checks you can also employ
-[logical quantifiers](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/Quantifier.html):
+[logical quantifiers](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/Quantifier.html).
+Using logical qualifiers you can provide multiple values against which to validate the
+input value. They allow you to specify that the input value must pass a check for 
+**_all of_** the provided values, **_at least one of_** the provided values, or 
+**_none of_** the provided values. Here is an example:
 
 ```java
+import static org.klojang.check.types.Quantifier.noneOf;
 
+Check.that(collection).is(valid().and(contains(), noneOf(), "FOO", "BAR", "BOZO"));
+```
 
-Check.that(collection).
+What if there is just one check you want to execute, but you want to use a logical 
+quantifier? Again you can use the dummy checks mentioned above:
 
-is(notEmpty().
+```java
+import static org.klojang.check.types.Quantifier.allOf;
 
-and(contains(),noneOf(),"FOO","BAR"));
+Check.that(collection).is(valid().and(contains(), allOf(), "FOO", "BAR", "BOZO"));
 ```
 
 ## About
