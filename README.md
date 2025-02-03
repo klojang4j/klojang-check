@@ -108,7 +108,7 @@ in the above example can possibly be null, you must start with an explicit null 
 [notEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#notEmpty())
 and 
 [deepNotEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#deepNotEmpty())
-checks do include a null check. This will then be clearly documented in the javadocs.)
+checks do include a null test. This will then be clearly documented in the javadocs.)
 
 Checks on different values can be also be chained:
 
