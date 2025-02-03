@@ -311,8 +311,8 @@ this.age = Check.notNull(person).ok(Person::age);
 ```
 
 The transformation function is allowed to throw a checked exception, so even at this late
-stage you may decide the value is invalid after all. This is because what gets passed to
-the `ok()` method is not a
+stage you may decide that the value is invalid after all. This is because what gets passed
+to the `ok()` method is not a
 [Function](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html)
 or [ToIntFunction](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/ToIntFunction.html)
 but a [FallibleFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleFunction.html)
