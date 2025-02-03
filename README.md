@@ -104,7 +104,8 @@ Check.notNull(file).is(writable());
 
 This is a good time to point out that checks in the `CommonChecks` class _only_ validate 
 "what it says on the tin". So the `writable()` check does not do an implicit null check.
-If the `file` argument in the above example can possibly be null, you must start your
+If the `file` argument in the above example can possibly be null, you must start with a
+null check.
 
 Checks on different values can be also be chained:
 
