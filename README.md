@@ -207,6 +207,7 @@ that extracts the value to be tested from the argument.
 
 ```java
 Check.that(fullName).has(String::length, lte(), 100);
+Check.that(person).has(Person::firstName, substringOf(), person.lastName());
 ```
 
 The [CommonProperties](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonProperties.html)
