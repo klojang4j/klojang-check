@@ -135,7 +135,7 @@ but what about `gte()` and `substringOf()`?
 With _Klojang Check_ you can execute two basic types of tests, specified through the
 [ComposablePredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html)
 and
-[Relation](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/Relation.html).
+[Relation](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/Relation.html)
 interfaces. (Both have int specializations like
 [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposableIntPredicate.html).)
 `ComposablePredicate` is an extension of `Predicate` that add various `default` methods
