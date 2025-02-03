@@ -352,10 +352,10 @@ In that case you can start your composition with one of four special checks:
 [validInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#validInt()),
 [invalid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalid()),
 and [invalidInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalidInt()).
-These really are dummy checks that don't make sense as the _only_ check on a value. The 
-first two checks always pass and can be used as the start of a series of AND-joined 
-checks. The last two always fail and can be used as the start of a series of OR-joined 
-checks.
+These really are dummy checks that don't make sense when used as the _only_ check on a 
+value. The first two checks always pass and can be used as the start of a series of 
+AND-joined checks. The last two always fail and can be used as the start of a series of 
+OR-joined checks.
 
 ```java
 import static org.klojang.check.CommonChecks.valid;
