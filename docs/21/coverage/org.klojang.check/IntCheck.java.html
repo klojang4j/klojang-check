@@ -1,0 +1,1381 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IntCheck.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check</a> &gt; <span class="el_source">IntCheck.java</span></div><h1>IntCheck.java</h1><pre class="source lang-java linenums">package org.klojang.check;
+
+import org.klojang.check.fallible.FallibleIntConsumer;
+import org.klojang.check.fallible.FallibleIntFunction;
+import org.klojang.check.fallible.FallibleIntUnaryOperator;
+import org.klojang.check.types.IntObjRelation;
+import org.klojang.check.types.IntRelation;
+import org.klojang.check.types.Relation;
+import org.klojang.check.x.msg.MsgArgs;
+
+import java.util.function.*;
+
+import static org.klojang.check.x.msg.CheckDefs.*;
+import static org.klojang.check.x.msg.MsgUtil.*;
+
+/**
+ * Facilitates the validation of {@code int} values. See the
+ * &lt;a href=&quot;../../../module-summary.html&quot;&gt;module summary&lt;/a&gt; for a detailed
+ * explanation.
+ *
+ * @param &lt;X&gt; The type of the exception that is thrown by default if the value
+ *     fails a test (this can be overridden for individual tests in the chain of
+ *     checks)
+ */
+public final class IntCheck&lt;X extends Exception&gt; {
+
+  final int arg;
+  final String argName;
+  final Function&lt;String, X&gt; exc;
+
+<span class="fc" id="L31">  IntCheck(int arg, String argName, Function&lt;String, X&gt; exc) {</span>
+<span class="fc" id="L32">    this.arg = arg;</span>
+<span class="fc" id="L33">    this.argName = argName;</span>
+<span class="fc" id="L34">    this.exc = exc;</span>
+<span class="fc" id="L35">  }</span>
+
+  /**
+   * Returns the {@code int} value validated by this instance. To be used as the last
+   * call after a chain of checks.
+   *
+   * @return the {@code int} value validated by this instance
+   */
+  public int ok() {
+<span class="fc" id="L44">    return arg;</span>
+  }
+
+  /**
+   * Passes the validated value to the specified function and returns the value it
+   * computes. To be used as the last call after a chain of checks. For example:
+   *
+   * &lt;blockquote&gt;
+   *
+   * &lt;pre&gt;{@code
+   * int moderate = Check.that(t, &quot;temperature&quot;).has(abs(), lt(), 30).ok(Math::abs);
+   * }&lt;/pre&gt;
+   *
+   * &lt;/blockquote&gt;
+   *
+   * @param transformer a function that transforms the {@code int} value
+   *     validated by this instance
+   * @param &lt;X2&gt; the type of the exception thrown if the transformation fails
+   * @return the value computed by the transformation function
+   * @throws X2 if the transformation fails
+   */
+  public &lt;X2 extends Throwable&gt; int ok(FallibleIntUnaryOperator&lt;X2&gt; transformer)
+      throws X2 {
+<span class="fc" id="L67">    return transformer.applyAsInt(arg);</span>
+  }
+
+  /**
+   * Passes the validated value to the specified function and returns the value it
+   * computes. To be used as the last call after a chain of checks.
+   *
+   * &lt;blockquote&gt;
+   *
+   * &lt;pre&gt;{@code
+   * List&lt;String&gt; list = ...;
+   * String s = Check.that(index).is(indexOf(), list).ok(list::get);
+   * }&lt;/pre&gt;
+   *
+   * &lt;/blockquote&gt;
+   *
+   * @param transformer a function that transforms the {@code int} value
+   *     validated by this instance
+   * @param &lt;R&gt; the type of the returned value
+   * @param &lt;X2&gt; the type of the exception thrown if the transformation fails
+   * @return the value computed by the {@code Function}
+   * @throws X2 if the transformation fails
+   */
+  public &lt;R, X2 extends Throwable&gt; R mapToObj(FallibleIntFunction&lt;R, X2&gt; transformer)
+      throws X2 {
+<span class="fc" id="L92">    return transformer.apply(arg);</span>
+  }
+
+  /**
+   * Passes the validated value to a consumer for further processing. To be used as
+   * the last call after a chain of checks.
+   *
+   * @param consumer a consumer of the {@code int} value validated by this
+   *     instance
+   * @param &lt;X2&gt; the type of the exception thrown if the consumer fails while
+   *     processing the value
+   * @throws X2 if the consumer fails while processing the value
+   */
+  public &lt;X2 extends Throwable&gt; void then(FallibleIntConsumer&lt;X2&gt; consumer)
+      throws X2 {
+<span class="fc" id="L107">    consumer.accept(arg);</span>
+<span class="fc" id="L108">  }</span>
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
+   *
+   * @param test the test
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; is(IntPredicate test) throws X {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">    if (test.test(arg)) {</span>
+<span class="fc" id="L122">      return this;</span>
+    }
+<span class="fc" id="L124">    Function&lt;MsgArgs, String&gt; formatter = getIntPredicateFormatter(test);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L126">      throw exc.apply(getDefaultPredicateMessage(argName, arg));</span>
+    }
+<span class="fc" id="L128">    throw exc.apply(</span>
+<span class="fc" id="L129">        getPrefabMessage(formatter, test, false, argName, arg, int.class, null));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
+   *
+   * @param test the test
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; isNot(IntPredicate test) throws X {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">    if (!test.test(arg)) {</span>
+<span class="fc" id="L144">      return this;</span>
+    }
+<span class="fc" id="L146">    Function&lt;MsgArgs, String&gt; formatter = getIntPredicateFormatter(test);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L148">      throw exc.apply(getDefaultPredicateMessage(argName, arg));</span>
+    }
+<span class="fc" id="L150">    throw exc.apply(</span>
+<span class="fc" id="L151">        getPrefabMessage(formatter, test, true, argName, arg, int.class, null));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; is(IntPredicate test, String message, Object... msgArgs)
+      throws X {
+<span class="fc bfc" id="L168" title="All 2 branches covered.">    if (test.test(arg)) {</span>
+<span class="fc" id="L169">      return this;</span>
+    }
+<span class="fc" id="L171">    throw exc.apply(</span>
+<span class="fc" id="L172">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+<span class="fc" id="L176">            arg,</span>
+            int.class,
+            null));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; isNot(IntPredicate test, String message, Object... msgArgs)
+      throws X {
+    // WATCH OUT. Do not call: is(test.negate(), message, msgArgs). If the test came
+    // from the CommonChecks class it must preserve its identity
+<span class="fc bfc" id="L197" title="All 2 branches covered.">    if (!test.test(arg)) {</span>
+<span class="fc" id="L198">      return this;</span>
+    }
+<span class="fc" id="L200">    throw exc.apply(</span>
+<span class="fc" id="L201">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+<span class="fc" id="L205">            arg,</span>
+            int.class,
+            null));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid The {@code Supplier} of the exception to be thrown if the
+   *     argument is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the {@code int} value does
+   *     not pass the test
+   * @return this instance
+   * @throws X2 if the {@code int} value does not pass the test
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; is(IntPredicate test,
+      Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc bfc" id="L225" title="All 2 branches covered.">    if (test.test(arg)) {</span>
+<span class="fc" id="L226">      return this;</span>
+    }
+<span class="fc" id="L228">    throw exception.get();</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid The {@code Supplier} of the exception to be thrown if the
+   *     argument is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the {@code int} value does
+   *     not pass the test
+   * @return this instance
+   * @throws X2 if the {@code int} value does not pass the test
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; isNot(IntPredicate test,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L247">    return is(test.negate(), exception);</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
+   *
+   * @param test the test
+   * @param object the object of the {@code Relation}
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; is(IntRelation test, int object) throws X {
+<span class="fc bfc" id="L262" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L263">      return this;</span>
+    }
+<span class="fc" id="L265">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L267">      throw exc.apply(getDefaultRelationMessage(argName, arg, object));</span>
+    }
+<span class="fc" id="L269">    throw exc.apply(</span>
+<span class="fc" id="L270">        getPrefabMessage(formatter, test, false, argName, arg, int.class, object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
+   *
+   * @param test the test
+   * @param object the object of the {@code Relation}
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; isNot(IntRelation test, int object) throws X {
+<span class="fc bfc" id="L285" title="All 2 branches covered.">    if (!test.exists(arg, object)) {</span>
+<span class="fc" id="L286">      return this;</span>
+    }
+<span class="fc" id="L288">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L290">      throw exc.apply(getDefaultRelationMessage(argName, arg, object));</span>
+    }
+<span class="fc" id="L292">    throw exc.apply(</span>
+<span class="fc" id="L293">        getPrefabMessage(formatter, test, true, argName, arg, int.class, object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; is(IntRelation test,
+      int object,
+      String message,
+      Object... msgArgs) throws X {
+<span class="fc bfc" id="L313" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L314">      return this;</span>
+    }
+<span class="fc" id="L316">    throw exc.apply(</span>
+<span class="fc" id="L317">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+<span class="fc" id="L321">            arg,</span>
+            int.class,
+<span class="fc" id="L323">            object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public IntCheck&lt;X&gt; isNot(IntRelation test,
+      int object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc bfc" id="L344" title="All 2 branches covered.">    if (!test.exists(arg, object)) {</span>
+<span class="fc" id="L345">      return this;</span>
+    }
+<span class="fc" id="L347">    throw exc.apply(</span>
+<span class="fc" id="L348">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+<span class="fc" id="L352">            arg,</span>
+            int.class,
+<span class="fc" id="L354">            object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid The {@code Supplier} of the exception to be thrown if the
+   *     argument is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the {@code int} value does
+   *     not pass the test
+   * @return this instance
+   * @throws X2 if the {@code int} value does not pass the test
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; is(IntRelation test,
+      int object,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc bfc" id="L375" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L376">      return this;</span>
+    }
+<span class="fc" id="L378">    throw exception.get();</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid The {@code Supplier} of the exception to be thrown if the
+   *     argument is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the {@code int} value does
+   *     not pass the test
+   * @return this instance
+   * @throws X2 if the {@code int} value does not pass the test
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; isNot(IntRelation test,
+      int object,
+      Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L398">    return is(test.negate(), object, exception);</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param &lt;O&gt; The type of the object of the {@code IntObjRelation}
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public &lt;O&gt; IntCheck&lt;X&gt; is(IntObjRelation&lt;O&gt; test, O object) throws X {
+<span class="fc bfc" id="L414" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L415">      return this;</span>
+    }
+<span class="fc" id="L417">    Function&lt;MsgArgs, String&gt; formatter = getIntObjRelationFormatter(test);</span>
+<span class="fc bfc" id="L418" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L419">      throw exc.apply(getDefaultRelationMessage(argName, arg, object));</span>
+    }
+<span class="fc" id="L421">    throw exc.apply(</span>
+<span class="fc" id="L422">        getPrefabMessage(formatter, test, false, argName, arg, int.class, object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. While not strictly required,
+   * this method is meant to be passed a check from the {@link CommonChecks} class.
+   * When providing your own lambda or method reference, the error message wil not be
+   * very intelligible.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param &lt;O&gt; the type of the object of the {@code IntObjRelation}
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public &lt;O&gt; IntCheck&lt;X&gt; isNot(IntObjRelation&lt;O&gt; test, O object) throws X {
+<span class="fc bfc" id="L438" title="All 2 branches covered.">    if (!test.exists(arg, object)) {</span>
+<span class="fc" id="L439">      return this;</span>
+    }
+<span class="fc" id="L441">    Function&lt;MsgArgs, String&gt; formatter = getIntObjRelationFormatter(test);</span>
+<span class="fc bfc" id="L442" title="All 2 branches covered.">    if (formatter == null) {</span>
+<span class="fc" id="L443">      throw exc.apply(getDefaultRelationMessage(argName, arg, object));</span>
+    }
+<span class="fc" id="L445">    throw exc.apply(</span>
+<span class="fc" id="L446">        getPrefabMessage(formatter, test, true, argName, arg, int.class, object));</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;O&gt; the type of the object of the {@code IntObjRelation}
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public &lt;O&gt; IntCheck&lt;X&gt; is(IntObjRelation&lt;O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc bfc" id="L468" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L469">      return this;</span>
+    }
+<span class="fc" id="L471">    throw exc.apply(</span>
+<span class="fc" id="L472">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+<span class="fc" id="L476">            arg,</span>
+            int.class,
+            object));
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to provide a custom
+   * error message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;O&gt; the type of the object of the {@code IntObjRelation}
+   * @return this instance
+   * @throws X if the {@code int} value does not pass the test
+   */
+  public &lt;O&gt; IntCheck&lt;X&gt; isNot(IntObjRelation&lt;O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc bfc" id="L500" title="All 2 branches covered.">    if (!test.exists(arg, object)) {</span>
+<span class="fc" id="L501">      return this;</span>
+    }
+<span class="fc" id="L503">    throw exc.apply(</span>
+<span class="fc" id="L504">        getCustomMessage(message,</span>
+            msgArgs,
+            test,
+            argName,
+<span class="fc" id="L508">            arg,</span>
+            int.class,
+            object));
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid The {@code Supplier} of the exception to be thrown if the
+   *     argument is invalid
+   * @param &lt;O&gt; the type of the object of the {@code IntObjRelation}
+   * @param &lt;X2&gt; the type of exception thrown if the {@code int} value does not
+   *     pass the test
+   * @return this instance
+   * @throws X2 if the {@code int} value does not pass the test
+   */
+  public &lt;O, X2 extends Exception&gt; IntCheck&lt;X&gt; is(
+      IntObjRelation&lt;O&gt; test, O object, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc bfc" id="L534" title="All 2 branches covered.">    if (test.exists(arg, object)) {</span>
+<span class="fc" id="L535">      return this;</span>
+    }
+<span class="fc" id="L537">    throw exception.get();</span>
+  }
+
+  /**
+   * Validates the argument using the specified test. Allows you to throw a different
+   * type of exception for this particular test.
+   *
+   * @param test the test
+   * @param object the object of the {@code IntObjRelation}
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid The {@code Supplier} of the exception to be thrown if the
+   *     argument is invalid
+   * @param &lt;O&gt; the type of the object of the {@code IntObjRelation}
+   * @param &lt;X2&gt; the type of exception thrown if the {@code int} value does not
+   *     pass the test
+   * @return this instance
+   * @throws X2 if the {@code int} value does not pass the test
+   */
+  public &lt;O, X2 extends Exception&gt; IntCheck&lt;X&gt; isNot(
+      IntObjRelation&lt;O&gt; test, O object, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L557">    return is(test.negate(), object, exception);</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P&gt; IntCheck&lt;X&gt; has(IntFunction&lt;P&gt; property, Predicate&lt;P&gt; test) throws X {
+<span class="fc" id="L580">    return IntCheckHelper1.help(this).has(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P&gt; IntCheck&lt;X&gt; notHas(IntFunction&lt;P&gt; property, Predicate&lt;P&gt; test)
+      throws X {
+<span class="fc" id="L600">    return IntCheckHelper1.help(this).notHas(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested.
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P&gt; IntCheck&lt;X&gt; has(IntFunction&lt;P&gt; property, String name, Predicate&lt;P&gt; test)
+      throws X {
+<span class="fc" id="L621">    return IntCheckHelper1.help(this).has(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested.
+   * @param test the test
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P&gt; IntCheck&lt;X&gt; notHas(IntFunction&lt;P&gt; property,
+      String name,
+      Predicate&lt;P&gt; test) throws X {
+<span class="fc" id="L643">    return IntCheckHelper1.help(this).notHas(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P&gt; IntCheck&lt;X&gt; has(
+      IntFunction&lt;P&gt; property, Predicate&lt;P&gt; test, String message, Object... msgArgs)
+      throws X {
+<span class="fc" id="L665">    return IntCheckHelper1.help(this).has(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P&gt; IntCheck&lt;X&gt; notHas(
+      IntFunction&lt;P&gt; property, Predicate&lt;P&gt; test, String message, Object... msgArgs)
+      throws X {
+<span class="fc" id="L687">    return IntCheckHelper1.help(this).notHas(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, X2 extends Exception&gt; IntCheck&lt;X&gt; has(
+      IntFunction&lt;P&gt; property, Predicate&lt;P&gt; test, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L707">    return IntCheckHelper1.help(this).has(property, test, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, X2 extends Exception&gt; IntCheck&lt;X&gt; notHas(
+      IntFunction&lt;P&gt; property, Predicate&lt;P&gt; test, Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L727">    return IntCheckHelper1.help(this).has(property, test.negate(), exception);</span>
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P, O&gt; IntCheck&lt;X&gt; has(IntFunction&lt;P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object) throws X {
+<span class="fc" id="L755">    return IntCheckHelper1.help(this).has(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P, O&gt; IntCheck&lt;X&gt; notHas(IntFunction&lt;P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object)
+      throws X {
+<span class="fc" id="L780">    return IntCheckHelper1.help(this).notHas(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P, O&gt; IntCheck&lt;X&gt; has(IntFunction&lt;P&gt; property,
+      String name,
+      Relation&lt;P, O&gt; test,
+      O object)
+      throws X {
+<span class="fc" id="L807">    return IntCheckHelper1.help(this).has(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested.
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P, O&gt; IntCheck&lt;X&gt; notHas(IntFunction&lt;P&gt; property,
+      String name,
+      Relation&lt;P, O&gt; test,
+      O object) throws X {
+<span class="fc" id="L833">    return IntCheckHelper1.help(this).notHas(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public &lt;P, O&gt; IntCheck&lt;X&gt; has(
+      IntFunction&lt;P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L862">    return IntCheckHelper1.help(this).has(property, test, object, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @return this instance
+   * @throws X if the argument is invalid
+   */
+  public &lt;P, O&gt; IntCheck&lt;X&gt; notHas(
+      IntFunction&lt;P&gt; property,
+      Relation&lt;P, O&gt; test,
+      O object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L891">    return IntCheckHelper1.help(this).notHas(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, O, X2 extends Exception&gt; IntCheck&lt;X&gt; has(
+      IntFunction&lt;P&gt; property, Relation&lt;P, O&gt; test, O object, Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L919">    return IntCheckHelper1.help(this).has(property, test, object, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the value that the argument is tested against (called &quot;the
+   *     object&quot; of a relation)
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;P&gt; the type of the extracted value
+   * @param &lt;O&gt; the type of the value being tested against
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;P, O, X2 extends Exception&gt; IntCheck&lt;X&gt; notHas(
+      IntFunction&lt;P&gt; property, Relation&lt;P, O&gt; test, O object, Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L943">    return IntCheckHelper1.help(this).has(property,</span>
+<span class="fc" id="L944">        test.negate(),</span>
+        object,
+        exception);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; has(IntUnaryOperator property, IntPredicate test) throws X {
+<span class="fc" id="L968">    return IntCheckHelper2.help(this).has(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; notHas(IntUnaryOperator property, IntPredicate test) throws X {
+<span class="fc" id="L986">    return IntCheckHelper2.help(this).notHas(property, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; has(IntUnaryOperator property, String name, IntPredicate test)
+      throws X {
+<span class="fc" id="L1008">    return IntCheckHelper2.help(this).has(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested. In error messages the
+   *     fully-qualified name will be used and constructed using
+   *     {@code argName + &quot;.&quot; + name}.
+   * @param test the test
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; notHas(IntUnaryOperator property,
+      String name,
+      IntPredicate test) throws X {
+<span class="fc" id="L1031">    return IntCheckHelper2.help(this).notHas(property, name, test);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; has(
+      IntUnaryOperator property,
+      IntPredicate test,
+      String message,
+      Object... msgArgs) throws X {
+<span class="fc" id="L1054">    return IntCheckHelper2.help(this).has(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; notHas(
+      IntUnaryOperator property,
+      IntPredicate test,
+      String message,
+      Object... msgArgs) throws X {
+<span class="fc" id="L1077">    return IntCheckHelper2.help(this).notHas(property, test, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; has(
+      IntUnaryOperator property, IntPredicate test, Supplier&lt;X2&gt; exception) throws
+      X2 {
+<span class="fc" id="L1097">    return IntCheckHelper2.help(this).has(property, test, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the argument is invalid
+   * @return this instance
+   * @throws X2 if the argument is invalid
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; notHas(IntUnaryOperator property,
+      IntPredicate test,
+      Supplier&lt;X2&gt; exception) throws X2 {
+<span class="fc" id="L1117">    return IntCheckHelper2.help(this).has(property, test.negate(), exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; has(IntUnaryOperator property, IntRelation test, int object)
+      throws X {
+<span class="fc" id="L1137">    return IntCheckHelper2.help(this).has(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; notHas(IntUnaryOperator property, IntRelation test, int object)
+      throws X {
+<span class="fc" id="L1157">    return IntCheckHelper2.help(this).notHas(property, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name The name of the property being tested
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; has(IntUnaryOperator property,
+      String name,
+      IntRelation test,
+      int object)
+      throws X {
+<span class="fc" id="L1181">    return IntCheckHelper2.help(this).has(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. While not strictly required, this method
+   * is meant to be passed a check from the {@link CommonChecks} class
+   * &lt;i&gt;and&lt;/i&gt; a property extractor function from the {@link CommonProperties}
+   * class. When providing your own lambdas and/or method references, the error
+   * message wil not be very intelligible
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param name a descriptive name for the property being tested
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; notHas(IntUnaryOperator property,
+      String name,
+      IntRelation test,
+      int object)
+      throws X {
+<span class="fc" id="L1205">    return IntCheckHelper2.help(this).notHas(property, name, test, object);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; has(
+      IntUnaryOperator property,
+      IntRelation test,
+      int object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L1231">    return IntCheckHelper2.help(this).has(property, test, object, message, msgArgs);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to provide a custom error
+   * message. See the paragraph on &lt;a
+   * href=&quot;../../../module-summary.html#custom-error-messages&quot;&gt;Custom Error
+   * Messages&lt;/a&gt; in the module description for how to specify a custom message.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @param message the message pattern
+   * @param msgArgs the message arguments
+   * @return this instance
+   * @throws X if the property does not pass the test
+   */
+  public IntCheck&lt;X&gt; notHas(
+      IntUnaryOperator property,
+      IntRelation test,
+      int object,
+      String message,
+      Object... msgArgs)
+      throws X {
+<span class="fc" id="L1257">    return IntCheckHelper2.help(this).notHas(property,</span>
+        test,
+        object,
+        message,
+        msgArgs);
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the property does not pass
+   *     the test
+   * @return this instance
+   * @throws X2 if the property does not pass the test
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; has(
+      IntUnaryOperator property,
+      IntRelation test,
+      int object,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L1286">    return IntCheckHelper2.help(this).has(property, test, object, exception);</span>
+  }
+
+  /**
+   * Validates a property of the argument. Allows you to throw a different type of
+   * exception for this particular test.
+   *
+   * @param property a function that exposes some property of the {@code int}
+   *     value (for example its absolute value or its square root), which is then
+   *     validated using the specified test
+   * @param test the test
+   * @param object the object of the {@code IntRelation}
+   * @param exception the supplier of the exception to be thrown if the argument
+   *     is invalid
+   * @param &lt;X2&gt; the type of the exception thrown if the property does not pass
+   *     the test
+   * @return this instance
+   * @throws X2 if the property does not pass the test
+   */
+  public &lt;X2 extends Exception&gt; IntCheck&lt;X&gt; notHas(
+      IntUnaryOperator property,
+      IntRelation test,
+      int object,
+      Supplier&lt;X2&gt; exception)
+      throws X2 {
+<span class="fc" id="L1311">    return has(property, test.negate(), object, exception);</span>
+  }
+
+  /**
+   * Returns a &lt;i&gt;new&lt;/i&gt; {@code IntCheck} instance for validating the specified
+   * {@code int} value. This allows you to chain not just multiple checks for a
+   * single argument, but also multiple checks for multiple arguments:
+   *
+   * &lt;blockquote&gt;&lt;pre&gt;{@code
+   * Check.that(list).is(notNull())
+   *  .and(off).is(gte(), 0)
+   *  .and(len).is(gte(), 0)
+   *  .and(off+len).is(lte(), list.size());
+   * }&lt;/pre&gt;&lt;/blockquote&gt;
+   *
+   * &lt;p&gt;The new instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @return a new {@code IntCheck} instance for validating the specified value
+   */
+  public IntCheck&lt;X&gt; and(int arg) {
+<span class="fc" id="L1332">    return new IntCheck&lt;&gt;(arg, DEF_ARG_NAME, exc);</span>
+  }
+
+  /**
+   * Returns a &lt;i&gt;new&lt;/i&gt; {@code IntCheck} instance for validating the specified
+   * value. The new instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @param argName the name of the argument, field or variable being validated
+   * @return a new {@code IntCheck} instance for validating the specified value
+   */
+  public IntCheck&lt;X&gt; and(int arg, String argName) {
+<span class="fc" id="L1344">    return new IntCheck&lt;&gt;(arg, argName, exc);</span>
+  }
+
+  /**
+   * Returns a new {@link ObjectCheck} instance for validating the specified value.
+   * The new instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @param &lt;T&gt; the type of the value to be validated
+   * @return a new {@code IntCheck} instance for validating the specified value
+   */
+  public &lt;T&gt; ObjectCheck&lt;T, X&gt; and(T arg) {
+<span class="fc" id="L1356">    return new ObjectCheck&lt;&gt;(arg, DEF_ARG_NAME, exc);</span>
+  }
+
+  /**
+   * Returns a new {@link ObjectCheck} instance for validating the specified value.
+   * The new instance inherits the exception factory of this instance.
+   *
+   * @param arg the value to be validated.
+   * @param argName the name of the argument, field or variable being validated
+   * @param &lt;T&gt; the type of the value to be validated
+   * @return a new {@code IntCheck} instance for validating the specified value
+   */
+  public &lt;T&gt; ObjectCheck&lt;T, X&gt; and(T arg, String argName) {
+<span class="fc" id="L1369">    return new ObjectCheck&lt;&gt;(arg, argName, exc);</span>
+  }
+
+  /* Returns fully-qualified name of the property with the specified name */
+  String FQN(String name) {
+<span class="fc bfc" id="L1374" title="All 2 branches covered.">    if (argName == null) {</span>
+<span class="fc" id="L1375">      return name;</span>
+    }
+<span class="fc" id="L1377">    return argName + &quot;.&quot; + name;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -102,8 +102,8 @@ Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 Check.notNull(file).is(writable());
 ```
 
-Note that a check in the `CommonChecks` only does "what it says on the tin". So the 
-`writable()` check does _not_ do an implicit null check. If the `file` argument in the 
+Note that a check in the `CommonChecks` does "what it says on the tin" _and nothing else_.
+So the `writable()` check does _not_ do an implicit null check. If the `file` argument in the 
 above example can possibly be null, you must start with a null check.
 
 Checks on different values can be also be chained:

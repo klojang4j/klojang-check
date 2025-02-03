@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonProperties.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check</a> &gt; <span class="el_source">CommonProperties.java</span></div><h1>CommonProperties.java</h1><pre class="source lang-java linenums">package org.klojang.check;
+
+import org.klojang.check.types.Relation;
+
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.function.*;
+
+import static org.klojang.check.x.Misc.typeNotSupported;
+import static org.klojang.check.x.msg.MsgUtil.*;
+
+/**
+ * Defines various functions that can optionally be passed as the first argument to
+ * the {@code has(...)} and {@code notHas(...) } methods of {@link IntCheck} and
+ * {@link ObjectCheck}. These functions are associated with a description of the
+ * property they expose, so generating an error message requires very little
+ * hand-crafting. For example:
+ *
+ * &lt;blockquote&gt;
+ *
+ * &lt;pre&gt;{@code
+ * Check.that(car, &quot;car&quot;).has(strval(), equalTo(), &quot;BMW&quot;);
+ * // Error message: &quot;car.toString() must be equal to BMW (was Toyota)&quot;
+ * }&lt;/pre&gt;
+ *
+ * &lt;/blockquote&gt;
+ *
+ * &lt;p&gt;Note that the word &quot;property&quot; is suggestive, but also misleading. The
+ * functions defined here really are just that: functions that transform the argument
+ * into some other value, which can then be subjected to further tests.
+ *
+ * &lt;blockquote&gt;
+ *
+ * &lt;pre&gt;{@code
+ * Check.that(temperature, &quot;temperature&quot;).has(abs(), lt(), 20);
+ * // Error message: &quot;abs(temperature) must be &lt; 20 (was -39)&quot;
+ * }&lt;/pre&gt;
+ *
+ * &lt;/blockquote&gt;
+ *
+ * &lt;p&gt;As with the checks in the {@link CommonChecks} class, &lt;i&gt;none of the functions
+ * defined here execute a preliminary null check&lt;/i&gt;. Many of them simply return a
+ * method reference. They rely upon being embedded in chain of checks, the first of
+ * which should be the {@link CommonChecks#notNull() notNull} check (if necessary).
+ *
+ * @author Ayco Holleman
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+public class CommonProperties {
+
+  private CommonProperties() {}
+
+  private static final Map&lt;Object, BiFunction&lt;Object, String, String&gt;&gt; NAMES;
+
+<span class="fc" id="L57">  private static Map&lt;Object, BiFunction&lt;Object, String, String&gt;&gt; tmp = new HashMap&lt;&gt;();</span>
+
+  /**
+   * Returns the boxed version of the argument. Equivalent to
+   * {@link Integer#valueOf(int) Integer::valueOf}. This &quot;property&quot; is especially
+   * useful to get access to the many {@link Relation} checks in the
+   * {@link CommonChecks} class when validating an {@code int} argument:
+   *
+   * &lt;blockquote&gt;
+   *
+   * &lt;pre&gt;{@code
+   * // WON'T COMPILE! IntCheck does not have method is(Relation, Object)
+   * Check.that(42).is(keyIn(), map);
+   *
+   * // OK. ObjectCheck does have method is(Relation, Object)
+   * Check.that((Integer) 42).is(keyIn(), map);
+   *
+   * // More idiomatic:
+   * Check.that(42).has(box(), keyIn(), map);
+   *
+   * }&lt;/pre&gt;
+   *
+   * &lt;/blockquote&gt;
+   *
+   * @return The boxed version of the argument
+   */
+  public static IntFunction&lt;Integer&gt; box() {
+<span class="fc" id="L84">    return Integer::valueOf;</span>
+  }
+
+  static {
+<span class="fc" id="L88">    tmp.put(box(), (arg, argName) -&gt;</span>
+<span class="fc" id="L89">        &quot;Integer.valueOf(&quot; + ifNull(argName, DEF_ARG_NAME) + &quot;)&quot;);</span>
+  }
+
+  /**
+   * Returns the unboxed version of the argument. Equivalent to
+   * {@link Integer#intValue() Integer::intValue}.
+   *
+   * @return The unboxed version of the argument
+   */
+  public static ToIntFunction&lt;Integer&gt; unbox() {
+<span class="fc" id="L99">    return Integer::intValue;</span>
+  }
+
+  static {
+<span class="fc" id="L103">    tmp.put(unbox(), (arg, argName) -&gt;</span>
+<span class="fc" id="L104">        &quot;Integer.intValue(&quot; + ifNull(argName, DEF_ARG_NAME) + &quot;)&quot;);</span>
+  }
+
+  /**
+   * Returns the result of calling {@code toString()} on the argument. Equivalent to
+   * {@link Object#toString() Object::toString}.
+   *
+   * @param &lt;T&gt; The type of the object on which to call {@code toString{}}.
+   * @return The result of calling {@code toString()} on the argument
+   */
+  public static &lt;T&gt; Function&lt;T, String&gt; strval() {
+<span class="fc" id="L115">    return Object::toString;</span>
+  }
+
+  static {
+<span class="fc" id="L119">    tmp.put(strval(), (arg, argName) -&gt; base(argName, arg) + &quot;.toString()&quot;);</span>
+  }
+
+  /**
+   * Returns the length of a {@code CharSequence}. Equivalent to
+   * {@code CharSequence::length}.
+   *
+   * @param &lt;T&gt; the type of the {@code CharSequence}
+   * @return The length of a {@code CharSequence}
+   */
+  public static &lt;T extends CharSequence&gt; ToIntFunction&lt;T&gt; strlen() {
+<span class="fc" id="L130">    return CharSequence::length;</span>
+  }
+
+  static {
+<span class="fc" id="L134">    tmp.put(strlen(), (arg, argName) -&gt; base(argName, arg) + &quot;.length()&quot;);</span>
+  }
+
+  /**
+   * Returns the upper case version of the argument. Equivalent to
+   * {@link String#toUpperCase() String::toUpperCase}.
+   *
+   * @return The upper case version of the argument
+   */
+  public static Function&lt;String, String&gt; toUpperCase() {
+<span class="fc" id="L144">    return String::toUpperCase;</span>
+  }
+
+  static {
+<span class="fc" id="L148">    tmp.put(toUpperCase(), (arg, argName) -&gt; base(argName, arg) + &quot;.toUpperCase()&quot;);</span>
+  }
+
+  /**
+   * Returns the lower case version of the argument. Equivalent to
+   * {@link String#toLowerCase() String::toLowerCase}.
+   *
+   * @return The lower case version of the argument
+   */
+  public static Function&lt;String, String&gt; toLowerCase() {
+<span class="fc" id="L158">    return String::toLowerCase;</span>
+  }
+
+  static {
+<span class="fc" id="L162">    tmp.put(toLowerCase(), (arg, argName) -&gt; base(argName, arg) + &quot;.toLowerCase()&quot;);</span>
+  }
+
+  /**
+   * Returns the {@code Class} of the argument. Equivalent to
+   * {@link Object#getClass() Object::getClass}.
+   *
+   * @param &lt;T&gt; The type of the object
+   * @return The {@code Class} of the argument
+   */
+  public static &lt;T&gt; Function&lt;T, Class&lt;?&gt;&gt; type() {
+<span class="fc" id="L173">    return Object::getClass;</span>
+  }
+
+  static {
+<span class="fc" id="L177">    tmp.put(type(), (arg, argName) -&gt; base(argName, arg) + &quot;.getClass()&quot;);</span>
+  }
+
+  /**
+   * Returns the constants of an enum class. Equivalent to
+   * {@link Class#getEnumConstants() Class::getEnumConstants}.
+   *
+   * @param &lt;T&gt; The enum class
+   * @return The constants of an enum class
+   */
+  public static &lt;T extends Enum&lt;T&gt;&gt; Function&lt;Class&lt;T&gt;, T[]&gt; constants() {
+<span class="fc" id="L188">    return x -&gt; (T[]) x.getEnumConstants();</span>
+  }
+
+  static {
+<span class="fc" id="L192">    tmp.put(constants(),</span>
+<span class="fc" id="L193">        (arg, argName) -&gt; base(argName, arg) + &quot;.getEnumConstants()&quot;);</span>
+  }
+
+  /**
+   * Returns the name of an enum constant. Equivalent to
+   * {@link Enum#name() Enum::name}.
+   *
+   * @param &lt;T&gt; The type of the enum class
+   * @return The name of the enum constant
+   */
+  public static &lt;T extends Enum&lt;?&gt;&gt; Function&lt;T, String&gt; name() {
+<span class="fc" id="L204">    return Enum::name;</span>
+  }
+
+  static {
+<span class="fc" id="L208">    tmp.put(name(), (arg, argName) -&gt; base(argName, arg) + &quot;.name()&quot;);</span>
+  }
+
+  /**
+   * Returns the ordinal of an enum constant. Equivalent to
+   * {@link Enum#ordinal() Enum::ordinal}.
+   *
+   * @param &lt;T&gt; The type of the enum class
+   * @return The ordinal of the enum constant
+   */
+  public static &lt;T extends Enum&lt;?&gt;&gt; ToIntFunction&lt;T&gt; ordinal() {
+<span class="fc" id="L219">    return Enum::ordinal;</span>
+  }
+
+  static {
+<span class="fc" id="L223">    tmp.put(ordinal(), (arg, argName) -&gt; base(argName, arg) + &quot;.ordinal()&quot;);</span>
+  }
+
+  /**
+   * A function that returns the length of an array argument.
+   *
+   * @param &lt;T&gt; The type of the array.
+   * @return A {@code Function} that returns the length of an array
+   */
+  public static &lt;T&gt; ToIntFunction&lt;T&gt; length() {
+<span class="fc" id="L233">    return Array::getLength;</span>
+  }
+
+  static {
+<span class="fc" id="L237">    tmp.put(length(), (arg, argName) -&gt; base(argName, arg) + &quot;.length&quot;);</span>
+  }
+
+  /**
+   * Returns the size of a {@code Collection} argument. Equivalent to
+   * {@code Collection::size}.
+   *
+   * @param &lt;C&gt; The type of the {@code Collection}
+   * @return The size of a {@code Collection} argument
+   */
+  public static &lt;C extends Collection&lt;?&gt;&gt; ToIntFunction&lt;C&gt; size() {
+<span class="fc" id="L248">    return Collection::size;</span>
+  }
+
+  static {
+<span class="fc" id="L252">    tmp.put(size(), (arg, argName) -&gt; base(argName, arg) + &quot;.size()&quot;);</span>
+  }
+
+  /**
+   * Returns the size of a {@code List} argument. Equivalent to {@code List::size}.
+   *
+   * @param &lt;L&gt; The type of the {@code List}
+   * @return Returns the size of a {@code List} argument
+   */
+  public static &lt;L extends List&lt;?&gt;&gt; ToIntFunction&lt;L&gt; listSize() {
+<span class="fc" id="L262">    return List::size;</span>
+  }
+
+  static {
+<span class="fc" id="L266">    tmp.put(listSize(), tmp.get(size()));</span>
+  }
+
+  /**
+   * Returns the size of a {@code Set} argument. Equivalent to {@code Set::size}.
+   *
+   * @param &lt;S&gt; The type of the {@code Set}.
+   * @return The size of a {@code Set} argument
+   */
+  public static &lt;S extends Set&lt;?&gt;&gt; ToIntFunction&lt;S&gt; setSize() {
+<span class="fc" id="L276">    return Set::size;</span>
+  }
+
+  static {
+<span class="fc" id="L280">    tmp.put(setSize(), tmp.get(size()));</span>
+  }
+
+  /**
+   * Returns the size of a {@code Map} argument. Equivalent to {@code Map::size}.
+   *
+   * @param &lt;M&gt; The type of the {@code Map}
+   * @return The size of a {@code Map} argument
+   */
+  public static &lt;M extends Map&lt;?, ?&gt;&gt; ToIntFunction&lt;M&gt; mapSize() {
+<span class="fc" id="L290">    return Map::size;</span>
+  }
+
+  static {
+<span class="fc" id="L294">    tmp.put(mapSize(), tmp.get(size()));</span>
+  }
+
+  /**
+   * Returns the keys of a {@code Map} argument. Equivalent to
+   * {@link Map#keySet() Map::keySet}.
+   *
+   * @param &lt;K&gt; The type of the keys in the map
+   * @param &lt;V&gt; The type of the values in the map
+   * @param &lt;M&gt; The type of the map
+   * @return The keys of a {@code Map} argument
+   */
+  public static &lt;K, V, M extends Map&lt;K, V&gt;&gt; Function&lt;M, Set&lt;K&gt;&gt; keySet() {
+<span class="fc" id="L307">    return Map::keySet;</span>
+  }
+
+  static {
+<span class="fc" id="L311">    tmp.put(keySet(),</span>
+<span class="fc" id="L312">        (arg, argName) -&gt; base(argName, arg) + &quot;.keySet()&quot;);</span>
+  }
+
+  /**
+   * Returns the keys of a {@code Map} argument. Equivalent to
+   * {@link Map#values() Map::values}.
+   *
+   * @param &lt;K&gt; The type of the keys in the map
+   * @param &lt;V&gt; The type of the values in the map
+   * @param &lt;M&gt; The type of the map
+   * @return The values of a {@code Map} argument
+   */
+  public static &lt;K, V, M extends Map&lt;K, V&gt;&gt; Function&lt;M, Collection&lt;V&gt;&gt; values() {
+<span class="fc" id="L325">    return Map::values;</span>
+  }
+
+  static {
+<span class="fc" id="L329">    tmp.put(values(), (arg, argName) -&gt; base(argName, arg) + &quot;.values()&quot;);</span>
+  }
+
+  /**
+   * Returns the key of a {@code Map} entry. Equivalent to
+   * {@code Map.Entry::getKey}.
+   *
+   * @param &lt;K&gt; The type of the key of the entry
+   * @param &lt;V&gt; The type of the value of the entry
+   * @return The key of a {@code Map} entry
+   */
+  public static &lt;K, V&gt; Function&lt;Map.Entry&lt;K, V&gt;, K&gt; key() {
+<span class="fc" id="L341">    return Map.Entry::getKey;</span>
+  }
+
+  static {
+<span class="fc" id="L345">    tmp.put(key(), (arg, argName) -&gt; base(argName, arg) + &quot;.getKey()&quot;);</span>
+  }
+
+  /**
+   * Returns the value of a {@code Map} entry. Equivalent to
+   * {@code Map.Entry::getValue}.
+   *
+   * @param &lt;K&gt; The type of the key of the entry
+   * @param &lt;V&gt; The type of the value of the entry
+   * @return A {@code Function} that returns the value of a {@code Map} entry
+   */
+  public static &lt;K, V&gt; Function&lt;Map.Entry&lt;K, V&gt;, V&gt; value() {
+<span class="fc" id="L357">    return Map.Entry::getValue;</span>
+  }
+
+  static {
+<span class="fc" id="L361">    tmp.put(value(), (arg, argName) -&gt; base(argName, arg) + &quot;.getValue()&quot;);</span>
+  }
+
+  /**
+   * Returns the absolute value of an {@code int} argument. Equivalent to
+   * {@link Math#abs(int) Math::abs}.
+   *
+   * @return A {@code Function} that returns the absolute value of an integer
+   */
+  public static IntUnaryOperator abs() {
+<span class="fc" id="L371">    return Math::abs;</span>
+  }
+
+  static {
+<span class="fc" id="L375">    tmp.put(abs(),</span>
+<span class="fc" id="L376">        (arg, argName) -&gt; &quot;abs(&quot; + ifNull(argName, DEF_ARG_NAME) + &quot;)&quot;);</span>
+  }
+
+  //@formatter:off
+<span class="fc" id="L380">  private static final Map&lt;Class&lt;?&gt;, UnaryOperator&lt;? extends Number&gt;&gt; absFunctions = Map.of(</span>
+<span class="fc bfc" id="L381" title="All 2 branches covered.">      Integer.class,        n -&gt; n.intValue() &gt;= 0 ? n : Integer.valueOf(-n.intValue()),</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">      Double.class,         n -&gt; n.doubleValue() &gt;= 0 ? n : Double.valueOf(-n.doubleValue()),</span>
+<span class="fc bfc" id="L383" title="All 2 branches covered.">      Long.class,           n -&gt; n.longValue() &gt;= 0 ? n : Long.valueOf(-n.longValue()),</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">      Float.class,          n -&gt; n.floatValue() &gt;= 0 ? n : Float.valueOf(-n.floatValue()),</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">      Short.class,          n -&gt; n.shortValue() &gt;= 0 ? n : Short.valueOf((short) -n.shortValue()),</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">      Byte.class,           n -&gt; n.byteValue() &gt;= 0 ? n : Byte.valueOf((byte) -n.byteValue()),</span>
+<span class="fc" id="L387">      BigInteger.class,     n -&gt; ((BigInteger) n).abs(),</span>
+<span class="fc" id="L388">      BigDecimal.class,     n -&gt; ((BigDecimal) n).abs());</span>
+  //@formatter:on
+
+  /**
+   * Returns the absolute value of a {@code Number}. The following {@code Number}
+   * types are supported: {@code Integer}, {@code Double}, {@code Long},
+   * {@code Float}, {@code Short}, {@code Byte}, {@code BigInteger},
+   * {@code BigDecimal}.
+   *
+   * @param &lt;T&gt; The type of the {@code Number}
+   * @return The absolute value of a {@code Number}
+   */
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public static &lt;T extends Number&gt; Function&lt;T, T&gt; ABS() {
+<span class="fc" id="L402">    return n -&gt; {</span>
+<span class="fc" id="L403">      UnaryOperator op = absFunctions.get(n.getClass());</span>
+<span class="fc bfc" id="L404" title="All 2 branches covered.">      if (op != null) {</span>
+<span class="fc" id="L405">        return (T) op.apply(n);</span>
+      }
+<span class="fc" id="L407">      throw typeNotSupported(n.getClass());</span>
+    };
+  }
+
+  static {
+<span class="fc" id="L412">    tmp.put(ABS(), (arg, argName) -&gt; &quot;abs(&quot; + base(argName, arg) + &quot;)&quot;);</span>
+  }
+
+  /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+  /*            End of getter definitions                    */
+  /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+  static String formatProperty(Object arg,
+      String argName,
+      Object getter,
+      Class getterClass) {
+<span class="fc" id="L423">    BiFunction&lt;Object, String, String&gt; fmt = NAMES.get(getter);</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">    if (fmt == null) {</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">      String s0 = getterClass == ToIntFunction.class ? &quot;applyAsInt&quot; : &quot;apply&quot;;</span>
+<span class="fc" id="L426">      return simpleClassName(getterClass) + &quot;.&quot; + s0 + &quot;(&quot; + toStr(arg) + &quot;)&quot;;</span>
+    }
+<span class="fc" id="L428">    return fmt.apply(arg, argName);</span>
+  }
+
+  static String formatProperty(int arg,
+      String argName,
+      Object getter,
+      Class getterClass) {
+<span class="fc" id="L435">    BiFunction&lt;Object, String, String&gt; fmt = NAMES.get(getter);</span>
+<span class="fc bfc" id="L436" title="All 2 branches covered.">    if (fmt == null) {</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">      String s0 = getterClass == IntUnaryOperator.class ? &quot;applyAsInt&quot; : &quot;apply&quot;;</span>
+<span class="fc" id="L438">      return simpleClassName(getterClass) + &quot;.&quot; + s0 + &quot;(&quot; + arg + &quot;)&quot;;</span>
+    }
+<span class="fc" id="L440">    return fmt.apply(arg, argName);</span>
+  }
+
+  static {
+<span class="fc" id="L444">    NAMES = Map.copyOf(tmp);</span>
+<span class="fc" id="L445">    tmp = null;</span>
+<span class="fc" id="L446">  }</span>
+
+  private static String base(String argName, Object arg) {
+<span class="fc" id="L449">    return ifNull(argName, simpleClassName(arg));</span>
+  }
+
+  private static String ifNull(String value, String defVal) {
+<span class="fc bfc" id="L453" title="All 2 branches covered.">    return value == null ? defVal : value;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
