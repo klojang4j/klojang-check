@@ -102,8 +102,10 @@ Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 Check.notNull(file).is(writable());
 ```
 
-Note that a check in the `CommonChecks` does "what it says on the tin" _and nothing else_.
-So the `writable()` check does _not_ do an implicit null check. If the `file` argument in the 
+Note that the checks in the `CommonChecks` _only_ validate what they advertise to be 
+validating ("what it says on the tin"). The 
+[writable()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#writable()) 
+check does not also do an implicit null check. If the `file` argument in the 
 above example can possibly be null, you must start with a null check.
 
 Checks on different values can be also be chained:
@@ -121,16 +123,50 @@ Check.that(numberOfTables).is(one());
 
 This makes it easier to see which values are being validated.
 
+### The ComposablePredicate and Relation Interfaces
+
+What exactly is going on in those `is(...)` calls? You probably (and correctly) inferred
+that `positive()` and `one()` return some kind of 
+[Predicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html),
+but what about `gte()` and `substringOf()`?
+
+The `is()` method is overloaded to take two basic types of tests: either
+[ComposablePredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html)
+or
+[Relation](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/Relation.html).
+(Both have int specializations like
+[ComposableIntPredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposableIntPredicate.html).)
+`ComposablePredicate` is an extension of `Predicate` that add various `default` methods
+that assist in composing checks (combining multiple checks into one more fine-grained 
+check). See [Composite Checks](#composite-checks). The `Relation` interface does not have
+a `java.util.function` equivalent. The functional method of the `Relation` interface is
+called `exists()`; it takes two arguments and returns a `boolean`. (It could also have
+been called a `BiPredicate`.)
+
+Take this example again:
+
+```java
+Check.that(firstName).is(substringOf(), lastName);
+```
+
+Here, `substringOf()` returns a `Relation<String, String>`. _Klojang Check_ will pass 
+`firstName` as the first argument to the `exists()` method and `lastName` as the second.
+If the `exists()` returns `true`, `firstName` has passed the check; otherwise it has 
+failed the check. (To demystify it even further, what gets executed in this particular
+check really is nothing but `lastName.contains(firstName)`, because that is how the
+`substringOf()` check has been implemented.)
+
+
 ### Tagging the Tested Value
 
 <i>Klojang Check</i> generates a short, informative error message if the input value fails
 a test.
 
 ```java
-Check.notNull(foo);
+Check.notNull(null);
 // error message: argument must not be null
 
-Check.that(length).is(gte(), 0);
+Check.that(-42).is(gte(), 0);
 // error message: argument must be >= 0 (was -42)
 ```
 
@@ -143,6 +179,9 @@ Check.notNull(foo, "foo");
 
 Check.that(length, "length").is(gte(), 0);
 // error message: length must be >= 0 (was -42)
+    
+Check.that(numberOfChairs, "number of chairs").is(positive());
+Check.that(numberOfTables, "number of tables").is(one());
 ```
 
 This is especially useful when checking multiple method arguments as the
