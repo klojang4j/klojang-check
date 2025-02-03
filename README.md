@@ -69,8 +69,7 @@ Check.notNull(foo);
 ### The CommonChecks class
 
 The [CommonChecks](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html)
-class is a grab bag of common checks on arguments, fields (a.k.a. state) and other types
-of program input.
+class is a grab bag of common checks on arguments, fields (a.k.a. state), variables, etc.
 
 ```java
 import static org.klojang.check.CommonChecks.*;
@@ -103,10 +102,13 @@ Check.notNull(file).is(writable());
 ```
 
 Note that the checks in the `CommonChecks` _only_ validate what they advertise to be 
-validating ("what it says on the tin"). The 
-[writable()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#writable()) 
-check does not also do an implicit null check. If the `file` argument in the 
-above example can possibly be null, you must start with a null check.
+validating. Notably, _they will never do an implicit null check!_ If the `file` argument 
+in the above example can possibly be null, you must start with an explicit null check. 
+(There are a few exceptions to this rule. For example, the 
+[notEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#notEmpty())
+and 
+[deepNotEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#deepNotEmpty())
+checks do include a null check. This will then be clearly documented in the javadocs.)
 
 Checks on different values can be also be chained:
 
@@ -130,18 +132,17 @@ that `positive()` and `one()` return some kind of
 [Predicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html),
 but what about `gte()` and `substringOf()`?
 
-The `is()` method is overloaded to take two basic types of tests: either
+With _Klojang Check_ you can execute two basic types of tests, specified through the
 [ComposablePredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html)
-or
+and
 [Relation](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/Relation.html).
-(Both have int specializations like
+interfaces. (Both have int specializations like
 [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposableIntPredicate.html).)
 `ComposablePredicate` is an extension of `Predicate` that add various `default` methods
 that assist in composing checks (combining multiple checks into one more fine-grained 
 check). See [Composite Checks](#composite-checks). The `Relation` interface does not have
 a `java.util.function` equivalent. The functional method of the `Relation` interface is
-called `exists()`; it takes two arguments and returns a `boolean`. (It could also have
-been called a `BiPredicate`.)
+called `exists()`; it takes two arguments and returns a `boolean`.
 
 Take this example again:
 
@@ -152,9 +153,9 @@ Check.that(firstName).is(substringOf(), lastName);
 Here, `substringOf()` returns a `Relation<String, String>`. _Klojang Check_ will pass 
 `firstName` as the first argument to the `exists()` method and `lastName` as the second.
 If the `exists()` returns `true`, `firstName` has passed the check; otherwise it has 
-failed the check. (To demystify it even further, what gets executed in this particular
+failed the check. To demystify it even further, what gets executed in this particular
 check really is nothing but `lastName.contains(firstName)`, because that is how the
-`substringOf()` check has been implemented.)
+`substringOf()` check has been implemented.
 
 
 ### Tagging the Tested Value
