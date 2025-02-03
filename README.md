@@ -102,7 +102,7 @@ Check.notNull(file).is(writable());
 ```
 
 Note that the checks in the `CommonChecks` _only_ validate what they advertise to be 
-validating. Notably, _they will never do an implicit null check!_ If the `file` argument 
+validating. Notably, **they will never do an implicit null check!** If the `file` argument 
 in the above example can possibly be null, you must start with an explicit null check. 
 (There are a few exceptions to this rule. For example, the 
 [notEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#notEmpty())
