@@ -175,13 +175,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>docs/api</directory>
-                            <includes>
-                                <include>**/*</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>docs/coverage</directory>
+                            <directory>docs/21</directory>
                             <includes>
                                 <include>**/*</include>
                             </includes>
@@ -262,7 +256,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>docs/api</outputDirectory>
+                            <outputDirectory>docs/21/api</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target/apidocs</directory>
@@ -277,7 +271,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>docs/coverage</outputDirectory>
+                            <outputDirectory>docs/21/coverage</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target/site/jacoco</directory>

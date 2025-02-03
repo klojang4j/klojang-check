@@ -36,25 +36,25 @@ implementation group: 'org.klojang', name: 'klojang-check', version: '21.2.0'
 ## Documentation
 
 The **Javadocs** for <i>Klojang Check</i> can be
-found **[here](https://klojang4j.github.io/klojang-check/api)**.
+found **[here](https://klojang4j.github.io/klojang-check/21/api)**.
 
 The latest **test coverage results**
-are **[here](https://klojang4j.github.io/klojang-check/coverage)**.
+are **[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
 
 ## Performance
 
 <i>Klojang Check</i> incurs practically zero
 overhead. That is because, by itself, it doesn't really _do stuff_. As mentioned, it only
 provides a set of syntactical constructs that make precondition validation more concise.
-Of course, if you want to ascertain that a is in a `Map` before using it, you will have to
-do the lookup. There is no two ways around it. <i>Klojang Check</i> just lets you express
-this fact more clearly:
+Of course, if you need to ascertain that a value is in a `Map` before proceeding, you will 
+have to do the lookup. There are no two ways around it. <i>Klojang Check</i> just lets you 
+express this fact more clearly:
 
 ```java
 Check.that(value).is(keyIn(), map);
 ```
 
-The latest **JMH benchmarks** can be found
+You can find **JMH benchmarks** for _Klojang Check_
 **[here](https://github.com/klojang4j/klojang-check-jmh)**.
 
 ## Usage
@@ -102,10 +102,9 @@ Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 Check.notNull(file).is(writable());
 ```
 
-This is a good time to point out that checks in the `CommonChecks` class _only_ validate 
-"what it says on the tin". So the `writable()` check does not do an implicit null check.
-If the `file` argument in the above example can possibly be null, you must start with a
-null check.
+Note that a check in the `CommonChecks` only does "what it says on the tin". So the 
+`writable()` check does _not_ do an implicit null check. If the `file` argument in the 
+above example can possibly be null, you must start with a null check.
 
 Checks on different values can be also be chained:
 
@@ -120,7 +119,7 @@ Check.that(numberOfChairs).is(positive());
 Check.that(numberOfTables).is(one());
 ```
 
-This makes it easier to see which values have been validated.
+This makes it easier to see which values are being validated.
 
 ### Tagging the Tested Value
 
@@ -337,7 +336,7 @@ input value. They allow you to specify that the input value must pass a check fo
 ```java
 import static org.klojang.check.types.Quantifier.noneOf;
 
-Check.that(collection).is(valid().and(contains(), noneOf(), "FOO", "BAR", "BOZO"));
+Check.that(collection).is(notEmpty().and(contains(), noneOf(), "FOO", "BAR", "BOZO"));
 ```
 
 What if there is just one check you want to execute, but you want to use a logical 
