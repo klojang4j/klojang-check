@@ -99,7 +99,12 @@ Checks on the same value can be chained:
 
 ```java
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
+Check.notNull(file).is(writable());
 ```
+
+This is a good time to point out that checks in the `CommonChecks` class _only_ validate 
+"what it says on the tin". So the `writable()` check does not do an implicit null check.
+If the `file` argument in the above example can possibly be null, you must start your
 
 Checks on different values can be also be chained:
 
@@ -107,7 +112,7 @@ Checks on different values can be also be chained:
 Check.that(numberOfChairs).is(positive()).and(numberOfTables).is(one());
 ```
 
-Generally, though, we do not recommend the latter practice. Just write:
+Generally, though, we do not recommend this. Just write:
 
 ```java
 Check.that(numberOfChairs).is(positive());
