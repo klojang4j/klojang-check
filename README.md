@@ -261,8 +261,8 @@ Thus, the previous check can also be written as follows:
 Check.that(length).is(lte(), maxLen, "length must be <= ${obj} (was ${arg})");
 ```
 
-Note that the above error message contains message arguments, but you don't need to
-provide them yourself.
+The above error message contains message arguments, but you don't need to provide them 
+yourself.
 
 ### Throwing a Custom Exception
 
