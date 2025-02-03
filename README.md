@@ -345,8 +345,8 @@ Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 What if you want the first check to be a
 [Relation](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/Relation.html),
 like [gte()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte())
-or [instanceOf()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#instanceOf()),
-or you want the first check to be a self-written lambda or a method reference?
+or [instanceOf()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#instanceOf())?
+Or if you want the first check to be a self-written lambda or a method reference?
 In that case you can start your composition with one of four special checks:
 [valid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#valid()),
 [validInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#validInt()),
