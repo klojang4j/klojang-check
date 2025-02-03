@@ -338,8 +338,6 @@ interfaces. Here we use the `or(...)` method:
 ```java
 Check.that(collection).is(empty().or(contains(), "FOO"));
 Check.that(collection1).is(empty().or(collection2, contains(), "FOO"));
-// or, if you prefer a little less syntactic sugar:
-Check.that(collection1).is(empty().or(collection2.contains("FOO"));
 ```
 
 What if you want the first check to be a
