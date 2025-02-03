@@ -333,7 +333,8 @@ second case you want to validate two interrelated values.
 <i>Klojang Check</i> enables you to do this using the `default` methods on the
 [ComposablePredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposablePredicate.html)
 and [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposableIntPredicate.html)
-interfaces. Here we use the `or(...)` method:
+interfaces. Here we use the [or()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html#or(org.klojang.check.types.Relation,O))
+method of `ComposablePredicate`:
 
 ```java
 Check.that(collection).is(empty().or(contains(), "FOO"));
