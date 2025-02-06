@@ -19,7 +19,6 @@ error messages, so you don't have to invent them yourselves.
 To use <i>Klojang Check</i>, add the following dependency to your Maven POM file:
 
 ```xml
-
 <dependency>
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
@@ -76,10 +75,41 @@ import static org.klojang.check.CommonChecks.*;
 
 Check.that(length).is(gte(), 0);
 Check.that(divisor).isNot(zero());
+Check.that(collection).isNot(empty());
 Check.that(file).is(writable());
 Check.that(firstName).is(substringOf(), fullName);
 Check.that(i).is(indexOf(), list);
 Check.that(employee.isManager()).is(yes());
+```
+
+The `Check.that(...)` method either returns an
+[IntCheck](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/IntCheck.html)
+or an
+[ObjectCheck](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/ObjectCheck.html)
+object, depending on whether the argument is an `int` or anything else. `IntCheck` gives
+you access to int-specific checks like
+[gte()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#gte()),
+[zero()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#zero()),
+and [indexOf()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#indexOf()).
+With `ObjectCheck`, the argument passed to `Check.that(...)` determines which checks can
+be executed. The
+[writable()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#writable())
+check, for example, can only be used if the argument is a
+[File](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/File.html).
+The
+[empty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#emptu())
+check, on the other hand, can be applied to a wide variety of objects. These are also
+valid checks:
+
+```java
+import static org.klojang.check.CommonChecks.empty;
+
+Check.that(map).is(empty());
+Check.that(array).isNot(empty());
+Check.that(string).isNot(empty());
+Check.that(optional).isNot(empty());
+Check.that(file).is(empty());
+Check.that(directory).is(empty());
 ```
 
 ### Custom Checks
@@ -102,10 +132,11 @@ Check.notNull(file).is(writable());
 ```
 
 Note that the checks in the `CommonChecks` _only_ validate what they advertise to be 
-validating. Notably, **they will never do an implicit null check!** If the `file` argument 
+validating. Notably, **they will never do an implicit null check.** If the `file` argument 
 in the above example can possibly be null, you must start with an explicit null check. 
-(There are a few exceptions to this rule. For example, the 
-[notEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#notEmpty())
+(There are a few exceptions to this rule. For example, the
+[empty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#empty()),
+[notEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#notEmpty()),
 and 
 [deepNotEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#deepNotEmpty())
 checks do include a null test. This will then be clearly documented in the javadocs.)
@@ -127,11 +158,6 @@ This makes it easier to see which values are being validated.
 
 ### The ComposablePredicate and Relation Interfaces
 
-What exactly is going on in those `is(...)` calls? You probably (and correctly) inferred
-that `positive()` and `one()` return some kind of 
-[Predicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html),
-but what about `gte()` and `substringOf()`?
-
 With _Klojang Check_ you can execute two basic types of tests, specified through the
 [ComposablePredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html)
 and
@@ -141,8 +167,8 @@ interfaces. (Both have int specializations like
 `ComposablePredicate` is an extension of `Predicate` that add various `default` methods
 that assist in composing checks (combining multiple checks into one more fine-grained 
 check). See [Composite Checks](#composite-checks). The `Relation` interface does not have
-a `java.util.function` equivalent. The functional method of the `Relation` interface is
-called `exists()`; it takes two arguments and returns a `boolean`.
+a `java.util.function` equivalent. The functional method of `Relation` is called 
+`exists()`. It takes two arguments and returns a `boolean`.
 
 Take this example again:
 
@@ -153,10 +179,7 @@ Check.that(firstName).is(substringOf(), lastName);
 Here, `substringOf()` returns a `Relation<String, String>`. _Klojang Check_ will pass 
 `firstName` as the first argument to the `exists()` method and `lastName` as the second.
 If the `exists()` returns `true`, `firstName` has passed the check; otherwise it has 
-failed the check. To demystify it even further, what gets executed in this particular
-check really is nothing but `lastName.contains(firstName)`, because that is how the
-`substringOf()` check has been implemented.
-
+failed the check.
 
 ### Tagging the Tested Value
 
@@ -379,7 +402,7 @@ import static org.klojang.check.types.Quantifier.noneOf;
 Check.that(collection).is(notEmpty().and(contains(), noneOf(), "FOO", "BAR", "BOZO"));
 ```
 
-What if there is just one check you want to execute, but you want to use a logical 
+What if there is just one check you want to execute, but you still want to use a logical 
 quantifier? Again you can use the dummy checks mentioned above:
 
 ```java
