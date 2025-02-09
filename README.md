@@ -438,7 +438,7 @@ Check.that(collection).is(valid().and(contains(), allOf(), "FOO", "BAR", "BOZO")
 
 ## About
 
-<img src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0" />
+<img alt="Naturalis logo" src="docs/logo-groen.png" style="float:left;width:5%;padding:0 12px 12px 0" />
 
 <i>Klojang Check</i> is developed by [Naturalis](https://www.naturalis.nl/en), the
 Dutch national biodiversity research institute. It maintains one of the largest
