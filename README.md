@@ -5,14 +5,40 @@ method arguments, variables &#8212; anything that needs to have the right value 
 you can safely execute the next line of code. It enables you to separate precondition 
 validation and business logic in an elegant and concise way.
 
-<i>Klojang Check</i> works rather differently than, for example,
+<i>Klojang Check</i>'s take on precondition validation is different from, for example,
 Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
 class or
 Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
-class, which server a similar purpose. It provides a set of syntactical constructs that 
-make it easy to specify your checks. In addition, it comes with a large set of predefined
-checks on values of various types. These checks are associated with short, informative 
-error messages, so you don't have to invent them yourselves.
+class, which serve a similar purpose. It provides you with a template in which you can
+embed your own checks. In addition, it comes with a large set of predefined checks on 
+values of various types. These checks are associated with short, informative error 
+messages, so you don't have to invent them yourselves.
+
+Here is an example (explained below) of <i>Klojang Check</i> in action:
+
+```java
+Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
+```
+
+<i>Klojang Check</i> will save you a lot of time writing unit tests. The above example
+does not require you to write any unit tests in order to maintain the code coverage
+percentage you are aiming for &#8212; your code coverage analyzer would simply step over
+the above statement. On the other hand, if you would hand-code the above check, it would 
+look something like this:
+
+```java
+if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
+    throw new IllegalArgumentException();
+}
+```
+
+_Now_ you will have to write six boring unit tests to keep your code coverage analyzer
+happy. Of course, that shifts the burden of making sure the checks get properly executed
+to <i>Klojang Check</i>. For this reason <i>Klojang Check</i> itself is thoroughly tested.
+The latest test coverage results can be found
+**[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
+
+
 
 ## Getting Started
 
@@ -32,13 +58,9 @@ or Gradle build script:
 implementation group: 'org.klojang', name: 'klojang-check', version: '21.2.0'
 ```
 
-## Documentation
-
 The **Javadocs** for <i>Klojang Check</i> can be
 found **[here](https://klojang4j.github.io/klojang-check/21/api)**.
 
-The latest **test coverage results**
-are **[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
 
 ## Performance
 
