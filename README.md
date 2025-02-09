@@ -61,12 +61,9 @@ found **[here](https://klojang4j.github.io/klojang-check/21/api)**.
 
 ## Performance
 
-<i>Klojang Check</i> incurs practically zero
-overhead. That is because, by itself, it doesn't really _do stuff_. As mentioned, it only
-provides a set of syntactical constructs that make precondition validation more concise.
-Of course, if you need to ascertain that a value is in a `Map` before proceeding, you will 
-have to do the lookup. There are no two ways around it. <i>Klojang Check</i> just lets you 
-express this fact more clearly:
+<i>Klojang Check</i> incurs practically zero overhead. Of course, if you need to ascertain 
+that a value is in a `Map` before proceeding, you will have to do the lookup. There are no
+two ways around it. <i>Klojang Check</i> just lets you express this fact more clearly:
 
 ```java
 Check.that(value).is(keyIn(), map);
@@ -143,7 +140,9 @@ Check.that(employee).is(Employee::isManager);
 
 ### Chaining Checks
 
-Checks on the same value can be chained:
+The `is(...)` and `isNot(...)` methods return the same `IntCheck` or `ObjectCheck`
+instance as the one that was created by `Check.that(...)`. This allows you to chain
+multiple checks on the same value:
 
 ```java
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
