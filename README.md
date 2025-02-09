@@ -164,22 +164,29 @@ and
 [Relation](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/Relation.html)
 interfaces. (Both have int specializations like
 [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposableIntPredicate.html).)
-`ComposablePredicate` is an extension of `Predicate` that add various `default` methods
+`ComposablePredicate` is an extension of `Predicate` that adds various `default` methods
 that assist in composing checks (combining multiple checks into one more fine-grained 
 check). See [Composite Checks](#composite-checks). The `Relation` interface does not have
 a `java.util.function` equivalent. The functional method of `Relation` is called 
 `exists()`. It takes two arguments and returns a `boolean`.
 
-Take this example again:
+Take this example:
 
 ```java
 Check.that(firstName).is(substringOf(), lastName);
 ```
 
-Here, `substringOf()` returns a `Relation<String, String>`. _Klojang Check_ will pass 
+The `substringOf()` method returns a `Relation<String, String>`. _Klojang Check_ will pass 
 `firstName` as the first argument to the `exists()` method and `lastName` as the second.
 If the `exists()` returns `true`, `firstName` has passed the check; otherwise it has 
-failed the check.
+failed the check. To demystify things even further, this is how the `substringOf()` method
+is implemented:
+
+```java
+public static Relation<String, String> substringOf() {
+    return (arg1, arg2) -> arg2.contains(arg1);
+}
+```
 
 ### Tagging the Tested Value
 
