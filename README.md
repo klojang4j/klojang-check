@@ -21,10 +21,9 @@ Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 ```
 
 <i>Klojang Check</i> will save you a lot of time writing unit tests. The above example
-does not require you to write any unit tests in order to maintain the code coverage
-percentage you are aiming for &#8212; your code coverage analyzer would simply step over
-the above statement. On the other hand, if you would hand-code the above check, it would 
-look something like this:
+does not require you to write any unit tests &#8212; your code coverage analyzer would 
+simply step over the above statement. On the other hand, if you would hand-code the 
+above check, it would look something like this:
 
 ```java
 if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
@@ -34,11 +33,9 @@ if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
 
 _Now_ you will have to write six boring unit tests to keep your code coverage analyzer
 happy. Of course, that shifts the burden of making sure the checks get properly executed
-to <i>Klojang Check</i>. For this reason <i>Klojang Check</i> itself is thoroughly tested.
+to <i>Klojang Check</i>. For this reason <i>Klojang Check</i> is itself thoroughly tested.
 The latest test coverage results can be found
 **[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
-
-
 
 ## Getting Started
 
