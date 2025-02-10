@@ -198,7 +198,7 @@ Check.that(firstName).is(substringOf(), lastName);
 
 The `substringOf()` method returns a `Relation<String, String>`. _Klojang Check_ will pass
 `firstName` as the first argument to the `exists()` method and `lastName` as the second.
-If the `exists()` returns `true`, `firstName` has passed the check; otherwise it has
+If the `exists()` call returns `true`, `firstName` has passed the check; otherwise it has
 failed the check. To demystify things even further, this is how the `substringOf()` method
 is implemented:
 
