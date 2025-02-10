@@ -1,37 +1,37 @@
 # Klojang Check
 
-<i>Klojang Check</i> is a tiny framework for validating program input, object state,
-method arguments, variables &#8212; anything that needs to have the right value before
-you can safely execute the next line of code. It enables you to separate precondition 
-validation and business logic in an elegant and concise way.
+Ensuring that your program input, object state, or method arguments are valid before
+execution is crucial for writing robust software. _Klojang Check_ is a lightweight framework
+designed to simplify precondition validation, making your code cleaner, more expressive,
+and reducing the need for excessive unit tests. It helps separate precondition validation 
+from business logic in an elegant, concise way.
 
-<i>Klojang Check</i>'s take on precondition validation is different from, for example,
+_Klojang Check_'s take on precondition validation is different from, for example,
 Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
 class or
 Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
-class, which serve a similar purpose. It lets you lay out a template in which you can
-embed your own checks. In addition, it comes with a large set of predefined checks on 
-values of various types. These checks are associated with short, informative error 
-messages, so you don't have to invent them yourselves.
+class, which serve a similar purpose. It provides a flexible template for embedding your 
+own checks. In addition, it comes with a large set of predefined checks on values of 
+various types. These checks are associated with short, informative error messages, so you 
+don't have to invent them yourselves.
 
-Here is an example (explained below) of <i>Klojang Check</i> in action:
+Here is an example (explained below) of _Klojang Check_ in action:
 
 ```java
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 ```
 
-Using <i>Klojang Check</i> will make your code more robust while still saving you a lot of 
-time writing unit tests. The above example does not require you to write any unit tests 
-&#8212; code coverage analyzers would fly right past the above statement. On the other 
-hand, if you would hand-code the above check, it would look something like this:
+Note that this validation requires no additional unit tests, making your code easier to
+maintain. Code coverage analyzers would simply step over the above statement. On the other 
+hand, if you would hand-code this check, it would look something like this:
 
 ```java
 if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
-    throw new IllegalArgumentException();
+    throw new IllegalArgumentException("Invalid number of chairs");
 }
 ```
 
-_Now_ you will have to write eight (actually 2 to the power of 3) boring unit tests to 
+_Now_ you will have to write eight (2 to the power of 3) boring unit tests to 
 maintain your code coverage.
 
 Of course, this shifts the burden of responsibility to <i>Klojang Check</i>. 
@@ -41,14 +41,13 @@ The latest test coverage results can be found
 
 ### Performance
 
-<i>Klojang Check</i> incurs practically zero overhead. By itself, it doesn't really do
-anything. It just provides you with a template in which you can embed your own checks. 
-Of course, if you need to ascertain that a value is in a `Map` before proceeding, you will 
-have to do the lookup. There are no two ways around it. _Klojang Check_ just lets you 
-express this fact more clearly:
+_Klojang Check_ is lightweight: it provides a template for embedding checks without adding
+significant overhead. Of course, if you need to check whether a value is in a `Map`, 
+a lookup is unavoidable. There are no two ways around it. _Klojang Check_ simply provides 
+a cleaner way to express this:
 
 ```java
-Check.that(value).is(keyIn(), map);
+Check.that(value).is(keyIn(), map);  // Ensure 'value' is a key in 'map'
 ```
 
 You can find **JMH benchmarks** for _Klojang Check_
@@ -71,7 +70,9 @@ To use <i>Klojang Check</i>, add the following dependency to your Maven POM file
 or Gradle build script:
 
 ```
-implementation group: 'org.klojang', name: 'klojang-check', version: '21.2.0'
+dependencies {
+    implementation 'org.klojang:klojang-check:21.2.0'
+}
 ```
 
 The **Javadocs** for <i>Klojang Check</i> can be
@@ -225,8 +226,7 @@ Check.that(-42).is(gte(), 0);
 // error message: argument must be >= 0 (was -42)
 ```
 
-You can provide a "tag" for the value you are testing in order to give the user more 
-context:
+To improve error messages, you can tag values with meaningful names:
 
 ```java
 Check.notNull(foo, "foo");
@@ -364,27 +364,23 @@ You can optionally pass a transformation function to the `ok()` method:
 this.age = Check.notNull(person).ok(Person::age);
 ```
 
-The transformation function is allowed to throw a checked exception, so even at this late
-stage you may decide that the value is invalid after all. This is because what gets passed
-to the `ok()` method is not a
-[Function](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html)
-or [ToIntFunction](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/ToIntFunction.html)
-but a [FallibleFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleFunction.html)
-or [FallibleToIntFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleToIntFunction.html),
-respectively.
+The transformation function can throw checked exceptions, so even at this late stage you 
+can still reject the value if needed. (See
+[FallibleFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleFunction.html)
+and [FallibleToIntFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleToIntFunction.html) for more details.)
 
 ### Composite Checks
 
 Sometimes, proper validation can only be done through a combination of checks.
-Schematically, this is what you would want to accomplish:
+For example, you may want to enforce one of these conditions:
 
 - _**x must be either A or B**_
-- or: _**either x must be A or y must be B**_:
+- _**either x must be A or y must be B**_:
 
 In the first case you want to provide two alternative checks for the same value. In the
 second case you want to validate two interrelated values.
 
-<i>Klojang Check</i> enables you to do this using the `default` methods on the
+_Klojang Check_ enables you to do this using the `default` methods on the
 [ComposablePredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposablePredicate.html)
 and [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposableIntPredicate.html)
 interfaces. Here we use the [or()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html#or(org.klojang.check.types.Relation,O))
@@ -405,8 +401,8 @@ In that case you can start your composition with one of four special checks:
 [validInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#validInt()),
 [invalid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalid()),
 and [invalidInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalidInt()).
-These really are dummy checks that don't make sense when used as the _only_ check on a 
-value. The first two checks always pass and can be used as the start of a series of 
+These are dummy checks specifically meant for composition and should not be used in
+isolation. The first two checks always pass and can be used as the start of a series of 
 AND-joined checks. The last two always fail and can be used as the start of a series of 
 OR-joined checks.
 

@@ -28,7 +28,7 @@ public interface ObjIntRelation&lt;S&gt; {
    * @return an {@code IntObjRelation} that is the converse of this {@code ObjIntRelation}.
    */
   default IntObjRelation&lt;S&gt; converse() {
-<span class="nc" id="L31">    return (x, y) -&gt; exists(y, x);</span>
+<span class="fc" id="L31">    return (x, y) -&gt; exists(y, x);</span>
   }
 
   /**
@@ -37,7 +37,7 @@ public interface ObjIntRelation&lt;S&gt; {
    * @return the negation of the this {@code ObjIntRelation}
    */
   default ObjIntRelation&lt;S&gt; negate() {
-<span class="nc bnc" id="L40" title="All 2 branches missed.">    return (x, y) -&gt; !exists(x, y);</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">    return (x, y) -&gt; !exists(x, y);</span>
   }
 
   /**

@@ -19,7 +19,7 @@ Klojang Check,org.klojang.check.types,ComposableIntPredicate,1,605,5,129,0,35,5,
 Klojang Check,org.klojang.check.types,Quantifier,0,27,0,0,0,7,0,4,0,4
 Klojang Check,org.klojang.check.types,Private,3,82,0,6,1,8,1,12,1,8
 Klojang Check,org.klojang.check.types,ComposablePredicate,2,551,5,117,0,32,5,119,0,63
-Klojang Check,org.klojang.check.types,ObjIntRelation,20,0,2,0,2,0,5,0,4,0
+Klojang Check,org.klojang.check.types,ObjIntRelation,2,18,1,1,0,2,1,4,0,4
 Klojang Check,org.klojang.check.types,Compose,6,77,0,6,2,9,1,19,1,16
 Klojang Check,org.klojang.check.types,IntRelation,0,20,0,2,0,2,0,5,0,4
 Klojang Check,org.klojang.check.types,Relation,8,12,0,2,1,1,2,3,2,2
