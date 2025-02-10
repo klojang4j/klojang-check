@@ -41,8 +41,8 @@ The latest test coverage results can be found
 
 ### Performance
 
-<i>Klojang Check</i> incurs practically zero overhead. By itself, it doesn't 
-_do stuff_. It just provides you with a template in which you can embed your own checks. 
+<i>Klojang Check</i> incurs practically zero overhead. By itself, it doesn't really do
+anything. It just provides you with a template in which you can embed your own checks. 
 Of course, if you need to ascertain that a value is in a `Map` before proceeding, you will 
 have to do the lookup. There are no two ways around it. _Klojang Check_ just lets you 
 express this fact more clearly:
