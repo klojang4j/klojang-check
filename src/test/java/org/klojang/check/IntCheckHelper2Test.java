@@ -331,15 +331,28 @@ public class IntCheckHelper2Test {
     Check.that(7).notHas(i -> i + 3, gt(), 5, () -> new IOException());
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void has_IntUnaryOperator00() throws IOException {
+    Check.that(-7).has(abs(), gt(), 9);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void notHas_IntUnaryOperator00() throws IOException {
+    Check.that(-7).notHas(abs(), gt(), 5);
+  }
+
+  @Test(expected = IOException.class)
+  public void notHas_IntUnaryOperator_IntPredicate_ExcSupplier() throws IOException {
+    Check.that(-7).notHas(abs(), eq(), 7, () -> new IOException());
+  }
+
   @Test
   public void testLambdas() {
     int temperature = -7;
     Check.that(temperature).has(i -> Math.abs(i), (int i) -> i < 30);
     Check.that(temperature).has((IntUnaryOperator) i -> Math.abs(i), i -> i < 30);
     Check.that(temperature).has(i -> Math.abs(i), (Integer i) -> i % 2 == 1);
-    Check.that(temperature).has(
-        (IntFunction<Integer>) i -> Math.abs(i),
-        i -> i < 30);
+    Check.that(temperature).has((IntFunction<Integer>) i -> Math.abs(i), i -> i < 30);
     Check.that(temperature).has(abs(), i -> i < 30);
     Check.that(temperature).has(i -> Math.abs(i), lt(), 30);
     Check.that(temperature).has(abs(), lt(), 30);

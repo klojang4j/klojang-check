@@ -10,8 +10,8 @@ Klojang Check,org.klojang.check,IntCheckHelper1,0,538,0,44,0,114,0,38,0,16
 Klojang Check,org.klojang.check,Tag,6,0,0,0,2,0,1,0,1,0
 Klojang Check,org.klojang.check,ObjectCheckHelper1,0,534,0,44,0,110,0,38,0,16
 Klojang Check,org.klojang.check,CommonProperties,0,436,0,24,0,76,0,66,0,54
-Klojang Check,org.klojang.check,IntCheckHelper2,34,534,3,41,5,123,3,35,0,16
-Klojang Check,org.klojang.check.extra,Result,0,169,1,35,0,32,1,35,0,18
+Klojang Check,org.klojang.check,IntCheckHelper2,4,564,1,43,1,127,1,37,0,16
+Klojang Check,org.klojang.check.extra,Result,0,169,0,36,0,32,0,36,0,18
 Klojang Check,org.klojang.check.extra,DuplicateValueException.Usage,0,25,0,0,0,5,0,2,0,2
 Klojang Check,org.klojang.check.extra,DuplicateValueException,0,65,0,0,0,18,0,8,0,8
 Klojang Check,org.klojang.check.extra,Emptyable,0,7,0,2,0,1,0,2,0,1

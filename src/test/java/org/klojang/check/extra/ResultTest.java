@@ -122,4 +122,10 @@ public class ResultTest {
     assertTrue(r.isAvailableAndNotNull());
   }
 
+  @Test
+  public void isAvailableAndNotNull01() {
+    Result<String> r = Result.notAvailable();
+    assertFalse(r.isAvailableAndNotNull());
+  }
+
 }

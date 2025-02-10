@@ -166,11 +166,11 @@ final class IntCheckHelper2&lt;X extends Exception&gt; {
         prop,
         IntUnaryOperator.class);
 <span class="fc" id="L168">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
-<span class="pc bpc" id="L169" title="1 of 2 branches missed.">    if (formatter == null) {</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">    if (formatter == null) {</span>
 <span class="fc" id="L170">      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));</span>
     }
-<span class="nc" id="L172">    throw check.exc.apply(</span>
-<span class="nc" id="L173">        getPrefabMessage(formatter, test, false, name, val, int.class, obj));</span>
+<span class="fc" id="L172">    throw check.exc.apply(</span>
+<span class="fc" id="L173">        getPrefabMessage(formatter, test, false, name, val, int.class, obj));</span>
   }
 
   IntCheck&lt;X&gt; notHas(IntUnaryOperator prop, IntRelation test, int obj) throws X {
@@ -184,11 +184,11 @@ final class IntCheckHelper2&lt;X extends Exception&gt; {
         prop,
         IntUnaryOperator.class);
 <span class="fc" id="L186">    Function&lt;MsgArgs, String&gt; formatter = getIntRelationFormatter(test);</span>
-<span class="pc bpc" id="L187" title="1 of 2 branches missed.">    if (formatter == null) {</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">    if (formatter == null) {</span>
 <span class="fc" id="L188">      throw check.exc.apply(getDefaultRelationMessage(name, val, obj));</span>
     }
-<span class="nc" id="L190">    throw check.exc.apply(</span>
-<span class="nc" id="L191">        getPrefabMessage(formatter, test, true, name, val, int.class, obj));</span>
+<span class="fc" id="L190">    throw check.exc.apply(</span>
+<span class="fc" id="L191">        getPrefabMessage(formatter, test, true, name, val, int.class, obj));</span>
   }
 
   IntCheck&lt;X&gt; has(IntUnaryOperator prop, String name, IntRelation test, int obj)
