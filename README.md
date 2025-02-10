@@ -42,17 +42,14 @@ The latest test coverage results can be found
 
 ### Performance
 
-_Klojang Check_ is lightweight: it provides a template for embedding checks without adding
-significant overhead. Of course, if you need to check whether a value is in a `Map`,
-a lookup is unavoidable. There are no two ways around it. _Klojang Check_ simply provides
-a cleaner way to express this:
+_Klojang Check_ is lightweight: it provides a template for embedding checks without 
+adding measurable overhead. You can find **JMH benchmarks** for _Klojang Check_
+**[here](https://github.com/klojang4j/klojang-check-jmh)**. Of course, if you need to check whether a value is in a `Map`,
+a lookup is unavoidable. _Klojang Check_ simply provides a cleaner way to express this:
 
 ```java
 Check.that(value).is(keyIn(), map);  // Ensure 'value' is a key in 'map'
 ```
-
-You can find **JMH benchmarks** for _Klojang Check_
-**[here](https://github.com/klojang4j/klojang-check-jmh)**.
 
 ## Getting Started
 
@@ -224,7 +221,7 @@ Check.that(-42).is(gte(), 0);
 // error message: argument must be >= 0 (was -42)
 ```
 
-To improve error messages, you can tag values with meaningful names:
+To improve the error messages, you can tag values with meaningful names:
 
 ```java
 Check.notNull(foo, "foo");
