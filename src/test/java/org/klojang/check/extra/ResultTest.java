@@ -106,4 +106,20 @@ public class ResultTest {
     assertFalse(Result.of("foo").isUnavailable());
   }
 
+  @Test
+  public void isAvailableAndNull00() {
+    Result<String> r = Result.of(null);
+    assertTrue(r.isAvailableAndNull());
+    r = Result.of("foo");
+    assertFalse(r.isAvailableAndNull());
+  }
+
+  @Test
+  public void isAvailableAndNotNull00() {
+    Result<String> r = Result.of(null);
+    assertFalse(r.isAvailableAndNotNull());
+    r = Result.of("foo");
+    assertTrue(r.isAvailableAndNotNull());
+  }
+
 }

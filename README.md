@@ -1,18 +1,19 @@
 # Klojang Check
 
 Ensuring that your program input, object state, or method arguments are valid before
-execution is crucial for writing robust software. _Klojang Check_ is a lightweight framework
+execution is crucial for writing robust software. _Klojang Check_ is a lightweight
+framework
 designed to simplify precondition validation, making your code cleaner, more expressive,
-and reducing the need for excessive unit tests. It helps separate precondition validation 
+and reducing the need for excessive unit tests. It helps separate precondition validation
 from business logic in an elegant, concise way.
 
 _Klojang Check_'s take on precondition validation is different from, for example,
 Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
 class or
 Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
-class, which serve a similar purpose. It provides a flexible template for embedding your 
-own checks. In addition, it comes with a large set of predefined checks on values of 
-various types. These checks are associated with short, informative error messages, so you 
+class, which serve a similar purpose. It provides a flexible template for embedding your
+own checks. In addition, it comes with a large set of predefined checks on values of
+various types. These checks are associated with short, informative error messages, so you
 don't have to invent them yourselves.
 
 Here is an example (explained below) of _Klojang Check_ in action:
@@ -21,9 +22,8 @@ Here is an example (explained below) of _Klojang Check_ in action:
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 ```
 
-Note that this validation requires no additional unit tests, making your code easier to
-maintain. Code coverage analyzers would simply step over the above statement. On the other 
-hand, if you would hand-code this check, it would look something like this:
+Note that this validation requires no additional unit tests. On the other hand, if you
+would hand-code this check, it would look something like this:
 
 ```java
 if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
@@ -31,19 +31,20 @@ if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
 }
 ```
 
-_Now_ you will have to write eight (2 to the power of 3) boring unit tests to 
-maintain your code coverage.
+_Now_ you will have to write eight (2 to the power of 3) boring unit tests to
+maintain your code coverage. Thus, using _Klojang Check_ saves you time and makes your 
+code easier to maintain.
 
-Of course, this shifts the burden of responsibility to <i>Klojang Check</i>. 
-For this reason <i>Klojang Check</i> itself maintains very high levels of code coverage.
+Of course, this shifts the burden of responsibility to <i>Klojang Check</i>.
+For this reason _Klojang Check_ itself maintains very high levels of code coverage.
 The latest test coverage results can be found
 **[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
 
 ### Performance
 
 _Klojang Check_ is lightweight: it provides a template for embedding checks without adding
-significant overhead. Of course, if you need to check whether a value is in a `Map`, 
-a lookup is unavoidable. There are no two ways around it. _Klojang Check_ simply provides 
+significant overhead. Of course, if you need to check whether a value is in a `Map`,
+a lookup is unavoidable. There are no two ways around it. _Klojang Check_ simply provides
 a cleaner way to express this:
 
 ```java
@@ -52,8 +53,6 @@ Check.that(value).is(keyIn(), map);  // Ensure 'value' is a key in 'map'
 
 You can find **JMH benchmarks** for _Klojang Check_
 **[here](https://github.com/klojang4j/klojang-check-jmh)**.
-
-
 
 ## Getting Started
 
@@ -77,7 +76,6 @@ dependencies {
 
 The **Javadocs** for <i>Klojang Check</i> can be
 found **[here](https://klojang4j.github.io/klojang-check/21/api)**.
-
 
 ## Usage
 
@@ -156,13 +154,13 @@ Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 Check.notNull(file).is(writable());
 ```
 
-Note that the checks in the `CommonChecks` _only_ validate what they advertise to be 
-validating. Notably, **they will never do an implicit null check.** If the `file` argument 
-in the above example can possibly be null, you must start with an explicit null check. 
+Note that the checks in the `CommonChecks` _only_ validate what they advertise to be
+validating. Notably, **they will never do an implicit null check.** If the `file` argument
+in the above example can possibly be null, you must start with an explicit null check.
 (There are a few exceptions to this rule. For example, the
 [empty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#empty()),
 [notEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#notEmpty()),
-and 
+and
 [deepNotEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#deepNotEmpty())
 checks do include a null test. This will then be clearly documented in the javadocs.)
 
@@ -190,9 +188,9 @@ and
 interfaces. (Both have int specializations like
 [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposableIntPredicate.html).)
 `ComposablePredicate` is an extension of `Predicate` that adds various `default` methods
-that assist in composing checks (combining multiple checks into one more fine-grained 
+that assist in composing checks (combining multiple checks into one more fine-grained
 check). See [Composite Checks](#composite-checks). The `Relation` interface does not have
-a `java.util.function` equivalent. The functional method of `Relation` is called 
+a `java.util.function` equivalent. The functional method of `Relation` is called
 `exists()`. It takes two arguments and returns a `boolean`.
 
 Take this example:
@@ -201,9 +199,9 @@ Take this example:
 Check.that(firstName).is(substringOf(), lastName);
 ```
 
-The `substringOf()` method returns a `Relation<String, String>`. _Klojang Check_ will pass 
+The `substringOf()` method returns a `Relation<String, String>`. _Klojang Check_ will pass
 `firstName` as the first argument to the `exists()` method and `lastName` as the second.
-If the `exists()` returns `true`, `firstName` has passed the check; otherwise it has 
+If the `exists()` returns `true`, `firstName` has passed the check; otherwise it has
 failed the check. To demystify things even further, this is how the `substringOf()` method
 is implemented:
 
@@ -301,10 +299,12 @@ There are a five predefined message arguments that you can use in your error mes
 
 - ${arg} &#8212; The value being tested.
 - ${obj} &#8212; The value against which the input value is tested, if applicable. For
-  example, in `Check.that(length).is(lte(), maxLen)`, the value of `length` is tested against
+  example, in `Check.that(length).is(lte(), maxLen)`, the value of `length` is tested
+  against
   the value of `maxLen`.
 - ${type} &#8212; The type of the value being tested.
-- ${tag} &#8212; The tag you gave to the value (defaults to "argument" if you did not provide a tag).
+- ${tag} &#8212; The tag you gave to the value (defaults to "argument" if you did not
+  provide a tag).
 - ${test} &#8212; The name of the test. For example: "notNull" or "lte". If you
   executed a custom check (a lambda or method reference), this will be a pretty
   unintelligible string.
@@ -315,7 +315,7 @@ Thus, the previous check can also be written as follows:
 Check.that(length).is(lte(), maxLen, "length must be <= ${obj} (was ${arg})");
 ```
 
-The above error message contains message arguments, but you don't need to provide them 
+The above error message contains message arguments, but you don't need to provide them
 yourself.
 
 ### Throwing a Custom Exception
@@ -364,10 +364,11 @@ You can optionally pass a transformation function to the `ok()` method:
 this.age = Check.notNull(person).ok(Person::age);
 ```
 
-The transformation function can throw checked exceptions, so even at this late stage you 
+The transformation function can throw checked exceptions, so even at this late stage you
 can still reject the value if needed. (See
 [FallibleFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleFunction.html)
-and [FallibleToIntFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleToIntFunction.html) for more details.)
+and [FallibleToIntFunction](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/fallible/FallibleToIntFunction.html)
+for more details.)
 
 ### Composite Checks
 
@@ -383,7 +384,8 @@ second case you want to validate two interrelated values.
 _Klojang Check_ enables you to do this using the `default` methods on the
 [ComposablePredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposablePredicate.html)
 and [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/relation/ComposableIntPredicate.html)
-interfaces. Here we use the [or()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html#or(org.klojang.check.types.Relation,O))
+interfaces. Here we use
+the [or()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposablePredicate.html#or(org.klojang.check.types.Relation,O))
 method of `ComposablePredicate`:
 
 ```java
@@ -402,8 +404,8 @@ In that case you can start your composition with one of four special checks:
 [invalid()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalid()),
 and [invalidInt()](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/CommonChecks.html#invalidInt()).
 These are dummy checks specifically meant for composition and should not be used in
-isolation. The first two checks always pass and can be used as the start of a series of 
-AND-joined checks. The last two always fail and can be used as the start of a series of 
+isolation. The first two checks always pass and can be used as the start of a series of
+AND-joined checks. The last two always fail and can be used as the start of a series of
 OR-joined checks.
 
 ```java
@@ -419,8 +421,8 @@ Check.that(collection).is(invalid().or(contains(), "FOO").or(contains(), "BAR"))
 When combining checks you can also employ
 [logical quantifiers](https://klojang4j.github.io/klojang-check/api/org.klojang.check/org/klojang/check/types/Quantifier.html).
 Using logical qualifiers you can provide multiple values against which to validate the
-input value. They allow you to specify that the input value must pass a check for 
-**_all of_** the provided values, **_at least one of_** the provided values, or 
+input value. They allow you to specify that the input value must pass a check for
+**_all of_** the provided values, **_at least one of_** the provided values, or
 **_none of_** the provided values. Here is an example:
 
 ```java
@@ -429,7 +431,7 @@ import static org.klojang.check.types.Quantifier.noneOf;
 Check.that(collection).is(notEmpty().and(contains(), noneOf(), "FOO", "BAR", "BOZO"));
 ```
 
-What if there is just one check you want to execute, but you still want to use a logical 
+What if there is just one check you want to execute, but you still want to use a logical
 quantifier? Again you can use the dummy checks mentioned above:
 
 ```java
