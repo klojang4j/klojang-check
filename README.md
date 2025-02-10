@@ -9,7 +9,7 @@ validation and business logic in an elegant and concise way.
 Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
 class or
 Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
-class, which serve a similar purpose. It provides you with a template in which you can
+class, which serve a similar purpose. It lets you lay out a template in which you can
 embed your own checks. In addition, it comes with a large set of predefined checks on 
 values of various types. These checks are associated with short, informative error 
 messages, so you don't have to invent them yourselves.
@@ -20,10 +20,10 @@ Here is an example (explained below) of <i>Klojang Check</i> in action:
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 ```
 
-<i>Klojang Check</i> will save you a lot of time writing unit tests. The above example
-does not require you to write any unit tests &#8212; your code coverage analyzer would 
-simply step over the above statement. On the other hand, if you would hand-code the 
-above check, it would look something like this:
+Using <i>Klojang Check</i> will make your code more robust while still saving you a lot of 
+time writing unit tests. The above example does not require you to write any unit tests 
+&#8212; code coverage analyzers would fly right past the above statement. On the other 
+hand, if you would hand-code the above check, it would look something like this:
 
 ```java
 if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
@@ -31,11 +31,30 @@ if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
 }
 ```
 
-_Now_ you will have to write six boring unit tests to keep your code coverage analyzer
-happy. Of course, that shifts the burden of making sure the checks get properly executed
-to <i>Klojang Check</i>. For this reason <i>Klojang Check</i> is itself thoroughly tested.
+_Now_ you will have to write eight (actually 2 to the power of 3) boring unit tests to 
+maintain your code coverage.
+
+Of course, this shifts the burden of responsibility to <i>Klojang Check</i>. 
+For this reason <i>Klojang Check</i> itself maintains very high levels of code coverage.
 The latest test coverage results can be found
 **[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
+
+### Performance
+
+<i>Klojang Check</i> incurs practically zero overhead. By itself, it does not really _do_
+anything except providing you with a template in which you can embed your own checks. Of 
+course, if you need to ascertain that a value is in a `Map` before proceeding, you will 
+have to do the lookup. There are no two ways around it. _Klojang Check_ just lets you 
+express this fact more clearly:
+
+```java
+Check.that(value).is(keyIn(), map);
+```
+
+You can find **JMH benchmarks** for _Klojang Check_
+**[here](https://github.com/klojang4j/klojang-check-jmh)**.
+
+
 
 ## Getting Started
 
@@ -58,19 +77,6 @@ implementation group: 'org.klojang', name: 'klojang-check', version: '21.2.0'
 The **Javadocs** for <i>Klojang Check</i> can be
 found **[here](https://klojang4j.github.io/klojang-check/21/api)**.
 
-
-## Performance
-
-<i>Klojang Check</i> incurs practically zero overhead. Of course, if you need to ascertain 
-that a value is in a `Map` before proceeding, you will have to do the lookup. There are no
-two ways around it. <i>Klojang Check</i> just lets you express this fact more clearly:
-
-```java
-Check.that(value).is(keyIn(), map);
-```
-
-You can find **JMH benchmarks** for _Klojang Check_
-**[here](https://github.com/klojang4j/klojang-check-jmh)**.
 
 ## Usage
 

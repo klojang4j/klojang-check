@@ -10,12 +10,18 @@ import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.List.of;
 import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.types.Compose.*;
+import static org.klojang.check.types.Compose.validWhen;
 import static org.klojang.check.types.Quantifier.*;
 
 public class ComposablePredicateTest {
+
+  @Test
+  public void negated() {
+    Check.that(List.of("foo", "bar")).is(empty().negated());
+    Check.that("foo").is(empty().negated());
+    Check.that("").is(empty().negated().negated());
+  }
 
   @Test
   public void orElsePredicate00() {
@@ -254,16 +260,19 @@ public class ComposablePredicateTest {
 
   @Test
   public void orNotRelation101() {
-    Check.that(List.of("foo", "bar")).is(empty()
-        .orNot("hello", hasSubstring(), "world"));
-    Check.that(List.of("foo", "bar")).is(notEmpty()
-        .orNot("hello", hasSubstring(), "hell"));
+    Check.that(List.of("foo", "bar")).is(empty().orNot("hello", hasSubstring(), "world"));
+    Check.that(List.of("foo", "bar")).is(notEmpty().orNot("hello", hasSubstring(), "hell"));
+    Check.that(List.of("foo", "bar")).is(notEmpty().orNot("hello", hasSubstring(), "world"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void orNotRelation102() {
-    Check.that(Year.of(2001)).is(Compose.validWhen(GT(), Year.of(3000))
-        .orNot("foo", substringOf(), "foo bar"));
+    Check.that(List.of("foo", "bar")).is(empty().orNot("hello", hasSubstring(), "hell"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void orNotRelation103() {
+    Check.that(Year.of(2001)).is(validWhen(GT(), Year.of(3000)).orNot("foo", substringOf(), "foo bar"));
   }
 
   @Test
@@ -354,9 +363,9 @@ public class ComposablePredicateTest {
     Check.that(LocalDate.now()).is(NULL().or(10, gt(), noneOf(), 1, 52, 3, 4));
   }
 
-  ///////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////
+  /// ////////////////////////////////////////////////////////////////////
+  /// ////////////////////////////////////////////////////////////////////
+  /// ////////////////////////////////////////////////////////////////////
 
   @Test
   public void andAlsoPredicate00() {

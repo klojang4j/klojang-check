@@ -118,10 +118,13 @@ public interface ComposablePredicate<T> extends Predicate<T> {
   /**
    * Returns the negation of this predicate.
    *
+   * @param <U> the type of the value that is tested by the returned {@code ComposablePredicate}. Note that in
+   *            actual fact, that really is the type of the value being tested by <i>this</i>
+   *            {@code ComposablePredicate}.
    * @return the negation of this predicate
    * @see Predicate#negate()
    */
-  default ComposablePredicate<T> negated() {
+  default <U> ComposablePredicate<U> negated() {
     return x -> !meFirst(x);
   }
 
@@ -412,9 +415,7 @@ public interface ComposablePredicate<T> extends Predicate<T> {
    *                 {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default <S, O, V> ComposablePredicate<V> orNot(S subject,
-      Relation<S, O> relation,
-      O object) {
+  default <S, O, V> ComposablePredicate<V> orNot(S subject, Relation<S, O> relation, O object) {
     return x -> meFirst(x) || !relation.exists(subject, object);
   }
 

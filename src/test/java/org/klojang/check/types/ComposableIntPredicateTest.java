@@ -12,6 +12,7 @@ public class ComposableIntPredicateTest {
   @Test
   public void negated00() {
     Check.that(27).is(even().negated());
+    Check.that(28).is(even().negated().negated());
   }
 
   @Test(expected = IllegalArgumentException.class)

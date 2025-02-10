@@ -118,11 +118,14 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   /**
    * Returns the negation of this predicate.
    *
+   * @param &lt;U&gt; the type of the value that is tested by the returned {@code ComposablePredicate}. Note that in
+   *            actual fact, that really is the type of the value being tested by &lt;i&gt;this&lt;/i&gt;
+   *            {@code ComposablePredicate}.
    * @return the negation of this predicate
    * @see Predicate#negate()
    */
-  default ComposablePredicate&lt;T&gt; negated() {
-<span class="nc bnc" id="L125" title="All 2 branches missed.">    return x -&gt; !meFirst(x);</span>
+  default &lt;U&gt; ComposablePredicate&lt;U&gt; negated() {
+<span class="fc bfc" id="L128" title="All 2 branches covered.">    return x -&gt; !meFirst(x);</span>
   }
 
   /**
@@ -139,7 +142,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; orElse(Predicate&lt;?&gt; test) {
-<span class="fc bfc" id="L142" title="All 4 branches covered.">    return x -&gt; meFirst(x) || ((Predicate) test).test(x);</span>
+<span class="fc bfc" id="L145" title="All 4 branches covered.">    return x -&gt; meFirst(x) || ((Predicate) test).test(x);</span>
   }
 
   /**
@@ -160,7 +163,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;O, V&gt; ComposablePredicate&lt;V&gt; or(Relation&lt;?, O&gt; relation, O object) {
-<span class="fc bfc" id="L163" title="All 4 branches covered.">    return x -&gt; meFirst(x) || ((Relation) relation).exists(x, object);</span>
+<span class="fc bfc" id="L166" title="All 4 branches covered.">    return x -&gt; meFirst(x) || ((Relation) relation).exists(x, object);</span>
   }
 
   /**
@@ -180,7 +183,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   default &lt;O, P extends O, V&gt; ComposablePredicate&lt;V&gt; or(Relation&lt;V, O&gt; relation,
       Quantifier quantifier,
       P... objects) {
-<span class="fc bfc" id="L183" title="All 4 branches covered.">    return x -&gt; meFirst(x) || testAgainstArray(x, relation, quantifier, objects);</span>
+<span class="fc bfc" id="L186" title="All 4 branches covered.">    return x -&gt; meFirst(x) || testAgainstArray(x, relation, quantifier, objects);</span>
   }
 
   /**
@@ -205,7 +208,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
       Relation&lt;S, O&gt; relation,
       Quantifier quantifier,
       P... objects) {
-<span class="fc bfc" id="L208" title="All 4 branches covered.">    return x -&gt; meFirst(x) || testAgainstArray(subject, relation, quantifier, objects);</span>
+<span class="fc bfc" id="L211" title="All 4 branches covered.">    return x -&gt; meFirst(x) || testAgainstArray(subject, relation, quantifier, objects);</span>
   }
 
   /**
@@ -227,7 +230,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
       IntRelation relation,
       Quantifier quantifier,
       int... objects) {
-<span class="fc bfc" id="L230" title="All 4 branches covered.">    return x -&gt; meFirst(x) || testAgainstArray(subject, relation, quantifier, objects);</span>
+<span class="fc bfc" id="L233" title="All 4 branches covered.">    return x -&gt; meFirst(x) || testAgainstArray(subject, relation, quantifier, objects);</span>
   }
 
   /**
@@ -241,7 +244,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified free-form test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; or(boolean test) {
-<span class="fc bfc" id="L244" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test;</span>
+<span class="fc bfc" id="L247" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test;</span>
   }
 
   /**
@@ -258,7 +261,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified free-form test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; or(Supplier&lt;Boolean&gt; test) {
-<span class="fc bfc" id="L261" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.get();</span>
+<span class="fc bfc" id="L264" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.get();</span>
   }
 
   /**
@@ -272,7 +275,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; orNot(Predicate&lt;?&gt; test) {
-<span class="fc bfc" id="L275" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !((Predicate) test).test(x);</span>
+<span class="fc bfc" id="L278" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !((Predicate) test).test(x);</span>
   }
 
   /**
@@ -290,7 +293,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;O, V&gt; ComposablePredicate&lt;V&gt; orNot(Relation&lt;?, O&gt; relation, O object) {
-<span class="pc bpc" id="L293" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !((Relation) relation).exists(x, object);</span>
+<span class="pc bpc" id="L296" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !((Relation) relation).exists(x, object);</span>
   }
 
   /**
@@ -311,7 +314,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;U, V&gt; ComposablePredicate&lt;V&gt; orThat(U value, Predicate&lt;U&gt; test) {
-<span class="fc bfc" id="L314" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
+<span class="fc bfc" id="L317" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
   }
 
   /**
@@ -331,7 +334,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; orThat(int value, IntPredicate test) {
-<span class="fc bfc" id="L334" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
+<span class="fc bfc" id="L337" title="All 4 branches covered.">    return x -&gt; meFirst(x) || test.test(value);</span>
   }
 
   /**
@@ -352,7 +355,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; orThat(S subject,
       Relation&lt;S, O&gt; relation,
       O object) {
-<span class="fc bfc" id="L355" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
+<span class="fc bfc" id="L358" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
   }
 
   /**
@@ -371,7 +374,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   default &lt;V&gt; ComposablePredicate&lt;V&gt; orThat(int subject,
       IntRelation relation,
       int object) {
-<span class="fc bfc" id="L374" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
+<span class="fc bfc" id="L377" title="All 4 branches covered.">    return x -&gt; meFirst(x) || relation.exists(subject, object);</span>
   }
 
   /**
@@ -393,7 +396,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;U, V&gt; ComposablePredicate&lt;V&gt; orNot(U value, Predicate&lt;U&gt; test) {
-<span class="pc bpc" id="L396" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !test.test(value);</span>
+<span class="pc bpc" id="L399" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) || !test.test(value);</span>
   }
 
   /**
@@ -412,10 +415,8 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    *                 {@code ComposablePredicate}.
    * @return a new test combining this test and the specified test
    */
-  default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; orNot(S subject,
-      Relation&lt;S, O&gt; relation,
-      O object) {
-<span class="fc bfc" id="L418" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !relation.exists(subject, object);</span>
+  default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; orNot(S subject, Relation&lt;S, O&gt; relation, O object) {
+<span class="fc bfc" id="L419" title="All 4 branches covered.">    return x -&gt; meFirst(x) || !relation.exists(subject, object);</span>
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -435,7 +436,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; andAlso(Predicate&lt;?&gt; test) {
-<span class="pc bpc" id="L438" title="2 of 4 branches missed.">    return x -&gt; meFirst(x) &amp;&amp; ((Predicate) test).test(x);</span>
+<span class="pc bpc" id="L439" title="2 of 4 branches missed.">    return x -&gt; meFirst(x) &amp;&amp; ((Predicate) test).test(x);</span>
   }
 
   /**
@@ -452,7 +453,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;O, V&gt; ComposablePredicate&lt;V&gt; andAlso(Relation&lt;?, O&gt; relation, O object) {
-<span class="fc bfc" id="L455" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; ((Relation) relation).exists(x, object);</span>
+<span class="fc bfc" id="L456" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; ((Relation) relation).exists(x, object);</span>
   }
 
   /**
@@ -466,7 +467,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified free-form test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; and(boolean test) {
-<span class="fc bfc" id="L469" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test;</span>
+<span class="fc bfc" id="L470" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test;</span>
   }
 
   /**
@@ -483,7 +484,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified free-form test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; and(Supplier&lt;Boolean&gt; test) {
-<span class="fc bfc" id="L486" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.get();</span>
+<span class="fc bfc" id="L487" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.get();</span>
   }
 
   /**
@@ -503,7 +504,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   default &lt;O, P extends O, V&gt; ComposablePredicate&lt;V&gt; and(Relation&lt;V, O&gt; relation,
       Quantifier quantifier,
       P... objects) {
-<span class="fc bfc" id="L506" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; testAgainstArray(x, relation, quantifier, objects);</span>
+<span class="fc bfc" id="L507" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; testAgainstArray(x, relation, quantifier, objects);</span>
   }
 
   /**
@@ -526,7 +527,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    */
   default &lt;S, O, P extends O, V&gt; ComposablePredicate&lt;V&gt; and(S subject,
       Relation&lt;S, O&gt; relation, Quantifier quantifier, P... objects) {
-<span class="fc bfc" id="L529" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; testAgainstArray(subject, relation, quantifier, objects);</span>
+<span class="fc bfc" id="L530" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; testAgainstArray(subject, relation, quantifier, objects);</span>
   }
 
   /**
@@ -546,7 +547,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; and(int subject,
       IntRelation relation, Quantifier quantifier, int... objects) {
-<span class="fc bfc" id="L549" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; testAgainstArray(subject, relation, quantifier, objects);</span>
+<span class="fc bfc" id="L550" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; testAgainstArray(subject, relation, quantifier, objects);</span>
   }
 
   /**
@@ -560,7 +561,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; andNot(Predicate&lt;?&gt; test) {
-<span class="fc bfc" id="L563" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !((Predicate) test).test(x);</span>
+<span class="fc bfc" id="L564" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !((Predicate) test).test(x);</span>
   }
 
   /**
@@ -577,7 +578,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;O, V&gt; ComposablePredicate&lt;V&gt; andNot(Relation&lt;?, O&gt; relation, O object) {
-<span class="fc bfc" id="L580" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !((Relation) relation).exists(x, object);</span>
+<span class="fc bfc" id="L581" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !((Relation) relation).exists(x, object);</span>
   }
 
 
@@ -599,7 +600,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;U, V&gt; ComposablePredicate&lt;V&gt; andThat(U value, Predicate&lt;U&gt; test) {
-<span class="fc bfc" id="L602" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
+<span class="fc bfc" id="L603" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
   }
 
   /**
@@ -619,7 +620,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;V&gt; ComposablePredicate&lt;V&gt; andThat(int value, IntPredicate test) {
-<span class="fc bfc" id="L622" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
+<span class="fc bfc" id="L623" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; test.test(value);</span>
   }
 
   /**
@@ -640,7 +641,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; andThat(S subject,
       Relation&lt;S, O&gt; relation,
       O object) {
-<span class="pc bpc" id="L643" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
+<span class="pc bpc" id="L644" title="1 of 4 branches missed.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
   }
 
   /**
@@ -659,7 +660,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   default &lt;V&gt; ComposablePredicate&lt;V&gt; andThat(int subject,
       IntRelation relation,
       int object) {
-<span class="fc bfc" id="L662" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
+<span class="fc bfc" id="L663" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; relation.exists(subject, object);</span>
   }
 
   /**
@@ -681,7 +682,7 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
    * @return a new test combining this test and the specified test
    */
   default &lt;U, V&gt; ComposablePredicate&lt;V&gt; andNot(U value, Predicate&lt;U&gt; test) {
-<span class="fc bfc" id="L684" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !test.test(value);</span>
+<span class="fc bfc" id="L685" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !test.test(value);</span>
   }
 
   /**
@@ -703,11 +704,11 @@ public interface ComposablePredicate&lt;T&gt; extends Predicate&lt;T&gt; {
   default &lt;S, O, V&gt; ComposablePredicate&lt;V&gt; andNot(S subject,
       Relation&lt;S, O&gt; relation,
       O object) {
-<span class="fc bfc" id="L706" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !relation.exists(subject, object);</span>
+<span class="fc bfc" id="L707" title="All 4 branches covered.">    return x -&gt; meFirst(x) &amp;&amp; !relation.exists(subject, object);</span>
   }
 
   private &lt;V&gt; boolean meFirst(V v) {
-<span class="fc" id="L710">    return ComposablePredicate.this.test((T) v);</span>
+<span class="fc" id="L711">    return ComposablePredicate.this.test((T) v);</span>
   }
 
 }
