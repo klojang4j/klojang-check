@@ -260,8 +260,7 @@ Check.that(person).has(Person::firstName, substringOf(), person.fullName());
 ```
 
 The [CommonProperties](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonProperties.html)
-class contains some `Function`, `ToIntFunction` and `IntFunction` constants that might be
-of help:
+class contains some extraction functions that might be helpful:
 
 ```java
 import static org.klojang.check.CommonProperties.strlen;
