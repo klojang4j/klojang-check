@@ -1,20 +1,19 @@
 # Klojang Check
 
 Ensuring that your program input, object state, or method arguments are valid before
-execution is crucial for writing robust software. _Klojang Check_ is a lightweight
-framework
-designed to simplify precondition validation, making your code cleaner, more expressive,
-and reducing the need for excessive unit tests. It helps separate precondition validation
-from business logic in an elegant, concise way.
+execution is crucial for writing robust software. _Klojang Check_ simplifies precondition 
+validation, making your code more robust, more expressive, and reducing the need for 
+excessive unit testing. It helps separate precondition validation from business logic in 
+an elegant, concise way.
 
 _Klojang Check_'s take on precondition validation is different from, for example,
 Guava's [Preconditions](https://guava.dev/releases/19.0/api/docs/com/google/common/base/Preconditions.html)
 class or
 Apache's [Validate](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/Validate.html)
-class, which serve a similar purpose. It provides a flexible template for embedding your
-own checks. In addition, it comes with a large set of predefined checks on values of
-various types. These checks are associated with short, informative error messages, so you
-don't have to invent them yourselves.
+class, which serve a similar purpose. It provides a template for embedding your own 
+checks. In addition, it comes with a large set of predefined checks on values of various 
+types. These checks are associated with short, informative error messages, so you don't 
+have to invent them yourselves.
 
 Here is an example (explained below) of _Klojang Check_ in action:
 
@@ -22,7 +21,7 @@ Here is an example (explained below) of _Klojang Check_ in action:
 Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 ```
 
-Note that this validation requires no additional unit tests. On the other hand, if you
+Note that this statement requires no additional unit tests. On the other hand, if you 
 would hand-code this check, it would look something like this:
 
 ```java
@@ -31,21 +30,22 @@ if(numberOfChairs <= 0 || numberOfChairs > 4 || numberOfChairs % 2 != 0) {
 }
 ```
 
-_Now_ you will have to write eight (2 to the power of 3) boring unit tests to
-maintain your code coverage. Thus, using _Klojang Check_ saves you time and makes your 
-code easier to maintain.
+Now you _will_ have to write six tedious unit tests to maintain your code coverage. 
+Thus, using _Klojang Check_ saves you time and makes your code easier to maintain.
 
 Of course, this shifts the burden of responsibility to <i>Klojang Check</i>.
-For this reason _Klojang Check_ itself maintains very high levels of code coverage.
-The latest test coverage results can be found
+_Klojang Check_ itself maintains very high levels of code coverage. The latest test 
+coverage results can be found
 **[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
 
 ### Performance
 
 _Klojang Check_ is lightweight: it provides a template for embedding checks without 
-adding measurable overhead. You can find **JMH benchmarks** for _Klojang Check_
-**[here](https://github.com/klojang4j/klojang-check-jmh)**. Of course, if you need to check whether a value is in a `Map`,
-a lookup is unavoidable. _Klojang Check_ simply provides a cleaner way to express this:
+adding measurable overhead compared to hand-coding your checks. You can find 
+**JMH benchmarks** for _Klojang Check_
+**[here](https://github.com/klojang4j/klojang-check-jmh)**. 
+Of course, if you need to check whether a value is in a `Map`, a lookup is unavoidable. 
+_Klojang Check_ simply provides a cleaner way to express this:
 
 ```java
 Check.that(value).is(keyIn(), map);  // Ensure 'value' is a key in 'map'
@@ -53,7 +53,7 @@ Check.that(value).is(keyIn(), map);  // Ensure 'value' is a key in 'map'
 
 ## Getting Started
 
-To use <i>Klojang Check</i>, add the following dependency to your Maven POM file:
+To use _Klojang Check_, add the following dependency to your Maven POM file:
 
 ```xml
 <dependency>
@@ -151,7 +151,7 @@ Check.that(numberOfChairs).is(positive()).is(lte(), 4).is(even());
 Check.notNull(file).is(writable());
 ```
 
-Note that the checks in the `CommonChecks` _only_ validate what they advertise to be
+Note that the checks in the `CommonChecks` class _only_ validate what they advertise to be
 validating. Notably, **they will never do an implicit null check.** If the `file` argument
 in the above example can possibly be null, you must start with an explicit null check.
 (There are a few exceptions to this rule. For example, the
@@ -313,7 +313,7 @@ Check.that(length).is(lte(), maxLen, "length must be <= ${obj} (was ${arg})");
 ```
 
 The above error message contains message arguments, but you don't need to provide them
-yourself.
+yourself!
 
 ### Throwing a Custom Exception
 
