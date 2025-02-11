@@ -2,7 +2,7 @@
 
 Ensuring that your program input, object state, or method arguments are valid before
 execution is crucial for writing robust software. _Klojang Check_ simplifies precondition 
-validation, making your code more robust, more expressive, and reducing the need for 
+validation, making your code cleaner, more expressive, and reducing the need for 
 excessive unit testing. It helps separate precondition validation from business logic in 
 an elegant, concise way.
 
