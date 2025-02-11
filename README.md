@@ -269,7 +269,7 @@ import static org.klojang.check.CommonProperties.type;
 import static org.klojang.check.CommonProperties.abs;
 
 Check.that(fullName).has(strlen(), lte(), 100);
-Check.that(foo).has(type(), instanceOf(), InputStream .class);
+Check.that(john).has(type(), instanceOf(), Manager.class);
 Check.that(angle).has(abs(), lte(), 90);
 ```
 
