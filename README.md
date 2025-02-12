@@ -71,8 +71,8 @@ dependencies {
 }
 ```
 
-The **Javadocs** for <i>Klojang Check</i> can be
-found **[here](https://klojang4j.github.io/klojang-check/21/api)**.
+The **Javadocs** for _Klojang Check_ can be found 
+**[here](https://klojang4j.github.io/klojang-check/21/api)**.
 
 ## Usage
 
@@ -159,7 +159,8 @@ in the above example can possibly be null, you must start with an explicit null 
 [notEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#notEmpty()),
 and
 [deepNotEmpty()](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/CommonChecks.html#deepNotEmpty())
-checks do include a null test. This will then be clearly documented in the javadocs.)
+checks do include a null test. This will then be clearly documented in the 
+[javadocs](https://klojang4j.github.io/klojang-check/21/api).)
 
 Checks on different values can be also be chained:
 
@@ -184,20 +185,22 @@ and
 [Relation](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/Relation.html)
 interfaces. (Both have int specializations like
 [ComposableIntPredicate](https://klojang4j.github.io/klojang-check/21/api/org.klojang.check/org/klojang/check/types/ComposableIntPredicate.html).)
-`ComposablePredicate` is an extension of `Predicate` that adds various `default` methods
-that assist in composing checks (combining multiple checks into one more fine-grained
-check). See [Composite Checks](#composite-checks). The `Relation` interface does not have
-a `java.util.function` equivalent. The functional method of `Relation` is called
-`exists()`. It takes two arguments and returns a `boolean`.
+`ComposablePredicate` is an extension of 
+[Predicate](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html)
+that adds various `default` methods that assist in composing checks (combining multiple 
+checks into one more fine-grained check). See 
+[Composite Checks](#composite-checks). 
+The `Relation` interface does not have a `java.util.function` equivalent. The functional 
+method of `Relation` is called `exists()`. It takes two arguments and returns a `boolean`.
 
 Take this example:
 
 ```java
-Check.that(firstName).is(substringOf(), lastName);
+Check.that(firstName).is(substringOf(), fullName);
 ```
 
 The `substringOf()` method returns a `Relation<String, String>`. _Klojang Check_ will pass
-`firstName` as the first argument to the `exists()` method and `lastName` as the second.
+`firstName` as the first argument to the `exists()` method and `fullName` as the second.
 If the `exists()` call returns `true`, `firstName` has passed the check; otherwise it has
 failed the check. To demystify things even further, this is how the `substringOf()` method
 is implemented:
@@ -249,7 +252,7 @@ Check.that(length, LENGTH).is(gte(), 0);
 
 ### Validating Argument Properties
 
-With <i>Klojang Check</i> you can test not just arguments, but also argument properties.
+With _Klojang Check_ you can test not just arguments, but also argument properties.
 To do this, provide
 a [Function](https://download.java.net/java/early_access/panama/docs/api/java.base/java/util/function/Function.html)
 that extracts the value to be tested from the argument.
@@ -268,7 +271,7 @@ import static org.klojang.check.CommonProperties.type;
 import static org.klojang.check.CommonProperties.abs;
 
 Check.that(fullName).has(strlen(), lte(), 100);
-Check.that(john).has(type(), instanceOf(), Manager.class);
+Check.that(employee).has(type(), instanceOf(), Manager.class);
 Check.that(angle).has(abs(), lte(), 90);
 ```
 
