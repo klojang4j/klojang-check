@@ -31,10 +31,12 @@ public final class CheckDefs {
   private static final Map<Object, String> names;
 
   private static Map<Predicate<?>, Function<MsgArgs, String>> predicateFormattersTemp = new HashMap<>();
-  private static Map<ComposableIntPredicate, Function<MsgArgs, String>> intPredicateFormattersTemp = new HashMap<>();
+  private static Map<ComposableIntPredicate, Function<MsgArgs, String>> intPredicateFormattersTemp =
+      new HashMap<>();
   private static Map<Relation<?, ?>, Function<MsgArgs, String>> relationFormattersTemp = new HashMap<>();
   private static Map<IntRelation, Function<MsgArgs, String>> intRelationFormattersTemp = new HashMap<>();
-  private static Map<IntObjRelation<?>, Function<MsgArgs, String>> intObjRelationFormattersTemp = new HashMap<>();
+  private static Map<IntObjRelation<?>, Function<MsgArgs, String>> intObjRelationFormattersTemp =
+      new HashMap<>();
 
   private static Map<Object, String> namesTemp = new HashMap<>();
 
@@ -55,7 +57,6 @@ public final class CheckDefs {
     setMetadata(file(), msgFile(), "file");
     setMetadata(directory(), msgDirectory(), "directory");
     setMetadata(symlink(), msgSymlink(), "symlink");
-    setMetadata(onFileSystem(), msgFileExists(), "fileExists");
     setMetadata(readable(), msgReadable(), "readable");
     setMetadata(writable(), msgWritable(), "writable");
     setMetadata(present(), msgPresent(), "present");
@@ -92,21 +93,18 @@ public final class CheckDefs {
     setMetadata(valueIn(), msgValueIn(), "valueIn");
     setMetadata(inArray(), msgIn(), "inArray"); // Recycle message
     setMetadata(containsAll(), msgContainsAll(), "containsAll");
-    setMetadata(containedIn(), msgContainedIn(), "containedIn");
     setMetadata(hasSubstring(), msgHasSubstring(), "hasSubstring");
-    setMetadata(hasSubstringIC(), msgHasSubstringIC(), "hasSubstringIC");
+    setMetadata(hasSubstringIgnoreCase(), msgHasSubstringIC(), "hasSubstringIgnoreCase");
     setMetadata(substringOf(), msgSubstringOf(), "substringOf");
-    setMetadata(equalsIC(), msgEqualsIC(), "equalsIC");
+    setMetadata(equalsIgnoreCase(), msgEqualsIC(), "equalsIgnoreCase");
     setMetadata(startsWith(), msgStartsWith(), "startsWith");
-    setMetadata(startsWithIC(), msgStartsWithIC(), "startsWithIC");
+    setMetadata(startsWithIgnoreCase(), msgStartsWithIC(), "startsWithIgnoreCase");
     setMetadata(endsWith(), msgEndsWith(), "endsWith");
-    setMetadata(endsWithIC(), msgEndsWithIC(), "endsWithIC");
-    setMetadata(hasPattern(), msgHasPattern(), "hasPattern");
-    setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
-    setMetadata(matches(), msgHasPattern(), "matches"); // recycle message
-    setMetadata(containsMatch(), msgContainsPattern(), "containsMatch"); // recycle message
-    setMetadata(numerical(), msgNumerical(), "numerical");
-    setMetadata(parsableAs(), msgParsableAs(), "parsableAs");
+    setMetadata(endsWithIgnoreCase(), msgEndsWithIC(), "endsWithIgnoreCase");
+    setMetadata(matchingPattern(), msgMatchingPattern(), "matchingPattern");
+    setMetadata(containingPattern(), msgContainingPattern(), "containingPattern");
+    setMetadata(matching(), msgMatchingPattern(), "matching"); // recycle message
+    setMetadata(containsMatch(), msgContainingPattern(), "containsMatch"); // recycle message
     setMetadata(indexOf(), msgIndexOf(), "indexOf");
     setMetadata(indexInclusiveOf(), msgIndexInclusiveInto(), "indexInclusiveInto");
     setMetadata(inIntArray(), msgIn(), "inIntArray"); // Recycle message
@@ -116,7 +114,8 @@ public final class CheckDefs {
     relationFormatters = Map.copyOf(relationFormattersTemp);
     intRelationFormatters = Map.copyOf(intRelationFormattersTemp);
     intObjRelationFormatters = Map.copyOf(intObjRelationFormattersTemp);
-    names = Map.copyOf(namesTemp);
+    names = HashMap.newHashMap(namesTemp.size());
+    names.putAll(namesTemp);
 
     predicateFormattersTemp = null;
     intPredicateFormattersTemp = null;

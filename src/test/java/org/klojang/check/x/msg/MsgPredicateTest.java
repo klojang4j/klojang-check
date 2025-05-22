@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.klojang.check.CommonChecks.*;
 import static org.klojang.check.CommonExceptions.INDEX;
-import static org.klojang.check.TestUtil.*;
+import static org.klojang.check.TestUtil.pack;
 
 public class MsgPredicateTest {
 
@@ -391,30 +391,6 @@ public class MsgPredicateTest {
   }
 
   @Test
-  public void fileExists00() {
-    Path p = Path.of("bla", "foo", "bla", "bar");
-    File file = p.toFile();
-    try {
-      Check.that(file, "xenon").is(onFileSystem());
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals("file not found: bla/foo/bla/bar", e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void fileExists01() throws IOException {
-    File f = File.createTempFile("foo234", null);
-    try {
-      Check.that(f, "xenon").isNot(onFileSystem());
-    } finally {
-      f.delete();
-    }
-  }
-
-  @Test
   public void readable00() throws IOException {
     File f = new File("/bla/foo/bla/bar");
     try {
@@ -431,12 +407,6 @@ public class MsgPredicateTest {
   public void readable01() throws IOException {
     File f = File.createTempFile("foo123", null);
     Check.that(f, "krypton").isNot(readable());
-  }
-
-  //@Test(expected = IllegalArgumentException.class)
-  public void readable02() throws IOException {
-    //    File f = IOMethods.createTempDir();
-    //    Check.that(f, "krypton").isNot(readable());
   }
 
   @Test

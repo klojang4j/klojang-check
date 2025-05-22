@@ -3,14 +3,13 @@ package org.klojang.check;
 import org.junit.Test;
 import org.klojang.check.extra.DuplicateValueException;
 
-import static org.klojang.check.CommonChecks.*;
-import static org.klojang.check.CommonExceptions.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.klojang.check.CommonChecks.*;
+import static org.klojang.check.CommonExceptions.*;
+import static org.klojang.check.CommonExceptions.NULL;
 
 public class CommonExceptionsTest {
 
@@ -57,23 +56,6 @@ public class CommonExceptionsTest {
   @Test(expected = IOException.class)
   public void io02() throws IOException {
     Check.that("foo").is(EQ(), "bar", ioException());
-  }
-
-  @Test(expected = FileNotFoundException.class)
-  public void fileNotFound00() throws FileNotFoundException {
-    Check.on(FILE, new File("/foo/bar/bla/x/42.d/0--.tmp")).is(onFileSystem());
-  }
-
-  @Test(expected = FileNotFoundException.class)
-  public void fileNotFound01() throws FileNotFoundException {
-    File f = new File("/foo/bar/bla/x/42.d/0--.tmp");
-    Check.that(f).is(onFileSystem(), fileNotFound(f));
-  }
-
-  @Test(expected = FileNotFoundException.class)
-  public void fileNotFound02() throws FileNotFoundException {
-    File f = new File("/foo/bar/bla/x/42.d/0--.tmp");
-    Check.that(f).is(onFileSystem(), fileNotFound("file not there"));
   }
 
   @Test(expected = NullPointerException.class)

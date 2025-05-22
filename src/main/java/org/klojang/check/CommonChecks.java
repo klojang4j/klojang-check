@@ -9,13 +9,9 @@ import org.klojang.check.x.StringCheckImpls;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.*;
-import static org.klojang.check.x.Misc.typeNotSupported;
-import static org.klojang.check.x.StringCheckImpls.NUMERICALS;
-import static org.klojang.check.x.StringCheckImpls.PARSABLES;
 
 /**
  * Defines various common checks on arguments, variables, object state, program input, etc. The checks have
@@ -114,8 +110,7 @@ public final class CommonChecks {
    *   <li>it is an empty {@link Emptyable}
    *   <li>it is a {@link File} representing an existing but empty file or directory
    *   <li>it is a zero-length array
-   *   <li>it is an empty {@link Optional} <b>or</b> an {@code Optional}
-   *      containing an empty value
+   *   <li>it is an empty {@link Optional}
    * </ul>
    *
    * <p>This check (implicitly) performs a null check and can be safely executed
@@ -254,8 +249,8 @@ public final class CommonChecks {
    */
   public static <T> ComposablePredicate<T> array() {
     return x -> x.getClass() == Class.class
-                ? ((Class<?>) x).isArray()
-                : x.getClass().isArray();
+        ? ((Class<?>) x).isArray()
+        : x.getClass().isArray();
   }
 
   /**
@@ -286,23 +281,6 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the specified file, directory or symbolic link is present on the file system. Equivalent to
-   * {@link File#exists() File::exists}.
-   *
-   * <blockquote><pre>{@code
-   * // import static org.klojang.CommonChecks.onFileSystem;
-   * // import static org.klojang.CommonExceptions.fileNotFound;
-   * Check.that(file).is(onFileSystem(), fileNotFound(file));
-   * }</pre></blockquote>
-   *
-   * @return a function implementing the test described above
-   * @see CommonExceptions#fileNotFound(File)
-   */
-  public static ComposablePredicate<File> onFileSystem() {
-    return File::exists;
-  }
-
-  /**
    * Verifies that a file is readable. Implies that the file exists. Equivalent to
    * {@link File#canRead() File::canRead}.
    *
@@ -323,9 +301,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is a non-empty {@code Optional}. Note that this check differs from the
-   * {@link #empty()} check in that it <i>only</i> verifies that the {@code Optional} contains a value. The
-   * {@code empty()} check (in its negation) additionally requires that the value is itself non-empty.
+   * Verifies that the argument is a non-empty {@code Optional}.
    *
    * @param <T> the type of the value contained in the {@code Optional}
    * @return a function implementing the test described above
@@ -335,10 +311,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a {@linkplain Result result} is available. Note that this check differs from the
-   * {@link #empty()} check in that it <i>only</i> verifies that {@code Result} contains a value. The
-   * {@code empty()} check (in its negation) additionally requires that the value it contains is itself
-   * non-empty.
+   * Verifies that a {@linkplain Result result} is available.
    *
    * @param <T> the type of the value contained in the {@code Result}
    * @return a function implementing the test described above
@@ -552,8 +525,8 @@ public final class CommonChecks {
   /**
    * Verifies that a value references the same object as another value.
    *
-   * @param <S> the type of the subject of the relationship (which is the value being tested) (the subject of
-   *            the {@code Relation})
+   * @param <S> the type of the subject of the relationship (which is the value being tested) (the subject
+   *     of the {@code Relation})
    * @param <O> the type of the value to compare it with (the object of the {@code Relation})
    * @return a function implementing the test described above
    */
@@ -585,9 +558,14 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is a supertype of the provided type. In other words, the provided type should
-   * extend, implement or equal the argument. Equivalent to
+   * Verifies that the argument is a supertype of the provided type. Equivalent to
    * {@link Class#isAssignableFrom(Class) Class::isAssignableFrom}.
+   * <blockquote><pre>{@code
+   * Check.that(Map.class).is(superTypeOf(), HashMap.class); // OK
+   * Check.that(AbstractMap.class).is(superTypeOf(), HashMap.class); // OK
+   * Check.that(HashMap.class).is(superTypeOf(), HashMap.class); // OK
+   * Check.that(HashMap.class).is(superTypeOf(), Map.class); // IllegalArgumentException
+   * }</pre></blockquote>
    *
    * @param <S> the type of the subject's class
    * @param <O> the type of the object's class
@@ -709,7 +687,7 @@ public final class CommonChecks {
    * Check.that(List.of(1, 2)).is(enclosing(), Set.of(1, 2, 3)); // false
    * }</pre></blockquote>
    *
-   * @param <E>  The type of the elements in the {@code Collection}
+   * @param <E> The type of the elements in the {@code Collection}
    * @param <C0> The type of the argument (the subject of the {@code Relation})
    * @param <C1> The type of the object of the {@code Relation}
    * @return a function implementing the test described above
@@ -717,24 +695,6 @@ public final class CommonChecks {
   public static <E, C0 extends Collection<? super E>, C1 extends Collection<E>>
   Relation<C0, C1> containsAll() {
     return Collection::containsAll;
-  }
-
-  /**
-   * Verifies that a {@code Collection} argument is a subset or sublist of another {@code Collection}.
-   *
-   * <blockquote><pre>{@code
-   * Check.that(List.of(1, 2, 3)).is(enclosedBy(), Set.of(1, 2)); // false
-   * Check.that(List.of(1, 2)).is(enclosedBy(), Set.of(1, 2, 3)); // true
-   * }</pre></blockquote>
-   *
-   * @param <E>  The type of the elements in the {@code Collection}
-   * @param <C0> The type of the argument (the subject of the {@code Relation})
-   * @param <C1> The type of the object of the {@code Relation}
-   * @return a function implementing the test described above
-   */
-  public static <E, C0 extends Collection<E>, C1 extends Collection<? super E>>
-  Relation<C0, C1> containedIn() {
-    return (x, y) -> y.containsAll(x);
   }
 
   /**
@@ -777,43 +737,43 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument matches the specified pattern (that is, the pattern fully describes the
-   * string).
-   *
-   * @return a function implementing the test described above
-   * @see #matches()
-   */
-  public static Relation<String, Pattern> hasPattern() {
-    return (string, pattern) -> pattern.matcher(string).matches();
-  }
-
-  /**
-   * Verifies that the argument contains the specified pattern (that is, the pattern can be found somewhere in
-   * the string).
-   *
-   * @return a function implementing the test described above
-   * @see #containsMatch()
-   */
-  public static Relation<String, Pattern> containsPattern() {
-    return (string, pattern) -> pattern.matcher(string).find();
-  }
-
-  /**
-   * Verifies that the argument matches the specified pattern (that is, the pattern fully describes the
+   * Verifies that the argument matches the specified pattern (that is, the pattern <i>fully</i> describes the
    * string). The subject of the returned {@code Relation} is the string to match; the object of the
    * {@code Relation} is a regular expression to be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
-   * Check.that("abcd123").is(matches(), "^\\w{4}\\d{3}$"); // yes
-   * Check.that("abcd123").is(matches(), "\\d{3}"); // no
+   * Check.that("abcd123").is(matching(), "^\\w{4}\\d{3}$"); // yes
+   * Check.that("abcd123").is(matching(), "\\d{3}"); // no
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> matches() {
-    return (string, pattern) ->
-        hasPattern().exists(string, compile(pattern));
+  public static Relation<String, String> matching() {
+    return (string, pattern) -> Pattern.compile(pattern).matcher(string).matches();
   }
+
+  /**
+   * Verifies that the argument matches the specified pattern (that is, the pattern <i>fully</i> describes the
+   * string).
+   *
+   * @return a function implementing the test described above
+   * @see #matching()
+   */
+  public static Relation<String, Pattern> matchingPattern() {
+    return (string, pattern) -> pattern.matcher(string).matches();
+  }
+
+  /**
+   * Verifies that the argument contains the specified pattern (that is, the pattern can be found
+   * <i>somewhere</i> in the string).
+   *
+   * @return a function implementing the test described above
+   * @see #containsMatch()
+   */
+  public static Relation<String, Pattern> containingPattern() {
+    return (string, pattern) -> pattern.matcher(string).find();
+  }
+
 
   /**
    * Verifies that the argument contains the specified pattern (that is, the pattern can be found somewhere in
@@ -828,67 +788,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation<String, String> containsMatch() {
-    return (string, pattern) ->
-        containsPattern().exists(string, compile(pattern));
-  }
-
-  /**
-   * Verifies that a string can be parsed into a number of the specified type without loss of information. The
-   * provided type must be one of the <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
-   * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g. {@code Integer}) will
-   * result in a {@link CorruptCheckException}.
-   *
-   * <blockquote><pre>{@code
-   * Check.that("123").is(numerical(), int.class); // yes
-   * Check.that("123.0").is(numerical(), int.class); // no
-   * }</pre></blockquote>
-   *
-   * @param <T> the type of the number into which to parse the string
-   * @return a function implementing the test described above
-   * @see #parsableAs
-   * @see #plainInt()
-   * @see #plainShort()
-   */
-  public static <T extends Number> Relation<String, Class<T>> numerical() {
-    return (x, y) -> {
-      Predicate<String> p = NUMERICALS.get(y);
-      if (p != null) {
-        return p.test(x);
-      }
-      throw typeNotSupported(y);
-    };
-  }
-
-  /**
-   * Verifies that a string can be parsed into a {@code Number} of the specified type without loss of
-   * information. The provided type must be one of the
-   * <i>primitive</i> number types: {@code long}, {@code int}, {@code short},
-   * {@code byte}, {@code double} or {@code float}. Specifying a wrapper type (e.g. {@code Integer}) will
-   * result in a {@link CorruptCheckException}. Contrary to the {@link #numerical()} check, this check allows
-   * the string to contain a fractional part even if the target type is an integral type (like {@code byte}),
-   * as long as it consists of zeros only. Scientific notation is allowed, too, as long as the effective
-   * fractional part consists of zeros only. For {@code Double} and {@code Float} there is no difference
-   * between the two checks.
-   *
-   * <blockquote><pre>{@code
-   * Check.that("123").is(parsableAs(), int.class); // yes
-   * Check.that("123.0").is(parsableAs(), int.class); // yes
-   * }</pre></blockquote>
-   *
-   * @param <T> the type of the number into which to parse the string
-   * @return a function implementing the test described above
-   * @see #numerical()
-   * @see #plainInt()
-   * @see #plainShort()
-   */
-  public static <T extends Number> Relation<String, Class<T>> parsableAs() {
-    return (x, y) -> {
-      Predicate<String> p = PARSABLES.get(y);
-      if (p != null) {
-        return p.test(x);
-      }
-      throw typeNotSupported(y);
-    };
+    return (string, pattern) -> containingPattern().exists(string, compile(pattern));
   }
 
   /**
@@ -897,7 +797,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> equalsIC() {
+  public static Relation<String, String> equalsIgnoreCase() {
     return String::equalsIgnoreCase;
   }
 
@@ -906,7 +806,7 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> startsWithIC() {
+  public static Relation<String, String> startsWithIgnoreCase() {
     return (s, o) -> s.regionMatches(true, 0, o, 0, o.length());
   }
 
@@ -915,9 +815,8 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> endsWithIC() {
-    return (s, o) ->
-        s.regionMatches(true, s.length() - o.length(), o, 0, o.length());
+  public static Relation<String, String> endsWithIgnoreCase() {
+    return (s, o) -> s.regionMatches(true, s.length() - o.length(), o, 0, o.length());
   }
 
   /**
@@ -925,9 +824,8 @@ public final class CommonChecks {
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> hasSubstringIC() {
-    return (s, o) ->
-        containsPattern().exists(s, compile(o, CASE_INSENSITIVE | LITERAL));
+  public static Relation<String, String> hasSubstringIgnoreCase() {
+    return (s, o) -> Pattern.compile(o, CASE_INSENSITIVE | LITERAL).matcher(s).find();
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -940,8 +838,8 @@ public final class CommonChecks {
    * {@code String}. A {@link CorruptCheckException} is thrown if it is not. Execute the {@link #instanceOf()}
    * or {@link #array()} check first, if necessary.
    *
-   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String}, {@code List}
-   *            or array
+   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String},
+   *     {@code List} or array
    * @return a function implementing the test described above
    */
   public static <T> IntObjRelation<T> indexOf() {
@@ -950,15 +848,15 @@ public final class CommonChecks {
 
   /**
    * Alias for {@link #indexOf()}. Can be used if the class you are working in already contains an
-   * {@code indexOf()} method. Note that this will report itself to be the {@code indexOf()} check:
+   * {@code indexOf()} method. Note that this check will report itself to be the {@code indexOf()} check:
    *
    * <blockquote><pre>{@code
    * Check.that(42, "foo").is(indexExclusiveOf(), new int[10], "${tag} did not pass the ${test}() test");
    * // "foo did not pass the indexOf() test"
    * }</pre></blockquote>
    *
-   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String}, {@code List}
-   *            or array
+   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String},
+   *     {@code List} or array
    * @return a function implementing the test described above
    */
   public static <T> IntObjRelation<T> indexExclusiveOf() {
@@ -974,8 +872,8 @@ public final class CommonChecks {
    * {@code List} or {@code String}. A {@link CorruptCheckException} is thrown if it is not. Execute the
    * {@link #instanceOf()} or {@link #array()} check first, if necessary.
    *
-   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String}, {@code List}
-   *            or array
+   * @param <T> the type of the object of the {@code IntObjRelation} - must be a {@code String},
+   *     {@code List} or array
    * @return a function implementing the test described above
    * @see Check#fromTo(Object[], int, int)
    */
@@ -1013,7 +911,7 @@ public final class CommonChecks {
    * }</pre></blockquote>
    *
    * @param <T> the type of the value being tested (which is ignored by the returned
-   *            {@code ComposablePredicate})
+   *     {@code ComposablePredicate})
    * @return a {@code ComposablePredicate} that always evaluates to {@code true}
    */
   public static <T> ComposablePredicate<T> valid() {
@@ -1039,7 +937,7 @@ public final class CommonChecks {
    * }</pre></blockquote>
    *
    * @param <T> the type of the value being tested (which is ignored by the returned
-   *            {@code ComposablePredicate})
+   *     {@code ComposablePredicate})
    * @return a {@code ComposablePredicate} that always evaluates to {@code false}
    */
   public static <T> ComposablePredicate<T> invalid() {

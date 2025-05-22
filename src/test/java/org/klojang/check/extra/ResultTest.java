@@ -53,22 +53,17 @@ public class ResultTest {
   }
 
   @Test
-  public void or00() {
-    assertEquals(Result.of(42), Result.of(42).or(Result.of(43)));
-    assertEquals(Result.of(42), Result.notAvailable().or(Result.of(42)));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void or01() {
-    Result.notAvailable().or(Result.notAvailable());
+  public void orElaseGet00() {
+    assertEquals((Integer)42, Result.of(42).orElaseGet(()->43));
+    assertEquals(42, Result.notAvailable().orElaseGet(()->42));
   }
 
   @Test
   public void isEmpty00() {
     assertTrue(Result.notAvailable().isEmpty());
-    assertTrue(Result.of("").isEmpty());
-    assertTrue(Result.of(Set.of()).isEmpty());
-    assertFalse(Result.of("hi there").isEmpty());
+    assertFalse(Result.of("").isEmpty());
+    assertFalse(Result.of(Set.of()).isEmpty());
+    assertFalse(Result.of(null).isEmpty());
     assertFalse(Result.of(Set.of(1, 2, 3)).isEmpty());
   }
 

@@ -52,7 +52,7 @@ public final class CheckImpls {
         || (isArray(arg) && getArrayLength(arg) == 0)
         || (arg instanceof Map<?, ?> m && m.isEmpty())
         || (arg instanceof Object[] x && x.length == 0)
-        || (arg instanceof Optional<?> o && (o.isEmpty() || isEmpty(o.get())))
+        || (arg instanceof Optional<?> o && o.isEmpty())
         || (arg instanceof Emptyable e && e.isEmpty())
         || (arg instanceof File f && isEmptyFile(f))
         ;
@@ -65,7 +65,7 @@ public final class CheckImpls {
         && (!isArray(arg) || getArrayLength(arg) != 0)
         && (!(arg instanceof Map<?, ?> m) || !m.isEmpty())
         && (!(arg instanceof Object[] x) || x.length != 0)
-        && (!(arg instanceof Optional<?> o) || (o.isPresent() && isNotEmpty(o.get())))
+        && (!(arg instanceof Optional<?> o) || o.isPresent())
         && (!(arg instanceof Emptyable e) || !e.isEmpty())
         && (!(arg instanceof File f) || !isEmptyFile(f))
         ;

@@ -59,10 +59,6 @@ public class MsgRelationTest {
     Check.that((Integer) 4).isNot(in(), List.of(1, 2, 3));
     Check.that(Set.of("1", "2", "3")).is(containsAll(), List.of("1", "2"));
     Check.that(Set.of("1", "4", "5")).isNot(containsAll(), List.of("1", "2"));
-    Check.that(Set.of(MONDAY, TUESDAY, WEDNESDAY))
-        .is(containedIn(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
-    Check.that(Set.of(MONDAY, TUESDAY, SATURDAY))
-        .isNot(containedIn(), List.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY));
     Map<Integer, Integer> map = Map.of(1, 1, 2, 4, 3, 6, 4, 8, 5, 10);
     Check.that(map).is(containsKey(), 1);
     Check.that(map).isNot(containsKey(), 11);
@@ -73,7 +69,7 @@ public class MsgRelationTest {
     Check.that((Integer) 7).is(inArray(), pack(1, 7, 10));
     Check.that("Hello").is(EQ(), new String("Hello"));
     Check.that("Hello").isNot(sameAs(), new String("Hello"));
-    Check.that("Hello").is(equalsIC(), "HELLO");
+    Check.that("Hello").is(equalsIgnoreCase(), "HELLO");
     Check.that(null).is(nullOr(), Boolean.TRUE);
     Check.that(true).is(nullOr(), Boolean.TRUE);
     Check.that(7.23F).is(GT(), 2F);
@@ -642,38 +638,6 @@ public class MsgRelationTest {
   }
 
   @Test
-  public void subsetOf00() {
-    try {
-      Check.that(List.of("mccartney", "harrisson", "lennon"), "kremlin")
-          .is(containedIn(), List.of("mccartney", "harrisson", "star"));
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals(
-          "kremlin must be subset of ListN[3] of [mccartney, harrisson, star] "
-              + "(was ListN[3] of [mccartney, harrisson, lennon])",
-          e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test
-  public void subsetOf01() {
-    try {
-      Check.that(List.of("lennon", "mccartney", "harrisson", "star"), "kremlin")
-          .isNot(containedIn(), List.of("lennon", "mccartney", "harrisson", "star"));
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-      assertEquals(
-          "kremlin must not be subset of ListN[4] of [lennon, mccartney, harrisson, star] "
-              + "(was ListN[4] of [lennon, mccartney, harrisson, star])",
-          e.getMessage());
-      return;
-    }
-    fail();
-  }
-
-  @Test
   public void hasSubstring00() {
     try {
       Check.that("abcd", "BMW").is(hasSubstring(), "qwe");
@@ -755,7 +719,7 @@ public class MsgRelationTest {
   @Test
   public void equalsIC00() {
     try {
-      Check.that("abc", "mordor").is(equalsIC(), "XYZ");
+      Check.that("abc", "mordor").is(equalsIgnoreCase(), "XYZ");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("mordor must be equal, ignoring case, to XYZ (was abc)",
@@ -768,7 +732,7 @@ public class MsgRelationTest {
   @Test
   public void equalsIC01() {
     try {
-      Check.that("123", "mordor").isNot(equalsIC(), "123");
+      Check.that("123", "mordor").isNot(equalsIgnoreCase(), "123");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       assertEquals("mordor must not be equal, ignoring case, to 123 (was 123)",

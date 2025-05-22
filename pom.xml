@@ -7,12 +7,12 @@
 
     <groupId>org.klojang</groupId>
     <artifactId>klojang-check</artifactId>
-    <version>21.4.0</version>
+    <version>24.0.0</version>
     <packaging>jar</packaging>
 
     <name>Klojang Check</name>
     <description>
-        Defensive Programming &amp; Validating Preconditions
+        Defensive Programming &amp;amp; Validating Preconditions
     </description>
     <url>https://klojang4j.github.io/klojang-check/</url>
 
@@ -54,8 +54,8 @@
         <!-- ==================================================================== -->
         <!-- *** Build settings                                               *** -->
         <!-- ==================================================================== -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- ==================================================================== -->
@@ -72,7 +72,7 @@
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
-        <jacoco-plugin.version>0.8.11</jacoco-plugin.version>
+        <jacoco-plugin.version>0.8.13</jacoco-plugin.version>
         <nexus-plugin.version>1.6.13</nexus-plugin.version>
 
         <!-- ==================================================================== -->
@@ -175,7 +175,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>docs/21</directory>
+                            <directory>docs/24</directory>
                             <includes>
                                 <include>**/*</include>
                             </includes>
@@ -256,7 +256,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>docs/21/api</outputDirectory>
+                            <outputDirectory>docs/24/api</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target/apidocs</directory>
@@ -271,7 +271,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>docs/21/coverage</outputDirectory>
+                            <outputDirectory>docs/24/coverage</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target/site/jacoco</directory>

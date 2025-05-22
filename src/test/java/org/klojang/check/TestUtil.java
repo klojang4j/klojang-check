@@ -71,9 +71,9 @@ public class TestUtil {
     }
 
     @Test
-    public void or00() {
-      assertEquals(Result.of(42), Result.of(42).or(Result.of(43)));
-      assertEquals(Result.of(42), Result.notAvailable().or(Result.of(42)));
+    public void orElaseGet00() {
+      assertEquals((Integer) 42, Result.of(42).orElaseGet(() -> 43));
+      assertEquals(42, Result.notAvailable().orElaseGet(() -> 42));
     }
 
     @Test

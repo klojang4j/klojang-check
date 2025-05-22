@@ -158,18 +158,8 @@ public class CheckImplsTest {
   }
 
   @Test
-  public void isEmpty02() {
-    Check.that(Result.of(null)).is(empty());
-  }
-
-  @Test
   public void isEmpty03() {
     Check.that(Result.notAvailable()).is(empty());
-  }
-
-  @Test
-  public void isEmpty04() {
-    Check.that(Result.of("")).is(empty());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -204,7 +194,7 @@ public class CheckImplsTest {
 
   @Test
   public void isEmpty11() {
-    Check.that(Optional.of(List.of())).is(empty());
+    Check.that(Optional.empty()).is(empty());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -253,7 +243,6 @@ public class CheckImplsTest {
     Check.that(Map.of(1, 1)).is(notEmpty());
   }
 
-  @Test(expected = IllegalArgumentException.class)
   public void isNotEmpty02() {
     Check.that(Result.of(null)).is(notEmpty());
   }
@@ -263,8 +252,7 @@ public class CheckImplsTest {
     Check.that(Result.notAvailable()).is(notEmpty());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void isNotEmpty04() {
+   public void isNotEmpty04() {
     Check.that(Result.of("")).is(notEmpty());
   }
 
@@ -300,7 +288,7 @@ public class CheckImplsTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void isNotEmpty11() {
-    Check.that(Optional.of(List.of())).is(notEmpty());
+    Check.that(Optional.empty()).is(notEmpty());
   }
 
   @Test

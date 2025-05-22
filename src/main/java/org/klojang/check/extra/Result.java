@@ -6,40 +6,35 @@ import org.klojang.check.fallible.FallibleConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.Supplier;
 
-import static org.klojang.check.CommonChecks.*;
+import static org.klojang.check.CommonChecks.deepNotEmpty;
 
 /**
  * A simple value container that explicitly allows the value to be {@code null}. This class is meant to be
- * used as the return value of methods that would otherwise return {@code null} both as the legitimate outcome
- * of a computation and as a signal that the computation yielded no result. The {@link java.util.HashMap}
- * class is a well-known example. If its {@code get} method returns {@code null}, it is not clear whether the
- * requested key was absent, or whether it was present, but associated with value {@code null}.
- *
- * <p>Another scenario would be iterating over an
- * array and returning a particular element, if found. If the element can itself legitimately be {@code null},
- * it is not clear whether a return value of {@code null} means <b>not present</b> or <b>really null</b>.
- * Using the {@code Result} class, you would return a {@code Result} containing {@code null} if the element
- * was present but {@code null}. If the element was not present, you would return
- * {@link Result#notAvailable() Result.notAvailable()}.
+ * used as the return value of methods that would otherwise return {@code null} <b>both</b> as the legitimate
+ * outcome of a computation <b>and</b> as a signal that the computation yielded no result. The
+ * {@link java.util.HashMap HashMap} class is a well-known example. If its {@code get()} method returns
+ * {@code null}, it is not clear whether the requested key was absent, or whether it was present, but
+ * associated with value {@code null}. If you wanted to create a {@code Map} implementation where this
+ * distinction is clear, you could use the {@code Result} class and return {@link Result#notAvailable()} if
+ * the requested key was absent, and {@code Result.of(null)} if resent but {@code null}.
  *
  * @param <T> the type of the result value
  */
 public final class Result<T> implements Emptyable {
 
   private static final Result<?> NONE = new Result<>(null);
-  private static final Result<?> NULL = new Result<>(null);
 
   /**
    * Returns a {@code Result} containing the specified value (possibly {@code null}).
    *
    * @param value The value
-   * @param <T>   The type of the result value
+   * @param <T> The type of the result value
    * @return a {@code Result} containing the specified value
    */
-  @SuppressWarnings("unchecked")
   public static <T> Result<T> of(T value) {
-    return value == null ? (Result<T>) NULL : new Result<>(value);
+    return new Result<>(value);
   }
 
   /**
@@ -101,7 +96,7 @@ public final class Result<T> implements Emptyable {
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
    */
   public boolean isAvailableAndNull() {
-    return this == NULL;
+    return this != NONE && val == null;
   }
 
   /**
@@ -111,18 +106,17 @@ public final class Result<T> implements Emptyable {
    * @return {@code true} if a result could be computed and it was a non-{@code null} result
    */
   public boolean isAvailableAndNotNull() {
-    return this != NONE && this != NULL;
+    return this != NONE && val != null;
   }
 
   /**
    * If available, passes the result to the specified consumer; else does nothing.
    *
    * @param consumer the consumer of the result
-   * @param <X>      the type of the exception thrown by the consumer
+   * @param <X> the type of the exception thrown by the consumer
    * @throws X if the consumer experiences an error
    */
-  public <X extends Throwable> void ifAvailable(FallibleConsumer<T, X> consumer)
-      throws X {
+  public <X extends Throwable> void ifAvailable(FallibleConsumer<T, X> consumer) throws X {
     Check.notNull(consumer);
     if (isAvailable()) {
       consumer.accept(val);
@@ -143,15 +137,13 @@ public final class Result<T> implements Emptyable {
    * Returns this {@code Result} if it contains a proper result value (possibly {@code null}), else the
    * provided {@code Result}.
    *
-   * @param alternative the {@code Result} to return if this {@code Result} is
-   *                    {@link Result#notAvailable() Result.notAvailable()}. Must not be {@code null}, and
-   *                    must not be {@code Result.notAvailable()}.
-   * @return this instance or the provided instance
+   * @param alternative the value to return if this {@code Result} is {@link Result#notAvailable()}.
+   * @return this instance's value if available; else the value provided by the specified {@code Supplier};
    * @throws IllegalArgumentException if the specified {@code Result} is {@code Result.notAvailable()}
    */
-  public Result<T> or(Result<T> alternative) throws IllegalArgumentException {
-    Check.notNull(alternative).isNot(sameAs(), NONE);
-    return isAvailable() ? this : alternative;
+  public T orElaseGet(Supplier<T> alternative) throws IllegalArgumentException {
+    Check.notNull(alternative);
+    return isAvailable() ? val : alternative.get();
   }
 
   /**
@@ -162,7 +154,7 @@ public final class Result<T> implements Emptyable {
    */
   @Override
   public boolean isEmpty() {
-    return this == NONE || empty().test(val);
+    return this == NONE;
   }
 
   /**
@@ -187,11 +179,11 @@ public final class Result<T> implements Emptyable {
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;
-    } else if (obj == null || obj.getClass() != Result.class) {
-      return false;
     }
-    Result<?> other = (Result<?>) obj;
-    return Objects.equals(val, other.val);
+    return this != NONE
+        && obj != NONE
+        && obj instanceof Result<?> that
+        && Objects.equals(this.val, that.val);
   }
 
   /**
@@ -211,7 +203,7 @@ public final class Result<T> implements Emptyable {
    */
   @Override
   public String toString() {
-    return val != null ? String.format("Result[%s]", val) : "Result.notAvailable";
+    return this != NONE ? String.format("Result[%s]", val) : "Result.notAvailable";
   }
 
   private static NoSuchElementException noResult() {
