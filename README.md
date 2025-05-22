@@ -36,7 +36,7 @@ Thus, using _Klojang Check_ saves you time and makes your code easier to maintai
 Of course, this shifts the burden of responsibility to <i>Klojang Check</i>.
 _Klojang Check_ itself maintains very high levels of code coverage. The latest test 
 coverage results can be found
-**[here](https://klojang4j.github.io/klojang-check/21/coverage)**.
+**[here](https://klojang4j.github.io/klojang-check/24/coverage)**.
 
 ### Performance
 
@@ -72,7 +72,7 @@ dependencies {
 ```
 
 The **Javadocs** for _Klojang Check_ can be found 
-**[here](https://klojang4j.github.io/klojang-check/21/api)**.
+**[here](https://klojang4j.github.io/klojang-check/24/api)**.
 
 ## Usage
 
