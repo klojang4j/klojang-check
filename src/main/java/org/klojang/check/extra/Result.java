@@ -94,27 +94,26 @@ public final class Result<T> {
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result} could not compute a proper
-   * result.
+   * Returns {@code true} if the operation that produced this {@code Result} could not compute a result.
    *
-   * @return {@code true} if the operation that produced this {@code Result} could not compute a proper result
+   * @return {@code true} if the operation that produced this {@code Result} could not compute a result
    */
   public boolean isUnavailable() {
     return this == NONE;
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result
-   * and the result value was not {@code null}.
+   * Returns {@code true} if the operation that produced this {@code Result} could not compute a result or the
+   * result was {@code null}.
    *
-   * @return {@code true} if a result could be computed and it was a non-{@code null} result
+   * @return {@code true} if a result could either not be computed or it was {@code null}
    */
   public boolean isUnavailableOrNull() {
     return this == NONE || this == NULL;
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result
+   * Returns {@code true} if the operation that produced this {@code Result} successfully computed a result
    * and the result value was {@code null}.
    *
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
@@ -124,7 +123,7 @@ public final class Result<T> {
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result
+   * Returns {@code true} if the operation that produced this {@code Result} successfully computed a result
    * and the result value was not {@code null}.
    *
    * @return {@code true} if a result could be computed and it was a non-{@code null} result

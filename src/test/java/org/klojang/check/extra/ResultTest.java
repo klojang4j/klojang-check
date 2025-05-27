@@ -133,4 +133,19 @@ public class ResultTest {
     assertFalse(r.isAvailableAndNotNull());
   }
 
+  @Test
+  public void isUnavailableOrNull00() {
+    assertTrue(Result.notAvailable().isUnavailableOrNull());
+  }
+
+  @Test
+  public void isUnavailableOrNull01() {
+    assertTrue(Result.nullResult().isUnavailableOrNull());
+  }
+
+  @Test
+  public void isUnavailableOrNull02() {
+    assertFalse(Result.of("foo").isUnavailableOrNull());
+  }
+
 }
