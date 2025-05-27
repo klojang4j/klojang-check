@@ -105,12 +105,22 @@ public final class Result&lt;T&gt; {
 
   /**
    * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result
+   * and the result value was not {@code null}.
+   *
+   * @return {@code true} if a result could be computed and it was a non-{@code null} result
+   */
+  public boolean isUnavailableOrNull() {
+<span class="nc bnc" id="L113" title="All 4 branches missed.">    return this == NONE || this == NULL;</span>
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result
    * and the result value was {@code null}.
    *
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
    */
   public boolean isAvailableAndNull() {
-<span class="fc bfc" id="L113" title="All 2 branches covered.">    return this == NULL;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    return this == NULL;</span>
   }
 
   /**
@@ -120,7 +130,7 @@ public final class Result&lt;T&gt; {
    * @return {@code true} if a result could be computed and it was a non-{@code null} result
    */
   public boolean isAvailableAndNotNull() {
-<span class="fc bfc" id="L123" title="All 4 branches covered.">    return this != NONE &amp;&amp; this != NULL;</span>
+<span class="fc bfc" id="L133" title="All 4 branches covered.">    return this != NONE &amp;&amp; this != NULL;</span>
   }
 
   /**
@@ -131,11 +141,11 @@ public final class Result&lt;T&gt; {
    * @throws X if the consumer experiences an error
    */
   public &lt;X extends Throwable&gt; void ifAvailable(FallibleConsumer&lt;T, X&gt; consumer) throws X {
-<span class="fc" id="L134">    Check.notNull(consumer);</span>
-<span class="fc bfc" id="L135" title="All 2 branches covered.">    if (isAvailable()) {</span>
-<span class="fc" id="L136">      consumer.accept(val);</span>
+<span class="fc" id="L144">    Check.notNull(consumer);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">    if (isAvailable()) {</span>
+<span class="fc" id="L146">      consumer.accept(val);</span>
     }
-<span class="fc" id="L138">  }</span>
+<span class="fc" id="L148">  }</span>
 
   /**
    * Returns the result value, if available, else the provided default value.
@@ -144,7 +154,7 @@ public final class Result&lt;T&gt; {
    * @return the result value, if available, else the provided default value
    */
   public T orElse(T defaultValue) {
-<span class="fc bfc" id="L147" title="All 2 branches covered.">    return isAvailable() ? val : defaultValue;</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">    return isAvailable() ? val : defaultValue;</span>
   }
 
   /**
@@ -155,8 +165,8 @@ public final class Result&lt;T&gt; {
    * @throws IllegalArgumentException if the specified {@code Result} is {@code Result.notAvailable()}
    */
   public T orElseGet(Supplier&lt;T&gt; supplier) throws IllegalArgumentException {
-<span class="fc" id="L158">    Check.notNull(supplier);</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">    return isAvailable() ? val : supplier.get();</span>
+<span class="fc" id="L168">    Check.notNull(supplier);</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">    return isAvailable() ? val : supplier.get();</span>
   }
 
   /**
@@ -168,10 +178,10 @@ public final class Result&lt;T&gt; {
    */
   @Override
   public boolean equals(Object obj) {
-<span class="fc bfc" id="L171" title="All 2 branches covered.">    if (this == obj) {</span>
-<span class="fc" id="L172">      return true;</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">    if (this == obj) {</span>
+<span class="fc" id="L182">      return true;</span>
     }
-<span class="fc bfc" id="L174" title="All 4 branches covered.">    return obj instanceof Result&lt;?&gt; that &amp;&amp; Objects.equals(this.val, that.val);</span>
+<span class="fc bfc" id="L184" title="All 4 branches covered.">    return obj instanceof Result&lt;?&gt; that &amp;&amp; Objects.equals(this.val, that.val);</span>
   }
 
   /**
@@ -181,7 +191,7 @@ public final class Result&lt;T&gt; {
    */
   @Override
   public int hashCode() {
-<span class="fc" id="L184">    return Objects.hashCode(val);</span>
+<span class="fc" id="L194">    return Objects.hashCode(val);</span>
   }
 
   /**
@@ -191,11 +201,11 @@ public final class Result&lt;T&gt; {
    */
   @Override
   public String toString() {
-<span class="fc bfc" id="L194" title="All 2 branches covered.">    return this != NONE ? String.format(&quot;Result[%s]&quot;, val) : &quot;Result.notAvailable&quot;;</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">    return this != NONE ? String.format(&quot;Result[%s]&quot;, val) : &quot;Result.notAvailable&quot;;</span>
   }
 
   private static NoSuchElementException noResult() {
-<span class="fc" id="L198">    return new NoSuchElementException(&quot;no result available&quot;);</span>
+<span class="fc" id="L208">    return new NoSuchElementException(&quot;no result available&quot;);</span>
   }
 
 }

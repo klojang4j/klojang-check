@@ -105,6 +105,16 @@ public final class Result<T> {
 
   /**
    * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result
+   * and the result value was not {@code null}.
+   *
+   * @return {@code true} if a result could be computed and it was a non-{@code null} result
+   */
+  public boolean isUnavailableOrNull() {
+    return this == NONE || this == NULL;
+  }
+
+  /**
+   * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result
    * and the result value was {@code null}.
    *
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
