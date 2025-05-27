@@ -1,14 +1,11 @@
 package org.klojang.check.extra;
 
 import org.klojang.check.Check;
-import org.klojang.check.CommonChecks;
 import org.klojang.check.fallible.FallibleConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Supplier;
-
-import static org.klojang.check.CommonChecks.deepNotEmpty;
 
 /**
  * A simple value container that explicitly allows the value to be {@code null}. This class is meant to be
@@ -18,13 +15,15 @@ import static org.klojang.check.CommonChecks.deepNotEmpty;
  * {@code null}, it is not clear whether the requested key was absent, or whether it was present, but
  * associated with value {@code null}. If you wanted to create a {@code Map} implementation where this
  * distinction is clear, you could use the {@code Result} class and return {@link Result#notAvailable()} if
- * the requested key was absent, and {@code Result.of(null)} if resent but {@code null}.
+ * the requested key was absent, and {@code Result.of(null)} (or {@link Result#nullResult()}) if present but
+ * {@code null}.
  *
  * @param <T> the type of the result value
  */
-public final class Result<T> implements Emptyable {
+public final class Result<T> {
 
-  private static final Result<?> NONE = new Result<>(null);
+  private static final Result<?> NULL = new Result<>(null);
+  private static final Result<?> NONE = new Result<>(new Object());
 
   /**
    * Returns a {@code Result} containing the specified value (possibly {@code null}).
@@ -33,19 +32,34 @@ public final class Result<T> implements Emptyable {
    * @param <T> The type of the result value
    * @return a {@code Result} containing the specified value
    */
+  @SuppressWarnings("unchecked")
   public static <T> Result<T> of(T value) {
+    if (value == null) {
+      return (Result<T>) NULL;
+    }
     return new Result<>(value);
   }
 
   /**
-   * Returns a special {@code Result} instance signifying the absence of a result.
+   * Returns a special {@code Result} instance indicating the absence of a result.
    *
    * @param <T> the type of the result value
-   * @return a special {@code Result} object signifying the absence of a result
+   * @return a special {@code Result} object indicating the absence of a result
    */
   @SuppressWarnings("unchecked")
   public static <T> Result<T> notAvailable() {
     return (Result<T>) NONE;
+  }
+
+  /**
+   * Returns a {@code Result} containing {@code null}.
+   *
+   * @param <T> the type of the result value
+   * @return a {@code Result} containing {@code null}
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> Result<T> nullResult() {
+    return (Result<T>) NULL;
   }
 
   private final T val;
@@ -96,7 +110,7 @@ public final class Result<T> implements Emptyable {
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
    */
   public boolean isAvailableAndNull() {
-    return this != NONE && val == null;
+    return this == NULL;
   }
 
   /**
@@ -106,7 +120,7 @@ public final class Result<T> implements Emptyable {
    * @return {@code true} if a result could be computed and it was a non-{@code null} result
    */
   public boolean isAvailableAndNotNull() {
-    return this != NONE && val != null;
+    return this != NONE && this != NULL;
   }
 
   /**
@@ -134,38 +148,15 @@ public final class Result<T> implements Emptyable {
   }
 
   /**
-   * Returns this {@code Result} if it contains a proper result value (possibly {@code null}), else the
-   * provided {@code Result}.
+   * Returns this {@code Result} if available, else the provided {@code Result}.
    *
-   * @param alternative the value to return if this {@code Result} is {@link Result#notAvailable()}.
+   * @param supplier the value to return if this {@code Result} is {@link Result#notAvailable()}.
    * @return this instance's value if available; else the value provided by the specified {@code Supplier};
    * @throws IllegalArgumentException if the specified {@code Result} is {@code Result.notAvailable()}
    */
-  public T orElaseGet(Supplier<T> alternative) throws IllegalArgumentException {
-    Check.notNull(alternative);
-    return isAvailable() ? val : alternative.get();
-  }
-
-  /**
-   * Returns {@code true} if no result is available <i>or</i> if the result value is empty as per the
-   * {@link CommonChecks#empty() empty()} test.
-   *
-   * @return {@code true} if no result is available or the result value is empty.
-   */
-  @Override
-  public boolean isEmpty() {
-    return this == NONE;
-  }
-
-  /**
-   * Returns {@code true} if a result is available <i>and</i> the result value is recursively non-empty as per
-   * the {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
-   *
-   * @return {@code true} if a result is available and is deep-not-empty
-   */
-  @Override
-  public boolean isDeepNotEmpty() {
-    return this != NONE && deepNotEmpty().test(val);
+  public T orElseGet(Supplier<T> supplier) throws IllegalArgumentException {
+    Check.notNull(supplier);
+    return isAvailable() ? val : supplier.get();
   }
 
   /**
@@ -180,10 +171,7 @@ public final class Result<T> implements Emptyable {
     if (this == obj) {
       return true;
     }
-    return this != NONE
-        && obj != NONE
-        && obj instanceof Result<?> that
-        && Objects.equals(this.val, that.val);
+    return obj instanceof Result<?> that && Objects.equals(this.val, that.val);
   }
 
   /**

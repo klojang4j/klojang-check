@@ -5,8 +5,6 @@ import org.klojang.check.Check;
 import org.klojang.check.CorruptCheckException;
 import org.klojang.check.extra.Result;
 
-import static org.klojang.check.CommonChecks.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +12,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static org.klojang.check.CommonChecks.*;
 
 public class CheckImplsTest {
 
@@ -157,11 +157,6 @@ public class CheckImplsTest {
     Check.that(Map.of(1, 1)).is(empty());
   }
 
-  @Test
-  public void isEmpty03() {
-    Check.that(Result.notAvailable()).is(empty());
-  }
-
   @Test(expected = IllegalArgumentException.class)
   public void isEmpty05() {
     Check.that(Result.of("666")).is(empty());
@@ -247,12 +242,7 @@ public class CheckImplsTest {
     Check.that(Result.of(null)).is(notEmpty());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void isNotEmpty03() {
-    Check.that(Result.notAvailable()).is(notEmpty());
-  }
-
-   public void isNotEmpty04() {
+  public void isNotEmpty04() {
     Check.that(Result.of("")).is(notEmpty());
   }
 

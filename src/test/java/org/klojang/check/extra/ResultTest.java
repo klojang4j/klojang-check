@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
@@ -34,6 +33,11 @@ public class ResultTest {
   }
 
   @Test
+  public void hashCode01() {
+    assertEquals(0, Result.nullResult().hashCode());
+  }
+
+  @Test
   public void equals00() {
     Result result = Result.of(List.of(1, 2, 3));
     assertTrue(result.equals(result));
@@ -47,33 +51,25 @@ public class ResultTest {
   }
 
   @Test
+  public void equals01() {
+    assertNotEquals(Result.notAvailable(), Result.nullResult());
+  }
+
+  @Test
+  public void equals02() {
+    assertNotEquals(Result.notAvailable(), Result.of(new Object()));
+  }
+
+  @Test
   public void toString00() {
     assertEquals("Result[Hi there]", Result.of("Hi there").toString());
     assertEquals("Result.notAvailable", Result.notAvailable().toString());
   }
 
   @Test
-  public void orElaseGet00() {
-    assertEquals((Integer)42, Result.of(42).orElaseGet(()->43));
-    assertEquals(42, Result.notAvailable().orElaseGet(()->42));
-  }
-
-  @Test
-  public void isEmpty00() {
-    assertTrue(Result.notAvailable().isEmpty());
-    assertFalse(Result.of("").isEmpty());
-    assertFalse(Result.of(Set.of()).isEmpty());
-    assertFalse(Result.of(null).isEmpty());
-    assertFalse(Result.of(Set.of(1, 2, 3)).isEmpty());
-  }
-
-  @Test
-  public void isDeepNotEmpty00() {
-    assertFalse(Result.notAvailable().isDeepNotEmpty());
-    assertFalse(Result.of("").isDeepNotEmpty());
-    assertFalse(Result.of(Set.of()).isDeepNotEmpty());
-    assertTrue(Result.of("hi there").isDeepNotEmpty());
-    assertTrue(Result.of(Set.of(1, 2, 3)).isDeepNotEmpty());
+  public void orElseGet00() {
+    assertEquals((Integer) 42, Result.of(42).orElseGet(() -> 43));
+    assertEquals(42, Result.notAvailable().orElseGet(() -> 42));
   }
 
   @Test
@@ -105,20 +101,34 @@ public class ResultTest {
   public void isAvailableAndNull00() {
     Result<String> r = Result.of(null);
     assertTrue(r.isAvailableAndNull());
-    r = Result.of("foo");
+  }
+
+  @Test
+  public void isAvailableAndNull01() {
+    Result<String> r = Result.of("foo");
     assertFalse(r.isAvailableAndNull());
+  }
+
+  @Test
+  public void isAvailableAndNull02() {
+    Result<String> r = Result.of(null);
+    assertSame(Result.nullResult(), r);
   }
 
   @Test
   public void isAvailableAndNotNull00() {
     Result<String> r = Result.of(null);
     assertFalse(r.isAvailableAndNotNull());
-    r = Result.of("foo");
-    assertTrue(r.isAvailableAndNotNull());
   }
 
   @Test
   public void isAvailableAndNotNull01() {
+    Result<String> r = Result.of("foo");
+    assertTrue(r.isAvailableAndNotNull());
+  }
+
+  @Test
+  public void isAvailableAndNotNull02() {
     Result<String> r = Result.notAvailable();
     assertFalse(r.isAvailableAndNotNull());
   }

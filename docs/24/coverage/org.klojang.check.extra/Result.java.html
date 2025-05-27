@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Result.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Klojang Check</a> &gt; <a href="index.source.html" class="el_package">org.klojang.check.extra</a> &gt; <span class="el_source">Result.java</span></div><h1>Result.java</h1><pre class="source lang-java linenums">package org.klojang.check.extra;
 
 import org.klojang.check.Check;
-import org.klojang.check.CommonChecks;
 import org.klojang.check.fallible.FallibleConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Supplier;
-
-import static org.klojang.check.CommonChecks.deepNotEmpty;
 
 /**
  * A simple value container that explicitly allows the value to be {@code null}. This class is meant to be
@@ -18,13 +15,15 @@ import static org.klojang.check.CommonChecks.deepNotEmpty;
  * {@code null}, it is not clear whether the requested key was absent, or whether it was present, but
  * associated with value {@code null}. If you wanted to create a {@code Map} implementation where this
  * distinction is clear, you could use the {@code Result} class and return {@link Result#notAvailable()} if
- * the requested key was absent, and {@code Result.of(null)} if resent but {@code null}.
+ * the requested key was absent, and {@code Result.of(null)} (or {@link Result#nullResult()}) if present but
+ * {@code null}.
  *
  * @param &lt;T&gt; the type of the result value
  */
-public final class Result&lt;T&gt; implements Emptyable {
+public final class Result&lt;T&gt; {
 
-<span class="fc" id="L27">  private static final Result&lt;?&gt; NONE = new Result&lt;&gt;(null);</span>
+<span class="fc" id="L25">  private static final Result&lt;?&gt; NULL = new Result&lt;&gt;(null);</span>
+<span class="fc" id="L26">  private static final Result&lt;?&gt; NONE = new Result&lt;&gt;(new Object());</span>
 
   /**
    * Returns a {@code Result} containing the specified value (possibly {@code null}).
@@ -33,26 +32,41 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @param &lt;T&gt; The type of the result value
    * @return a {@code Result} containing the specified value
    */
+  @SuppressWarnings(&quot;unchecked&quot;)
   public static &lt;T&gt; Result&lt;T&gt; of(T value) {
-<span class="fc" id="L37">    return new Result&lt;&gt;(value);</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">    if (value == null) {</span>
+<span class="fc" id="L38">      return (Result&lt;T&gt;) NULL;</span>
+    }
+<span class="fc" id="L40">    return new Result&lt;&gt;(value);</span>
   }
 
   /**
-   * Returns a special {@code Result} instance signifying the absence of a result.
+   * Returns a special {@code Result} instance indicating the absence of a result.
    *
    * @param &lt;T&gt; the type of the result value
-   * @return a special {@code Result} object signifying the absence of a result
+   * @return a special {@code Result} object indicating the absence of a result
    */
   @SuppressWarnings(&quot;unchecked&quot;)
   public static &lt;T&gt; Result&lt;T&gt; notAvailable() {
-<span class="fc" id="L48">    return (Result&lt;T&gt;) NONE;</span>
+<span class="fc" id="L51">    return (Result&lt;T&gt;) NONE;</span>
+  }
+
+  /**
+   * Returns a {@code Result} containing {@code null}.
+   *
+   * @param &lt;T&gt; the type of the result value
+   * @return a {@code Result} containing {@code null}
+   */
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public static &lt;T&gt; Result&lt;T&gt; nullResult() {
+<span class="fc" id="L62">    return (Result&lt;T&gt;) NULL;</span>
   }
 
   private final T val;
 
-<span class="fc" id="L53">  private Result(T value) {</span>
-<span class="fc" id="L54">    this.val = value;</span>
-<span class="fc" id="L55">  }</span>
+<span class="fc" id="L67">  private Result(T value) {</span>
+<span class="fc" id="L68">    this.val = value;</span>
+<span class="fc" id="L69">  }</span>
 
   /**
    * Returns the result. You should have established first that a result value
@@ -62,10 +76,10 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @throws NoSuchElementException if no result is available
    */
   public T get() throws NoSuchElementException {
-<span class="fc bfc" id="L65" title="All 2 branches covered.">    if (this != NONE) {</span>
-<span class="fc" id="L66">      return val;</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">    if (this != NONE) {</span>
+<span class="fc" id="L80">      return val;</span>
     }
-<span class="fc" id="L68">    throw noResult();</span>
+<span class="fc" id="L82">    throw noResult();</span>
   }
 
   /**
@@ -76,7 +90,7 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @return {@code true} if a result could be computed
    */
   public boolean isAvailable() {
-<span class="fc bfc" id="L79" title="All 2 branches covered.">    return this != NONE;</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">    return this != NONE;</span>
   }
 
   /**
@@ -86,7 +100,7 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @return {@code true} if the operation that produced this {@code Result} could not compute a proper result
    */
   public boolean isUnavailable() {
-<span class="fc bfc" id="L89" title="All 2 branches covered.">    return this == NONE;</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    return this == NONE;</span>
   }
 
   /**
@@ -96,7 +110,7 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
    */
   public boolean isAvailableAndNull() {
-<span class="pc bpc" id="L99" title="1 of 4 branches missed.">    return this != NONE &amp;&amp; val == null;</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    return this == NULL;</span>
   }
 
   /**
@@ -106,7 +120,7 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @return {@code true} if a result could be computed and it was a non-{@code null} result
    */
   public boolean isAvailableAndNotNull() {
-<span class="fc bfc" id="L109" title="All 4 branches covered.">    return this != NONE &amp;&amp; val != null;</span>
+<span class="fc bfc" id="L123" title="All 4 branches covered.">    return this != NONE &amp;&amp; this != NULL;</span>
   }
 
   /**
@@ -117,11 +131,11 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @throws X if the consumer experiences an error
    */
   public &lt;X extends Throwable&gt; void ifAvailable(FallibleConsumer&lt;T, X&gt; consumer) throws X {
-<span class="fc" id="L120">    Check.notNull(consumer);</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">    if (isAvailable()) {</span>
-<span class="fc" id="L122">      consumer.accept(val);</span>
+<span class="fc" id="L134">    Check.notNull(consumer);</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">    if (isAvailable()) {</span>
+<span class="fc" id="L136">      consumer.accept(val);</span>
     }
-<span class="fc" id="L124">  }</span>
+<span class="fc" id="L138">  }</span>
 
   /**
    * Returns the result value, if available, else the provided default value.
@@ -130,42 +144,19 @@ public final class Result&lt;T&gt; implements Emptyable {
    * @return the result value, if available, else the provided default value
    */
   public T orElse(T defaultValue) {
-<span class="fc bfc" id="L133" title="All 2 branches covered.">    return isAvailable() ? val : defaultValue;</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">    return isAvailable() ? val : defaultValue;</span>
   }
 
   /**
-   * Returns this {@code Result} if it contains a proper result value (possibly {@code null}), else the
-   * provided {@code Result}.
+   * Returns this {@code Result} if available, else the provided {@code Result}.
    *
-   * @param alternative the value to return if this {@code Result} is {@link Result#notAvailable()}.
+   * @param supplier the value to return if this {@code Result} is {@link Result#notAvailable()}.
    * @return this instance's value if available; else the value provided by the specified {@code Supplier};
    * @throws IllegalArgumentException if the specified {@code Result} is {@code Result.notAvailable()}
    */
-  public T orElaseGet(Supplier&lt;T&gt; alternative) throws IllegalArgumentException {
-<span class="fc" id="L145">    Check.notNull(alternative);</span>
-<span class="fc bfc" id="L146" title="All 2 branches covered.">    return isAvailable() ? val : alternative.get();</span>
-  }
-
-  /**
-   * Returns {@code true} if no result is available &lt;i&gt;or&lt;/i&gt; if the result value is empty as per the
-   * {@link CommonChecks#empty() empty()} test.
-   *
-   * @return {@code true} if no result is available or the result value is empty.
-   */
-  @Override
-  public boolean isEmpty() {
-<span class="fc bfc" id="L157" title="All 2 branches covered.">    return this == NONE;</span>
-  }
-
-  /**
-   * Returns {@code true} if a result is available &lt;i&gt;and&lt;/i&gt; the result value is recursively non-empty as per
-   * the {@link CommonChecks#deepNotEmpty() deepNotEmpty()} test.
-   *
-   * @return {@code true} if a result is available and is deep-not-empty
-   */
-  @Override
-  public boolean isDeepNotEmpty() {
-<span class="fc bfc" id="L168" title="All 4 branches covered.">    return this != NONE &amp;&amp; deepNotEmpty().test(val);</span>
+  public T orElseGet(Supplier&lt;T&gt; supplier) throws IllegalArgumentException {
+<span class="fc" id="L158">    Check.notNull(supplier);</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">    return isAvailable() ? val : supplier.get();</span>
   }
 
   /**
@@ -177,13 +168,10 @@ public final class Result&lt;T&gt; implements Emptyable {
    */
   @Override
   public boolean equals(Object obj) {
-<span class="fc bfc" id="L180" title="All 2 branches covered.">    if (this == obj) {</span>
-<span class="fc" id="L181">      return true;</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">    if (this == obj) {</span>
+<span class="fc" id="L172">      return true;</span>
     }
-<span class="fc" id="L183">    return this != NONE</span>
-        &amp;&amp; obj != NONE
-<span class="fc" id="L185">        &amp;&amp; obj instanceof Result&lt;?&gt; that</span>
-<span class="fc bfc" id="L186" title="All 8 branches covered.">        &amp;&amp; Objects.equals(this.val, that.val);</span>
+<span class="fc bfc" id="L174" title="All 4 branches covered.">    return obj instanceof Result&lt;?&gt; that &amp;&amp; Objects.equals(this.val, that.val);</span>
   }
 
   /**
@@ -193,7 +181,7 @@ public final class Result&lt;T&gt; implements Emptyable {
    */
   @Override
   public int hashCode() {
-<span class="fc" id="L196">    return Objects.hashCode(val);</span>
+<span class="fc" id="L184">    return Objects.hashCode(val);</span>
   }
 
   /**
@@ -203,11 +191,11 @@ public final class Result&lt;T&gt; implements Emptyable {
    */
   @Override
   public String toString() {
-<span class="fc bfc" id="L206" title="All 2 branches covered.">    return this != NONE ? String.format(&quot;Result[%s]&quot;, val) : &quot;Result.notAvailable&quot;;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">    return this != NONE ? String.format(&quot;Result[%s]&quot;, val) : &quot;Result.notAvailable&quot;;</span>
   }
 
   private static NoSuchElementException noResult() {
-<span class="fc" id="L210">    return new NoSuchElementException(&quot;no result available&quot;);</span>
+<span class="fc" id="L198">    return new NoSuchElementException(&quot;no result available&quot;);</span>
   }
 
 }

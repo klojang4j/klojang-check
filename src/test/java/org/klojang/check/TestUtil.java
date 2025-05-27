@@ -71,28 +71,9 @@ public class TestUtil {
     }
 
     @Test
-    public void orElaseGet00() {
-      assertEquals((Integer) 42, Result.of(42).orElaseGet(() -> 43));
-      assertEquals(42, Result.notAvailable().orElaseGet(() -> 42));
-    }
-
-    @Test
-    public void isEmpty00() {
-      assertTrue(Result.notAvailable().isEmpty());
-      assertTrue(Result.of("").isEmpty());
-      assertTrue(Result.of(Set.of()).isEmpty());
-      assertFalse(Result.of("hi there").isEmpty());
-      assertFalse(Result.of(Set.of(1, 2, 3)).isEmpty());
-    }
-
-    @Test
-    public void isDeepNotEmpty00() {
-      assertFalse(Result.notAvailable().isDeepNotEmpty());
-      assertFalse(Result.of("").isDeepNotEmpty());
-      assertFalse(Result.of(Set.of()).isDeepNotEmpty());
-      assertTrue(Result.of("hi there").isDeepNotEmpty());
-      assertTrue(Result.of(Set.of(1, 2, 3)).isDeepNotEmpty());
-
+    public void orElseGet00() {
+      assertEquals((Integer) 42, Result.of(42).orElseGet(() -> 43));
+      assertEquals(42, Result.notAvailable().orElseGet(() -> 42));
     }
 
   }
