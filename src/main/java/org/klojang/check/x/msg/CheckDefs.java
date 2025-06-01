@@ -46,7 +46,11 @@ public final class CheckDefs {
     setMetadata(yes(), msgYes(), "yes");
     setMetadata(no(), msgNo(), "no");
     setMetadata(empty(), msgEmpty(), "empty");
-    setMetadata(emptyString(), msgEmpty(), "emptyString"); // recycle message
+    setMetadata(emptyString(), msgEmptyString(), "emptyString");
+    setMetadata(emptyList(), msgEmptyList(), "emptyList");
+    setMetadata(emptySet(), msgEmptyList(), "emptySet"); // recycle message
+    setMetadata(emptyMap(), msgEmptyList(), "emptyMap"); // recycle message
+    setMetadata(emptyOptional(), msgEmptyList(), "emptyOptional"); // recycle message
     setMetadata(notEmpty(), msgNotEmpty(), "notEmpty");
     setMetadata(deepNotNull(), msgDeepNotNull(), "deepNotNull");
     setMetadata(deepNotEmpty(), msgDeepNotEmpty(), "deepNotEmpty");
@@ -101,10 +105,10 @@ public final class CheckDefs {
     setMetadata(startsWithIgnoreCase(), msgStartsWithIC(), "startsWithIgnoreCase");
     setMetadata(endsWith(), msgEndsWith(), "endsWith");
     setMetadata(endsWithIgnoreCase(), msgEndsWithIC(), "endsWithIgnoreCase");
-    setMetadata(matchingPattern(), msgMatchingPattern(), "matchingPattern");
-    setMetadata(containingPattern(), msgContainingPattern(), "containingPattern");
-    setMetadata(matching(), msgMatchingPattern(), "matching"); // recycle message
-    setMetadata(containsMatch(), msgContainingPattern(), "containsMatch"); // recycle message
+    setMetadata(matchesPattern(), msgMatchesPattern(), "matchesPattern");
+    setMetadata(containsPattern(), msgContainsPattern(), "containsPattern");
+    setMetadata(matches(), msgMatchesPattern(), "matches"); // recycle message
+    setMetadata(containsMatch(), msgContainsPattern(), "containsMatch"); // recycle message
     setMetadata(indexOf(), msgIndexOf(), "indexOf");
     setMetadata(indexInclusiveOf(), msgIndexInclusiveInto(), "indexInclusiveInto");
     setMetadata(inIntArray(), msgIn(), "inIntArray"); // Recycle message

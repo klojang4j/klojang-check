@@ -28,8 +28,8 @@ public final class Result<T> {
   /**
    * Returns a {@code Result} containing the specified value (possibly {@code null}).
    *
-   * @param value The value
-   * @param <T> The type of the result value
+   * @param value the value
+   * @param <T> the type of the result value
    * @return a {@code Result} containing the specified value
    */
   @SuppressWarnings("unchecked")
@@ -83,7 +83,7 @@ public final class Result<T> {
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result.
+   * Returns {@code true} if the operation that produced this {@code Result} successfully computed a result.
    * If so, the result value can be retrieved via the {@link #get()} method. If not, calling {@code get()}
    * method will result in a {@link NoSuchElementException}.
    *
@@ -118,18 +118,18 @@ public final class Result<T> {
    *
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
    */
-  public boolean isAvailableAndNull() {
-    return this == NULL;
+  public boolean isNull() {
+    return val == null;
   }
 
   /**
    * Returns {@code true} if the operation that produced this {@code Result} successfully computed a result
-   * and the result value was not {@code null}.
+   * and it was a non-{@code null} result.
    *
    * @return {@code true} if a result could be computed and it was a non-{@code null} result
    */
-  public boolean isAvailableAndNotNull() {
-    return this != NONE && this != NULL;
+  public boolean isNonNull() {
+    return this != NONE && val != null;
   }
 
   /**
@@ -142,6 +142,20 @@ public final class Result<T> {
   public <X extends Throwable> void ifAvailable(FallibleConsumer<T, X> consumer) throws X {
     Check.notNull(consumer);
     if (isAvailable()) {
+      consumer.accept(val);
+    }
+  }
+
+  /**
+   * If available and non-null, passes the result to the specified consumer; else does nothing.
+   *
+   * @param consumer the consumer of the result
+   * @param <X> the type of the exception thrown by the consumer
+   * @throws X if the consumer experiences an error
+   */
+  public <X extends Throwable> void ifNonNull(FallibleConsumer<T, X> consumer) throws X {
+    Check.notNull(consumer);
+    if (isNonNull()) {
       consumer.accept(val);
     }
   }
@@ -166,6 +180,30 @@ public final class Result<T> {
   public T orElseGet(Supplier<T> supplier) throws IllegalArgumentException {
     Check.notNull(supplier);
     return isAvailable() ? val : supplier.get();
+  }
+
+  /**
+   * Returns the result value, if available, else throws a {@link NoSuchElementException}.
+   *
+   * @return the result value, if available
+   */
+  public T orElseThrow() {
+    if (isAvailable()) {
+      return val;
+    }
+    throw noResult();
+  }
+
+  /**
+   * Returns the result value, if available, else throws the exception produced by the exception supplier.
+   *
+   * @return the result value, if available
+   */
+  public <X extends Throwable> T orElseThrow(Supplier<X> exceptionSupplier) throws X {
+    if (isAvailable()) {
+      return val;
+    }
+    throw exceptionSupplier.get();
   }
 
   /**

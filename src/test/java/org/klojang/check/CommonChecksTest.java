@@ -183,7 +183,7 @@ public class CommonChecksTest {
     Check.that(new char[0]).is(notEmpty());
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void emptyString00() {
     Check.that((String) null).is(emptyString());
   }
@@ -196,6 +196,46 @@ public class CommonChecksTest {
   @Test
   public void emptyString02() {
     Check.that(" ").isNot(emptyString());
+  }
+
+  @Test
+  public void emptyList00() {
+    Check.that(List.of()).is(emptyList());
+  }
+
+  @Test
+  public void emptyList01() {
+    Check.that(List.of("foo")).isNot(emptyList());
+  }
+
+  @Test
+  public void emptySet00() {
+    Check.that(Set.of()).is(emptySet());
+  }
+
+  @Test
+  public void emptySet01() {
+    Check.that(Set.of("foo")).isNot(emptySet());
+  }
+
+  @Test
+  public void emptyMap00() {
+    Check.that(Map.of()).is(emptyMap());
+  }
+
+  @Test
+  public void emptyMap01() {
+    Check.that(Map.of("foo","bar")).isNot(emptyMap());
+  }
+
+  @Test
+  public void emptyOptional00() {
+    Check.that(Optional.empty()).is(emptyOptional());
+  }
+
+  @Test
+  public void emptyOptional01() {
+    Check.that(Optional.of("foo")).isNot(emptyOptional());
   }
 
   @Test
@@ -400,43 +440,43 @@ public class CommonChecksTest {
   }
 
   @Test
-  public void matchingPattern00() {
-    Check.that("abcd123").is(matchingPattern(), Pattern.compile("^\\w{4}\\d{3}$"));
+  public void matchesPattern00() {
+    Check.that("abcd123").is(matchesPattern(), Pattern.compile("^\\w{4}\\d{3}$"));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void matchingPattern01() {
-    Check.that("abcd123").is(matchingPattern(), Pattern.compile("^\\w{3}\\d{4}$"));
+  public void matchesPattern01() {
+    Check.that("abcd123").is(matchesPattern(), Pattern.compile("^\\w{3}\\d{4}$"));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void matchingPattern02() {
-    Check.that("abcd123").is(matchingPattern(), Pattern.compile("foo"));
+  public void matchesPattern02() {
+    Check.that("abcd123").is(matchesPattern(), Pattern.compile("foo"));
   }
 
   @Test
-  public void containingPattern00() {
-    Check.that("abcd123").is(containingPattern(), Pattern.compile("\\w{4}"));
+  public void containsPattern00() {
+    Check.that("abcd123").is(containsPattern(), Pattern.compile("\\w{4}"));
   }
 
   @Test
-  public void containingPattern01() {
-    Check.that("abcd123").is(containingPattern(), Pattern.compile("^\\w{4}\\d{3}$"));
+  public void containsPattern01() {
+    Check.that("abcd123").is(containsPattern(), Pattern.compile("^\\w{4}\\d{3}$"));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void containingPattern02() {
-    Check.that("abcd123").is(containingPattern(), Pattern.compile("^\\d{5,6}"));
+  public void containsPattern02() {
+    Check.that("abcd123").is(containsPattern(), Pattern.compile("^\\d{5,6}"));
   }
 
   @Test
-  public void matching00() {
-    Check.that("abcd123").is(matching(), "^\\w{4}\\d{3}$");
+  public void matches00() {
+    Check.that("abcd123").is(matches(), "^\\w{4}\\d{3}$");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void matching01() {
-    Check.that("abcd123").is(matching(), "\\d{4}");
+  public void matches01() {
+    Check.that("abcd123").is(matches(), "\\d{4}");
   }
 
   @Test

@@ -16,14 +16,12 @@ import static java.util.regex.Pattern.*;
 /**
  * Defines various common checks on arguments, variables, object state, program input, etc. The checks have
  * short, informative error messages associated with them, so you don't have to invent them yourself. Unless
- * specified otherwise they
- * <i>only</i> test what they are documented to be testing. Many of them do nothing
+ * specified otherwise they <i>only</i> test what they are documented to be testing. Many of them do nothing
  * but return a method reference (e.g. {@link Collection#contains(Object) Collection::contains}). More
- * specifically:
- * <b>the checks will not execute a preliminary null check</b> on the argument
- * before proceeding with the actual check. If the argument might be {@code null}, always perform a
- * {@link #notNull()} check first. Otherwise, a raw, unprocessed {@link NullPointerException} <i>can and
- * will</i> be thrown from the code underlying Klojang Check.
+ * specifically: <b>the checks will not execute a preliminary null check</b> on the argument before proceeding
+ * with the actual check. If the argument might be {@code null}, always perform a {@link #notNull()} check
+ * first. Otherwise, a raw, unprocessed {@link NullPointerException} <i>can and will</i> be thrown from the
+ * code underlying Klojang Check.
  *
  * <blockquote><pre>{@code
  * Check.notNull(file).is(readable());
@@ -42,9 +40,9 @@ public final class CommonChecks {
     throw new UnsupportedOperationException();
   }
 
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
   // Predicate
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
 
   /**
    * Verifies that the argument is null. Equivalent to {@link Objects#isNull(Object) Objects::isNull}.
@@ -71,7 +69,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a condition evaluates to {@code true}.
+   * Verifies that an expression evaluates to {@code true}.
    *
    * <blockquote><pre>{@code
    * Check.that(connection.isOpen()).is(yes());
@@ -84,7 +82,7 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that a condition evaluates to {@code false}.
+   * Verifies that an expression evaluates to {@code false}.
    *
    * @return a function implementing the test described above
    */
@@ -99,8 +97,7 @@ public final class CommonChecks {
    * Check.that(list).isNot(empty());
    * }</pre></blockquote>
    *
-   * <p>
-   * A value is defined to be empty if any of the following applies:
+   * <p>A value is defined to be empty if <i>any</i> of the following applies:
    *
    * <ul>
    *   <li>it is {@code null}
@@ -113,8 +110,8 @@ public final class CommonChecks {
    *   <li>it is an empty {@link Optional}
    * </ul>
    *
-   * <p>This check (implicitly) performs a null check and can be safely executed
-   * without or instead of executing the {@link #notNull()} check first.
+   * <p>Thus, this check performs a null check and can be safely executed without or instead of executing
+   * the {@link #notNull()} check first.
    *
    * @param <T> the type of the argument
    * @return a function implementing the test described above
@@ -124,15 +121,48 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument is either null or an empty string.
-   *
-   * <p>This check (implicitly) performs a null check and can be safely executed
-   * without or instead of executing the {@link #notNull()} check first.
+   * Verifies that the argument is an empty string.
    *
    * @return a function implementing the test described above
    */
   public static ComposablePredicate<String> emptyString() {
-    return s -> s == null || s.isEmpty();
+    return String::isEmpty;
+  }
+
+  /**
+   * Verifies that the argument is an empty {@code List}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static <E, L extends List<E>> ComposablePredicate<L> emptyList() {
+    return List::isEmpty;
+  }
+
+  /**
+   * Verifies that the argument is an empty {@code List}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static <E, S extends Set<E>> ComposablePredicate<S> emptySet() {
+    return Set::isEmpty;
+  }
+
+  /**
+   * Verifies that the argument is an empty {@code List}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static <K, V, M extends Map<K, V>> ComposablePredicate<M> emptyMap() {
+    return Map::isEmpty;
+  }
+
+  /**
+   * Verifies that the argument is an empty {@code List}.
+   *
+   * @return a function implementing the test described above
+   */
+  public static <E> ComposablePredicate<Optional<E>> emptyOptional() {
+    return Optional::isEmpty;
   }
 
   /**
@@ -320,9 +350,9 @@ public final class CommonChecks {
     return Result::isAvailable;
   }
 
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
   // IntPredicate
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
 
   /**
    * Verifies that the argument is an even integer.
@@ -378,9 +408,9 @@ public final class CommonChecks {
     return x -> x == 1;
   }
 
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
   // IntRelation
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
 
   /**
    * Verifies that the argument equals the specified {@code int} value.
@@ -445,9 +475,9 @@ public final class CommonChecks {
     return (x, y) -> x % y == 0;
   }
 
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
   // Relation
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
 
   /**
    * Verifies that the argument equals the provided value. Equivalent to
@@ -537,8 +567,8 @@ public final class CommonChecks {
   /**
    * Verifies that the argument is either null or equals a particular value.
    *
-   * <p>This check (implicitly) performs a null check and can be safely executed
-   * without or instead of executing the {@link #notNull()} check first.
+   * <p>This check (implicitly) performs a null check and can be safely executed without or instead of
+   * executing the {@link #notNull()} check first.
    *
    * @param <T> the type of the subject of the relationship (which is the value being tested)
    * @return a function implementing the test described above
@@ -708,6 +738,15 @@ public final class CommonChecks {
   }
 
   /**
+   * Verifies that a string value contains, ignoring case, the specified string.
+   *
+   * @return a function implementing the test described above
+   */
+  public static Relation<String, String> hasSubstringIgnoreCase() {
+    return (str, substr) -> Pattern.compile(substr, CASE_INSENSITIVE | LITERAL).matcher(str).find();
+  }
+
+  /**
    * Verifies that the argument is a substring of the specified string.
    *
    * @return a function implementing the test described above
@@ -737,18 +776,18 @@ public final class CommonChecks {
   }
 
   /**
-   * Verifies that the argument matches the specified pattern (that is, the pattern <i>fully</i> describes the
-   * string). The subject of the returned {@code Relation} is the string to match; the object of the
+   * Verifies that the argument matches the specified pattern (that is, the <i>entire</i> matches the
+   * pattern). The subject of the returned {@code Relation} is the string to match; the object of the
    * {@code Relation} is a regular expression to be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
-   * Check.that("abcd123").is(matching(), "^\\w{4}\\d{3}$"); // yes
-   * Check.that("abcd123").is(matching(), "\\d{3}"); // no
+   * Check.that("abcd123").is(matches(), "^\\w{4}\\d{3}$"); // yes
+   * Check.that("abcd123").is(matches(), "\\d{3}"); // no
    * }</pre></blockquote>
    *
    * @return a function implementing the test described above
    */
-  public static Relation<String, String> matching() {
+  public static Relation<String, String> matches() {
     return (string, pattern) -> Pattern.compile(pattern).matcher(string).matches();
   }
 
@@ -757,28 +796,16 @@ public final class CommonChecks {
    * string).
    *
    * @return a function implementing the test described above
-   * @see #matching()
+   * @see #matches()
    */
-  public static Relation<String, Pattern> matchingPattern() {
+  public static Relation<String, Pattern> matchesPattern() {
     return (string, pattern) -> pattern.matcher(string).matches();
   }
 
   /**
    * Verifies that the argument contains the specified pattern (that is, the pattern can be found
-   * <i>somewhere</i> in the string).
-   *
-   * @return a function implementing the test described above
-   * @see #containsMatch()
-   */
-  public static Relation<String, Pattern> containingPattern() {
-    return (string, pattern) -> pattern.matcher(string).find();
-  }
-
-
-  /**
-   * Verifies that the argument contains the specified pattern (that is, the pattern can be found somewhere in
-   * the string). The subject of the returned {@code Relation} is the string to match; the object of the
-   * {@code Relation} is a regular expression to be compiled into a {@link Pattern}.
+   * <i>somewhere</i> in the string). The subject of the returned {@code Relation} is the string to match;
+   * the object of the {@code Relation} is a regular expression to be compiled into a {@link Pattern}.
    *
    * <blockquote><pre>{@code
    * Check.that("abcd123").is(containsMatch(), "\\d{3}"); // yes
@@ -788,8 +815,20 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation<String, String> containsMatch() {
-    return (string, pattern) -> containingPattern().exists(string, compile(pattern));
+    return (string, pattern) -> containsPattern().exists(string, compile(pattern));
   }
+
+  /**
+   * Verifies that the argument contains the specified pattern (that is, the pattern can be found
+   * <i>somewhere</i> in the string).
+   *
+   * @return a function implementing the test described above
+   * @see #containsMatch()
+   */
+  public static Relation<String, Pattern> containsPattern() {
+    return (string, pattern) -> pattern.matcher(string).find();
+  }
+
 
   /**
    * Verifies that a string value equals, ignoring case, the specified string. Equivalent to
@@ -807,7 +846,7 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation<String, String> startsWithIgnoreCase() {
-    return (s, o) -> s.regionMatches(true, 0, o, 0, o.length());
+    return (str, prefix) -> str.regionMatches(true, 0, prefix, 0, prefix.length());
   }
 
   /**
@@ -816,21 +855,13 @@ public final class CommonChecks {
    * @return a function implementing the test described above
    */
   public static Relation<String, String> endsWithIgnoreCase() {
-    return (s, o) -> s.regionMatches(true, s.length() - o.length(), o, 0, o.length());
+    return (str, suffix) ->
+        str.regionMatches(true, str.length() - suffix.length(), suffix, 0, suffix.length());
   }
 
-  /**
-   * Verifies that a string value contains, ignoring case, the specified string.
-   *
-   * @return a function implementing the test described above
-   */
-  public static Relation<String, String> hasSubstringIgnoreCase() {
-    return (s, o) -> Pattern.compile(o, CASE_INSENSITIVE | LITERAL).matcher(s).find();
-  }
-
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
   // IntObjRelation
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
 
   /**
    * Verifies that the argument is a valid index into the specified array, {@code List} or {@code String}. No
@@ -897,9 +928,9 @@ public final class CommonChecks {
     };
   }
 
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
   // Special
-  //////////////////////////////////////////////////////////////////////////////////
+  // ---------------------------------------------------------------- //
 
 
   /**

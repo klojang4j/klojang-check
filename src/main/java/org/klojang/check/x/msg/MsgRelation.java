@@ -183,7 +183,7 @@ public final class MsgRelation {
     //@formatter:off
   }
 
-  public static PrefabMsgFormatter msgMatchingPattern() {
+  public static PrefabMsgFormatter msgMatchesPattern() {
     //@formatter:off
     return x -> x.negated()
         ? x.name() + " must not match " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'
@@ -192,7 +192,7 @@ public final class MsgRelation {
   }
 
 
-  public static PrefabMsgFormatter msgContainingPattern() {
+  public static PrefabMsgFormatter msgContainsPattern() {
     //@formatter:off
     return x -> x.negated()
         ? x.name() + " must not contain pattern " + toStr(x.obj()) + WAS + toStr(x.arg()) + ')'

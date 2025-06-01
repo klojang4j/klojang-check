@@ -89,6 +89,22 @@ public class ResultTest {
   }
 
   @Test
+  public void ifNonNull00() {
+    AtomicReference ar = new AtomicReference<>("bar");
+    Result<String> r = Result.of("foo");
+    r.ifNonNull(s -> ar.set(s));
+    assertEquals("foo", ar.get());
+  }
+
+  @Test
+  public void ifNonNull01() {
+    AtomicReference ar = new AtomicReference<>("bar");
+    Result<String> r = Result.nullResult();
+    r.ifNonNull(s -> ar.set(s));
+    assertEquals("bar", ar.get());
+  }
+
+  @Test
   public void isAvailable00() {
     assertFalse(Result.notAvailable().isAvailable());
     assertTrue(Result.notAvailable().isUnavailable());
@@ -98,39 +114,39 @@ public class ResultTest {
   }
 
   @Test
-  public void isAvailableAndNull00() {
+  public void isNull00() {
     Result<String> r = Result.of(null);
-    assertTrue(r.isAvailableAndNull());
+    assertTrue(r.isNull());
   }
 
   @Test
-  public void isAvailableAndNull01() {
+  public void isNull01() {
     Result<String> r = Result.of("foo");
-    assertFalse(r.isAvailableAndNull());
+    assertFalse(r.isNull());
   }
 
   @Test
-  public void isAvailableAndNull02() {
+  public void isNull02() {
     Result<String> r = Result.of(null);
     assertSame(Result.nullResult(), r);
   }
 
   @Test
-  public void isAvailableAndNotNull00() {
+  public void isNonNull00() {
     Result<String> r = Result.of(null);
-    assertFalse(r.isAvailableAndNotNull());
+    assertFalse(r.isNonNull());
   }
 
   @Test
-  public void isAvailableAndNotNull01() {
+  public void isNonNull01() {
     Result<String> r = Result.of("foo");
-    assertTrue(r.isAvailableAndNotNull());
+    assertTrue(r.isNonNull());
   }
 
   @Test
-  public void isAvailableAndNotNull02() {
+  public void isNonNull02() {
     Result<String> r = Result.notAvailable();
-    assertFalse(r.isAvailableAndNotNull());
+    assertFalse(r.isNonNull());
   }
 
   @Test
@@ -146,6 +162,34 @@ public class ResultTest {
   @Test
   public void isUnavailableOrNull02() {
     assertFalse(Result.of("foo").isUnavailableOrNull());
+  }
+
+
+  @Test(expected = NoSuchElementException.class)
+  public void orElseThrow00() {
+    Result<String> r = Result.notAvailable();
+    r.orElseThrow();
+  }
+
+  @Test
+  public void orElseThrow01() {
+    Result<String> r = Result.of("foo");
+    String s = r.orElseThrow();
+    assertEquals("foo", s);
+  }
+
+
+  @Test(expected = IllegalStateException.class)
+  public void orElseThrow02() {
+    Result<String> r = Result.notAvailable();
+    r.orElseThrow(IllegalStateException::new);
+  }
+
+  @Test
+  public void orElseThrow03() {
+    Result<String> r = Result.of("foo");
+    String s = r.orElseThrow(IllegalStateException::new);
+    assertEquals("foo", s);
   }
 
 }

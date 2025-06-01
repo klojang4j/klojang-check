@@ -28,8 +28,8 @@ public final class Result&lt;T&gt; {
   /**
    * Returns a {@code Result} containing the specified value (possibly {@code null}).
    *
-   * @param value The value
-   * @param &lt;T&gt; The type of the result value
+   * @param value the value
+   * @param &lt;T&gt; the type of the result value
    * @return a {@code Result} containing the specified value
    */
   @SuppressWarnings(&quot;unchecked&quot;)
@@ -83,7 +83,7 @@ public final class Result&lt;T&gt; {
   }
 
   /**
-   * Returns {@code true} if the operation that produced this {@code Result} successfully computed the result.
+   * Returns {@code true} if the operation that produced this {@code Result} successfully computed a result.
    * If so, the result value can be retrieved via the {@link #get()} method. If not, calling {@code get()}
    * method will result in a {@link NoSuchElementException}.
    *
@@ -118,18 +118,18 @@ public final class Result&lt;T&gt; {
    *
    * @return {@code true} if a result could be computed, and it turned out to be {@code null}
    */
-  public boolean isAvailableAndNull() {
-<span class="fc bfc" id="L122" title="All 2 branches covered.">    return this == NULL;</span>
+  public boolean isNull() {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    return val == null;</span>
   }
 
   /**
    * Returns {@code true} if the operation that produced this {@code Result} successfully computed a result
-   * and the result value was not {@code null}.
+   * and it was a non-{@code null} result.
    *
    * @return {@code true} if a result could be computed and it was a non-{@code null} result
    */
-  public boolean isAvailableAndNotNull() {
-<span class="fc bfc" id="L132" title="All 4 branches covered.">    return this != NONE &amp;&amp; this != NULL;</span>
+  public boolean isNonNull() {
+<span class="fc bfc" id="L132" title="All 4 branches covered.">    return this != NONE &amp;&amp; val != null;</span>
   }
 
   /**
@@ -147,13 +147,27 @@ public final class Result&lt;T&gt; {
 <span class="fc" id="L147">  }</span>
 
   /**
+   * If available and non-null, passes the result to the specified consumer; else does nothing.
+   *
+   * @param consumer the consumer of the result
+   * @param &lt;X&gt; the type of the exception thrown by the consumer
+   * @throws X if the consumer experiences an error
+   */
+  public &lt;X extends Throwable&gt; void ifNonNull(FallibleConsumer&lt;T, X&gt; consumer) throws X {
+<span class="fc" id="L157">    Check.notNull(consumer);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">    if (isNonNull()) {</span>
+<span class="fc" id="L159">      consumer.accept(val);</span>
+    }
+<span class="fc" id="L161">  }</span>
+
+  /**
    * Returns the result value, if available, else the provided default value.
    *
    * @param defaultValue the default value
    * @return the result value, if available, else the provided default value
    */
   public T orElse(T defaultValue) {
-<span class="fc bfc" id="L156" title="All 2 branches covered.">    return isAvailable() ? val : defaultValue;</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">    return isAvailable() ? val : defaultValue;</span>
   }
 
   /**
@@ -164,8 +178,32 @@ public final class Result&lt;T&gt; {
    * @throws IllegalArgumentException if the specified {@code Result} is {@code Result.notAvailable()}
    */
   public T orElseGet(Supplier&lt;T&gt; supplier) throws IllegalArgumentException {
-<span class="fc" id="L167">    Check.notNull(supplier);</span>
-<span class="fc bfc" id="L168" title="All 2 branches covered.">    return isAvailable() ? val : supplier.get();</span>
+<span class="fc" id="L181">    Check.notNull(supplier);</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">    return isAvailable() ? val : supplier.get();</span>
+  }
+
+  /**
+   * Returns the result value, if available, else throws a {@link NoSuchElementException}.
+   *
+   * @return the result value, if available
+   */
+  public T orElseThrow() {
+<span class="fc bfc" id="L191" title="All 2 branches covered.">    if (isAvailable()) {</span>
+<span class="fc" id="L192">      return val;</span>
+    }
+<span class="fc" id="L194">    throw noResult();</span>
+  }
+
+  /**
+   * Returns the result value, if available, else throws the exception produced by the exception supplier.
+   *
+   * @return the result value, if available
+   */
+  public &lt;X extends Throwable&gt; T orElseThrow(Supplier&lt;X&gt; exceptionSupplier) throws X {
+<span class="fc bfc" id="L203" title="All 2 branches covered.">    if (isAvailable()) {</span>
+<span class="fc" id="L204">      return val;</span>
+    }
+<span class="fc" id="L206">    throw exceptionSupplier.get();</span>
   }
 
   /**
@@ -177,10 +215,10 @@ public final class Result&lt;T&gt; {
    */
   @Override
   public boolean equals(Object obj) {
-<span class="fc bfc" id="L180" title="All 2 branches covered.">    if (this == obj) {</span>
-<span class="fc" id="L181">      return true;</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">    if (this == obj) {</span>
+<span class="fc" id="L219">      return true;</span>
     }
-<span class="fc bfc" id="L183" title="All 4 branches covered.">    return obj instanceof Result&lt;?&gt; that &amp;&amp; Objects.equals(this.val, that.val);</span>
+<span class="fc bfc" id="L221" title="All 4 branches covered.">    return obj instanceof Result&lt;?&gt; that &amp;&amp; Objects.equals(this.val, that.val);</span>
   }
 
   /**
@@ -190,7 +228,7 @@ public final class Result&lt;T&gt; {
    */
   @Override
   public int hashCode() {
-<span class="fc" id="L193">    return Objects.hashCode(val);</span>
+<span class="fc" id="L231">    return Objects.hashCode(val);</span>
   }
 
   /**
@@ -200,11 +238,11 @@ public final class Result&lt;T&gt; {
    */
   @Override
   public String toString() {
-<span class="fc bfc" id="L203" title="All 2 branches covered.">    return this != NONE ? String.format(&quot;Result[%s]&quot;, val) : &quot;Result.notAvailable&quot;;</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">    return this != NONE ? String.format(&quot;Result[%s]&quot;, val) : &quot;Result.notAvailable&quot;;</span>
   }
 
   private static NoSuchElementException noResult() {
-<span class="fc" id="L207">    return new NoSuchElementException(&quot;no result available&quot;);</span>
+<span class="fc" id="L245">    return new NoSuchElementException(&quot;no result available&quot;);</span>
   }
 
 }
